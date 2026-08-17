@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>COCI - Chat Clínico</title>
+    <style>
+        /* ===== RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600&h=900&fit=crop&crop=center&auto=format');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.25);
+            z-index: 0;
+        }
+
+        /* ===== CONTAINER PRINCIPAL ===== */
+        .app {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            width: 100%;
+            height: 90vh;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 0;
+            box-shadow: 
+                0 30px 60px -20px rgba(0, 0, 0, 0.5),
+                inset 0 1px 1px rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            padding: 20px 32px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .header-title {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-title .badge {
+            font-size: 11px;
+            background: rgba(123, 184, 255, 0.25);
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-weight: 400;
+            color: #7bb8ff;
+            border: 1px solid rgba(123, 184, 255, 0.15);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            padding: 8px 18px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .header-btn.primary {
+            background: rgba(26, 107, 176, 0.3);
+            border-color: rgba(26, 107, 176, 0.3);
+            color: #7bb8ff;
+        }
+
+        .header-btn.primary:hover {
+            background: rgba(26, 107, 176, 0.5);
+        }
+
+        /* ===== CHAT PRINCIPAL ===== */
+        .chat-main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 320px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-search {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .sidebar-search input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-search input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .sidebar-search input:focus {
+            border-color: rgba(123, 184, 255, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .sidebar-search .search-icon {
+            position: absolute;
+            left: 32px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-search {
+            position: relative;
+        }
+
+        /* ===== TABS ===== */
+        .sidebar-tabs {
+            display: flex;
+            padding: 12px 20px;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .sidebar-tab {
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .sidebar-tab:hover {
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-tab.active {
+            background: rgba(123, 184, 255, 0.15);
+            color: #7bb8ff;
+        }
+
+        /* ===== LISTA DE CONVERSAS ===== */
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+
+        .conversations-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .conversations-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .conversations-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .conversation-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .conversation-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .conversation-item.active {
+            background: rgba(123, 184, 255, 0.1);
+            border-left-color: #7bb8ff;
+        }
+
+        .conversation-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(123, 184, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #7bb8ff;
+            font-size: 16px;
+            flex-shrink: 0;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .conversation-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .conversation-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conversation-name {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .conversation-name .time {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            font-weight: 400;
+        }
+
+        .conversation-message {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 2px;
+        }
+
+        .conversation-badge {
+            background: #1a6bb0;
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .conversation-item .badge-dot {
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 8px;
+        }
+
+        /* ===== CHAT AREA ===== */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        /* ===== CHAT HEADER ===== */
+        .chat-header {
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .chat-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(123, 184, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7bb8ff;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .chat-user-name {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .chat-user-status {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .chat-user-status .online {
+            color: #4caf50;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-action-btn {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .chat-action-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        /* ===== MENSAGENS ===== */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .messages-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .messages-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .messages-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            position: relative;
+            animation: messageIn 0.3s ease;
+        }
+
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: rgba(26, 107, 176, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(26, 107, 176, 0.2);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message .message-time {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 6px;
+            display: block;
+            text-align: right;
+        }
+
+        .message .message-sender {
+            font-size: 11px;
+            color: #7bb8ff;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .message .message-text {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message .message-file {
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+        }
+
+        .message .message-file:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* ===== MENSAGEM DE SISTEMA ===== */
+        .system-message {
+            align-self: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* ===== INPUT ===== */
+        .chat-input {
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+            flex-shrink: 0;
+        }
+
+        .chat-input .input-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .chat-input .input-actions button {
+            padding: 8px;
+            border-radius: 30px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-input .input-actions button:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .chat-input textarea {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            transition: all 0.3s ease;
+            max-height: 120px;
+            font-family: inherit;
+            line-height: 1.5;
+        }
+
+        .chat-input textarea::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-input textarea:focus {
+            border-color: rgba(123, 184, 255, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .chat-input .send-btn {
+            padding: 10px 24px;
+            border-radius: 30px;
+            border: none;
+            background: rgba(26, 107, 176, 0.3);
+            color: #7bb8ff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            border: 1px solid rgba(26, 107, 176, 0.2);
+            white-space: nowrap;
+        }
+
+        .chat-input .send-btn:hover {
+            background: rgba(26, 107, 176, 0.5);
+            border-color: rgba(26, 107, 176, 0.4);
+        }
+
+        /* ===== TEMA CLARO ===== */
+        body.light-theme::before {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        body.light-theme .app {
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        body.light-theme .header {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        body.light-theme .header-title {
+            color: #0b1e3a;
+        }
+
+        body.light-theme .header-btn {
+            color: rgba(0, 0, 0, 0.6);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .header-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: #000;
+        }
+
+        body.light-theme .back-btn {
+            color: rgba(0, 0, 0, 0.6);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .back-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: #000;
+        }
+
+        body.light-theme .sidebar {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .sidebar-search input {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: rgba(0, 0, 0, 0.08);
+            color: #0b1e3a;
+        }
+
+        body.light-theme .sidebar-search input::placeholder {
+            color: rgba(0, 0, 0, 0.3);
+        }
+
+        body.light-theme .conversation-item:hover {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        body.light-theme .conversation-item.active {
+            background: rgba(26, 107, 176, 0.08);
+        }
+
+        body.light-theme .conversation-name {
+            color: #0b1e3a;
+        }
+
+        body.light-theme .conversation-message {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        body.light-theme .chat-area {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .chat-header {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .chat-user-name {
+            color: #0b1e3a;
+        }
+
+        body.light-theme .chat-user-status {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        body.light-theme .message.received {
+            background: rgba(255, 255, 255, 0.6);
+            border-color: rgba(0, 0, 0, 0.05);
+            color: #0b1e3a;
+        }
+
+        body.light-theme .message.sent {
+            background: rgba(26, 107, 176, 0.15);
+            border-color: rgba(26, 107, 176, 0.1);
+            color: #0b1e3a;
+        }
+
+        body.light-theme .message .message-time {
+            color: rgba(0, 0, 0, 0.3);
+        }
+
+        body.light-theme .system-message {
+            background: rgba(0, 0, 0, 0.03);
+            border-color: rgba(0, 0, 0, 0.05);
+            color: rgba(0, 0, 0, 0.3);
+        }
+
+        body.light-theme .chat-input {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .chat-input textarea {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: rgba(0, 0, 0, 0.08);
+            color: #0b1e3a;
+        }
+
+        body.light-theme .chat-input textarea::placeholder {
+            color: rgba(0, 0, 0, 0.3);
+        }
+
+        body.light-theme .chat-input .input-actions button {
+            color: rgba(0, 0, 0, 0.3);
+        }
+
+        body.light-theme .chat-input .input-actions button:hover {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        body.light-theme .header-btn.primary {
+            background: rgba(26, 107, 176, 0.1);
+            color: #1a6bb0;
+        }
+
+        body.light-theme .header-btn.primary:hover {
+            background: rgba(26, 107, 176, 0.2);
+        }
+
+        body.light-theme .conversation-avatar {
+            background: rgba(26, 107, 176, 0.1);
+            color: #1a6bb0;
+        }
+
+        body.light-theme .sidebar-tab {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        body.light-theme .sidebar-tab:hover {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        body.light-theme .sidebar-tab.active {
+            background: rgba(26, 107, 176, 0.08);
+            color: #1a6bb0;
+        }
+
+        body.light-theme .conversation-name .time {
+            color: rgba(0, 0, 0, 0.25);
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 820px) {
+            .app {
+                height: 95vh;
+                border-radius: 24px;
+            }
+
+            .header {
+                padding: 14px 20px;
+            }
+
+            .sidebar {
+                width: 260px;
+            }
+
+            .messages-container {
+                padding: 16px 20px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .app {
+                height: 100vh;
+                border-radius: 0;
+                padding: 0;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .sidebar-mobile {
+                display: flex !important;
+            }
+
+            .header-title {
+                font-size: 16px;
+            }
+
+            .header-title .badge {
+                display: none;
+            }
+
+            .chat-input {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+            }
+
+            .chat-input textarea {
+                font-size: 13px;
+                min-height: 40px;
+            }
+
+            .message {
+                max-width: 85%;
+            }
+
+            .message .message-text {
+                font-size: 13px;
+            }
+
+            .chat-user-status {
+                display: none;
+            }
+
+            .header-actions .header-btn span {
+                display: none;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .header {
+                padding: 10px 14px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .chat-header {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .messages-container {
+                padding: 12px 14px;
+            }
+
+            .chat-input .send-btn {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+        }
+
+        /* ===== INTERRUPTOR DE TEMA ===== */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
+        .theme-toggle .toggle-switch {
+            width: 40px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .theme-toggle .toggle-switch .toggle-dot {
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle.dark .toggle-switch {
+            background: rgba(26, 107, 176, 0.5);
+        }
+
+        .theme-toggle.dark .toggle-switch .toggle-dot {
+            left: 21px;
+            background: #7bb8ff;
+        }
+
+        body.light-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.6);
+            color: #0b1e3a;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        body.light-theme .theme-toggle .toggle-switch {
+            background: rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== INTERRUPTOR DE TEMA ===== -->
+    <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+        <span>🌙</span>
+        <div class="toggle-switch">
+            <div class="toggle-dot"></div>
+        </div>
+        <span>☀️</span>
+    </div>
+
+    <!-- ===== CONTAINER PRINCIPAL ===== -->
+    <div class="app">
+
+        <!-- ===== HEADER ===== -->
+        <header class="header">
+            <div class="header-left">
+                <a href="#" class="back-btn" onclick="history.back()">← Voltar</a>
+                <div class="header-title">
+                    💬 Chat Clínico
+                    <span class="badge">Ativo</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" onclick="alert('📋 Abrindo prontuário...')">📋 Prontuário</button>
+                <button class="header-btn primary" onclick="alert('📄 Criando novo parecer...')">📄 Novo Parecer</button>
+            </div>
+        </header>
+
+        <!-- ===== CHAT PRINCIPAL ===== -->
+        <div class="chat-main">
+
+            <!-- ===== SIDEBAR ===== -->
+            <div class="sidebar">
+                <div class="sidebar-search">
+                    <input type="text" placeholder="🔍 Buscar conversas..." />
+                </div>
+
+                <div class="sidebar-tabs">
+                    <button class="sidebar-tab active">Todas</button>
+                    <button class="sidebar-tab">Médicos</button>
+                    <button class="sidebar-tab">Enfermagem</button>
+                </div>
+
+                <div class="conversations-list">
+                    <!-- Conversa 1 -->
+                    <div class="conversation-item active">
+                        <div class="conversation-avatar" style="background: rgba(76, 175, 80, 0.2); color: #4caf50;">
+                            DR
+                        </div>
+                        <div class="conversation-info">
+                            <div class="conversation-name">
+                                Dr. Ricardo Silva
+                                <span class="time">Agora</span>
+                            </div>
+                            <div class="conversation-message">Paciente João - resultados de exames...</div>
+                        </div>
+                        <span class="conversation-badge">3</span>
+                    </div>
+
+                    <!-- Conversa 2 -->
+                    <div class="conversation-item">
+                        <div class="conversation-avatar" style="background: rgba(255, 193, 7, 0.2); color: #ffc107;">
+                            EN
+                        </div>
+                        <div class="conversation-info">
+                            <div class="conversation-name">
+                                Enf. Ana Martins
+                                <span class="time">10:32</span>
+                            </div>
+                            <div class="conversation-message">Medicação do paciente Maria foi ajustada...</div>
+                        </div>
+                        <span class="conversation-badge">1</span>
+                    </div>
+
+                    <!-- Conversa 3 -->
+                    <div class="conversation-item">
+                        <div class="conversation-avatar" style="background: rgba(123, 184, 255, 0.2); color: #7bb8ff;">
+                            DR
+                        </div>
+                        <div class="conversation-info">
+                            <div class="conversation-name">
+                                Dr. Carlos Mendes
+                                <span class="time">09:15</span>
+                            </div>
+                            <div class="conversation-message">Segunda opinião sobre caso clínico #452...</div>
+                        </div>
+                    </div>
+
+                    <!-- Conversa 4 -->
+                    <div class="conversation-item">
+                        <div class="conversation-avatar" style="background: rgba(156, 39, 176, 0.2); color: #9c27b0;">
+                            DR
+                        </div>
+                        <div class="conversation-info">
+                            <div class="conversation-name">
+                                Dra. Sofia Costa
+                                <span class="time">Ontem</span>
+                            </div>
+                            <div class="conversation-message">Encaminhamento para neurologia - paciente...</div>
+                        </div>
+                    </div>
+
+                    <!-- Conversa 5 -->
+                    <div class="conversation-item">
+                        <div class="conversation-avatar" style="background: rgba(233, 30, 99, 0.2); color: #e91e63;">
+                            EN
+                        </div>
+                        <div class="conversation-info">
+                            <div class="conversation-name">
+                                Enf. Paula Santos
+                                <span class="time">Ontem</span>
+                            </div>
+                            <div class="conversation-message">Atualização do plano terapêutico - UTI...</div>
+                        </div>
+                        <span class="conversation-badge">2</span>
+                    </div>
+
+                    <!-- Conversa 6 -->
+                    <div class="conversation-item">
+                        <div class="conversation-avatar" style="background: rgba(33, 150, 243, 0.2); color: #2196f3;">
+                            DR
+                        </div>
+                        <div class="conversation-info">
+                            <div class="conversation-name">
+                                Dr. André Oliveira
+                                <span class="time">Ontem</span>
+                            </div>
+                            <div class="conversation-message">Discussão de caso - cirurgia geral...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== CHAT AREA ===== -->
+            <div class="chat-area">
+
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="chat-user-info">
+                        <div class="chat-user-avatar" style="background: rgba(76, 175, 80, 0.2); color: #4caf50;">
+                            DR
+                        </div>
+                        <div>
+                            <div class="chat-user-name">Dr. Ricardo Silva</div>
+                            <div class="chat-user-status"><span class="online">●</span> Online agora</div>
+                        </div>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="chat-action-btn" onclick="alert('📎 Anexando arquivo...')">📎 Anexar</button>
+                        <button class="chat-action-btn" onclick="alert('📋 Histórico do paciente')">📋 Histórico</button>
+                        <button class="chat-action-btn" onclick="alert('👥 Adicionar participante')">👥</button>
+                    </div>
+                </div>
+
+                <!-- Mensagens -->
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Mensagem de sistema -->
+                    <div class="system-message">
+                        📌 Discussão iniciada em 23/07/2026 - Caso: Paciente João Silva
+                    </div>
+
+                    <!-- Mensagem recebida -->
+                    <div class="message received">
+                        <span class="message-sender">Dr. Ricardo Silva</span>
+                        <div class="message-text">
+                            Bom dia equipe! Estou analisando os exames do paciente João Silva, internado na ala 3.
+                            Os resultados indicam possível infecção bacteriana. Solicito avaliação da equipe.
+                        </div>
+                        <span class="message-time">10:45</span>
+                    </div>
+
+                    <!-- Mensagem enviada -->
+                    <div class="message sent">
+                        <div class="message-text">
+                            Dr. Ricardo, já recebi os exames. Vou revisar e compartilhar com a equipe de infectologia.
+                            Agradeço o encaminhamento.
+                        </div>
+                        <span class="message-time">10:48</span>
+                    </div>
+
+                    <!-- Mensagem com arquivo -->
+                    <div class="message received">
+                        <span class="message-sender">Dra. Ana Paula - Infectologia</span>
+                        <div class="message-text">
+                            Conforme solicitado, segue protocolo de tratamento para infecção bacteriana.
+                        </div>
+                        <div class="message-file" onclick="alert('📄 Abrindo protocolo...')">
+                            📄 Protocolo_Infecção_Bacteriana_v2.pdf
+                        </div>
+                        <span class="message-time">10:52</span>
+                    </div>
+
+                    <!-- Mensagem recebida -->
+                    <div class="message received">
+                        <span class="message-sender">Enf. Ana Martins</span>
+                        <div class="message-text">
+                            Paciente está estável. Sinais vitais monitorados. Administrando antibióticos conforme
+                            prescrição. Aguardo novas orientações.
+                        </div>
+                        <span class="message-time">10:55</span>
+                    </div>
+
+                    <!-- Mensagem enviada -->
+                    <div class="message sent">
+                        <div class="message-text">
+                            Excelente, enfermeira Ana! Vamos manter o monitoramento. Agendarei nova avaliação
+                            para amanhã às 08:00. Alguém mais tem alguma consideração?
+                        </div>
+                        <span class="message-time">10:58</span>
+                    </div>
+
+                    <!-- Mensagem recebida -->
+                    <div class="message received">
+                        <span class="message-sender">Dr. Carlos Mendes</span>
+                        <div class="message-text">
+                            Concordo com a conduta. Sugiro também solicitar cultura de sangue para identificar
+                            o agente específico. Peço que seja incluído no plano terapêutico.
+                        </div>
+                        <span class="message-time">11:02</span>
+                    </div>
+
+                    <!-- Mensagem enviada -->
+                    <div class="message sent">
+                        <div class="message-text">
+                            Ótima sugestão, Dr. Carlos! Vou solicitar a cultura de sangue imediatamente.
+                            Obrigado pela contribuição.
+                        </div>
+                        <span class="message-time">11:05</span>
+                    </div>
+                </div>
+
+                <!-- Input -->
+                <div class="chat-input">
+                    <div class="input-actions">
+                        <button onclick="alert('📎 Anexar arquivo')">📎</button>
+                        <button onclick="alert('📷 Enviar imagem')">📷</button>
+                        <button onclick="alert('🔗 Compartilhar link')">🔗</button>
+                    </div>
+                    <textarea rows="1" placeholder="Digite sua mensagem..." id="messageInput"></textarea>
+                    <button class="send-btn" onclick="sendMessage()">Enviar →</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // ===== FUNÇÃO PARA ENVIAR MENSAGEM =====
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (text === '') return;
+
+            const container = document.getElementById('messagesContainer');
+            
+            // Cria a mensagem
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message sent';
+            
+            const messageText = document.createElement('div');
+            messageText.className = 'message-text';
+            messageText.textContent = text;
+            
+            const messageTime = document.createElement('span');
+            messageTime.className = 'message-time';
+            const now = new Date();
+            messageTime.textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            
+            messageDiv.appendChild(messageText);
+            messageDiv.appendChild(messageTime);
+            
+            // Remove mensagem de sistema se existir e for a única
+            const systemMsg = container.querySelector('.system-message');
+            if (systemMsg && container.children.length === 1) {
+                systemMsg.remove();
+            }
+            
+            container.appendChild(messageDiv);
+            
+            // Scroll para o final
+            container.scrollTop = container.scrollHeight;
+            
+            // Limpa o input
+            input.value = '';
+            input.style.height = 'auto';
+            
+            // Simula resposta automática (opcional)
+            setTimeout(() => {
+                receiveAutoReply(text);
+            }, 1500);
+        }
+
+        // ===== RESPOSTA AUTOMÁTICA (SIMULAÇÃO) =====
+        function receiveAutoReply(text) {
+            const container = document.getElementById('messagesContainer');
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message received';
+            
+            const sender = document.createElement('span');
+            sender.className = 'message-sender';
+            sender.textContent = 'Dr. Ricardo Silva';
+            
+            const messageText = document.createElement('div');
+            messageText.className = 'message-text';
+            
+            const replies = [
+                'Entendido! Vou analisar sua mensagem e retorno em breve.',
+                'Obrigado pela informação! Já estou verificando os dados do paciente.',
+                'Muito bem! Vou compartilhar com a equipe e volto com um parecer.',
+                'Recebi sua mensagem. Vamos agendar uma reunião para discutir esse caso.',
+                'Ótimo ponto! Vou considerar essa informação no plano terapêutico.'
+            ];
+            
+            messageText.textContent = replies[Math.floor(Math.random() * replies.length)];
+            
+            const messageTime = document.createElement('span');
+            messageTime.className = 'message-time';
+            const now = new Date();
+            messageTime.textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            
+            messageDiv.appendChild(sender);
+            messageDiv.appendChild(messageText);
+            messageDiv.appendChild(messageTime);
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // ===== ENTER PARA ENVIAR =====
+        document.getElementById('messageInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // ===== AUTO-RESIZE DO TEXTAREA =====
+        document.getElementById('messageInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // ===== INTERRUPTOR DE TEMA =====
+        function toggleTheme() {
+            const body = document.body;
+            const toggle = document.getElementById('themeToggle');
+            
+            body.classList.toggle('light-theme');
+            toggle.classList.toggle('dark');
+            
+            const icon = toggle.querySelector('span:first-child');
+            const icon2 = toggle.querySelector('span:last-child');
+            if (body.classList.contains('light-theme')) {
+                icon.textContent = '☀️';
+                icon2.textContent = '🌙';
+            } else {
+                icon.textContent = '🌙';
+                icon2.textContent = '☀️';
+            }
+            
+            localStorage.setItem('coci-theme', body.classList.contains('light-theme') ? 'light' : 'dark');
+        }
+
+        // ===== CARREGAR TEMA SALVO =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('coci-theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+                document.getElementById('themeToggle').classList.add('dark');
+                const toggle = document.getElementById('themeToggle');
+                const icon = toggle.querySelector('span:first-child');
+                const icon2 = toggle.querySelector('span:last-child');
+                icon.textContent = '☀️';
+                icon2.textContent = '🌙';
+            }
+        });
+
+        // ===== CLICK NAS CONVERSAS =====
+        document.querySelectorAll('.conversation-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.conversation-item').forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Simula carregamento de conversa
+                const name = this.querySelector('.conversation-name').textContent.trim();
+                document.querySelector('.chat-user-name').textContent = name;
+                
+                // Feedback visual
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // ===== CLICK NAS TABS =====
+        document.querySelectorAll('.sidebar-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+
+</body>
+</html>

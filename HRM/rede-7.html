@@ -1,0 +1,3146 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Criptografia</title>
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- QRCode JS Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+ <!-- Bootstrap 5 + Icons + Google Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <style>
+            *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family: 'Times New Roman', Times, serif;
+        }
+            /* ==========================================================
+ETAPA 66
+========================================================== */
+
+.backup-panel{
+
+    margin:20px;
+
+    padding:20px;
+
+    background:#ffffff;
+
+    border-radius:15px;
+
+}
+
+.backup-actions,
+
+.export-actions{
+
+    display:flex;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+
+    margin-bottom:18px;
+
+}
+
+.backup-info{
+
+    padding:15px;
+
+    background:#f5f5f5;
+
+    border-radius:10px;
+
+}
+
+.backup-info p{
+
+    margin:6px 0;
+
+}
+
+.sync-success{
+
+    color:#25d366;
+
+    font-weight:bold;
+
+}
+
+.sync-error{
+
+    color:#e53935;
+
+    font-weight:bold;
+
+}
+
+body.dark .backup-panel{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+
+body.dark .backup-info{
+
+    background:#2a3942;
+
+}
+
+            /* ==========================================================
+ETAPA 67
+========================================================== */
+
+.ai-panel{
+
+    margin:20px;
+
+    padding:18px;
+
+    background:#ffffff;
+
+    border-radius:15px;
+
+}
+
+.ai-header{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-bottom:18px;
+
+}
+
+.ai-header i{
+
+    font-size:28px;
+
+    color:#25d366;
+
+}
+
+.ai-tools{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:12px;
+
+}
+
+.ai-tools button{
+
+    border:none;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    background:#25d366;
+
+    color:#ffffff;
+
+    cursor:pointer;
+
+}
+
+.ai-result{
+
+    margin-top:20px;
+
+    min-height:120px;
+
+    background:#f5f5f5;
+
+    border-radius:10px;
+
+    padding:15px;
+
+    white-space:pre-wrap;
+
+}
+
+body.dark .ai-panel{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+
+body.dark .ai-result{
+
+    background:#2a3942;
+
+}
+
+            /* ==========================================================
+ETAPA 68
+========================================================== */
+
+.performance-panel{
+
+    margin:20px;
+
+    padding:20px;
+
+    background:#ffffff;
+
+    border-radius:15px;
+
+}
+
+.performance-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:20px;
+
+}
+
+.performance-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:15px;
+
+}
+
+.performance-card{
+
+    text-align:center;
+
+    padding:18px;
+
+    background:#f7f7f7;
+
+    border-radius:12px;
+
+}
+
+.performance-card i{
+
+    font-size:28px;
+
+    color:#25d366;
+
+    margin-bottom:10px;
+
+}
+
+.performance-card span{
+
+    display:block;
+
+    font-size:20px;
+
+    font-weight:bold;
+
+}
+
+body.dark .performance-panel{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+
+body.dark .performance-card{
+
+    background:#2a3942;
+
+}
+
+            /* ==========================================================
+ETAPA 69
+========================================================== */
+
+.status-container{
+
+    margin:20px;
+
+    background:#ffffff;
+
+    border-radius:15px;
+
+    padding:20px;
+
+}
+
+.status-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.status-card{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:12px;
+
+    margin-top:12px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.status-card:hover{
+
+    background:#f5f5f5;
+
+}
+
+.status-viewer{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:#000000;
+
+    z-index:999999;
+
+}
+
+.status-progress{
+
+    width:100%;
+
+    height:5px;
+
+    background:#444;
+
+}
+
+#statusBar{
+
+    width:0;
+
+    height:100%;
+
+    background:#25d366;
+
+}
+
+.status-actions{
+
+    position:absolute;
+
+    bottom:30px;
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:20px;
+
+}
+
+.status-actions button{
+
+    width:58px;
+
+    height:58px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#25d366;
+
+    color:#ffffff;
+
+}
+
+body.dark .status-container{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+            /* ==========================================================
+ETAPA 70
+========================================================== */
+
+.smart-feed{
+
+    margin:20px;
+
+    background:#ffffff;
+
+    border-radius:15px;
+
+    padding:20px;
+
+}
+
+.feed-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.feed-filters{
+
+    display:flex;
+
+    gap:10px;
+
+    overflow:auto;
+
+    margin:20px 0;
+
+}
+
+.feed-filters button{
+
+    border:none;
+
+    padding:8px 16px;
+
+    border-radius:20px;
+
+    background:#25d366;
+
+    color:#ffffff;
+
+    white-space:nowrap;
+
+}
+
+.feed-card{
+
+    background:#f8f8f8;
+
+    border-radius:12px;
+
+    padding:15px;
+
+    margin-bottom:15px;
+
+}
+
+.feed-score{
+
+    color:#25d366;
+
+    font-size:12px;
+
+}
+
+body.dark .smart-feed{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+
+body.dark .feed-card{
+
+    background:#2a3942;
+
+}
+
+
+            /* ==========================================================
+ETAPA 71
+========================================================== */
+
+.ai-studio{
+
+    margin:20px;
+
+    padding:20px;
+
+    border-radius:15px;
+
+    background:#ffffff;
+
+}
+
+.studio-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+
+    gap:15px;
+
+    margin-top:20px;
+
+}
+
+.studio-grid button{
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#25d366;
+
+    color:#ffffff;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.studio-grid button:hover{
+
+    transform:scale(1.04);
+
+}
+
+#studioPreview{
+
+    margin-top:25px;
+
+    min-height:250px;
+
+    border-radius:12px;
+
+    background:#f5f5f5;
+
+    padding:20px;
+
+}
+
+body.dark .ai-studio{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+
+body.dark #studioPreview{
+
+    background:#2a3942;
+
+}
+
+            /* ==========================================================
+ETAPA 72
+========================================================== */
+
+.socialverse{
+
+    margin:20px;
+
+    padding:20px;
+
+    background:#ffffff;
+
+    border-radius:16px;
+
+}
+
+.verse-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.beta{
+
+    background:#25d366;
+
+    color:#ffffff;
+
+    padding:5px 12px;
+
+    border-radius:20px;
+
+}
+
+.verse-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+
+    gap:15px;
+
+    margin-top:20px;
+
+}
+
+.verse-grid button{
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#25d366;
+
+    color:#ffffff;
+
+}
+
+#versePreview{
+
+    margin-top:25px;
+
+    min-height:260px;
+
+    border-radius:12px;
+
+    background:#f4f4f4;
+
+    padding:20px;
+
+}
+
+body.dark .socialverse{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+
+body.dark #versePreview{
+
+    background:#2a3942;
+
+}
+
+            /* ==========================================================
+ETAPA 73
+========================================================== */
+
+.miniapps-hub{
+
+    margin:20px;
+
+    padding:20px;
+
+    border-radius:15px;
+
+    background:#ffffff;
+
+}
+
+.hub-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.hub-search input{
+
+    width:100%;
+
+    margin-top:20px;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    border:1px solid #dddddd;
+
+}
+
+#appsGrid{
+
+    display:grid;
+
+    grid-template-columns:
+
+    repeat(auto-fill,minmax(170px,1fr));
+
+    gap:15px;
+
+    margin-top:20px;
+
+}
+
+.app-card{
+
+    padding:18px;
+
+    border-radius:12px;
+
+    background:#f5f5f5;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.app-card:hover{
+
+    transform:translateY(-4px);
+
+}
+
+.miniapp-window{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:#ffffff;
+
+    z-index:999999;
+
+    overflow:auto;
+
+}
+
+body.dark .miniapps-hub{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+
+body.dark .app-card{
+
+    background:#2a3942;
+
+}
+
+body.dark .miniapp-window{
+
+    background:#111b21;
+
+    color:#ffffff;
+
+}
+
+            /* ==========================================================
+ETAPA 74
+========================================================== */
+
+.wallet-panel{
+
+    margin:20px;
+
+    padding:20px;
+
+    background:#ffffff;
+
+    border-radius:16px;
+
+}
+
+.wallet-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+#walletBalance{
+
+    font-size:24px;
+
+    font-weight:bold;
+
+    color:#25d366;
+
+}
+
+.wallet-actions{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:15px;
+
+    margin-top:20px;
+
+}
+
+.wallet-actions button{
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#25d366;
+
+    color:#ffffff;
+
+}
+
+.transaction{
+
+    margin-top:15px;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    background:#f5f5f5;
+
+}
+
+body.dark .wallet-panel{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+
+body.dark .transaction{
+
+    background:#2a3942;
+
+}
+            
+            /* ==========================================================
+ETAPA 75
+========================================================== */
+
+.marketplace{
+
+    margin:20px;
+
+    padding:20px;
+
+    background:#ffffff;
+
+    border-radius:16px;
+
+}
+
+.market-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.market-search input{
+
+    width:100%;
+
+    margin:18px 0;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    border:1px solid #dddddd;
+
+}
+
+.market-filters{
+
+    display:flex;
+
+    gap:10px;
+
+    overflow:auto;
+
+}
+
+.market-filters button{
+
+    border:none;
+
+    padding:10px 18px;
+
+    border-radius:20px;
+
+    background:#25d366;
+
+    color:#ffffff;
+
+}
+
+.market-card{
+
+    margin-top:15px;
+
+    background:#f5f5f5;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+}
+
+.market-card img{
+
+    width:100%;
+
+    height:180px;
+
+    object-fit:cover;
+
+}
+
+.market-info{
+
+    padding:15px;
+
+}
+
+body.dark .marketplace{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+
+body.dark .market-card{
+
+    background:#2a3942;
+
+}
+
+
+        </style>
+    </head>
+    <body>
+        <!-- ==========================================================
+ETAPA 66
+Sistema de Backup e Restauro
+Exportação de Conversas
+Sincronização na Nuvem
+========================================================== -->
+
+<div id="backupPanel" class="backup-panel">
+
+    <h4>
+
+        Backup e Restauro
+
+    </h4>
+
+    <div class="backup-actions">
+
+        <button id="createBackup"
+                class="btn btn-outline-success">
+
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+
+            Criar Backup
+
+        </button>
+
+        <button id="restoreBackup"
+                class="btn btn-outline-primary">
+
+            <i class="fa-solid fa-cloud-arrow-down"></i>
+
+            Restaurar
+
+        </button>
+
+    </div>
+
+    <div class="export-actions">
+
+        <button id="exportTXT"
+                class="btn btn-outline-secondary">
+
+            <i class="fa-solid fa-file-lines"></i>
+
+            Exportar TXT
+
+        </button>
+
+        <button id="exportJSON"
+                class="btn btn-outline-warning">
+
+            <i class="fa-solid fa-file-code"></i>
+
+            Exportar JSON
+
+        </button>
+
+        <button id="exportPDF"
+                class="btn btn-outline-danger">
+
+            <i class="fa-solid fa-file-pdf"></i>
+
+            Exportar PDF
+
+        </button>
+
+    </div>
+
+    <div class="backup-info">
+
+        <p>
+
+            Último backup:
+
+            <span id="lastBackup">
+
+                Nunca
+
+            </span>
+
+        </p>
+
+        <p>
+
+            Estado:
+
+            <span id="backupStatus">
+
+                Sem sincronização
+
+            </span>
+
+        </p>
+
+    </div>
+
+</div>
+
+<input
+
+type="file"
+
+id="backupFile"
+
+accept=".json"
+
+hidden>
+
+        <!-- ==========================================================
+ETAPA 67
+Assistente de IA
+Resumos
+Tradução
+Respostas Inteligentes
+========================================================== -->
+
+<div id="aiPanel" class="ai-panel">
+
+    <div class="ai-header">
+
+        <i class="fa-solid fa-robot"></i>
+
+        <h5>
+
+            Assistente IA
+
+        </h5>
+
+    </div>
+
+    <div class="ai-tools">
+
+        <button id="summarizeChat">
+
+            <i class="fa-solid fa-file-lines"></i>
+
+            Resumir
+
+        </button>
+
+        <button id="translateChat">
+
+            <i class="fa-solid fa-language"></i>
+
+            Traduzir
+
+        </button>
+
+        <button id="smartReply">
+
+            <i class="fa-solid fa-reply"></i>
+
+            Respostas
+
+        </button>
+
+        <button id="emojiSuggestion">
+
+            <i class="fa-solid fa-face-smile"></i>
+
+            Emojis
+
+        </button>
+
+        <button id="spellCheck">
+
+            <i class="fa-solid fa-spell-check"></i>
+
+            Corrigir
+
+        </button>
+
+        <button id="extractTasks">
+
+            <i class="fa-solid fa-list-check"></i>
+
+            Tarefas
+
+        </button>
+
+    </div>
+
+    <div id="aiResult"
+
+         class="ai-result">
+
+    </div>
+
+</div>
+
+        <!-- ==========================================================
+ETAPA 68
+Otimização de Desempenho
+Cache Inteligente
+Lazy Loading
+Virtualização
+========================================================== -->
+
+<div id="performancePanel"
+
+     class="performance-panel">
+
+    <div class="performance-header">
+
+        <h5>
+
+            Desempenho
+
+        </h5>
+
+        <span id="performanceStatus">
+
+            Excelente
+
+        </span>
+
+    </div>
+
+    <div class="performance-grid">
+
+        <div class="performance-card">
+
+            <i class="fa-solid fa-memory"></i>
+
+            <span id="memoryUsage">
+
+                0 MB
+
+            </span>
+
+            <small>
+
+                Memória
+
+            </small>
+
+        </div>
+
+        <div class="performance-card">
+
+            <i class="fa-solid fa-gauge-high"></i>
+
+            <span id="fpsCounter">
+
+                60 FPS
+
+            </span>
+
+            <small>
+
+                Renderização
+
+            </small>
+
+        </div>
+
+        <div class="performance-card">
+
+            <i class="fa-solid fa-database"></i>
+
+            <span id="cacheSize">
+
+                0 MB
+
+            </span>
+
+            <small>
+
+                Cache
+
+            </small>
+
+        </div>
+
+    </div>
+
+</div>
+        
+        <!-- ==========================================================
+ETAPA 69
+Estados Inteligentes (Super Stories)
+Fotos
+Vídeos
+Áudio
+Música
+Sondagens
+IA
+========================================================== -->
+
+<div id="statusContainer" class="status-container">
+
+    <div class="status-header">
+
+        <h4>
+
+            Estados Inteligentes
+
+        </h4>
+
+        <button id="newStatus">
+
+            <i class="fa-solid fa-plus"></i>
+
+        </button>
+
+    </div>
+
+    <div id="statusList">
+
+    </div>
+
+</div>
+
+<div id="statusViewer"
+
+     class="status-viewer">
+
+    <div class="status-progress">
+
+        <div id="statusBar"></div>
+
+    </div>
+
+    <div id="statusContent">
+
+    </div>
+
+    <div class="status-actions">
+
+        <button id="likeStatus">
+
+            <i class="fa-solid fa-heart"></i>
+
+        </button>
+
+        <button id="reactStatus">
+
+            <i class="fa-solid fa-face-smile"></i>
+
+        </button>
+
+        <button id="pollStatus">
+
+            <i class="fa-solid fa-square-poll-vertical"></i>
+
+        </button>
+
+        <button id="shareStatus">
+
+            <i class="fa-solid fa-share"></i>
+
+        </button>
+
+        <button id="saveStatus">
+
+            <i class="fa-solid fa-bookmark"></i>
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- ==========================================================
+ETAPA 70
+Feed Inteligente com IA
+Algoritmo Personalizável
+Conteúdo Relevante
+========================================================== -->
+
+<div id="smartFeed" class="smart-feed">
+
+    <div class="feed-header">
+
+        <h4>
+
+            Feed Inteligente
+
+        </h4>
+
+        <button id="feedSettings">
+
+            <i class="fa-solid fa-sliders"></i>
+
+        </button>
+
+    </div>
+
+    <div class="feed-filters">
+
+        <button data-filter="todos">Todos</button>
+        <button data-filter="familia">Família</button>
+        <button data-filter="amigos">Amigos</button>
+        <button data-filter="trabalho">Trabalho</button>
+        <button data-filter="ia">IA</button>
+
+    </div>
+
+    <div id="feedTimeline">
+
+    </div>
+
+</div>
+
+         <!-- ==========================================================
+ETAPA 71
+AI Studio
+Editor Inteligente
+Imagem • Vídeo • Áudio • Avatar
+========================================================== -->
+
+<div id="aiStudio" class="ai-studio">
+
+    <div class="studio-header">
+
+        <h4>
+
+            AI Studio
+
+        </h4>
+
+    </div>
+
+    <div class="studio-grid">
+
+        <button id="generateImage">
+
+            <i class="fa-solid fa-image"></i>
+
+            Gerar Imagem
+
+        </button>
+
+        <button id="enhancePhoto">
+
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+            Melhorar Foto
+
+        </button>
+
+        <button id="removeBackground">
+
+            <i class="fa-solid fa-scissors"></i>
+
+            Remover Fundo
+
+        </button>
+
+        <button id="generateVideo">
+
+            <i class="fa-solid fa-film"></i>
+
+            Criar Vídeo
+
+        </button>
+
+        <button id="cloneVoice">
+
+            <i class="fa-solid fa-microphone-lines"></i>
+
+            Clonar Voz
+
+        </button>
+
+        <button id="createAvatar">
+
+            <i class="fa-solid fa-user-astronaut"></i>
+
+            Avatar 3D
+
+        </button>
+
+    </div>
+
+    <div id="studioPreview">
+
+    </div>
+
+</div>
+
+        <!-- ==========================================================
+ETAPA 72
+SocialVerse
+Espaços 3D
+Realidade Aumentada
+Eventos Virtuais
+========================================================== -->
+
+<div id="socialVerse"
+     class="socialverse">
+
+    <div class="verse-header">
+
+        <h4>
+
+            SocialVerse
+
+        </h4>
+
+        <span class="beta">
+
+            BETA
+
+        </span>
+
+    </div>
+
+    <div class="verse-grid">
+
+        <button id="openRoom">
+
+            <i class="fa-solid fa-cube"></i>
+
+            Sala 3D
+
+        </button>
+
+        <button id="openAR">
+
+            <i class="fa-solid fa-vr-cardboard"></i>
+
+            Realidade Aumentada
+
+        </button>
+
+        <button id="liveEvent">
+
+            <i class="fa-solid fa-tower-broadcast"></i>
+
+            Evento Ao Vivo
+
+        </button>
+
+        <button id="gamesHub">
+
+            <i class="fa-solid fa-gamepad"></i>
+
+            Jogos
+
+        </button>
+
+        <button id="virtualStore">
+
+            <i class="fa-solid fa-store"></i>
+
+            Loja Virtual
+
+        </button>
+
+        <button id="inviteFriends">
+
+            <i class="fa-solid fa-user-group"></i>
+
+            Convidar
+
+        </button>
+
+    </div>
+
+    <div id="versePreview">
+
+    </div>
+
+</div>
+
+        <!-- ==========================================================
+ETAPA 73
+Mini Apps Platform
+Centro de Aplicações
+SDK
+Loja de Extensões
+========================================================== -->
+
+<div id="miniAppsHub" class="miniapps-hub">
+
+    <div class="hub-header">
+
+        <h4>
+
+            Mini Apps
+
+        </h4>
+
+        <button id="developerMode">
+
+            <i class="fa-solid fa-code"></i>
+
+            Programador
+
+        </button>
+
+    </div>
+
+    <div class="hub-search">
+
+        <input
+               id="appSearch"
+               type="search"
+               placeholder="Pesquisar Mini Apps...">
+
+    </div>
+
+    <div id="appsGrid">
+
+    </div>
+
+</div>
+
+<!-- Janela da Mini App -->
+
+<div id="miniAppWindow"
+
+     class="miniapp-window">
+
+</div>
+
+        <!-- ==========================================================
+ETAPA 74
+Carteira Digital
+Pagamentos
+Transferências
+Subscrições
+========================================================== -->
+
+<div id="walletPanel" class="wallet-panel">
+
+    <div class="wallet-header">
+
+        <h4>
+
+            Carteira Digital
+
+        </h4>
+
+        <span id="walletBalance">
+
+            € 0,00
+
+        </span>
+
+    </div>
+
+    <div class="wallet-actions">
+
+        <button id="sendMoney">
+
+            <i class="fa-solid fa-paper-plane"></i>
+
+            Enviar
+
+        </button>
+
+        <button id="receiveMoney">
+
+            <i class="fa-solid fa-download"></i>
+
+            Receber
+
+        </button>
+
+        <button id="scanQRCode">
+
+            <i class="fa-solid fa-qrcode"></i>
+
+            QR Pay
+
+        </button>
+
+        <button id="walletHistory">
+
+            <i class="fa-solid fa-clock-rotate-left"></i>
+
+            Histórico
+
+        </button>
+
+    </div>
+
+    <div id="transactionsList">
+
+    </div>
+
+</div>
+
+        <!-- ==========================================================
+ETAPA 75
+Marketplace Inteligente
+Lojas • Produtos • Serviços
+========================================================== -->
+
+<div id="marketplace" class="marketplace">
+
+    <div class="market-header">
+
+        <h4>
+
+            Marketplace
+
+        </h4>
+
+        <button id="newProduct">
+
+            <i class="fa-solid fa-plus"></i>
+
+            Publicar
+
+        </button>
+
+    </div>
+
+    <div class="market-search">
+
+        <input id="searchProduct"
+               type="search"
+               placeholder="Pesquisar produtos ou serviços...">
+
+    </div>
+
+    <div class="market-filters">
+
+        <button>Tudo</button>
+        <button>Produtos</button>
+        <button>Serviços</button>
+        <button>Lojas</button>
+
+    </div>
+
+    <div id="marketGrid">
+
+    </div>
+
+</div>
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script>
+            /* ==========================================================
+ETAPA 66
+========================================================== */
+
+function obterConversas(){
+
+    return JSON.parse(
+
+    localStorage.getItem(
+
+    "conversas") || "[]"
+
+    );
+
+}
+
+/* Backup */
+
+createBackup.onclick=function(){
+
+    const dados={
+
+        data:new Date(),
+
+        versao:"1.0",
+
+        conversas:obterConversas()
+
+    };
+
+    const blob=
+
+    new Blob(
+
+    [
+
+    JSON.stringify(
+
+    dados,
+
+    null,
+
+    2)
+
+    ],
+
+    {
+
+    type:"application/json"
+
+    });
+
+    const url=
+
+    URL.createObjectURL(
+
+    blob);
+
+    const a=
+
+    document.createElement("a");
+
+    a.href=url;
+
+    a.download=
+
+    "backup_whatsapp.json";
+
+    a.click();
+
+    lastBackup.innerHTML=
+
+    new Date()
+
+    .toLocaleString();
+
+    backupStatus.innerHTML=
+
+    "Backup criado.";
+
+    backupStatus.className=
+
+    "sync-success";
+
+};
+
+/* Restaurar */
+
+restoreBackup.onclick=function(){
+
+    backupFile.click();
+
+};
+
+backupFile.onchange=function(){
+
+    const ficheiro=
+
+    this.files[0];
+
+    if(!ficheiro)
+
+    return;
+
+    const leitor=
+
+    new FileReader();
+
+    leitor.onload=function(){
+
+        const dados=
+
+        JSON.parse(
+
+        leitor.result);
+
+        localStorage.setItem(
+
+        "conversas",
+
+        JSON.stringify(
+
+        dados.conversas)
+
+        );
+
+        backupStatus.innerHTML=
+
+        "Restauro concluído.";
+
+        backupStatus.className=
+
+        "sync-success";
+
+    };
+
+    leitor.readAsText(
+
+    ficheiro);
+
+};
+
+/* Exportar TXT */
+
+exportTXT.onclick=function(){
+
+    const texto=
+
+    JSON.stringify(
+
+    obterConversas(),
+
+    null,
+
+    2);
+
+    descarregar(
+
+    texto,
+
+    "conversas.txt",
+
+    "text/plain");
+
+};
+
+/* Exportar JSON */
+
+exportJSON.onclick=function(){
+
+    descarregar(
+
+    JSON.stringify(
+
+    obterConversas(),
+
+    null,
+
+    2),
+
+    "conversas.json",
+
+    "application/json");
+
+};
+
+/* Exportar PDF */
+
+exportPDF.onclick=function(){
+
+    alert(
+
+    "Estrutura preparada para integração com jsPDF.");
+
+};
+
+/* Download */
+
+function descarregar(
+
+conteudo,
+
+nome,
+
+tipo){
+
+    const blob=
+
+    new Blob(
+
+    [conteudo],
+
+    {type:tipo}
+
+    );
+
+    const url=
+
+    URL.createObjectURL(blob);
+
+    const a=
+
+    document.createElement("a");
+
+    a.href=url;
+
+    a.download=nome;
+
+    a.click();
+
+}
+
+            /* ==========================================================
+ETAPA 67
+========================================================== */
+
+function obterTextoConversa(){
+
+    return document.body.innerText;
+
+}
+
+/* Resumo */
+
+summarizeChat.onclick=function(){
+
+    let texto=
+
+    obterTextoConversa();
+
+    aiResult.innerHTML=
+
+    texto.substring(0,300)+
+
+    "...";
+
+};
+
+/* Tradução */
+
+translateChat.onclick=function(){
+
+    aiResult.innerHTML=
+
+    "Preparado para integração com APIs de tradução.";
+
+};
+
+/* Respostas */
+
+smartReply.onclick=function(){
+
+    aiResult.innerHTML=
+
+    `
+
+    • Obrigado!
+
+    • Está combinado.
+
+    • Falo contigo mais tarde.
+
+    `;
+
+};
+
+/* Emojis */
+
+emojiSuggestion.onclick=function(){
+
+    aiResult.innerHTML=
+
+    "😀 👍 ❤️ 🎉 🙌";
+
+};
+
+/* Correção */
+
+spellCheck.onclick=function(){
+
+    aiResult.innerHTML=
+
+    "Texto analisado. Estrutura preparada para corretor ortográfico.";
+
+};
+
+/* Extração */
+
+extractTasks.onclick=function(){
+
+    aiResult.innerHTML=
+
+    `
+
+    Tarefas encontradas:
+
+    • Reunião amanhã
+
+    • Ligar ao cliente
+
+    • Enviar relatório
+
+    `;
+
+};
+
+/* Pesquisa */
+
+function pesquisaSemantica(
+
+texto){
+
+    return texto;
+
+}
+
+            /* ==========================================================
+ETAPA 68
+========================================================== */
+
+/* Cache */
+
+const cacheMidia=
+
+new Map();
+
+/* Cache */
+
+function adicionarCache(
+
+id,
+
+dados){
+
+cacheMidia.set(
+
+id,
+
+dados);
+
+atualizarCache();
+
+}
+
+/* Atualizar */
+
+function atualizarCache(){
+
+cacheSize.innerHTML=
+
+cacheMidia.size+
+
+" itens";
+
+}
+
+/* Lazy Loading */
+
+const observer=
+
+new IntersectionObserver(
+
+entradas=>{
+
+entradas.forEach(item=>{
+
+if(
+
+item.isIntersecting){
+
+const img=
+
+item.target;
+
+img.src=
+
+img.dataset.src;
+
+observer.unobserve(img);
+
+}
+
+});
+
+});
+
+document
+
+.querySelectorAll(
+
+"img[data-src]")
+
+.forEach(img=>{
+
+observer.observe(img);
+
+});
+
+/* Virtualização */
+
+function renderizarMensagens(
+
+inicio,
+
+fim){
+
+const lista=
+
+mensagens.children;
+
+for(
+
+let i=0;
+
+i<lista.length;
+
+i++){
+
+lista[i].style.display=
+
+(i>=inicio&&i<=fim)
+
+?"block"
+
+:"none";
+
+}
+
+}
+
+/* FPS */
+
+let frames=0;
+
+let ultimo=
+
+performance.now();
+
+function medirFPS(){
+
+frames++;
+
+const agora=
+
+performance.now();
+
+if(
+
+agora-
+
+ultimo>=1000){
+
+fpsCounter.innerHTML=
+
+frames+
+
+" FPS";
+
+frames=0;
+
+ultimo=agora;
+
+}
+
+requestAnimationFrame(
+
+medirFPS);
+
+}
+
+medirFPS();
+
+/* Memória */
+
+if(
+
+performance.memory){
+
+setInterval(()=>{
+
+memoryUsage.innerHTML=
+
+Math.round(
+
+performance.memory
+
+.usedJSHeapSize/
+
+1024/
+
+1024
+
+)+" MB";
+
+},2000);
+
+}
+
+/* Pré-carregar */
+
+function preloadImagem(
+
+url){
+
+const img=
+
+new Image();
+
+img.src=url;
+
+}
+
+            /* ==========================================================
+ETAPA 69
+========================================================== */
+
+const estados=[];
+
+/* Criar */
+
+function criarEstado(
+
+tipo,
+
+conteudo){
+
+estados.push({
+
+id:crypto.randomUUID(),
+
+tipo,
+
+conteudo,
+
+gostos:0,
+
+visualizacoes:0,
+
+guardados:0,
+
+comentarios:[],
+
+criado:new Date()
+
+});
+
+atualizarEstados();
+
+}
+
+/* Atualizar */
+
+function atualizarEstados(){
+
+statusList.innerHTML="";
+
+estados.forEach(item=>{
+
+statusList.innerHTML+=`
+
+<div class="status-card"
+
+onclick="abrirEstado('${item.id}')">
+
+<i class="fa-solid fa-circle-play"></i>
+
+<div>
+
+<strong>${item.tipo}</strong>
+
+<br>
+
+<small>
+
+${item.visualizacoes} visualizações
+
+</small>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+/* Abrir */
+
+function abrirEstado(id){
+
+const estado=
+
+estados.find(
+
+e=>e.id===id);
+
+statusViewer.style.display="block";
+
+statusContent.innerHTML=
+
+estado.conteudo;
+
+estado.visualizacoes++;
+
+animarBarra();
+
+}
+
+/* Barra */
+
+function animarBarra(){
+
+statusBar.style.width="0";
+
+setTimeout(()=>{
+
+statusBar.style.transition="5s";
+
+statusBar.style.width="100%";
+
+},100);
+
+}
+
+/* Gosto */
+
+likeStatus.onclick=function(){
+
+alert("Gosto registado.");
+
+};
+
+/* Reação */
+
+reactStatus.onclick=function(){
+
+alert("Abrir painel de emojis.");
+
+};
+
+/* Sondagem */
+
+pollStatus.onclick=function(){
+
+alert("Criar ou responder à sondagem.");
+
+};
+
+/* Partilhar */
+
+shareStatus.onclick=function(){
+
+alert("Partilhar estado.");
+
+};
+
+/* Guardar */
+
+saveStatus.onclick=function(){
+
+alert("Estado guardado.");
+
+};
+
+/* Exemplo */
+
+criarEstado(
+
+"Foto",
+
+"<img src='foto.jpg' style='width:100%'>");
+
+            /* ==========================================================
+ETAPA 70
+========================================================== */
+
+const feed=[];
+
+function adicionarPublicacao(
+
+autor,
+
+texto,
+
+categoria){
+
+feed.push({
+
+id:crypto.randomUUID(),
+
+autor,
+
+texto,
+
+categoria,
+
+gostos:0,
+
+comentarios:0,
+
+partilhas:0,
+
+pontuacao:0,
+
+data:new Date()
+
+});
+
+ordenarFeed();
+
+}
+
+/* Algoritmo */
+
+function calcularPontuacao(item){
+
+let score=0;
+
+score+=item.gostos*3;
+
+score+=item.comentarios*5;
+
+score+=item.partilhas*8;
+
+return score;
+
+}
+
+/* Ordenação */
+
+function ordenarFeed(){
+
+feed.forEach(item=>{
+
+item.pontuacao=
+
+calcularPontuacao(item);
+
+});
+
+feed.sort(
+
+(a,b)=>
+
+b.pontuacao-
+
+a.pontuacao
+
+);
+
+mostrarFeed();
+
+}
+
+/* Mostrar */
+
+function mostrarFeed(){
+
+feedTimeline.innerHTML="";
+
+feed.forEach(item=>{
+
+feedTimeline.innerHTML+=`
+
+<div class="feed-card">
+
+<h6>${item.autor}</h6>
+
+<p>${item.texto}</p>
+
+<div class="feed-score">
+
+Relevância:
+
+${item.pontuacao}
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+/* Exemplo */
+
+adicionarPublicacao(
+
+"Ana",
+
+"Bom dia!",
+
+"amigos");
+
+adicionarPublicacao(
+
+"Empresa",
+
+"Nova promoção",
+
+"trabalho");
+
+            /* ==========================================================
+ETAPA 71
+========================================================== */
+
+const aiStudio={
+
+imagem:null,
+
+video:null,
+
+audio:null,
+
+avatar:null
+
+};
+
+generateImage.onclick=function(){
+
+studioPreview.innerHTML=
+
+"<h4>Imagem criada por IA.</h4>";
+
+};
+
+enhancePhoto.onclick=function(){
+
+studioPreview.innerHTML=
+
+"<h4>Fotografia otimizada.</h4>";
+
+};
+
+removeBackground.onclick=function(){
+
+studioPreview.innerHTML=
+
+"<h4>Fundo removido.</h4>";
+
+};
+
+generateVideo.onclick=function(){
+
+studioPreview.innerHTML=
+
+"<h4>Vídeo gerado por IA.</h4>";
+
+};
+
+cloneVoice.onclick=function(){
+
+studioPreview.innerHTML=
+
+"<h4>Funcionalidade preparada para clonagem de voz mediante consentimento.</h4>";
+
+};
+
+createAvatar.onclick=function(){
+
+studioPreview.innerHTML=
+
+"<h4>Avatar 3D criado.</h4>";
+
+};
+
+/* Histórico */
+
+const historicoIA=[];
+
+function guardarProjeto(
+
+tipo,
+
+dados){
+
+historicoIA.push({
+
+id:crypto.randomUUID(),
+
+tipo,
+
+dados,
+
+criado:new Date()
+
+});
+
+}
+
+            /* ==========================================================
+ETAPA 72
+========================================================== */
+
+const universo={
+
+salas:[],
+
+eventos:[],
+
+lojas:[]
+
+};
+
+function abrirSala3D(){
+
+versePreview.innerHTML=`
+
+<h3>Sala Virtual</h3>
+
+<p>
+
+Estrutura preparada para
+Three.js ou Babylon.js.
+
+</p>
+
+`;
+
+}
+
+function abrirAR(){
+
+versePreview.innerHTML=`
+
+<h3>Realidade Aumentada</h3>
+
+<p>
+
+Preparado para WebXR.
+
+</p>
+
+`;
+
+}
+
+function criarEvento(){
+
+versePreview.innerHTML=`
+
+<h3>Evento Virtual</h3>
+
+<p>
+
+Transmissão ao vivo e
+interação em tempo real.
+
+</p>
+
+`;
+
+}
+
+function abrirJogos(){
+
+versePreview.innerHTML=`
+
+<h3>Centro de Jogos</h3>
+
+<p>
+
+Mini jogos sociais.
+
+</p>
+
+`;
+
+}
+
+function abrirLoja(){
+
+versePreview.innerHTML=`
+
+<h3>Loja Virtual</h3>
+
+<p>
+
+Produtos digitais e físicos.
+
+</p>
+
+`;
+
+}
+
+openRoom.onclick=abrirSala3D;
+
+openAR.onclick=abrirAR;
+
+liveEvent.onclick=criarEvento;
+
+gamesHub.onclick=abrirJogos;
+
+virtualStore.onclick=abrirLoja;
+
+inviteFriends.onclick=function(){
+
+alert(
+
+"Convites enviados."
+
+);
+
+};
+
+            /* ==========================================================
+ETAPA 73
+========================================================== */
+
+const miniApps=[];
+
+/* Registar */
+
+function registarMiniApp(
+
+config){
+
+miniApps.push(config);
+
+mostrarMiniApps();
+
+}
+
+/* Mostrar */
+
+function mostrarMiniApps(){
+
+appsGrid.innerHTML="";
+
+miniApps.forEach(app=>{
+
+appsGrid.innerHTML+=`
+
+<div class="app-card"
+
+onclick="abrirMiniApp('${app.id}')">
+
+<h5>${app.nome}</h5>
+
+<p>${app.descricao}</p>
+
+<small>
+
+${app.categoria}
+
+</small>
+
+</div>
+
+`;
+
+});
+
+}
+
+/* Abrir */
+
+function abrirMiniApp(id){
+
+const app=
+
+miniApps.find(
+
+x=>x.id===id);
+
+miniAppWindow.style.display=
+
+"block";
+
+miniAppWindow.innerHTML=
+
+app.html;
+
+}
+
+/* Fechar */
+
+function fecharMiniApp(){
+
+miniAppWindow.style.display=
+
+"none";
+
+}
+
+/* Pesquisa */
+
+appSearch.oninput=function(){
+
+const txt=
+
+this.value.toLowerCase();
+
+document
+
+.querySelectorAll(
+
+".app-card")
+
+.forEach(card=>{
+
+card.style.display=
+
+card.innerText
+
+.toLowerCase()
+
+.includes(txt)
+
+?"block"
+
+:"none";
+
+});
+
+};
+
+/* Exemplos */
+
+registarMiniApp({
+
+id:"notas",
+
+nome:"Notas",
+
+descricao:
+
+"Notas rápidas",
+
+categoria:"Produtividade",
+
+html:"<h2>Notas</h2>"
+
+});
+
+registarMiniApp({
+
+id:"calculadora",
+
+nome:"Calculadora",
+
+descricao:
+
+"Cálculos rápidos",
+
+categoria:"Utilitário",
+
+html:"<h2>Calculadora</h2>"
+
+});
+
+            
+            /* ==========================================================
+ETAPA 74
+========================================================== */
+
+let saldo=0;
+
+const transacoes=[];
+
+function atualizarSaldo(){
+
+walletBalance.innerHTML=
+
+"€ "+saldo.toFixed(2);
+
+}
+
+function adicionarTransacao(
+
+tipo,
+
+valor,
+
+destino){
+
+transacoes.unshift({
+
+id:crypto.randomUUID(),
+
+tipo,
+
+valor,
+
+destino,
+
+data:new Date()
+
+});
+
+renderizarHistorico();
+
+}
+
+function renderizarHistorico(){
+
+transactionsList.innerHTML="";
+
+transacoes.forEach(t=>{
+
+transactionsList.innerHTML+=`
+
+<div class="transaction">
+
+<strong>${t.tipo}</strong>
+
+<br>
+
+${t.destino}
+
+<br>
+
+€ ${t.valor}
+
+<br>
+
+<small>
+
+${t.data.toLocaleString()}
+
+</small>
+
+</div>
+
+`;
+
+});
+
+}
+
+sendMoney.onclick=function(){
+
+alert(
+
+"Preparado para integração com gateway de pagamentos."
+
+);
+
+};
+
+receiveMoney.onclick=function(){
+
+alert(
+
+"Gerar QR Code para receber pagamento."
+
+);
+
+};
+
+scanQRCode.onclick=function(){
+
+alert(
+
+"Abrir leitor de QR Code."
+
+);
+
+};
+
+walletHistory.onclick=
+
+renderizarHistorico;
+
+atualizarSaldo();
+
+            /* ==========================================================
+ETAPA 75
+========================================================== */
+
+const marketplace=[];
+
+function publicarItem(
+
+dados){
+
+marketplace.push({
+
+id:crypto.randomUUID(),
+
+...dados,
+
+avaliacao:5,
+
+vendas:0,
+
+verificado:false
+
+});
+
+renderMarketplace();
+
+}
+
+function renderMarketplace(){
+
+marketGrid.innerHTML="";
+
+marketplace.forEach(item=>{
+
+marketGrid.innerHTML+=`
+
+<div class="market-card">
+
+<img src="${item.imagem}">
+
+<div class="market-info">
+
+<h5>${item.nome}</h5>
+
+<p>${item.descricao}</p>
+
+<strong>
+
+€ ${item.preco}
+
+</strong>
+
+<br><br>
+
+<button
+
+onclick="comprar('${item.id}')">
+
+Comprar
+
+</button>
+
+<button
+
+onclick="abrirChatLoja('${item.id}')">
+
+Chat
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+function comprar(id){
+
+alert(
+
+"Iniciar pagamento seguro."
+
+);
+
+}
+
+function abrirChatLoja(id){
+
+alert(
+
+"Abrir conversa com vendedor."
+
+);
+
+}
+
+searchProduct.oninput=function(){
+
+const txt=
+
+this.value.toLowerCase();
+
+document
+
+.querySelectorAll(
+
+".market-card")
+
+.forEach(card=>{
+
+card.style.display=
+
+card.innerText
+
+.toLowerCase()
+
+.includes(txt)
+
+?"block"
+
+:"none";
+
+});
+
+};
+
+/* Exemplo */
+
+publicarItem({
+
+nome:"Smartphone",
+
+descricao:"Novo",
+
+preco:250,
+
+imagem:"produto.jpg"
+
+});
+
+        </script>
+    </body>
+</html>

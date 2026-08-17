@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>VITALINKA | Declaração de Alta</title>
+    <!-- Bootstrap 5 + Icons + Google Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        body {
+            background-image: url('images/declaration.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+
+        .container-fluid {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== GLASSMORPHISM ===== */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .glass-card .card-title {
+            color: #fff;
+            font-weight: 700;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+
+        .glass-card .card-title i {
+            color: #4c9f70;
+        }
+
+        /* ===== FORMULÁRIO ===== */
+        .form-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control,
+        .form-select {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: #fff;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: rgba(255, 255, 255, 0.10);
+            border-color: rgba(76, 159, 112, 0.4);
+            box-shadow: 0 0 0 4px rgba(76, 159, 112, 0.06);
+            color: #fff;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .form-control[readonly] {
+            opacity: 0.8;
+            cursor: default;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .form-control-sm-custom {
+            font-size: 0.85rem;
+            padding: 8px 12px;
+        }
+
+        .form-control.protected {
+            border-color: rgba(76, 159, 112, 0.2);
+            background: rgba(76, 159, 112, 0.04);
+        }
+
+        .form-control.protected:focus {
+            border-color: rgba(76, 159, 112, 0.4);
+        }
+
+        /* ===== BOTÕES ===== */
+        .btn-action {
+            border-radius: 30px;
+            padding: 8px 22px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-action.btn-success {
+            background: linear-gradient(135deg, #2b7a4b, #4c9f70);
+            color: #fff;
+        }
+
+        .btn-action.btn-success:hover {
+            box-shadow: 0 8px 30px rgba(76, 159, 112, 0.3);
+        }
+
+        .btn-action.btn-outline-success {
+            border: 1px solid #4c9f70;
+            color: #4c9f70;
+            background: transparent;
+        }
+
+        .btn-action.btn-outline-success:hover {
+            background: rgba(76, 159, 112, 0.15);
+            color: #fff;
+        }
+
+        .btn-action.btn-outline-secondary {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            background: transparent;
+        }
+
+        .btn-action.btn-outline-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .btn-action.btn-warning {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.2);
+        }
+
+        .btn-action.btn-warning:hover {
+            background: rgba(255, 193, 7, 0.3);
+        }
+
+        .btn-action.btn-info {
+            background: rgba(13, 202, 240, 0.15);
+            color: #6ee7ff;
+            border: 1px solid rgba(13, 202, 240, 0.15);
+        }
+
+        .btn-action.btn-info:hover {
+            background: rgba(13, 202, 240, 0.25);
+        }
+
+        /* ===== HEADER ===== */
+        .page-title {
+            color: #fff;
+            font-weight: 700;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-title .badge {
+            background: rgba(43, 122, 75, 0.5);
+            backdrop-filter: blur(5px);
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        #currentDateTime {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+        }
+
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: rotate(30deg);
+        }
+
+        /* ===== PREVIEW ===== */
+        .preview-container {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .preview-document {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a2e;
+            padding: 30px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .preview-document .header {
+            text-align: center;
+            border-bottom: 2px solid #1a1a2e;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .preview-document .header .brasao {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .preview-document .header .brasao img {
+            max-height: 70px;
+            width: auto;
+        }
+
+        .preview-document .header .institution {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            letter-spacing: 1px;
+        }
+
+        .preview-document .header .subtitle {
+            font-size: 0.8rem;
+            color: #6c757d;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .preview-document .header .declaration-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 8px;
+            color: #2b7a4b;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .preview-document .body {
+            text-align: justify;
+            font-size: 0.95rem;
+            padding: 0 10px;
+        }
+
+        .preview-document .body .highlight {
+            color: #2b7a4b;
+            font-weight: 600;
+        }
+
+        .preview-document .body .declaration-text {
+            text-indent: 40px;
+            margin-bottom: 16px;
+        }
+
+        .preview-document .body .signature-date {
+            margin-top: 16px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .preview-document .signatures {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #dee2e6;
+            padding-top: 24px;
+        }
+
+        .preview-document .signatures .signature-box {
+            text-align: center;
+            flex: 1;
+        }
+
+        .preview-document .signatures .signature-box .line {
+            width: 80%;
+            border-bottom: 1px solid #1a1a2e;
+            margin: 20px auto 6px;
+        }
+
+        .preview-document .signatures .signature-box .label {
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+
+        .preview-document .footer {
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            color: #6c757d;
+        }
+
+        .preview-document .footer .qr-code {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .preview-document .footer .qr-code .qr-small {
+            width: 50px;
+            height: 50px;
+            background: #e9ecef;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 1.2rem;
+            }
+            .header-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .glass-card {
+                padding: 16px;
+            }
+            .preview-document {
+                padding: 16px;
+                font-size: 0.8rem;
+            }
+            .preview-document .signatures {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .preview-document .footer {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+            .btn-action {
+                font-size: 0.75rem;
+                padding: 6px 16px;
+            }
+            .preview-document .header .brasao img {
+                max-height: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1rem;
+            }
+            .glass-card {
+                padding: 12px;
+            }
+            .form-control,
+            .form-select {
+                font-size: 0.8rem;
+                padding: 8px 10px;
+            }
+            .preview-document .header .brasao img {
+                max-height: 40px;
+            }
+        }
+
+        /* ===== ANIMAÇÃO ===== */
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeSlideUp 0.5s ease forwards;
+        }
+
+        .logo-point {
+            width: 120px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        /* ===== TOAST ===== */
+        .toast-custom {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1090;
+            min-width: 280px;
+            border-radius: 16px;
+            background: rgba(10, 15, 13, 0.92);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 5px solid #4c9f70;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            padding: 1rem 1.25rem;
+            color: #fff;
+        }
+
+        .toast-custom .btn-close {
+            filter: invert(1);
+        }
+
+        .toast-custom .toast-body {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        /* ===== LIGHT THEME OVERRIDES ===== */
+        body.light-theme::before {
+            background: rgba(255, 255, 255, 0.75);
+        }
+        body.light-theme .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        body.light-theme .glass-card .card-title {
+            color: #1a1a2e;
+            border-bottom-color: rgba(0,0,0,0.08);
+        }
+        body.light-theme .form-label {
+            color: rgba(0,0,0,0.5);
+        }
+        body.light-theme .form-control,
+        body.light-theme .form-select {
+            background: rgba(255,255,255,0.4);
+            border-color: rgba(0,0,0,0.08);
+            color: #1a1a2e;
+        }
+        body.light-theme .form-control:focus,
+        body.light-theme .form-select:focus {
+            background: rgba(255,255,255,0.6);
+            border-color: rgba(76, 159, 112, 0.4);
+            color: #1a1a2e;
+        }
+        body.light-theme .form-control::placeholder {
+            color: rgba(0,0,0,0.3);
+        }
+        body.light-theme .form-control[readonly] {
+            background: rgba(255,255,255,0.2);
+        }
+        body.light-theme .form-control.protected {
+            background: rgba(76,159,112,0.08);
+            border-color: rgba(76,159,112,0.2);
+        }
+        body.light-theme .page-title {
+            color: #1a1a2e;
+            text-shadow: none;
+        }
+        body.light-theme #currentDateTime {
+            background: rgba(255,255,255,0.2);
+            color: #1a1a2e;
+            border-color: rgba(0,0,0,0.08);
+        }
+        body.light-theme .theme-toggle-btn {
+            background: rgba(0,0,0,0.05);
+            color: #1a1a2e;
+            border-color: rgba(0,0,0,0.1);
+        }
+        body.light-theme .theme-toggle-btn:hover {
+            background: rgba(0,0,0,0.1);
+        }
+        body.light-theme .btn-action.btn-outline-secondary {
+            border-color: rgba(0,0,0,0.1);
+            color: rgba(0,0,0,0.5);
+        }
+        body.light-theme .btn-action.btn-outline-secondary:hover {
+            background: rgba(0,0,0,0.05);
+            color: #1a1a2e;
+        }
+        body.light-theme .preview-container {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(0,0,0,0.05);
+        }
+        body.light-theme .preview-document {
+            background: #ffffff;
+            color: #1a1a2e;
+        }
+        body.light-theme .preview-document .header .institution {
+            color: #1a1a2e;
+        }
+        body.light-theme .preview-document .header .declaration-title {
+            color: #2b7a4b;
+        }
+        body.light-theme .preview-document .body .highlight {
+            color: #2b7a4b;
+        }
+        body.light-theme .mt-3.d-flex {
+            background: rgba(0,0,0,0.04) !important;
+            border-color: rgba(0,0,0,0.05) !important;
+        }
+        body.light-theme .mt-3.d-flex span {
+            color: rgba(0,0,0,0.4) !important;
+        }
+        body.light-theme .mt-3.d-flex #statusNumber {
+            color: #2b7a4b !important;
+        }
+        body.light-theme footer p {
+            color: rgba(0,0,0,0.3) !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid py-4">
+
+        <!-- ===== HEADER ===== -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap header-actions">
+                    <h2 class="page-title">
+                        <a href="index.html">
+                            <img src="images/vitalinka-rbg.png" class="logo-point" alt="VITALINKA">
+                        </a>
+                        <span class="badge bg-success ms-2">DECLARAÇÃO DE ALTA</span>
+                    </h2>
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <button class="theme-toggle-btn" id="themeToggle" title="Alternar Tema">
+                            <i class="bi bi-moon-stars" id="themeIcon"></i>
+                        </button>
+                        <span class="badge" id="currentDateTime">
+                            <i class="bi bi-clock"></i> <span id="dateTimeDisplay">Carregando...</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CONTEÚDO PRINCIPAL ===== -->
+        <div class="row g-4">
+
+            <!-- ===== COLUNA ESQUERDA - FORMULÁRIO EDITÁVEL ===== -->
+            <div class="col-lg-5">
+                <div class="glass-card fade-in">
+                    <h5 class="card-title"><i class="bi bi-pencil-square"></i> Dados da Declaração</h5>
+
+                    <form id="altaForm" novalidate>
+
+                        <!-- Número da Declaração (automático) -->
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-hash"></i> Nº da Declaração</label>
+                            <input type="text" class="form-control" id="declarationNumber" value="HRM-DA-2026-000001" readonly>
+                        </div>
+
+                        <hr style="border-color:rgba(255,255,255,0.06); margin: 16px 0;">
+
+                        <!-- Dados do Paciente -->
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-person"></i> Nome do Paciente</label>
+                            <input type="text" class="form-control" id="patientName" value="António Manuel" placeholder="Nome do paciente">
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <label class="form-label"><i class="bi bi-folder"></i> Processo</label>
+                                <input type="text" class="form-control form-control-sm-custom" id="processNumber" value="HRM-PAC-000245" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"><i class="bi bi-calendar3"></i> Data da Alta</label>
+                                <input type="date" class="form-control form-control-sm-custom" id="altaDate" value="2026-08-07">
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-6">
+                                <label class="form-label"><i class="bi bi-clock"></i> Hora</label>
+                                <input type="time" class="form-control form-control-sm-custom" id="altaTime" value="10:45">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"><i class="bi bi-clipboard2"></i> Diagnóstico</label>
+                                <input type="text" class="form-control form-control-sm-custom" id="diagnosis" value="Pneumonia Bacteriana">
+                            </div>
+                        </div>
+
+                        <hr style="border-color:rgba(255,255,255,0.06); margin: 16px 0;">
+
+                        <!-- Dados Pessoais -->
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-person-badge"></i> Dados Pessoais</label>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label class="form-label" style="font-size:0.65rem;">Estado Civil</label>
+                                    <select class="form-select form-control-sm-custom" id="civilStatus">
+                                        <option value="Solteiro(a)">Solteiro(a)</option>
+                                        <option value="Casado(a)" selected>Casado(a)</option>
+                                        <option value="Divorciado(a)">Divorciado(a)</option>
+                                        <option value="Viúvo(a)">Viúvo(a)</option>
+                                        <option value="União de Facto">União de Facto</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" style="font-size:0.65rem;">Data de Nascimento</label>
+                                    <input type="date" class="form-control form-control-sm-custom" id="birthDate" value="1990-05-15">
+                                </div>
+                            </div>
+                            <div class="row g-2 mt-1">
+                                <div class="col-md-6">
+                                    <label class="form-label" style="font-size:0.65rem;">Província de Nascimento</label>
+                                    <input type="text" class="form-control form-control-sm-custom" id="birthProvince" value="Malanje">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" style="font-size:0.65rem;">BI / Passaporte</label>
+                                    <input type="text" class="form-control form-control-sm-custom" id="biNumber" value="000000000LA000">
+                                </div>
+                            </div>
+                            <div class="row g-2 mt-1">
+                                <div class="col-md-6">
+                                    <label class="form-label" style="font-size:0.65rem;">Nome do Pai</label>
+                                    <input type="text" class="form-control form-control-sm-custom" id="fatherName" value="José Manuel">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" style="font-size:0.65rem;">Nome da Mãe</label>
+                                    <input type="text" class="form-control form-control-sm-custom" id="motherName" value="Maria Manuel">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr style="border-color:rgba(255,255,255,0.06); margin: 16px 0;">
+
+                        <!-- Responsável -->
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-person-check"></i> Responsável pelo Paciente</label>
+                            <div class="row g-2">
+                                <div class="col-md-7">
+                                    <label class="form-label" style="font-size:0.65rem;">Nome</label>
+                                    <input type="text" class="form-control form-control-sm-custom" id="responsibleName" placeholder="Nome do responsável" value="Ana Manuel">
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label" style="font-size:0.65rem;">Parentesco</label>
+                                    <select class="form-select form-control-sm-custom" id="relationship">
+                                        <option value="Pai">Pai</option>
+                                        <option value="Mãe" selected>Mãe</option>
+                                        <option value="Cônjuge">Cônjuge</option>
+                                        <option value="Filho(a)">Filho(a)</option>
+                                        <option value="Irmão(ã)">Irmão(ã)</option>
+                                        <option value="Tio(a)">Tio(a)</option>
+                                        <option value="Avô(ó)">Avô(ó)</option>
+                                        <option value="Outro">Outro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr style="border-color:rgba(255,255,255,0.06); margin: 16px 0;">
+
+                        <!-- Data do Rodapé (agora com date picker) -->
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-calendar-event"></i> Data do Rodapé</label>
+                            <input type="date" class="form-control" id="footerDate" value="2026-08-07">
+                            <div style="font-size:0.65rem; color:rgba(255,255,255,0.3); margin-top:4px;">
+                                <i class="bi bi-info-circle"></i> Data que aparecerá no rodapé da declaração (seleccione uma data)
+                            </div>
+                        </div>
+
+                        <hr style="border-color:rgba(255,255,255,0.06); margin: 16px 0;">
+
+                        <!-- Médico Responsável -->
+                        <div class="mb-3">
+                            <label class="form-label"><i class="bi bi-person-fill-lock"></i> Médico Responsável</label>
+                            <input type="text" class="form-control protected" id="doctorName" value="Dr. João Manuel Silva">
+                            <div style="font-size:0.65rem; color:rgba(255,255,255,0.3); margin-top:4px;">
+                                <i class="bi bi-person-badge"></i> ID: HRM-MED-000458
+                            </div>
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            <button type="button" class="btn-action btn-success" id="emitirBtn">
+                                <i class="bi bi-check-circle"></i> Emitir Declaração
+                            </button>
+                            <button type="button" class="btn-action btn-info" id="imprimirBtn">
+                                <i class="bi bi-printer"></i> Imprimir
+                            </button>
+                            <button type="button" class="btn-action btn-warning" id="gerarPdfBtn">
+                                <i class="bi bi-file-pdf"></i> Gerar PDF
+                            </button>
+                            <button type="button" class="btn-action btn-outline-secondary" onclick="window.location.href='login.html'">
+                                <i class="bi bi-arrow-left"></i> Voltar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ===== COLUNA DIREITA - PRÉ-VISUALIZAÇÃO ===== -->
+            <div class="col-lg-7">
+                <div class="glass-card fade-in">
+                    <h5 class="card-title"><i class="bi bi-file-earmark-text"></i> Pré-visualização</h5>
+                    <div class="preview-container">
+                        <div class="preview-document" id="previewDocument">
+                            <!-- Cabeçalho com Brasão Centralizado -->
+                            <div class="header">
+                                <div class="brasao">
+                                    <img src="images/rep-bg.png" alt="Brasão da República de Angola">
+                                </div>
+                                <div class="institution">
+                                    REPÚBLICA DE ANGOLA
+                                </div>
+                                <div style="font-weight:600; font-size:1.1rem;">HOSPITAL REGIONAL DE MALANJE</div>
+                                <div class="subtitle">Unidade de Gestão de Pacientes</div>
+                                <div class="declaration-title">DECLARAÇÃO DE ALTA</div>
+                                <div style="font-size:0.85rem; color:#6c757d; margin-top:4px;">
+                                    Declaração n.º <strong id="previewNumber">HRM-DA-2026-000001</strong>
+                                </div>
+                            </div>
+
+                            <!-- Corpo com texto mais formal -->
+                            <div class="body" id="previewBody">
+                                <p class="declaration-text">
+                                    Para os devidos efeitos legais, a Direcção do <strong>Hospital Regional de Malanje</strong>, 
+                                    através da <strong>Unidade de Gestão de Pacientes</strong>, declara que o(a) Sr.(a) 
+                                    <span class="highlight" id="previewPatientName">António Manuel</span>, 
+                                    de estado civil <span id="previewCivilStatus">Casado(a)</span>, filho(a) de 
+                                    <span id="previewFatherName">José Manuel</span> e de 
+                                    <span id="previewMotherName">Maria Manuel</span>, nascido(a) aos 
+                                    <span id="previewBirthDate">15/05/1990</span>, na Província de 
+                                    <span id="previewBirthProvince">Malanje</span>, titular do Bilhete de Identidade n.º 
+                                    <span id="previewBiNumber">000000000LA000</span>, 
+                                    esteve internado(a) nesta Instituição Hospitalar sob o número de processo 
+                                    <span id="previewProcessNumber">HRM-PAC-000245</span>, 
+                                    tendo sido assistido(a) clinicamente por motivo de 
+                                    <span id="previewDiagnosis">Pneumonia Bacteriana</span>, 
+                                    no dia <span id="previewAltaDate">07/08/2026</span>, pelas 
+                                    <span id="previewAltaTime">10:45</span>, encontrando-se, portanto, em condições de receber alta hospitalar.
+                                </p>
+                                <p class="declaration-text">
+                                    A presente Declaração de Alta é emitida a pedido do(a) interessado(a) ou do(a) seu/sua responsável legal, 
+                                    para os fins que se mostrem necessários, devendo ser autenticada com o carimbo e assinatura do médico responsável.
+                                </p>
+                                <div class="signature-date">
+                                    Hospital Regional de Malanje, <span id="previewFooterDate">7 de Agosto de 2026</span>.
+                                </div>
+                            </div>
+
+                            <!-- Assinaturas -->
+                            <div class="signatures">
+                                <div class="signature-box">
+                                    <div class="line"></div>
+                                    <div><strong id="previewDoctorName">Dr. João Manuel Silva</strong></div>
+                                    <div class="label">Médico Responsável</div>
+                                    <div style="font-size:0.65rem; color:#6c757d;">ID: HRM-MED-000458</div>
+                                </div>
+                                <div class="signature-box">
+                                    <div class="line"></div>
+                                    <div><strong id="previewResponsibleName">Ana Manuel</strong></div>
+                                    <div class="label">Responsável pelo Paciente</div>
+                                    <div style="font-size:0.65rem; color:#6c757d;" id="previewRelationship">(Mãe)</div>
+                                </div>
+                            </div>
+
+                            <!-- Rodapé -->
+                            <div class="footer">
+                                <div class="qr-code">
+                                    <div class="qr-small"><i class="bi bi-qr-code"></i></div>
+                                    <div>
+                                        <div style="font-weight:600; font-size:0.75rem;">Documento válido</div>
+                                        <div style="font-size:0.65rem;">Declaração: HRM-DA-2026-000001</div>
+                                        <div style="font-size:0.65rem;">Status: <span style="color:#2b7a4b;">Autêntico</span></div>
+                                    </div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:0.65rem;">Código: <span id="previewQrCode">VITA-2026-08-07-X9K2</span></div>
+                                    <div style="font-size:0.6rem; color:#adb5bd;">Verifique a autenticidade</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="mt-3 d-flex justify-content-between align-items-center flex-wrap" style="padding: 12px 16px; background: rgba(255,255,255,0.04); border-radius: 12px; border: 1px solid rgba(255,255,255,0.04);">
+                    <div>
+                        <span style="color:rgba(255,255,255,0.4); font-size:0.75rem;">Declaração</span>
+                        <span style="color:#4c9f70; font-weight:700; font-size:1.1rem; font-family:'Courier New',monospace;" id="statusNumber">HRM-DA-2026-000001</span>
+                    </div>
+                    <div>
+                        <span class="badge" style="background:rgba(76,159,112,0.15); color:#4c9f70; padding:6px 14px; border-radius:20px;" id="statusBadge">
+                            <i class="bi bi-pencil-square"></i> Rascunho
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="mt-5 text-center" style="border-top:1px solid rgba(255,255,255,0.04); padding-top:20px;">
+            <p style="color:rgba(255,255,255,0.3); font-size:0.75rem;">
+                © 2026 VITALINKA - Declaração de Alta · Hospital Regional de Malanje
+            </p>
+        </footer>
+
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast-custom d-none" id="notificationToast" role="alert">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-check-circle-fill me-2" style="color: var(--accent-green); font-size: 1.4rem;"></i>
+            <div class="toast-body p-0" id="toastMessage"></div>
+            <button type="button" class="btn-close ms-auto" id="closeToast" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ================================================================
+        // 1. TEMA
+        // ================================================================
+        let isDarkTheme = true;
+
+        function toggleTheme() {
+            isDarkTheme = !isDarkTheme;
+            if (isDarkTheme) {
+                document.body.classList.remove('light-theme');
+                document.getElementById('themeIcon').className = 'bi bi-moon-stars';
+            } else {
+                document.body.classList.add('light-theme');
+                document.getElementById('themeIcon').className = 'bi bi-sun-fill';
+            }
+            localStorage.setItem('vitalinka-theme-info', isDarkTheme ? 'dark' : 'light');
+        }
+
+        const savedTheme = localStorage.getItem('vitalinka-theme-info');
+        if (savedTheme === 'light') {
+            isDarkTheme = false;
+            document.body.classList.add('light-theme');
+            document.getElementById('themeIcon').className = 'bi bi-sun-fill';
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        // ================================================================
+        // 2. DATA E HORA
+        // ================================================================
+        function updateDateTime() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('pt-BR');
+            const timeStr = now.toLocaleTimeString('pt-BR');
+            document.getElementById('dateTimeDisplay').textContent = `${dateStr} ${timeStr}`;
+        }
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        // ================================================================
+        // 3. FUNÇÕES AUXILIARES DE FORMATAÇÃO
+        // ================================================================
+        function formatDateBR(dateStr) {
+            if (!dateStr) return '--/--/----';
+            const parts = dateStr.split('-');
+            if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            return dateStr;
+        }
+
+        function formatDateExtenso(dateStr) {
+            if (!dateStr) return '-- de ----- de ----';
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+                ];
+                return `${parseInt(parts[2])} de ${meses[parseInt(parts[1])-1]} de ${parts[0]}`;
+            }
+            return dateStr;
+        }
+
+        // ================================================================
+        // 4. ATUALIZAR PRÉ-VISUALIZAÇÃO EM TEMPO REAL
+        // ================================================================
+        function updatePreview() {
+            // Buscar valores dos campos
+            const patientName = document.getElementById('patientName').value || '__________________';
+            const processNumber = document.getElementById('processNumber').value || '---';
+            const civilStatus = document.getElementById('civilStatus').value || '---';
+            const birthDate = document.getElementById('birthDate').value || '----/--/--';
+            const birthProvince = document.getElementById('birthProvince').value || '---';
+            const biNumber = document.getElementById('biNumber').value || '---';
+            const fatherName = document.getElementById('fatherName').value || '---';
+            const motherName = document.getElementById('motherName').value || '---';
+            const diagnosis = document.getElementById('diagnosis').value || '---';
+            const altaDate = document.getElementById('altaDate').value || '----/--/--';
+            const altaTime = document.getElementById('altaTime').value || '--:--';
+            const doctorName = document.getElementById('doctorName').value || '---';
+            const responsibleName = document.getElementById('responsibleName').value || '__________________';
+            const relationship = document.getElementById('relationship').value || '---';
+            const declarationNumber = document.getElementById('declarationNumber').value || 'HRM-DA-2026-000001';
+            
+            // Data do rodapé agora vem do input date
+            const footerDateRaw = document.getElementById('footerDate').value || '2026-08-07';
+            const footerDateExtenso = formatDateExtenso(footerDateRaw);
+
+            // Atualizar preview
+            document.getElementById('previewNumber').textContent = declarationNumber;
+            document.getElementById('previewPatientName').textContent = patientName;
+            document.getElementById('previewCivilStatus').textContent = civilStatus;
+            document.getElementById('previewFatherName').textContent = fatherName;
+            document.getElementById('previewMotherName').textContent = motherName;
+            document.getElementById('previewBirthDate').textContent = formatDateBR(birthDate);
+            document.getElementById('previewBirthProvince').textContent = birthProvince;
+            document.getElementById('previewBiNumber').textContent = biNumber;
+            document.getElementById('previewProcessNumber').textContent = processNumber;
+            document.getElementById('previewDiagnosis').textContent = diagnosis;
+            document.getElementById('previewAltaDate').textContent = formatDateBR(altaDate);
+            document.getElementById('previewAltaTime').textContent = altaTime;
+            document.getElementById('previewDoctorName').textContent = doctorName;
+            document.getElementById('previewResponsibleName').textContent = responsibleName || '__________________';
+            document.getElementById('previewRelationship').textContent = relationship ? `(${relationship})` : '';
+            document.getElementById('previewFooterDate').textContent = footerDateExtenso;
+
+            // Atualizar número no rodapé
+            const footerDeclaracao = document.querySelector('.preview-document .footer .qr-code div div:nth-child(2)');
+            if (footerDeclaracao) {
+                footerDeclaracao.textContent = `Declaração: ${declarationNumber}`;
+            }
+
+            // Atualizar código QR com base na data
+            const footerDateCode = footerDateRaw.replace(/-/g, '');
+            document.getElementById('previewQrCode').textContent = `VITA-${footerDateCode}-X9K2`;
+
+            // Atualizar status
+            document.getElementById('statusNumber').textContent = declarationNumber;
+        }
+
+        // ================================================================
+        // 5. EMITIR DECLARAÇÃO
+        // ================================================================
+        function emitirDeclaracao() {
+            if (confirm('Tem certeza que deseja emitir esta Declaração de Alta?')) {
+                // Atualizar badge
+                const badge = document.getElementById('statusBadge');
+                badge.innerHTML = `<i class="bi bi-check-circle-fill"></i> Emitida`;
+                badge.style.background = 'rgba(76,159,112,0.2)';
+                badge.style.color = '#4c9f70';
+
+                showToast('✅ Declaração emitida com sucesso! Documento arquivado no prontuário.');
+            }
+        }
+
+        // ================================================================
+        // 6. IMPRIMIR
+        // ================================================================
+        function imprimirDeclaracao() {
+            const conteudo = document.getElementById('previewDocument').innerHTML;
+            const janela = window.open('', '_blank', 'width=800,height=600');
+            janela.document.write(`
+                <html>
+                    <head>
+                        <title>Declaração de Alta - VITALINKA</title>
+                        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+                        <style>
+                            body { padding: 40px; background: #fff; }
+                            .preview-document { max-width: 800px; margin: 0 auto; }
+                            @media print { body { padding: 20px; } }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="preview-document">${conteudo}</div>
+                        <script>
+                            window.onload = function() { window.print(); setTimeout(window.close, 1000); };
+                        <\/script>
+                    </body>
+                </html>
+            `);
+            janela.document.close();
+            showToast('🖨️ A imprimir...');
+        }
+
+        // ================================================================
+        // 7. GERAR PDF (simulação)
+        // ================================================================
+        function gerarPdf() {
+            showToast('⬇️ A gerar PDF... O download começará em breve.');
+            // Simulação - numa implementação real, usaria jsPDF ou biblioteca similar
+            setTimeout(() => {
+                showToast('📄 PDF gerado com sucesso!');
+            }, 1500);
+        }
+
+        // ================================================================
+        // 8. TOAST
+        // ================================================================
+        function showToast(message, isError = false) {
+            const toastEl = document.getElementById('notificationToast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toastEl.classList.remove('d-none');
+            toastEl.style.borderLeftColor = isError ? '#dc3545' : '#4c9f70';
+            setTimeout(() => toastEl.classList.add('d-none'), 3000);
+        }
+
+        document.getElementById('closeToast').addEventListener('click', function() {
+            document.getElementById('notificationToast').classList.add('d-none');
+        });
+
+        // ================================================================
+        // 9. EVENTOS PARA ATUALIZAR PREVIEW AUTOMATICAMENTE
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const campos = ['patientName', 'civilStatus', 'birthDate', 'birthProvince',
+                'biNumber', 'fatherName', 'motherName', 'diagnosis', 'altaDate',
+                'altaTime', 'doctorName', 'responsibleName', 'relationship',
+                'declarationNumber', 'footerDate'
+            ];
+
+            campos.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('change', updatePreview);
+                    el.addEventListener('input', updatePreview);
+                }
+            });
+
+            // Botões
+            document.getElementById('emitirBtn').addEventListener('click', emitirDeclaracao);
+            document.getElementById('imprimirBtn').addEventListener('click', imprimirDeclaracao);
+            document.getElementById('gerarPdfBtn').addEventListener('click', gerarPdf);
+
+            // Atualizar preview inicial
+            setTimeout(updatePreview, 200);
+        });
+
+        console.log('✅ VITALINKA - Declaração de Alta carregada!');
+        console.log('📄 A data do rodapé agora usa o selector de data nativo.');
+        console.log('🖨️ Botões de acção completamente funcionais.');
+    </script>
+</body>
+</html>

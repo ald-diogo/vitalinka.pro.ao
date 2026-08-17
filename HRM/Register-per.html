@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>VITALINKA | Cadastro Institucional</title>
+    <!-- Bootstrap 5 + Icons + Google Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* ========== TEMA CLARO ========== */
+        :root {
+            --bg-overlay: rgba(0, 0, 0, 0.50);
+            --glass-bg: rgba(255, 255, 255, 0.92);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+            --text-primary: #1a2e2a;
+            --text-secondary: #4a6a5e;
+            --text-light: #ffffff;
+            --input-bg: #f7faf9;
+            --input-border: #dce5e2;
+            --input-focus: #2b7a4b;
+            --accent-green: #2b7a4b;
+            --accent-hover: #1e5a3a;
+            --accent-gradient: linear-gradient(135deg, #2b7a4b 0%, #1e5a3a 100%);
+            --error-bg: #fee2e2;
+            --error-text: #b91c1c;
+            --card-radius: 24px;
+            --input-radius: 12px;
+        }
+
+        /* ========== TEMA ESCURO ========== */
+        body.dark {
+            --bg-overlay: rgba(0, 0, 0, 0.70);
+            --glass-bg: rgba(20, 30, 28, 0.88);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+            --text-primary: #eef4f0;
+            --text-secondary: #b8d0c2;
+            --input-bg: #2a3c36;
+            --input-border: #3a4f48;
+            --input-focus: #4c9f70;
+            --accent-green: #4c9f70;
+            --accent-hover: #6bb886;
+            --accent-gradient: linear-gradient(135deg, #4c9f70 0%, #2b7a4b 100%);
+            --error-bg: #3b1e1e;
+            --error-text: #fca5a5;
+        }
+
+        /* ========== WRAPPER ========== */
+        .register-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100%;
+            background-image: url('images/register.png');
+            background-position: center 30%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            position: relative;
+            padding: 2rem;
+        }
+
+        .register-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--bg-overlay);
+            z-index: 0;
+        }
+
+        /* ========== SLOGAN ========== */
+        .slogan-overlay {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+            padding: 0 2rem;
+            max-width: 650px;
+            pointer-events: none;
+        }
+
+        .slogan-overlay .logo-slogan1 {
+            max-height: 60px;
+            width: auto;
+            filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.4));
+            margin-bottom: 0.5rem;
+        }
+
+        .slogan-overlay h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .slogan-overlay p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            margin-bottom: 0;
+        }
+
+        .logo-slogan1 {
+            width: 50px;
+            height: 50px;
+            border-radius: 90%;
+        }
+
+        /* ========== PAINEL PRINCIPAL ========== */
+        .form-panel {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        .register-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-radius: var(--card-radius);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 2.5rem 2.5rem 2rem;
+            transition: all 0.3s ease;
+        }
+
+        /* ========== HEADER ========== */
+        .card-header-custom {
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .card-header-custom .brand-icon {
+            font-size: 2.6rem;
+            color: var(--accent-green);
+            display: inline-block;
+            background: rgba(43, 122, 75, 0.12);
+            padding: 0.6rem;
+            border-radius: 16px;
+            margin-bottom: 0.75rem;
+        }
+
+        body.dark .card-header-custom .brand-icon {
+            background: rgba(76, 159, 112, 0.15);
+        }
+
+        .card-header-custom h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .card-header-custom p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        /* ========== AÇÕES SUPERIORES ========== */
+        .top-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-btn {
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            transition: 0.2s;
+            padding: 0.35rem 0.5rem;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.08);
+            background: rgba(43, 122, 75, 0.15);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .dropdown-menu-custom {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 0.4rem;
+            min-width: 160px;
+        }
+
+        .dropdown-menu-custom .dropdown-item {
+            color: var(--text-primary);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-menu-custom .dropdown-item:hover {
+            background: rgba(43, 122, 75, 0.1);
+            color: var(--accent-green);
+        }
+
+        /* ========== FORMULÁRIO ========== */
+        .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .input-group-custom {
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: var(--input-radius);
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .input-group-custom:focus-within {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 4px rgba(43, 122, 75, 0.12);
+        }
+
+        .form-control, .form-select-custom {
+            background: transparent;
+            border: none;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            border-radius: var(--input-radius);
+            flex: 1;
+            outline: none;
+            width: 100%;
+        }
+
+        .form-select-custom {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a6a5e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 12px 8px;
+            cursor: pointer;
+        }
+
+        body.dark .form-select-custom {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23b8d0c2' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        }
+
+        .form-select-custom option {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            padding: 0.5rem;
+        }
+
+        .form-control::placeholder {
+            color: #a0b8b0;
+        }
+
+        .form-control:focus {
+            background: transparent;
+            box-shadow: none;
+            border-color: transparent;
+            color: var(--text-primary);
+        }
+
+        .form-control[readonly] {
+            opacity: 0.85;
+            cursor: default;
+        }
+
+        /* ========== SENHA GERADA AUTOMATICAMENTE ========== */
+        .password-display {
+            background: rgba(43, 122, 75, 0.08);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: var(--accent-green);
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+        }
+
+        .password-display .copy-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0 4px;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .password-display .copy-btn:hover {
+            color: var(--accent-green);
+        }
+
+        .password-display .password-text {
+            letter-spacing: 1px;
+        }
+
+        /* ========== BOTÕES ========== */
+        .btn-register {
+            background: var(--accent-gradient);
+            border: none;
+            padding: 0.85rem;
+            font-weight: 700;
+            border-radius: var(--input-radius);
+            font-size: 1rem;
+            transition: 0.3s ease;
+            color: #ffffff;
+            box-shadow: 0 6px 24px rgba(43, 122, 75, 0.25);
+            letter-spacing: 0.3px;
+            width: 100%;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(43, 122, 75, 0.35);
+        }
+
+        .btn-register:active {
+            transform: translateY(0px);
+        }
+
+        .btn-secondary-custom {
+            border-radius: var(--input-radius);
+            padding: 0.6rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 2px solid var(--input-border);
+            background: transparent;
+            color: var(--text-secondary);
+            transition: 0.25s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+        }
+        .btn-secondary-custom:hover {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+            background: rgba(43, 122, 75, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-back {
+            border-radius: var(--input-radius);
+            padding: 0.6rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 2px solid var(--input-border);
+            background: transparent;
+            color: var(--text-secondary);
+            transition: 0.25s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+        }
+        .btn-outline-back:hover {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+            background: rgba(43, 122, 75, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .btn-success-custom {
+            background: var(--accent-gradient);
+            border: none;
+            padding: 0.6rem;
+            font-weight: 600;
+            border-radius: var(--input-radius);
+            font-size: 0.9rem;
+            transition: 0.3s ease;
+            color: #ffffff;
+            box-shadow: 0 4px 16px rgba(43, 122, 75, 0.2);
+            letter-spacing: 0.3px;
+            width: 100%;
+        }
+
+        .btn-success-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(43, 122, 75, 0.3);
+        }
+
+        /* ========== VALIDAÇÕES E ERROS ========== */
+        .invalid-feedback-custom {
+            font-size: 0.7rem;
+            color: var(--error-text);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* ========== TOAST ========== */
+        .toast-custom {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1090;
+            min-width: 280px;
+            border-radius: 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-left: 5px solid var(--accent-green);
+            box-shadow: var(--glass-shadow);
+            padding: 1rem 1.25rem;
+        }
+
+        .toast-custom .toast-body {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .toast-custom .btn-close {
+            filter: var(--text-primary) === '#ffffff' ? 'invert(1)' : 'invert(0.4)';
+        }
+
+        body.dark .toast-custom .btn-close {
+            filter: invert(1);
+        }
+
+        .text-muted-custom {
+            font-size: 0.7rem;
+            color: var(--text-secondary) !important;
+            opacity: 0.8;
+        }
+
+        /* ========== AUTOCOMPLETE ========== */
+        .email-auto-fill {
+            color: var(--accent-green);
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.3rem 0.75rem;
+            background: rgba(43, 122, 75, 0.08);
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 0.25rem;
+            opacity: 0.9;
+        }
+
+        /* ===== IDENTIFICADORES GERADOS ===== */
+        .generated-id {
+            background: rgba(43, 122, 75, 0.06);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            border: 1px solid rgba(43, 122, 75, 0.1);
+            display: none;
+        }
+
+        body.dark .generated-id {
+            background: rgba(76, 159, 112, 0.08);
+            border-color: rgba(76, 159, 112, 0.15);
+        }
+
+        .generated-id .id-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.85rem;
+        }
+
+        .generated-id .id-item:last-child {
+            border-bottom: none;
+        }
+
+        .generated-id .id-item .id-label {
+            color: var(--text-secondary);
+        }
+
+        .generated-id .id-item .id-value {
+            color: var(--accent-green);
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ===== PERFIL BADGE ===== */
+        .profile-badge {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: rgba(43, 122, 75, 0.12);
+            color: var(--accent-green);
+        }
+
+        /* ===== LISTA DE ERFIS E CHAVES ===== */
+        .erfi-list-container {
+            background: rgba(43, 122, 75, 0.04);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-top: 12px;
+            border: 1px solid rgba(43, 122, 75, 0.08);
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        body.dark .erfi-list-container {
+            background: rgba(76, 159, 112, 0.05);
+            border-color: rgba(76, 159, 112, 0.1);
+        }
+
+        .erfi-list-container .erfi-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.8rem;
+            gap: 8px;
+        }
+
+        .erfi-list-container .erfi-item:last-child {
+            border-bottom: none;
+        }
+
+        .erfi-list-container .erfi-item .erfi-user {
+            color: var(--text-secondary);
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .erfi-list-container .erfi-item .erfi-key {
+            color: var(--accent-green);
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }
+
+        .erfi-list-container .erfi-item .erfi-profile {
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+            background: rgba(43, 122, 75, 0.08);
+            padding: 1px 8px;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        body.dark .erfi-list-container .erfi-item .erfi-profile {
+            background: rgba(76, 159, 112, 0.12);
+        }
+
+        .erfi-list-container .erfi-item .erfi-index {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            opacity: 0.6;
+            flex-shrink: 0;
+            width: 24px;
+            text-align: right;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-content-custom {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: var(--card-radius);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .modal-content-custom .modal-header {
+            border-bottom: 1px solid var(--input-border);
+        }
+
+        .modal-content-custom .modal-footer {
+            border-top: 1px solid var(--input-border);
+        }
+
+        .modal-content-custom .modal-title {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .modal-content-custom .modal-body {
+            color: var(--text-primary);
+        }
+
+        .user-detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--input-border);
+        }
+
+        .user-detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .user-detail-item .detail-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .user-detail-item .detail-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* ========== RESPONSIVIDADE ========== */
+        @media (max-width: 576px) {
+            .register-wrapper {
+                padding: 1rem;
+                background-position: center 50%;
+            }
+
+            .register-card {
+                padding: 1.75rem 1.25rem 1.5rem;
+                border-radius: 20px;
+            }
+
+            .card-header-custom h2 {
+                font-size: 1.35rem;
+            }
+
+            .card-header-custom .brand-icon {
+                font-size: 2.2rem;
+                padding: 0.5rem;
+            }
+
+            .top-actions {
+                gap: 0.5rem;
+            }
+
+            .action-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 1rem;
+            }
+
+            .slogan-overlay {
+                bottom: 20px;
+                padding: 0 1rem;
+                max-width: 90%;
+            }
+
+            .slogan-overlay h2 {
+                font-size: 1.2rem;
+            }
+
+            .slogan-overlay p {
+                font-size: 0.75rem;
+            }
+
+            .form-control, .form-select-custom {
+                font-size: 0.9rem;
+                padding: 0.65rem 0.85rem;
+            }
+
+            .toast-custom {
+                left: 15px;
+                right: 15px;
+                min-width: auto;
+                bottom: 15px;
+            }
+
+            .erfi-list-container .erfi-item {
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            
+            .erfi-list-container .erfi-item .erfi-user {
+                flex: 0 0 100%;
+                white-space: normal;
+            }
+
+            .erfi-list-container .erfi-item .erfi-index {
+                width: auto;
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .register-card {
+                padding: 1.25rem 1rem;
+            }
+        }
+
+        /* ========== ANIMAÇÃO ========== */
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .register-card {
+            animation: fadeSlideUp 0.6s ease forwards;
+        }
+
+        .slogan-overlay {
+            animation: fadeSlideUp 0.8s ease 0.2s both;
+        }
+
+        .logo-slogan {
+            width: 100px;
+            height: 100px;
+        }
+        
+        .brand-icon{
+            border-radius: 90px;
+        }
+
+        .btn-group-vertical-custom {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-wrapper">
+    <!-- SLOGAN -->
+    <div class="slogan-overlay">
+        <img class="logo-slogan1" src="images/vitalinka-rbg.png" alt="VITALINKA">
+        <h2>Ligando vidas através da tecnologia</h2>
+        <p>Sistema integrado de gestão hospitalar para uma saúde mais eficiente e humanizada.</p>
+    </div>
+
+    <!-- PAINEL PRINCIPAL -->
+    <div class="form-panel">
+        <div class="register-card">
+            <!-- AÇÕES SUPERIORES -->
+            <div class="top-actions">
+                <button id="themeToggleBtn" class="action-btn" aria-label="Alternar tema">
+                    <i class="bi bi-moon-stars"></i>
+                </button>
+                <div class="dropdown">
+                    <button class="action-btn dropdown-toggle" type="button" id="langDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-globe2"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom" aria-labelledby="langDropdown">
+                        <li><a class="dropdown-item lang-option" data-lang="pt" href="#">🇵🇹 Português</a></li>
+                        <li><a class="dropdown-item lang-option" data-lang="en" href="#">🇬🇧 English</a></li>
+                        <li><a class="dropdown-item lang-option" data-lang="es" href="#">🇪🇸 Español</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- HEADER -->
+            <div class="card-header-custom">
+                <div class="brand-icon">
+                    <a href="index.html">
+                        <img class="logo-slogan" src="images/vitalinka-rbg.png" alt="VITALINKA">
+                    </a>
+                </div>
+                <h2 id="registerTitle">Cadastro Institucional</h2>
+                <p id="registerSubtitle">Criação de conta para funcionários do Hospital Regional de Malanje</p>
+            </div>
+
+            <!-- FORMULÁRIO -->
+            <form id="registerForm" novalidate>
+                <!-- Nome Completo -->
+                <div class="mb-3">
+                    <label class="form-label" id="nameLabel">Nome completo</label>
+                    <div class="input-group-custom">
+                        <input type="text" class="form-control" id="fullNameInput" placeholder="Ex: Dr. João Manuel Silva" required>
+                    </div>
+                    <div class="invalid-feedback-custom" id="nameError"></div>
+                </div>
+
+                <!-- NIF -->
+                <div class="mb-3">
+                    <label class="form-label" id="nifLabel">NIF</label>
+                    <div class="input-group-custom">
+                        <input type="text" class="form-control" id="nifInput" placeholder="Digite o NIF" required>
+                    </div>
+                    <div class="invalid-feedback-custom" id="nifError"></div>
+                </div>
+
+                <!-- Email Institucional -->
+                <div class="mb-3">
+                    <label class="form-label" id="emailLabel">E-mail institucional</label>
+                    <div class="input-group-custom">
+                        <input type="email" class="form-control" id="emailInput" placeholder="username.vitalinka.ao" required readonly>
+                    </div>
+                    <div id="emailAutoFill" class="email-auto-fill">
+                        <i class="bi bi-arrow-right-circle me-1"></i> 
+                        <span id="emailStatus">Aguardando nome...</span>
+                    </div>
+                    <div class="invalid-feedback-custom" id="emailError"></div>
+                </div>
+
+                <!-- Perfil -->
+                <div class="mb-3">
+                    <label class="form-label" id="profileLabel">Perfil de acesso</label>
+                    <div class="input-group-custom">
+                        <select id="profileSelect" class="form-select-custom" required>
+                            <option value="">Selecione o perfil</option>
+                            <option value="superadmin">Super Administrador</option>
+                            <option value="diretor">Diretor Geral</option>
+                            <option value="diretorclinico">Diretor Clínico</option>
+                            <option value="medico">Médico</option>
+                            <option value="enfermeiro">Enfermeiro</option>
+                            <option value="rececionista">Rececionista</option>
+                            <option value="tecnico">Técnico de Laboratório</option>
+                            <option value="farmaceutico">Farmacêutico</option>
+                            <option value="gestor">Gestor de Internamento</option>
+                            <option value="financeiro">Financeiro</option>
+                            <option value="rh">Recursos Humanos</option>
+                            <option value="ti">Técnico de Informática</option>
+                        </select>
+                    </div>
+                    <div class="invalid-feedback-custom" id="profileError"></div>
+                </div>
+
+                <!-- IDENTIFICADORES GERADOS -->
+                <div class="generated-id" id="generatedIdContainer">
+                    <div class="id-item">
+                        <span class="id-label"><i class="bi bi-person-badge"></i> ID Institucional</span>
+                        <span class="id-value" id="generatedId">---</span>
+                    </div>
+                    <div class="id-item">
+                        <span class="id-label"><i class="bi bi-key"></i> Chave de Acesso (ERFI)</span>
+                        <span class="id-value" id="generatedKey">---</span>
+                    </div>
+                    <div class="id-item">
+                        <span class="id-label"><i class="bi bi-shield-check"></i> CCI</span>
+                        <span class="id-value" id="generatedCci">---</span>
+                    </div>
+                </div>
+
+                <!-- Senha Gerada Automaticamente -->
+                <div class="mb-3">
+                    <label class="form-label" id="passwordLabel">Senha gerada automaticamente</label>
+                    <div class="password-display" id="passwordDisplayContainer" style="display: none;">
+                        <span class="password-text" id="generatedPassword">---</span>
+                        <button type="button" class="copy-btn" id="copyPasswordBtn" title="Copiar senha">
+                            <i class="bi bi-clipboard"></i>
+                        </button>
+                    </div>
+                    <div id="passwordPlaceholder" style="color: var(--text-secondary); font-size: 0.85rem; padding: 8px 0;">
+                        <i class="bi bi-info-circle"></i> A senha será gerada automaticamente ao selecionar o perfil
+                    </div>
+                    <input type="hidden" id="passwordInput" value="">
+                    <input type="hidden" id="confirmPasswordInput" value="">
+                </div>
+
+                <!-- LISTA DE ERFIS E CHAVES GERADAS -->
+                <div id="erfiListContainer" class="erfi-list-container" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span style="font-weight: 600; color: var(--text-primary); font-size: 0.85rem;">
+                            <i class="bi bi-key"></i> <span id="erfiListTitle">ERFIs e Chaves de Acesso</span>
+                        </span>
+                        <span id="erfiCount" style="font-size: 0.75rem; color: var(--text-secondary);"></span>
+                    </div>
+                    <div id="erfiList"></div>
+                </div>
+
+                <div class="btn-group-vertical-custom">
+                    <button type="submit" class="btn-register mb-2" id="registerBtn">
+                        <span id="btnText">Cadastrar Funcionário</span>
+                        <span id="btnSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                    </button>
+
+                    <button type="button" class="btn-success-custom mb-2" id="viewUserBtn">
+                        <i class="bi bi-eye"></i> <span id="viewUserText">Ver Cadastro</span>
+                    </button>
+
+                    <button type="button" class="btn-secondary-custom mb-2" id="generateCardBtn">
+                        <i class="bi bi-file-pdf"></i> <span id="generateCardText">Gerar Ficha do Cadastrado</span>
+                    </button>
+
+                    <a href="login-per.html" class="btn-outline-back">
+                        <i class="bi bi-arrow-left"></i> Voltar para o login
+                    </a>
+                </div>
+            </form>
+
+            <div class="text-center mt-3">
+                <small class="text-muted-custom" id="demoNote">🔐 O email é gerado automaticamente no formato: usuario.vitalinka.ao</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL PARA VER CADASTRO -->
+<div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-content-custom">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewUserModalLabel">
+                    <i class="bi bi-person-badge me-2"></i> Dados do Funcionário
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="userModalBody">
+                <!-- Os dados serão preenchidos dinamicamente -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-success" id="modalGenerateCardBtn">
+                    <i class="bi bi-file-pdf"></i> Gerar Ficha
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-custom d-none" id="notificationToast" role="alert">
+    <div class="d-flex align-items-center">
+        <i class="bi bi-check-circle-fill me-2" style="color: var(--accent-green); font-size: 1.4rem;"></i>
+        <div class="toast-body p-0" id="toastMessage"></div>
+        <button type="button" class="btn-close ms-auto" id="closeToast" aria-label="Close"></button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ============================================================
+    //  TRADUÇÕES
+    // ============================================================
+    const translations = {
+        pt: {
+            registerTitle: "Cadastro Institucional",
+            registerSubtitle: "Criação de conta para funcionários do Hospital Regional de Malanje",
+            nameLabel: "Nome completo",
+            nifLabel: "NIF",
+            emailLabel: "E-mail institucional",
+            profileLabel: "Perfil de acesso",
+            passwordLabel: "Senha gerada automaticamente",
+            btnText: "Cadastrar Funcionário",
+            viewUserText: "Ver Cadastro",
+            generateCardText: "Gerar Ficha do Cadastrado",
+            demoNote: "🔐 O email é gerado automaticamente no formato: usuario.vitalinka.ao",
+            nameRequired: "Nome é obrigatório",
+            nifRequired: "NIF é obrigatório",
+            emailRequired: "E-mail é obrigatório",
+            emailInvalid: "Formato de e-mail inválido (deve terminar com @vitalinka.ao)",
+            profileRequired: "Perfil é obrigatório",
+            successMsg: "✅ Funcionário cadastrado com sucesso!",
+            errorMsg: "❌ Erro no cadastro. Verifique os campos e tente novamente.",
+            waitingName: "Aguardando nome...",
+            generatingEmail: "Gerando email...",
+            emailGenerated: "Email gerado automaticamente",
+            idGenerated: "ID gerado: {id}",
+            keyGenerated: "Chave de Acesso ERFI gerada: {key}",
+            cciGenerated: "CCI gerado: {cci}",
+            noData: "Nenhum dado disponível. Faça um cadastro primeiro.",
+            erfiListTitle: "ERFIs e Chaves de Acesso",
+            modalTitle: "Dados do Funcionário",
+            passwordPlaceholder: "A senha será gerada automaticamente ao selecionar o perfil",
+            passwordCopied: "Senha copiada para a área de transferência!",
+            noPassword: "Nenhuma senha gerada ainda",
+            erfi: "ERFI"
+        },
+        en: {
+            registerTitle: "Institutional Registration",
+            registerSubtitle: "Account creation for Hospital Regional de Malanje staff",
+            nameLabel: "Full name",
+            nifLabel: "NIF",
+            emailLabel: "Institutional Email",
+            profileLabel: "Access profile",
+            passwordLabel: "Auto-generated password",
+            btnText: "Register Employee",
+            viewUserText: "View Registration",
+            generateCardText: "Generate Employee Card",
+            demoNote: "🔐 Email is automatically generated in the format: username.vitalinka.ao",
+            nameRequired: "Name is required",
+            nifRequired: "NIF is required",
+            emailRequired: "Email is required",
+            emailInvalid: "Invalid email format (must end with @vitalinka.ao)",
+            profileRequired: "Profile is required",
+            successMsg: "✅ Employee registered successfully!",
+            errorMsg: "❌ Registration failed. Check the fields and try again.",
+            waitingName: "Waiting for name...",
+            generatingEmail: "Generating email...",
+            emailGenerated: "Email automatically generated",
+            idGenerated: "ID generated: {id}",
+            keyGenerated: "ERFI Access Key generated: {key}",
+            cciGenerated: "CCI generated: {cci}",
+            noData: "No data available. Please register first.",
+            erfiListTitle: "ERFIs and Access Keys",
+            modalTitle: "Employee Data",
+            passwordPlaceholder: "Password will be auto-generated when profile is selected",
+            passwordCopied: "Password copied to clipboard!",
+            noPassword: "No password generated yet",
+            erfi: "ERFI"
+        },
+        es: {
+            registerTitle: "Registro Institucional",
+            registerSubtitle: "Creación de cuentas para el Hospital Regional de Malanje",
+            nameLabel: "Nombre completo",
+            nifLabel: "NIF",
+            emailLabel: "Correo institucional",
+            profileLabel: "Perfil de acceso",
+            passwordLabel: "Contraseña generada automáticamente",
+            btnText: "Registrar Funcionario",
+            viewUserText: "Ver Registro",
+            generateCardText: "Generar Ficha del Registrado",
+            demoNote: "🔐 El correo se genera automáticamente en el formato: usuario.vitalinka.ao",
+            nameRequired: "El nombre es obligatorio",
+            nifRequired: "El NIF es obligatorio",
+            emailRequired: "El correo es obligatorio",
+            emailInvalid: "Formato de correo inválido (debe terminar con @vitalinka.ao)",
+            profileRequired: "El perfil es obligatorio",
+            successMsg: "✅ ¡Funcionario registrado con éxito!",
+            errorMsg: "❌ Error en el registro. Verifique los campos e intente de nuevo.",
+            waitingName: "Esperando nombre...",
+            generatingEmail: "Generando correo...",
+            emailGenerated: "Correo generado automáticamente",
+            idGenerated: "ID generado: {id}",
+            keyGenerated: "Clave de Acceso ERFI generada: {key}",
+            cciGenerated: "CCI generado: {cci}",
+            noData: "No hay datos disponibles. Registre primero.",
+            erfiListTitle: "ERFIs y Claves de Acceso",
+            modalTitle: "Datos del Funcionario",
+            passwordPlaceholder: "La contraseña se generará automáticamente al seleccionar el perfil",
+            passwordCopied: "¡Contraseña copiada al portapapeles!",
+            noPassword: "Ninguna contraseña generada aún",
+            erfi: "ERFI"
+        }
+    };
+
+    // ============================================================
+    //  CONFIGURAÇÕES DE CHAVES POR INSTITUIÇÃO
+    // ============================================================
+    const INSTITUTION_CONFIG = {
+        // Código da instituição: [prefixo_ERFI, prefixo_ID, prefixo_CCI]
+        'HRM': ['ERFI-HRM', 'ID-HRM', 'CCI-HRM'],
+        'HUL': ['ERFI-HUL', 'ID-HUL', 'CCI-HUL'],
+        'HCA': ['ERFI-HCA', 'ID-HCA', 'CCI-HCA']
+    };
+
+    // Instituição atual (pode ser alterada dinamicamente)
+    let currentInstitution = 'HRM'; // Hospital Regional de Malanje
+
+    // Mapeamento de perfis para códigos
+    const PROFILE_CODES = {
+        'superadmin': 'SA',
+        'diretor': 'DG',
+        'diretorclinico': 'DC',
+        'medico': 'MD',
+        'enfermeiro': 'EN',
+        'rececionista': 'RC',
+        'tecnico': 'TL',
+        'farmaceutico': 'FM',
+        'gestor': 'GI',
+        'financeiro': 'FN',
+        'rh': 'RH',
+        'ti': 'TI'
+    };
+
+    // Nomes legíveis dos perfis
+    const PROFILE_NAMES = {
+        'superadmin': 'Super Admin',
+        'diretor': 'Diretor Geral',
+        'diretorclinico': 'Diretor Clínico',
+        'medico': 'Médico',
+        'enfermeiro': 'Enfermeiro',
+        'rececionista': 'Rececionista',
+        'tecnico': 'Técnico Lab',
+        'farmaceutico': 'Farmacêutico',
+        'gestor': 'Gestor Internamento',
+        'financeiro': 'Financeiro',
+        'rh': 'RH',
+        'ti': 'TI'
+    };
+
+    // ============================================================
+    //  ESTADO GLOBAL
+    // ============================================================
+    let currentLang = localStorage.getItem('vitalinkaLang') || 'pt';
+    let isDark = localStorage.getItem('vitalinkaTheme') === 'dark';
+    
+    // Array para armazenar os usuários cadastrados (ERFIs)
+    let registeredUsers = [];
+    
+    // Dados do último usuário cadastrado para exibição no modal
+    let lastRegisteredUser = null;
+    
+    // Senha gerada atual
+    let currentGeneratedPassword = '';
+
+    // ============================================================
+    //  DOM REFS
+    // ============================================================
+    const themeBtn = document.getElementById('themeToggleBtn');
+    const fullNameInput = document.getElementById('fullNameInput');
+    const nifInput = document.getElementById('nifInput');
+    const emailInput = document.getElementById('emailInput');
+    const emailStatus = document.getElementById('emailStatus');
+    const emailAutoFill = document.getElementById('emailAutoFill');
+    const profileSelect = document.getElementById('profileSelect');
+    const passwordInput = document.getElementById('passwordInput');
+    const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+    const registerForm = document.getElementById('registerForm');
+    const registerBtn = document.getElementById('registerBtn');
+    const btnTextSpan = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
+    const toastEl = document.getElementById('notificationToast');
+    const toastMessageSpan = document.getElementById('toastMessage');
+    const closeToastBtn = document.getElementById('closeToast');
+    const nameError = document.getElementById('nameError');
+    const nifError = document.getElementById('nifError');
+    const emailError = document.getElementById('emailError');
+    const profileError = document.getElementById('profileError');
+    const generatedIdContainer = document.getElementById('generatedIdContainer');
+    const generatedId = document.getElementById('generatedId');
+    const generatedKey = document.getElementById('generatedKey');
+    const generatedCci = document.getElementById('generatedCci');
+    const viewUserBtn = document.getElementById('viewUserBtn');
+    const viewUserText = document.getElementById('viewUserText');
+    const generateCardBtn = document.getElementById('generateCardBtn');
+    const generateCardText = document.getElementById('generateCardText');
+    const modalGenerateCardBtn = document.getElementById('modalGenerateCardBtn');
+    const userModalBody = document.getElementById('userModalBody');
+    const erfiListContainer = document.getElementById('erfiListContainer');
+    const erfiList = document.getElementById('erfiList');
+    const erfiCount = document.getElementById('erfiCount');
+    const passwordDisplayContainer = document.getElementById('passwordDisplayContainer');
+    const generatedPasswordSpan = document.getElementById('generatedPassword');
+    const passwordPlaceholder = document.getElementById('passwordPlaceholder');
+    const copyPasswordBtn = document.getElementById('copyPasswordBtn');
+    const erfiListTitle = document.getElementById('erfiListTitle');
+
+    const i18nEls = {
+        registerTitle: document.getElementById('registerTitle'),
+        registerSubtitle: document.getElementById('registerSubtitle'),
+        nameLabel: document.getElementById('nameLabel'),
+        nifLabel: document.getElementById('nifLabel'),
+        emailLabel: document.getElementById('emailLabel'),
+        profileLabel: document.getElementById('profileLabel'),
+        passwordLabel: document.getElementById('passwordLabel'),
+        demoNote: document.getElementById('demoNote')
+    };
+
+    // ============================================================
+    //  FUNÇÕES DE GERAÇÃO DE CHAVES PADRONIZADAS
+    // ============================================================
+    
+    /**
+     * Gera um número de ERFI (Estrutura de Registro Funcional Institucional)
+     * Formato: ERFI-{INST}-{PROFILE_CODE}-{ANO}-{SEQ}
+     * Exemplo: ERFI-HRM-MD-2025-0001
+     */
+    function generateERFI(profile, sequence) {
+        const prefix = INSTITUTION_CONFIG[currentInstitution][0];
+        const profileCode = PROFILE_CODES[profile] || 'US';
+        const year = new Date().getFullYear();
+        const seq = String(sequence).padStart(4, '0');
+        return `${prefix}-${profileCode}-${year}-${seq}`;
+    }
+
+    /**
+     * Gera um ID Institucional
+     * Formato: ID-{INST}-{PROFILE_CODE}-{ANO}-{SEQ}
+     */
+    function generateInstitutionalID(profile, sequence) {
+        const prefix = INSTITUTION_CONFIG[currentInstitution][1];
+        const profileCode = PROFILE_CODES[profile] || 'US';
+        const year = new Date().getFullYear();
+        const seq = String(sequence).padStart(4, '0');
+        return `${prefix}-${profileCode}-${year}-${seq}`;
+    }
+
+    /**
+     * Gera um CCI (Código de Controle Interno)
+     * Formato: CCI-{INST}-{ANO}-{SEQ}-{CHECK}
+     */
+    function generateCCI(profile, sequence) {
+        const prefix = INSTITUTION_CONFIG[currentInstitution][2];
+        const year = new Date().getFullYear();
+        const seq = String(sequence).padStart(4, '0');
+        // Dígito verificador simples (soma dos dígitos do número)
+        const sum = String(sequence).split('').reduce((acc, digit) => acc + parseInt(digit), 0);
+        const checkDigit = sum % 9;
+        return `${prefix}-${year}-${seq}-${checkDigit}`;
+    }
+
+    /**
+     * Gera senha automática baseada no perfil
+     * Formato: {PROFILE_CODE}-{ANO}{SEQ}{CHECK}
+     */
+    function generateAutoPassword(profile, sequence) {
+        const profileCode = PROFILE_CODES[profile] || 'US';
+        const year = String(new Date().getFullYear()).slice(-2);
+        const seq = String(sequence).padStart(4, '0');
+        // Caracteres especiais aleatórios
+        const specials = '!@#$%^&*';
+        const special = specials.charAt(Math.floor(Math.random() * specials.length));
+        return `${profileCode}-${year}${seq}${special}`;
+    }
+
+    // ============================================================
+    //  FUNÇÃO GERAR TODOS OS IDENTIFICADORES
+    // ============================================================
+    function generateAllIdentifiers(name, profile) {
+        const t = translations[currentLang];
+        
+        if (!name || name.trim().length < 3 || !profile) {
+            generatedIdContainer.style.display = 'none';
+            return null;
+        }
+
+        // Gerar sequência baseada no número de usuários + 1
+        const sequence = registeredUsers.length + 1;
+
+        const erfi = generateERFI(profile, sequence);
+        const id = generateInstitutionalID(profile, sequence);
+        const cci = generateCCI(profile, sequence);
+        const password = generateAutoPassword(profile, sequence);
+
+        // Atualizar display
+        generatedId.textContent = id;
+        generatedKey.textContent = erfi;
+        generatedCci.textContent = cci;
+        generatedIdContainer.style.display = 'block';
+
+        // Atualizar senha
+        currentGeneratedPassword = password;
+        passwordInput.value = password;
+        confirmPasswordInput.value = password;
+        generatedPasswordSpan.textContent = password;
+        passwordDisplayContainer.style.display = 'flex';
+        passwordPlaceholder.style.display = 'none';
+
+        return { erfi, id, cci, password, sequence };
+    }
+
+    // ============================================================
+    //  FUNÇÃO GERAR EMAIL INSTITUCIONAL
+    // ============================================================
+    function generateInstitutionalEmail(name) {
+        if (!name || name.trim().length < 3) {
+            return null;
+        }
+
+        let cleanName = name.trim()
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9\s.-]/g, '')
+            .replace(/\s+/g, '.');
+        
+        cleanName = cleanName.replace(/\.+/g, '.');
+        cleanName = cleanName.replace(/^\.|\.$/g, '');
+        
+        if (!cleanName || cleanName.length < 3) {
+            return null;
+        }
+
+        return `${cleanName}@vitalinka.ao`;
+    }
+
+    function updateEmailField(name) {
+        const t = translations[currentLang];
+        
+        if (!name || name.trim().length < 3) {
+            emailInput.value = '';
+            emailInput.placeholder = 'username.vitalinka.ao';
+            emailStatus.textContent = t.waitingName || 'Aguardando nome...';
+            emailAutoFill.style.opacity = '0.7';
+            return;
+        }
+
+        const email = generateInstitutionalEmail(name);
+        if (email) {
+            emailInput.value = email;
+            emailInput.placeholder = email;
+            emailStatus.textContent = t.emailGenerated || 'Email gerado automaticamente';
+            emailAutoFill.style.opacity = '1';
+            validateEmail();
+        } else {
+            emailInput.value = '';
+            emailInput.placeholder = 'username.vitalinka.ao';
+            emailStatus.textContent = t.generatingEmail || 'Gerando email...';
+            emailAutoFill.style.opacity = '0.7';
+        }
+    }
+
+    // ============================================================
+    //  VALIDAÇÕES
+    // ============================================================
+    function validateName() {
+        const name = fullNameInput.value.trim();
+        if (!name) {
+            nameError.innerText = translations[currentLang].nameRequired;
+            return false;
+        }
+        nameError.innerText = '';
+        return true;
+    }
+
+    function validateNif() {
+        const nif = nifInput.value.trim();
+        if (!nif) {
+            nifError.innerText = translations[currentLang].nifRequired;
+            return false;
+        }
+        nifError.innerText = '';
+        return true;
+    }
+
+    function validateEmail() {
+        const email = emailInput.value.trim();
+        if (!email) {
+            emailError.innerText = translations[currentLang].emailRequired;
+            return false;
+        }
+        const emailRegex = /^[^\s@]+@vitalinka\.ao$/;
+        if (!emailRegex.test(email)) {
+            emailError.innerText = translations[currentLang].emailInvalid;
+            return false;
+        }
+        emailError.innerText = '';
+        return true;
+    }
+
+    function validateProfile() {
+        const profile = profileSelect.value;
+        if (!profile) {
+            profileError.innerText = translations[currentLang].profileRequired;
+            return false;
+        }
+        profileError.innerText = '';
+        return true;
+    }
+
+    function validateAllFields() {
+        const isNameOk = validateName();
+        const isNifOk = validateNif();
+        const isEmailOk = validateEmail();
+        const isProfileOk = validateProfile();
+        return isNameOk && isNifOk && isEmailOk && isProfileOk;
+    }
+
+    // ============================================================
+    //  FUNÇÕES DE LISTA DE ERFIS
+    // ============================================================
+    function updateERFIList() {
+        if (registeredUsers.length === 0) {
+            erfiListContainer.style.display = 'none';
+            return;
+        }
+
+        erfiListContainer.style.display = 'block';
+        const t = translations[currentLang];
+        erfiList.innerHTML = '';
+        
+        // Mostrar todos os registros (do mais recente para o mais antigo)
+        const displayUsers = [...registeredUsers].reverse();
+        
+        displayUsers.forEach((user, index) => {
+            const item = document.createElement('div');
+            item.className = 'erfi-item';
+            const profileName = PROFILE_NAMES[user.profile] || user.profile;
+            item.innerHTML = `
+                <span class="erfi-index">#${registeredUsers.length - index}</span>
+                <span class="erfi-user">${user.name}</span>
+                <span class="erfi-profile">${profileName}</span>
+                <span class="erfi-key">${user.erfi}</span>
+            `;
+            erfiList.appendChild(item);
+        });
+
+        erfiCount.textContent = `${registeredUsers.length} ${registeredUsers.length === 1 ? 'ERFI' : 'ERFIs'}`;
+    }
+
+    // ============================================================
+    //  FUNÇÃO PARA GERAR FICHA (simulação)
+    // ============================================================
+    function generateEmployeeCard(userData) {
+        const t = translations[currentLang];
+        if (!userData) {
+            showToast(t.noData || 'Nenhum dado disponível', true);
+            return;
+        }
+
+        const profileName = PROFILE_NAMES[userData.profile] || userData.profile;
+        const cardContent = `
+╔═══════════════════════════════════════════════════════════╗
+║                    VITALINKA                             ║
+║              FICHA DO FUNCIONÁRIO                        ║
+╠═══════════════════════════════════════════════════════════╣
+║                                                          ║
+║  Nome:              ${userData.name.padEnd(40)}║
+║  NIF:               ${userData.nif.padEnd(40)}║
+║  Email:             ${userData.email.padEnd(40)}║
+║  Perfil:            ${profileName.padEnd(40)}║
+║                                                          ║
+║  ─── IDENTIFICADORES INSTITUCIONAIS ───                 ║
+║                                                          ║
+║  ERFI:              ${userData.erfi.padEnd(40)}║
+║  ID Institucional:  ${userData.id.padEnd(40)}║
+║  CCI:               ${userData.cci.padEnd(40)}║
+║                                                          ║
+║  ─── CREDENCIAIS DE ACESSO ───                         ║
+║                                                          ║
+║  Senha:             ${userData.password.padEnd(40)}║
+║                                                          ║
+║  Data de Cadastro:  ${new Date().toLocaleString().padEnd(40)}║
+║                                                          ║
+╚═══════════════════════════════════════════════════════════╝
+        `;
+        
+        console.log('Ficha gerada:', cardContent);
+        showToast('✅ Ficha do funcionário gerada com sucesso! (Verifique o console)', false);
+        
+        // Exibir alerta com a ficha
+        alert('Ficha do funcionário gerada!\n\n' + cardContent);
+    }
+
+    // ============================================================
+    //  FUNÇÃO PARA EXIBIR MODAL COM DADOS DO USUÁRIO
+    // ============================================================
+    function showUserModal(userData) {
+        const t = translations[currentLang];
+        
+        if (!userData) {
+            userModalBody.innerHTML = `
+                <div class="text-center py-3">
+                    <i class="bi bi-exclamation-circle" style="font-size: 2rem; color: var(--text-secondary);"></i>
+                    <p class="mt-2">${t.noData || 'Nenhum dado disponível. Faça um cadastro primeiro.'}</p>
+                </div>
+            `;
+        } else {
+            const profileName = PROFILE_NAMES[userData.profile] || userData.profile;
+            
+            userModalBody.innerHTML = `
+                <div class="user-detail-item">
+                    <span class="detail-label"><i class="bi bi-person"></i> Nome</span>
+                    <span class="detail-value">${userData.name}</span>
+                </div>
+                <div class="user-detail-item">
+                    <span class="detail-label"><i class="bi bi-card-text"></i> NIF</span>
+                    <span class="detail-value">${userData.nif}</span>
+                </div>
+                <div class="user-detail-item">
+                    <span class="detail-label"><i class="bi bi-envelope"></i> Email</span>
+                    <span class="detail-value">${userData.email}</span>
+                </div>
+                <div class="user-detail-item">
+                    <span class="detail-label"><i class="bi bi-person-badge"></i> Perfil</span>
+                    <span class="detail-value"><span class="profile-badge">${profileName}</span></span>
+                </div>
+                <div class="user-detail-item" style="background: rgba(43, 122, 75, 0.05); border-radius: 8px; margin: 4px 0; padding: 12px;">
+                    <span class="detail-label" style="font-weight: 700;"><i class="bi bi-key"></i> ERFI</span>
+                    <span class="detail-value" style="font-family: 'Courier New', monospace; color: var(--accent-green); font-weight: 700; font-size: 1.1rem;">${userData.erfi}</span>
+                </div>
+                <div class="user-detail-item">
+                    <span class="detail-label"><i class="bi bi-person-vcard"></i> ID Institucional</span>
+                    <span class="detail-value" style="font-family: 'Courier New', monospace; color: var(--accent-green);">${userData.id}</span>
+                </div>
+                <div class="user-detail-item">
+                    <span class="detail-label"><i class="bi bi-shield-check"></i> CCI</span>
+                    <span class="detail-value" style="font-family: 'Courier New', monospace; color: var(--accent-green);">${userData.cci}</span>
+                </div>
+                <div class="user-detail-item">
+                    <span class="detail-label"><i class="bi bi-lock"></i> Senha</span>
+                    <span class="detail-value" style="font-family: 'Courier New', monospace; color: var(--accent-green);">${userData.password}</span>
+                </div>
+            `;
+        }
+        
+        const modal = new bootstrap.Modal(document.getElementById('viewUserModal'));
+        modal.show();
+    }
+
+    // ============================================================
+    //  TOAST
+    // ============================================================
+    function showToast(message, isError = false) {
+        toastMessageSpan.innerText = message;
+        toastEl.classList.remove('d-none');
+        toastEl.style.borderLeftColor = isError ? '#e53e3e' : 'var(--accent-green)';
+        setTimeout(() => toastEl.classList.add('d-none'), 4000);
+    }
+
+    // ============================================================
+    //  SIMULAÇÃO DE REGISTO
+    // ============================================================
+    async function simulateRegistration(email, name, nif, profile, identifiers, password) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const userData = {
+                    name: name,
+                    nif: nif,
+                    email: email,
+                    profile: profile,
+                    erfi: identifiers.erfi,
+                    id: identifiers.id,
+                    cci: identifiers.cci,
+                    password: password,
+                    sequence: identifiers.sequence
+                };
+                resolve({ success: true, message: translations[currentLang].successMsg, userData });
+            }, 1200);
+        });
+    }
+
+    // ============================================================
+    //  EVENTOS DO FORMULÁRIO
+    // ============================================================
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const isNameOk = validateName();
+        const isNifOk = validateNif();
+        const isEmailOk = validateEmail();
+        const isProfileOk = validateProfile();
+
+        if (!isNameOk || !isNifOk || !isEmailOk || !isProfileOk) {
+            showToast(translations[currentLang].errorMsg, true);
+            return;
+        }
+
+        if (!currentGeneratedPassword) {
+            showToast('Por favor, selecione um perfil para gerar a senha automaticamente.', true);
+            return;
+        }
+
+        btnTextSpan.classList.add('d-none');
+        btnSpinner.classList.remove('d-none');
+        registerBtn.disabled = true;
+
+        const email = emailInput.value.trim();
+        const name = fullNameInput.value.trim();
+        const nif = nifInput.value.trim();
+        const profile = profileSelect.value;
+        const password = currentGeneratedPassword;
+        
+        // Gerar identificadores
+        const identifiers = generateAllIdentifiers(name, profile);
+        
+        if (!identifiers) {
+            btnTextSpan.classList.remove('d-none');
+            btnSpinner.classList.add('d-none');
+            registerBtn.disabled = false;
+            showToast('Erro ao gerar identificadores. Tente novamente.', true);
+            return;
+        }
+        
+        const result = await simulateRegistration(email, name, nif, profile, identifiers, password);
+
+        btnTextSpan.classList.remove('d-none');
+        btnSpinner.classList.add('d-none');
+        registerBtn.disabled = false;
+
+        if (result.success) {
+            registeredUsers.push(result.userData);
+            lastRegisteredUser = result.userData;
+            updateERFIList();
+            showToast(result.message, false);
+            
+            // Limpar campos para próximo cadastro (mantendo nome para referência)
+            fullNameInput.value = '';
+            nifInput.value = '';
+            emailInput.value = '';
+            emailStatus.textContent = translations[currentLang].waitingName;
+            emailAutoFill.style.opacity = '0.7';
+            generatedIdContainer.style.display = 'none';
+            passwordDisplayContainer.style.display = 'none';
+            passwordPlaceholder.style.display = 'block';
+            currentGeneratedPassword = '';
+            passwordInput.value = '';
+            confirmPasswordInput.value = '';
+            profileSelect.value = '';
+            validateAllFields();
+        } else {
+            showToast(result.message, true);
+        }
+    });
+
+    // ============================================================
+    //  EVENTOS DE INPUT
+    // ============================================================
+    fullNameInput.addEventListener('input', function() {
+        const name = this.value.trim();
+        validateName();
+        updateEmailField(name);
+        validateEmail();
+        if (name.length >= 3) {
+            emailAutoFill.style.borderColor = 'var(--accent-green)';
+        } else {
+            emailAutoFill.style.borderColor = 'transparent';
+        }
+        // Gerar identificadores quando nome e perfil estiverem preenchidos
+        const profile = profileSelect.value;
+        if (name.length >= 3 && profile) {
+            generateAllIdentifiers(name, profile);
+        } else {
+            generatedIdContainer.style.display = 'none';
+        }
+    });
+
+    nifInput.addEventListener('input', function() {
+        validateNif();
+    });
+
+    profileSelect.addEventListener('change', function() {
+        validateProfile();
+        const name = fullNameInput.value.trim();
+        const profile = this.value;
+        
+        // Gerar identificadores e senha
+        if (name.length >= 3 && profile) {
+            generateAllIdentifiers(name, profile);
+        } else if (profile) {
+            // Se não tiver nome, ainda gerar senha
+            const t = translations[currentLang];
+            const sequence = registeredUsers.length + 1;
+            const password = generateAutoPassword(profile, sequence);
+            currentGeneratedPassword = password;
+            passwordInput.value = password;
+            confirmPasswordInput.value = password;
+            generatedPasswordSpan.textContent = password;
+            passwordDisplayContainer.style.display = 'flex';
+            passwordPlaceholder.style.display = 'none';
+            generatedIdContainer.style.display = 'none';
+        } else {
+            generatedIdContainer.style.display = 'none';
+            passwordDisplayContainer.style.display = 'none';
+            passwordPlaceholder.style.display = 'block';
+            currentGeneratedPassword = '';
+            passwordInput.value = '';
+            confirmPasswordInput.value = '';
+        }
+    });
+
+    // ============================================================
+    //  EVENTO COPIAR SENHA
+    // ============================================================
+    copyPasswordBtn.addEventListener('click', function() {
+        const password = currentGeneratedPassword;
+        if (password) {
+            navigator.clipboard.writeText(password).then(() => {
+                const t = translations[currentLang];
+                showToast(t.passwordCopied || 'Senha copiada para a área de transferência!', false);
+            }).catch(() => {
+                const textArea = document.createElement('textarea');
+                textArea.value = password;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                const t = translations[currentLang];
+                showToast(t.passwordCopied || 'Senha copiada para a área de transferência!', false);
+            });
+        }
+    });
+
+    // ============================================================
+    //  EVENTO VER CADASTRO
+    // ============================================================
+    viewUserBtn.addEventListener('click', function() {
+        if (lastRegisteredUser) {
+            showUserModal(lastRegisteredUser);
+        } else if (registeredUsers.length > 0) {
+            showUserModal(registeredUsers[registeredUsers.length - 1]);
+        } else {
+            showUserModal(null);
+        }
+    });
+
+    // ============================================================
+    //  EVENTO GERAR FICHA
+    // ============================================================
+    generateCardBtn.addEventListener('click', function() {
+        if (lastRegisteredUser) {
+            generateEmployeeCard(lastRegisteredUser);
+        } else if (registeredUsers.length > 0) {
+            generateEmployeeCard(registeredUsers[registeredUsers.length - 1]);
+        } else {
+            const t = translations[currentLang];
+            showToast(t.noData || 'Nenhum dado disponível', true);
+        }
+    });
+
+    // ============================================================
+    //  EVENTO GERAR FICHA DO MODAL
+    // ============================================================
+    modalGenerateCardBtn.addEventListener('click', function() {
+        if (lastRegisteredUser) {
+            generateEmployeeCard(lastRegisteredUser);
+        } else if (registeredUsers.length > 0) {
+            generateEmployeeCard(registeredUsers[registeredUsers.length - 1]);
+        } else {
+            const t = translations[currentLang];
+            showToast(t.noData || 'Nenhum dado disponível', true);
+        }
+        const modal = bootstrap.Modal.getInstance(document.getElementById('viewUserModal'));
+        if (modal) modal.hide();
+    });
+
+    // ============================================================
+    //  TEMA
+    // ============================================================
+    function setTheme(enableDark) {
+        if (enableDark) {
+            document.body.classList.add('dark');
+            localStorage.setItem('vitalinkaTheme', 'dark');
+            themeBtn.querySelector('i').className = 'bi bi-sun-fill';
+        } else {
+            document.body.classList.remove('dark');
+            localStorage.setItem('vitalinkaTheme', 'light');
+            themeBtn.querySelector('i').className = 'bi bi-moon-stars';
+        }
+    }
+
+    themeBtn.addEventListener('click', () => {
+        isDark = !isDark;
+        setTheme(isDark);
+    });
+
+    // ============================================================
+    //  IDIOMA
+    // ============================================================
+    document.querySelectorAll('.lang-option').forEach(option => {
+        option.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentLang = option.getAttribute('data-lang');
+            localStorage.setItem('vitalinkaLang', currentLang);
+            applyLanguage();
+            validateAllFields();
+        });
+    });
+
+    // ============================================================
+    //  APLICAR IDIOMA
+    // ============================================================
+    function applyLanguage() {
+        const t = translations[currentLang];
+        if (i18nEls.registerTitle) i18nEls.registerTitle.innerText = t.registerTitle;
+        if (i18nEls.registerSubtitle) i18nEls.registerSubtitle.innerText = t.registerSubtitle;
+        if (i18nEls.nameLabel) i18nEls.nameLabel.innerText = t.nameLabel;
+        if (i18nEls.nifLabel) i18nEls.nifLabel.innerText = t.nifLabel;
+        if (i18nEls.emailLabel) i18nEls.emailLabel.innerText = t.emailLabel;
+        if (i18nEls.profileLabel) i18nEls.profileLabel.innerText = t.profileLabel;
+        if (i18nEls.passwordLabel) i18nEls.passwordLabel.innerText = t.passwordLabel;
+        if (i18nEls.demoNote) i18nEls.demoNote.innerText = t.demoNote;
+        if (btnTextSpan) btnTextSpan.innerText = t.btnText;
+        if (viewUserText) viewUserText.innerText = t.viewUserText;
+        if (generateCardText) generateCardText.innerText = t.generateCardText;
+        if (erfiListTitle) erfiListTitle.innerText = t.erfiListTitle;
+        
+        if (!profileSelect.value) {
+            passwordPlaceholder.innerHTML = `<i class="bi bi-info-circle"></i> ${t.passwordPlaceholder || 'A senha será gerada automaticamente ao selecionar o perfil'}`;
+        }
+        
+        validateAllFields();
+        updateEmailField(fullNameInput.value.trim());
+        updateERFIList();
+    }
+
+    // ============================================================
+    //  FECHAR TOAST
+    // ============================================================
+    if (closeToastBtn) {
+        closeToastBtn.addEventListener('click', () => toastEl.classList.add('d-none'));
+    }
+
+    // ============================================================
+    //  INICIALIZAÇÃO
+    // ============================================================
+    setTheme(isDark);
+    applyLanguage();
+    validateAllFields();
+    
+    if (fullNameInput.value.trim().length >= 3) {
+        updateEmailField(fullNameInput.value.trim());
+    }
+
+    // Adicionar dados de exemplo para demonstração
+    const demoUser = {
+        name: 'Dr. João Manuel Silva',
+        nif: '1234567890123',
+        email: 'joao.silva@vitalinka.ao',
+        profile: 'medico',
+        erfi: 'ERFI-HRM-MD-2025-0001',
+        id: 'ID-HRM-MD-2025-0001',
+        cci: 'CCI-HRM-2025-0001-6',
+        password: 'MD-250001!',
+        sequence: 1
+    };
+    registeredUsers.push(demoUser);
+    lastRegisteredUser = demoUser;
+    updateERFIList();
+
+    // Adicionar segundo exemplo
+    const demoUser2 = {
+        name: 'Enf. Maria Antónia Costa',
+        nif: '9876543210987',
+        email: 'maria.costa@vitalinka.ao',
+        profile: 'enfermeiro',
+        erfi: 'ERFI-HRM-EN-2025-0002',
+        id: 'ID-HRM-EN-2025-0002',
+        cci: 'CCI-HRM-2025-0002-4',
+        password: 'EN-250002@',
+        sequence: 2
+    };
+    registeredUsers.push(demoUser2);
+    updateERFIList();
+</script>
+</body>
+</html>

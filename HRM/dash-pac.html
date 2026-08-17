@@ -1,0 +1,2630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VITALINKA | Área do Paciente</title>
+    <!-- Bootstrap 5 + Bootstrap Icons + Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- html2pdf.js para gerar PDF nativamente -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        /* ===== VARIÁVEIS DE TEMA ===== */
+        :root {
+            --bg-image: url('images/dash-pac.png');
+            --bg-overlay: rgba(0, 0, 0, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.10);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-color: #f0f4f8;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --table-bg: rgba(255, 255, 255, 0.06);
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --input-border: rgba(255, 255, 255, 0.12);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --primary-glow: rgba(13, 110, 253, 0.25);
+            --success-color: #75f0a0;
+            --warning-color: #ffd75a;
+            --danger-color: #ff7a8a;
+            --info-color: #6ee7ff;
+            --chatbot-bg: rgba(20, 30, 28, 0.95);
+            --dropdown-bg: rgba(20, 30, 28, 0.95);
+            --modal-bg: rgba(20, 30, 28, 0.95);
+            --bg-pattern-opacity: 0.6;
+            --primary-color: #2b7a4b;
+            --primary-gradient: linear-gradient(135deg, #2b7a4b, #4c9f70);
+            --status-scheduled: #6ea8fe;
+            --status-confirmed: #75f0a0;
+            --status-cancelled: #6c757d;
+        }
+
+        /* Tema Claro */
+        [data-theme="light"] {
+            --bg-image: url('images/dash-pac.png');
+            --bg-overlay: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --text-color: #1a2634;
+            --text-muted: rgba(0, 0, 0, 0.6);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --table-bg: rgba(255, 255, 255, 0.6);
+            --input-bg: rgba(255, 255, 255, 0.75);
+            --input-border: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --primary-glow: rgba(13, 110, 253, 0.15);
+            --success-color: #198754;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #0dcaf0;
+            --chatbot-bg: rgba(255, 255, 255, 0.95);
+            --dropdown-bg: rgba(255, 255, 255, 0.95);
+            --modal-bg: rgba(255, 255, 255, 0.95);
+            --bg-pattern-opacity: 0.3;
+        }
+
+        /* ===== ESTILOS GERAIS ===== */
+        * { font-family: 'Times New Roman', Times, serif; }
+        
+        body {
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            position: relative;
+            background-color: #1a2634;
+            transition: background-color 0.3s ease;
+        }
+
+        [data-theme="light"] body {
+            background-color: #e8ecef;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-overlay);
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+
+        .container-fluid { position: relative; z-index: 1; }
+
+        /* ===== GLASSMORPHISM ===== */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        /* ===== TABS ===== */
+        .nav-tabs .nav-link {
+            font-size: 14px;
+            color: var(--text-color);
+            border: none;
+            padding: 10px 18px;
+            margin-right: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+        .nav-tabs .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        .nav-tabs .nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            color: var(--text-color);
+            border-bottom: 3px solid #0d6efd;
+            font-weight: bold;
+            box-shadow: 0 -2px 20px var(--primary-glow);
+        }
+        .tab-content {
+            padding: 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 0 8px 8px 8px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+
+        /* ===== INDICATOR CARDS ===== */
+        .indicator-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 15px 10px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        .indicator-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .indicator-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            text-shadow: 0 2px 10px var(--shadow-color);
+        }
+        .indicator-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .indicator-card.success .number { color: var(--success-color); }
+        .indicator-card.warning .number { color: var(--warning-color); }
+        .indicator-card.danger .number { color: var(--danger-color); }
+        .indicator-card.info .number { color: var(--info-color); }
+        .indicator-card.primary .number { color: #6ea8fe; }
+
+        /* ===== CARDS ===== */
+        .info-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .info-card .card-title {
+            color: var(--text-color);
+            border-bottom: 2px solid var(--glass-border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .info-card .info-label {
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .info-card .info-value { color: var(--text-color); }
+
+        /* ===== STATUS BADGE ===== */
+        .status-badge.scheduled { background: rgba(13, 110, 253, 0.7); color: #fff; }
+        .status-badge.confirmed { background: rgba(25, 135, 84, 0.7); color: #fff; }
+        .status-badge.cancelled { background: rgba(108, 117, 125, 0.7); color: #fff; }
+        .status-badge.pending { background: rgba(255, 193, 7, 0.7); color: #000; }
+        .status-badge.completed { background: rgba(13, 202, 240, 0.7); color: #000; }
+
+        /* ===== PAGE TITLE ===== */
+        .page-title {
+            color: var(--text-color);
+            text-shadow: 0 2px 20px var(--shadow-color);
+        }
+        .page-title .badge {
+            background: rgba(13, 110, 253, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== SEARCH SECTION ===== */
+        .search-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        .search-section h6 { color: var(--text-color); }
+        .search-section .form-control,
+        .search-section .form-select {
+            border-radius: 8px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+        }
+        .search-section .form-control::placeholder { color: var(--text-muted); }
+        .search-section .form-control:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .search-section .btn-outline-secondary { color: var(--text-muted); border-color: var(--glass-border); }
+        .search-section .btn-outline-secondary:hover { background: var(--glass-bg); color: var(--text-color); }
+        .search-section .btn-outline-primary { color: var(--text-color); border-color: var(--glass-border); }
+        .search-section .btn-outline-primary:hover { background: rgba(13, 110, 253, 0.3); }
+
+        /* ===== REPORT CARDS ===== */
+        .report-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .report-card .card-body { color: var(--text-color); }
+        .report-card .card-title { color: var(--text-color); }
+        .report-card .card-text { color: var(--text-muted); }
+
+        /* ===== MODAL GLASS ===== */
+        .modal-content {
+            background: var(--modal-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .modal-header { border-bottom: 1px solid var(--glass-border); }
+        .modal-footer { border-top: 1px solid var(--glass-border); }
+        .modal .btn-close { 
+            filter: invert(1); 
+            opacity: 0.7;
+        }
+        [data-theme="light"] .modal .btn-close { 
+            filter: invert(0); 
+            opacity: 0.5;
+        }
+        .modal .form-control,
+        .modal .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+        }
+        .modal .form-control:focus,
+        .modal .form-select:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .modal .form-label {
+            color: var(--text-muted);
+        }
+        .modal .form-check-label {
+            color: var(--text-color);
+        }
+        .modal .btn-secondary {
+            background: var(--input-bg);
+            border-color: var(--glass-border);
+            color: var(--text-color);
+        }
+        .modal .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .modal .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* ===== DATETIME ===== */
+        #currentDateTime {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        /* ============================================================ */
+        /* ===== TIMER, DASHBOARD DROPDOWN, CHATBOT ===== */
+        /* ============================================================ */
+
+        .timer-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: inline-block;
+        }
+        .timer-container svg {
+            transform: rotate(-90deg);
+            width: 60px;
+            height: 60px;
+        }
+        .timer-container .timer-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 4;
+        }
+        [data-theme="light"] .timer-container .timer-bg {
+            stroke: rgba(0, 0, 0, 0.12);
+        }
+        .timer-container .timer-progress {
+            fill: none;
+            stroke: #4c9f70;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 169.646;
+            stroke-dashoffset: 169.646;
+            transition: stroke-dashoffset 1s linear;
+        }
+        .timer-container .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-shadow: 0 1px 5px var(--shadow-color);
+        }
+        .timer-warning .timer-progress { stroke: #ffc107; }
+        .timer-danger .timer-progress { stroke: #dc3545; }
+
+        /* --- DASHBOARD DROPDOWN --- */
+        .dashboard-dropdown .dropdown-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+        }
+        .dashboard-dropdown .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .dashboard-dropdown .dropdown-menu {
+            background: var(--dropdown-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 220px;
+            z-index: 9999 !important;
+        }
+        .dashboard-dropdown .dropdown-item {
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        .dashboard-dropdown .dropdown-item:hover {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+        }
+        .dashboard-dropdown .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            color: #4c9f70;
+        }
+        .dashboard-dropdown .dropdown-divider {
+            border-color: var(--glass-border);
+        }
+
+        /* --- CHATBOT VITA --- */
+        .chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+        }
+        .chatbot-toggle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 30px rgba(43, 122, 75, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 40px rgba(43, 122, 75, 0.5);
+        }
+        .chatbot-toggle .badge-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #dc3545;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            max-height: 480px;
+            background: var(--chatbot-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            box-shadow: 0 20px 60px var(--shadow-color);
+            display: none;
+            overflow: hidden;
+            flex-direction: column;
+            z-index: 9999;
+        }
+        .chatbot-window.open { display: flex; }
+        .chatbot-header {
+            padding: 15px 20px;
+            background: rgba(43, 122, 75, 0.2);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chatbot-header .chatbot-name {
+            color: var(--text-color);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .chatbot-header .chatbot-name i {
+            color: #4c9f70;
+            margin-right: 8px;
+        }
+        .chatbot-header .chatbot-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .chatbot-header .chatbot-close:hover { color: var(--text-color); }
+        .chatbot-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            max-height: 320px;
+        }
+        .chatbot-body .message {
+            margin-bottom: 12px;
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            animation: fadeInMsg 0.3s ease;
+        }
+        .chatbot-body .message.bot {
+            background: rgba(76, 159, 112, 0.15);
+            color: var(--text-color);
+            border-bottom-left-radius: 4px;
+            margin-right: auto;
+        }
+        .chatbot-body .message.user {
+            background: rgba(13, 110, 253, 0.2);
+            color: var(--text-color);
+            border-bottom-right-radius: 4px;
+            margin-left: auto;
+        }
+        @keyframes fadeInMsg {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chatbot-footer {
+            padding: 12px 15px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 8px;
+        }
+        .chatbot-footer input {
+            flex: 1;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: var(--input-bg);
+            color: var(--text-color);
+            outline: none;
+            font-size: 0.9rem;
+        }
+        .chatbot-footer input::placeholder { color: var(--text-muted); }
+        .chatbot-footer input:focus { border-color: #4c9f70; }
+        .chatbot-footer button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: var(--primary-gradient);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chatbot-footer button:hover { opacity: 0.85; transform: scale(0.97); }
+
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .indicator-card .number { font-size: 1.5rem; }
+            .tab-content { padding: 15px; }
+            .page-title { font-size: 1.5rem; }
+            .chatbot-window {
+                width: 300px;
+                right: -10px;
+                bottom: 75px;
+            }
+            .timer-container { width: 45px; height: 45px; }
+            .timer-container svg { width: 45px; height: 45px; }
+            .timer-container .timer-text { font-size: 0.6rem; }
+            .header-timer-wrapper .timer-label { display: none; }
+        }
+        @media (max-width: 400px) {
+            .chatbot-window { width: 280px; right: -5px; }
+        }
+
+        .header-timer-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-timer-wrapper .timer-label {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* ===== ESTILOS PERFIL ===== */
+        .profile-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .profile-detail .label {
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .profile-detail .value {
+            color: var(--text-color);
+        }
+        .profile-avatar-lg {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 3px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: var(--text-color);
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+        }
+        .profile-permissions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .profile-permissions .badge {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* ===== PERFIL CARD ===== */
+        .profile-image-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            position: relative;
+            z-index: 9998;
+        }
+        .profile-image-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.12);
+        }
+        .profile-image-card .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            flex-shrink: 0;
+        }
+        .profile-image-card .info h6 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.85rem;
+        }
+        .profile-image-card .info small {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+        .profile-image-card .dropdown-toggle {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 0 0 0 8px;
+            font-size: 0.8rem;
+        }
+        .profile-image-card .dropdown-toggle:hover {
+            color: var(--text-color);
+        }
+        .profile-image-card .dropdown-menu {
+            background: var(--dropdown-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 200px;
+            z-index: 99999 !important;
+        }
+        .profile-image-card .dropdown-item {
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        .profile-image-card .dropdown-item:hover {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+        }
+        .profile-image-card .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            color: #4c9f70;
+        }
+        .profile-image-card .dropdown-item.text-danger i { color: #dc3545; }
+        .profile-image-card .dropdown-item.text-danger:hover {
+            background: rgba(220, 53, 69, 0.15);
+        }
+        .profile-image-card .dropdown-divider {
+            border-color: var(--glass-border);
+        }
+
+        .profile-edit-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 3px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--text-color);
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-size: cover;
+            background-position: center;
+        }
+        .profile-edit-avatar:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+        .profile-edit-avatar .avatar-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 4px;
+            border-radius: 0 0 50% 50%;
+            text-align: center;
+        }
+        .profile-edit-avatar .avatar-overlay i {
+            font-size: 0.8rem;
+        }
+        .edit-profile-form .form-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .edit-profile-form .form-control,
+        .edit-profile-form .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+            border-radius: 8px;
+        }
+        .edit-profile-form .form-control:focus,
+        .edit-profile-form .form-select:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .edit-profile-form .form-control::placeholder {
+            color: var(--text-muted);
+        }
+        .edit-profile-form .form-text {
+            color: var(--text-muted);
+        }
+        .permission-checkbox {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .permission-checkbox .form-check {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 8px 15px;
+            margin: 0;
+            transition: all 0.2s ease;
+        }
+        .permission-checkbox .form-check:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .permission-checkbox .form-check-input {
+            margin-right: 8px;
+        }
+        .permission-checkbox .form-check-label {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        /* ===== ESTILOS CONSULTAS ===== */
+        .consulta-item {
+            background: var(--glass-bg);
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .consulta-item:hover {
+            transform: translateX(5px);
+            background: rgba(255,255,255,0.05);
+        }
+        .consulta-item .consulta-info {
+            flex: 1;
+        }
+        .consulta-item .consulta-info .name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .consulta-item .consulta-info .details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== ESTILOS EXAMES ===== */
+        .exame-result-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .exame-result-item .exam-info {
+            flex: 1;
+        }
+        .exame-result-item .exam-info .exam-name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .exame-result-item .exam-info .exam-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== ESTILOS PRESCRIÇÕES ===== */
+        .prescricao-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            border-left: 4px solid var(--primary-color);
+        }
+        .prescricao-item .presc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .prescricao-item .presc-header .presc-name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* ===== ESTILOS NOTIFICAÇÕES ===== */
+        .notificacao-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 6px;
+            border-left: 4px solid var(--primary-color);
+        }
+        .notificacao-item .notif-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .notificacao-item .notif-text {
+            color: var(--text-color);
+        }
+        .notificacao-item.urgent { border-left-color: var(--danger-color); }
+        .notificacao-item.warning { border-left-color: var(--warning-color); }
+        .notificacao-item.info { border-left-color: var(--info-color); }
+
+        /* ===== BOTÕES ===== */
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+            color: #fff;
+        }
+
+        .vita-med {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .dropdown-menu {
+            z-index: 99999 !important;
+        }
+        .dropdown {
+            z-index: 9998 !important;
+        }
+        .dropdown-menu.show {
+            display: block !important;
+        }
+
+        /* ===== ESTILOS INTERNAMENTO ===== */
+        .internamento-card {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+        }
+        .internamento-card .intern-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .internamento-card .intern-header h6 {
+            color: var(--text-color);
+            margin: 0;
+        }
+        .internamento-card .intern-details {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* ===== ESTILOS FINANCEIRO ===== */
+        .financeiro-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .financeiro-item .fin-info {
+            flex: 1;
+        }
+        .financeiro-item .fin-info .fin-nome {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .financeiro-item .fin-info .fin-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== ESTILOS COMPROVATIVO ===== */
+        .comprovativo-container {
+            background: #ffffff;
+            color: #1a2634;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        .comprovativo-container .header {
+            text-align: center;
+            border-bottom: 2px solid #2b7a4b;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .comprovativo-container .header h3 {
+            color: #2b7a4b;
+            font-weight: bold;
+            margin: 0;
+        }
+        .comprovativo-container .header p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .comprovativo-container .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .comprovativo-container .info-row .label {
+            font-weight: 600;
+            color: #495057;
+        }
+        .comprovativo-container .info-row .value {
+            color: #212529;
+        }
+        .comprovativo-container .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #6c757d;
+            border-top: 2px solid #2b7a4b;
+            padding-top: 15px;
+        }
+        .comprovativo-container .qr-code-container {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .comprovativo-container .qr-code-container #qrcode {
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .comprovativo-container .status-confirmado {
+            color: #198754;
+            font-weight: bold;
+        }
+        .comprovativo-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .comprovativo-actions .btn {
+            min-width: 120px;
+        }
+        @media print {
+            .comprovativo-actions { display: none !important; }
+            .modal-header, .modal-footer { display: none !important; }
+            .comprovativo-container { box-shadow: none !important; border: 1px solid #ddd; }
+            .modal-content { background: #fff !important; }
+            body { background: #fff !important; }
+            .modal-dialog { max-width: 100% !important; margin: 0 !important; }
+            .modal { position: static !important; display: block !important; }
+            .modal-backdrop { display: none !important; }
+            #comprovativoContent { padding: 20px; }
+        }
+        
+        .modal-dialog {
+            min-height: 100vh;
+            width: 100%;
+            background-image: url('images/consultas-pac.jpg');
+            background-position: center 30%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- ========== CABEÇALHO ========== -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h2 class="page-title">
+                        <i class="fas fa-user-circle text-primary"></i> 
+                        Área do Paciente
+                        <span class="badge bg-primary ms-2 notification-badge">ATIVO</span>
+                    </h2>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        
+                        <!-- DASHBOARD DROPDOWN -->
+                        <div class="dashboard-dropdown dropdown">
+                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-th-large me-1"></i> Menu
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="dashboardMenu">
+                                <li><a class="dropdown-item" href="#dashboard-tab" data-tab="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+                                <li><a class="dropdown-item" href="#perfil-tab" data-tab="perfil"><i class="fas fa-user"></i> Perfil</a></li>
+                                <li><a class="dropdown-item" href="#consultas-tab" data-tab="consultas"><i class="fas fa-calendar-check"></i> Consultas</a></li>
+                                <li><a class="dropdown-item" href="#prontuario-tab" data-tab="prontuario"><i class="fas fa-file-medical"></i> Prontuário</a></li>
+                                <li><a class="dropdown-item" href="#exames-tab" data-tab="exames"><i class="fas fa-flask"></i> Exames</a></li>
+                                <li><a class="dropdown-item" href="#prescricoes-tab" data-tab="prescricoes"><i class="fas fa-prescription"></i> Prescrições</a></li>
+                                <li><a class="dropdown-item" href="#internamento-tab" data-tab="internamento"><i class="fas fa-hospital"></i> Internamento</a></li>
+                                <li><a class="dropdown-item" href="#financeiro-tab" data-tab="financeiro"><i class="fas fa-coins"></i> Financeiro</a></li>
+                                <li><a class="dropdown-item" href="#notificacoes-tab" data-tab="notificacoes"><i class="fas fa-bell"></i> Notificações</a></li>
+                                <li><a class="dropdown-item" href="#relatorios-tab" data-tab="relatorios"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#comunicacao-tab" data-tab="comunicacao"><i class="fas fa-comment-dots"></i> Comunicação</a></li>
+                            </ul>
+                        </div>
+                        
+                        <!-- RELÓGIO -->
+                        <span class="badge" id="currentDateTime">
+                            <i class="bi bi-clock"></i> 
+                            <span id="dateTimeDisplay">Carregando...</span>
+                        </span>
+
+                        <!-- THEME TOGGLE -->
+                        <div class="theme-toggle" id="themeToggle" title="Alterar Tema">
+                            <i class="fas fa-moon" id="themeIcon"></i>
+                        </div>
+
+                        <!-- TIMER CIRCULAR -->
+                        <div class="header-timer-wrapper">
+                            <span class="timer-label" id="timerLabel">Sessão</span>
+                            <div class="timer-container" id="timerContainer">
+                                <svg viewBox="0 0 60 60">
+                                    <circle class="timer-bg" cx="30" cy="30" r="27"/>
+                                    <circle class="timer-progress" id="timerProgress" cx="30" cy="30" r="27"/>
+                                </svg>
+                                <span class="timer-text" id="timerText">15:00</span>
+                            </div>
+                        </div>
+                        
+                        <!-- ===== PERFIL ===== -->
+                        <div class="profile-image-card dropdown" id="profileCard">
+                            <div class="avatar-img" id="profileCardAvatar">MS</div>
+                            <div class="info">
+                                <h6 id="profileCardName">Maria Silva</h6>
+                                <small id="profileCardSpecialty">Paciente</small>
+                            </div>
+                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="profileCardMenu">
+                                <li><a class="dropdown-item" href="#" id="profileCardView"><i class="fas fa-user"></i> Ver Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="profileCardEdit"><i class="fas fa-edit"></i> Editar Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="profileCardPassword"><i class="fas fa-key"></i> Alterar Senha</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="logout.html" id="profileCardLogout">
+                                        <i class="fas fa-sign-out-alt"></i> Sair
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== PAINEL DE ESTATÍSTICAS ========== -->
+        <div class="row mb-4" id="dashboard-tab">
+            <div class="col-md-2 col-6">
+                <div class="indicator-card fade-in">
+                    <div class="number" id="totalConsultas">0</div>
+                    <div class="label"><i class="fas fa-calendar-check"></i> Consultas</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card success fade-in">
+                    <div class="number" id="consultasConfirmadas">0</div>
+                    <div class="label"><i class="fas fa-check-circle"></i> Confirmadas</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card info fade-in">
+                    <div class="number" id="examesConcluidos">0</div>
+                    <div class="label"><i class="fas fa-flask"></i> Exames</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card warning fade-in">
+                    <div class="number" id="prescricoesAtivas">0</div>
+                    <div class="label"><i class="fas fa-prescription"></i> Prescrições</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card danger fade-in">
+                    <div class="number" id="pagamentosPendentes">0</div>
+                    <div class="label"><i class="fas fa-coins"></i> Pagamentos</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card primary fade-in">
+                    <div class="number" id="notificacoesCount">0</div>
+                    <div class="label"><i class="fas fa-bell"></i> Notificações</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TABS ========== -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item"><button class="nav-link active" id="consultas-tab" data-bs-toggle="tab" data-bs-target="#consultas" type="button"><i class="fas fa-calendar-check"></i> Consultas</button></li>
+            <li class="nav-item"><button class="nav-link" id="prontuario-tab" data-bs-toggle="tab" data-bs-target="#prontuario" type="button"><i class="fas fa-file-medical"></i> Prontuário</button></li>
+            <li class="nav-item"><button class="nav-link" id="exames-tab" data-bs-toggle="tab" data-bs-target="#exames" type="button"><i class="fas fa-flask"></i> Exames</button></li>
+            <li class="nav-item"><button class="nav-link" id="prescricoes-tab" data-bs-toggle="tab" data-bs-target="#prescricoes" type="button"><i class="fas fa-prescription"></i> Prescrições</button></li>
+            <li class="nav-item"><button class="nav-link" id="internamento-tab" data-bs-toggle="tab" data-bs-target="#internamento" type="button"><i class="fas fa-hospital"></i> Internamento</button></li>
+            <li class="nav-item"><button class="nav-link" id="financeiro-tab" data-bs-toggle="tab" data-bs-target="#financeiro" type="button"><i class="fas fa-coins"></i> Financeiro</button></li>
+            <li class="nav-item"><button class="nav-link" id="notificacoes-tab" data-bs-toggle="tab" data-bs-target="#notificacoes" type="button"><i class="fas fa-bell"></i> Notificações</button></li>
+            <li class="nav-item"><button class="nav-link" id="relatorios-tab" data-bs-toggle="tab" data-bs-target="#relatorios" type="button"><i class="fas fa-chart-bar"></i> Relatórios</button></li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- ===== ABA CONSULTAS ===== -->
+            <div class="tab-pane fade show active" id="consultas" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="search-section">
+                            <h6><i class="fas fa-calendar-check me-2"></i> Minhas Consultas</h6>
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="filterConsStatus">
+                                        <option value="">Todos</option>
+                                        <option value="Agendada">🔵 Agendada</option>
+                                        <option value="Confirmada">🟢 Confirmada</option>
+                                        <option value="Cancelada">⚪ Cancelada</option>
+                                        <option value="Realizada">🟣 Realizada</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-primary" id="btnSolicitarConsulta"><i class="fas fa-plus me-2"></i> Solicitar Consulta</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="listaConsultas">
+                            <!-- Consultas via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA PRONTUÁRIO ===== -->
+            <div class="tab-pane fade" id="prontuario" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-user-md me-2"></i> Dados Clínicos</h6>
+                            <div id="dadosClinicos">
+                                <div class="text-muted text-center p-3">Carregando dados...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-history me-2"></i> Histórico Clínico</h6>
+                            <div id="historicoClinico">
+                                <div class="text-muted text-center p-3">Nenhum histórico disponível</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA EXAMES ===== -->
+            <div class="tab-pane fade" id="exames" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-flask me-2"></i> Meus Exames</h6>
+                            <div id="listaExames">
+                                <div class="text-muted text-center p-3">Nenhum exame encontrado</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA PRESCRIÇÕES ===== -->
+            <div class="tab-pane fade" id="prescricoes" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-prescription me-2"></i> Minhas Prescrições</h6>
+                            <div id="listaPrescricoes">
+                                <div class="text-muted text-center p-3">Nenhuma prescrição ativa</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA INTERNAMENTO ===== -->
+            <div class="tab-pane fade" id="internamento" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-hospital me-2"></i> Meu Internamento</h6>
+                            <div id="internamentoInfo">
+                                <div class="text-muted text-center p-3">Nenhum internamento ativo</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA FINANCEIRO ===== -->
+            <div class="tab-pane fade" id="financeiro" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-coins me-2"></i> Minhas Faturas</h6>
+                            <div id="listaFaturas">
+                                <div class="text-muted text-center p-3">Nenhuma fatura encontrada</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA NOTIFICAÇÕES ===== -->
+            <div class="tab-pane fade" id="notificacoes" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-bell me-2"></i> Notificações</h6>
+                            <div id="listaNotificacoes">
+                                <div class="text-muted text-center p-3">Nenhuma notificação</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA RELATÓRIOS ===== -->
+            <div class="tab-pane fade" id="relatorios" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioConsultas">
+                            <div class="card-body text-center">
+                                <i class="fas fa-calendar-check text-primary fs-1"></i>
+                                <h5 class="card-title mt-3">Consultas</h5>
+                                <p class="card-text">Histórico de consultas realizadas</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioExames">
+                            <div class="card-body text-center">
+                                <i class="fas fa-flask text-success fs-1"></i>
+                                <h5 class="card-title mt-3">Exames</h5>
+                                <p class="card-text">Relatório de exames realizados</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioFinanceiro">
+                            <div class="card-body text-center">
+                                <i class="fas fa-coins text-info fs-1"></i>
+                                <h5 class="card-title mt-3">Financeiro</h5>
+                                <p class="card-text">Resumo financeiro de serviços</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAIS ========== -->
+    <!-- Modal de Perfil -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user me-2"></i> Meu Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <div class="profile-avatar-lg">MS</div>
+                        <h4 id="profileDoctorName">Maria Silva</h4>
+                        <span class="badge bg-primary">ID: P-2026-0158</span>
+                        <span class="badge bg-success">Ativo</span>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="profile-detail"><span class="label">Nome Completo</span><span class="value">Maria Silva Santos</span></div>
+                            <div class="profile-detail"><span class="label">Data Nascimento</span><span class="value">15/05/1998</span></div>
+                            <div class="profile-detail"><span class="label">Sexo</span><span class="value">Feminino</span></div>
+                            <div class="profile-detail"><span class="label">Email</span><span class="value">maria.silva@email.com</span></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="profile-detail"><span class="label">Telefone</span><span class="value">+244 923 456 789</span></div>
+                            <div class="profile-detail"><span class="label">Contacto Emergência</span><span class="value">+244 923 456 780</span></div>
+                            <div class="profile-detail"><span class="label">Endereço</span><span class="value">Rua 1, Bairro 2, Malanje</span></div>
+                            <div class="profile-detail"><span class="label">Alergias</span><span class="value">Nenhuma</span></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h6>Informações Adicionais</h6>
+                    <div class="row">
+                        <div class="col-4"><div class="text-center"><h6 class="text-primary">12</h6><small class="text-muted">Consultas</small></div></div>
+                        <div class="col-4"><div class="text-center"><h6 class="text-success">5</h6><small class="text-muted">Exames</small></div></div>
+                        <div class="col-4"><div class="text-center"><h6 class="text-warning">3</h6><small class="text-muted">Prescrições</small></div></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="profileEditBtn"><i class="fas fa-edit me-1"></i> Editar Perfil</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Perfil -->
+    <div class="modal fade" id="profileEditModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-edit me-2"></i> Editar Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="profileEditForm" class="edit-profile-form">
+                        <div class="text-center mb-4">
+                            <div class="profile-edit-avatar" id="avatarUpload">
+                                <span id="avatarInitials">MS</span>
+                                <div class="avatar-overlay">
+                                    <i class="fas fa-camera"></i> Alterar
+                                </div>
+                            </div>
+                            <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
+                            <small class="text-muted">Clique na imagem para alterar a foto</small>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nome Completo</label>
+                                    <input type="text" class="form-control" id="editFullName" value="Maria Silva Santos" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Data Nascimento</label>
+                                    <input type="date" class="form-control" id="editDataNasc" value="1998-05-15">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Sexo</label>
+                                    <select class="form-select" id="editSexo">
+                                        <option value="Feminino" selected>Feminino</option>
+                                        <option value="Masculino">Masculino</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="editEmail" value="maria.silva@email.com" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Telefone</label>
+                                    <input type="text" class="form-control" id="editPhone" value="+244 923 456 789" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Contacto Emergência</label>
+                                    <input type="text" class="form-control" id="editEmergencia" value="+244 923 456 780">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Endereço</label>
+                                    <input type="text" class="form-control" id="editEndereco" value="Rua 1, Bairro 2, Malanje">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Alergias</label>
+                                    <input type="text" class="form-control" id="editAlergias" value="Nenhuma">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>Preferências</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Idioma</label>
+                                    <select class="form-select" id="editLanguage">
+                                        <option value="pt" selected>Português</option>
+                                        <option value="en">Inglês</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Tema</label>
+                                    <select class="form-select" id="editTheme">
+                                        <option value="dark" selected>Escuro</option>
+                                        <option value="light">Claro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveProfile"><i class="fas fa-save me-1"></i> Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Solicitar Consulta -->
+    <div class="modal fade" id="solicitarConsultaModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-calendar-plus me-2"></i> Solicitar Consulta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Especialidade</label>
+                        <select class="form-select" id="solEspecialidade">
+                            <option value="Pediatria">Pediatria</option>
+                            <option value="Cardiologia">Cardiologia</option>
+                            <option value="Ginecologia">Ginecologia</option>
+                            <option value="Ortopedia">Ortopedia</option>
+                            <option value="Neurologia">Neurologia</option>
+                            <option value="Dermatologia">Dermatologia</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Médico (opcional)</label>
+                        <select class="form-select" id="solMedico">
+                            <option value="">Qualquer médico</option>
+                            <option value="Dra. Ana Manuel">Dra. Ana Manuel</option>
+                            <option value="Dr. Carlos Santos">Dr. Carlos Santos</option>
+                            <option value="Dra. Maria Santos">Dra. Maria Santos</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Data Preferencial</label>
+                        <input type="date" class="form-control" id="solData">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Hora Preferencial</label>
+                        <input type="time" class="form-control" id="solHora">
+                        <small class="text-muted">Selecione o horário desejado para a consulta</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Motivo</label>
+                        <textarea class="form-control" id="solMotivo" rows="3" placeholder="Descreva o motivo da consulta"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnEnviarSolicitacao">
+                         Enviar Solicitação <i class="fas fa-paper-plane me-2">
+                        </i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL COMPROVATIVO ===== -->
+    <div class="modal fade" id="comprovativoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="background: transparent; border: none;">
+                <div class="modal-body" style="padding: 0;">
+                    <div id="comprovativoContent" class="comprovativo-container">
+                        <!-- Conteúdo gerado via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Sessão -->
+    <div class="modal fade" id="sessionModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-clock me-2" style="color:#ffc107;"></i> Sessão a expirar</h5>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="fas fa-exclamation-triangle" style="font-size:3rem; color:#ffc107; margin-bottom:15px;"></i>
+                    <h4>Tem a certeza que pretende terminar a sessão?</h4>
+                    <p class="text-muted" style="color:var(--text-muted) !important;">A sua sessão irá expirar em <strong id="sessionCountdown">2:00</strong> minutos.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-success" id="sessionContinueBtn"><i class="fas fa-check me-2"></i> Não, continuar</button>
+                    <button type="button" class="btn btn-danger" id="sessionEndBtn"><i class="fas fa-sign-out-alt me-2"></i> Sim, terminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CHATBOT VITA ========== -->
+    <div class="chatbot-container">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <span class="chatbot-name"><i class="fas fa-robot"></i> VITA</span>
+                <button class="chatbot-close" id="chatbotClose"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chatbot-body" id="chatbotBody">
+                <div class="message bot">
+                    <i class="fas fa-robot me-1"></i> Olá! Sou a <strong>VITA</strong>, sua assistente virtual.<br>
+                    Como posso ajudar? Pergunte sobre consultas, exames, prescrições ou internamentos.
+                </div>
+            </div>
+            
+            <div class="chatbot-footer">
+                <input type="text" id="chatbotInput" placeholder="Digite sua pergunta...">
+                <button id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <button class="chatbot-toggle" id="chatbotToggle">
+            <img class="vita-med" src="images/chat-bot.png" alt="VITA">
+            <span class="badge-notification">1</span>
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // ================================================================
+            // 1. THEME TOGGLE
+            // ================================================================
+            let currentTheme = 'dark';
+            const themeToggle = $('#themeToggle');
+            const themeIcon = $('#themeIcon');
+
+            function setTheme(theme) {
+                currentTheme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                if (theme === 'light') {
+                    themeIcon.removeClass('fa-moon').addClass('fa-sun');
+                } else {
+                    themeIcon.removeClass('fa-sun').addClass('fa-moon');
+                }
+                localStorage.setItem('vitalinka-theme', theme);
+            }
+
+            const savedTheme = localStorage.getItem('vitalinka-theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            }
+
+            themeToggle.click(function() {
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+            });
+
+            // ================================================================
+            // 2. DASHBOARD DROPDOWN
+            // ================================================================
+            $('#dashboardMenu .dropdown-item[data-tab]').click(function(e) {
+                e.preventDefault();
+                const tabId = $(this).data('tab');
+                const tabButton = $(`#${tabId}-tab`);
+                if (tabButton.length) {
+                    const tab = new bootstrap.Tab(tabButton[0]);
+                    tab.show();
+                }
+                $(this).closest('.dropdown').find('.dropdown-toggle').dropdown('toggle');
+            });
+
+            // ================================================================
+            // 3. PERFIL
+            // ================================================================
+            const profileModal = new bootstrap.Modal(document.getElementById('profileModal'));
+            const profileEditModal = new bootstrap.Modal(document.getElementById('profileEditModal'));
+            const solicitarConsultaModal = new bootstrap.Modal(document.getElementById('solicitarConsultaModal'));
+            const comprovativoModal = new bootstrap.Modal(document.getElementById('comprovativoModal'));
+
+            $('#profileCardView').click(function(e) {
+                e.preventDefault();
+                profileModal.show();
+            });
+
+            $('#profileEditBtn').click(function() {
+                profileModal.hide();
+                loadProfileDataToEdit();
+                profileEditModal.show();
+            });
+
+            $('#profileCardEdit').click(function(e) {
+                e.preventDefault();
+                loadProfileDataToEdit();
+                profileEditModal.show();
+            });
+
+            $('#profileCardLogout').click(function(e) {
+                e.preventDefault();
+                if (confirm('Tem certeza que deseja sair?')) {
+                    clearInterval(timerInterval);
+                    window.location.href = "logout.html";
+                }
+            });
+
+            $('#profileCardPassword').click(function(e) {
+                e.preventDefault();
+                alert('🔐 Redirecionando para a página de alteração de senha...');
+            });
+
+            // ================================================================
+            // 4. PERFIL - DADOS
+            // ================================================================
+            let profileData = {
+                fullName: 'Maria Silva Santos',
+                dataNasc: '1998-05-15',
+                sexo: 'Feminino',
+                email: 'maria.silva@email.com',
+                phone: '+244 923 456 789',
+                emergencia: '+244 923 456 780',
+                endereco: 'Rua 1, Bairro 2, Malanje',
+                alergias: 'Nenhuma',
+                language: 'pt',
+                theme: 'dark',
+                id: 'P-2026-0158'
+            };
+
+            function loadProfileDataToEdit() {
+                $('#editFullName').val(profileData.fullName);
+                $('#editDataNasc').val(profileData.dataNasc);
+                $('#editSexo').val(profileData.sexo);
+                $('#editEmail').val(profileData.email);
+                $('#editPhone').val(profileData.phone);
+                $('#editEmergencia').val(profileData.emergencia);
+                $('#editEndereco').val(profileData.endereco);
+                $('#editAlergias').val(profileData.alergias);
+                $('#editLanguage').val(profileData.language);
+                $('#editTheme').val(profileData.theme);
+                
+                const initials = profileData.fullName.split(' ').map(n => n[0]).join('');
+                $('#avatarInitials').text(initials);
+                $('#avatarUpload').css('background-image', 'none');
+                $('#avatarInitials').show();
+            }
+
+            function saveProfileData() {
+                profileData.fullName = $('#editFullName').val() || profileData.fullName;
+                profileData.dataNasc = $('#editDataNasc').val() || profileData.dataNasc;
+                profileData.sexo = $('#editSexo').val() || profileData.sexo;
+                profileData.email = $('#editEmail').val() || profileData.email;
+                profileData.phone = $('#editPhone').val() || profileData.phone;
+                profileData.emergencia = $('#editEmergencia').val() || profileData.emergencia;
+                profileData.endereco = $('#editEndereco').val() || profileData.endereco;
+                profileData.alergias = $('#editAlergias').val() || profileData.alergias;
+                profileData.language = $('#editLanguage').val() || profileData.language;
+                profileData.theme = $('#editTheme').val() || profileData.theme;
+                
+                updateProfileDisplay();
+                profileEditModal.hide();
+                
+                alert('✅ Perfil atualizado com sucesso!');
+            }
+
+            function updateProfileDisplay() {
+                const initials = profileData.fullName.split(' ').map(n => n[0]).join('');
+                $('.profile-avatar-lg').text(initials);
+                $('#profileDoctorName').text(profileData.fullName);
+                
+                $('#profileCardAvatar').text(initials);
+                $('#profileCardName').text(profileData.fullName);
+                $('#profileCardSpecialty').text('Paciente');
+                
+                if (profileData.theme !== currentTheme) {
+                    setTheme(profileData.theme);
+                }
+            }
+
+            $('#btnSaveProfile').click(saveProfileData);
+
+            $('#avatarUpload').click(function() { $('#avatarFileInput').click(); });
+            $('#avatarFileInput').change(function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        $('#avatarUpload').css({
+                            'background-image': `url(${event.target.result})`,
+                            'background-size': 'cover',
+                            'background-position': 'center'
+                        });
+                        $('#avatarInitials').hide();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // ================================================================
+            // 5. DADOS DE EXEMPLO
+            // ================================================================
+            
+            // Consultas
+            let consultas = [
+                { id: 1, especialidade: 'Pediatria', medico: 'Dra. Ana Manuel', data: '15/08/2026', hora: '09:30', status: 'Confirmada', motivo: 'Consulta de rotina' },
+                { id: 2, especialidade: 'Cardiologia', medico: 'Dr. Carlos Santos', data: '20/08/2026', hora: '14:00', status: 'Agendada', motivo: 'Acompanhamento' },
+                { id: 3, especialidade: 'Ginecologia', medico: 'Dra. Maria Santos', data: '10/08/2026', hora: '11:00', status: 'Realizada', motivo: 'Exame de rotina' }
+            ];
+            let consultaCounter = 4;
+
+            // Exames
+            let exames = [
+                { id: 1, tipo: 'Hemograma', data: '15/08/2026', status: 'Concluído', resultado: 'Normal', medico: 'Dra. Ana Manuel' },
+                { id: 2, tipo: 'Glicemia', data: '16/08/2026', status: 'Pendente', resultado: 'Aguardando', medico: 'Dr. Carlos Santos' }
+            ];
+
+            // Prescrições
+            let prescricoes = [
+                { id: 1, medicamento: 'Amoxicilina 500mg', dose: '500mg', frequencia: '8/8h', duracao: '7 dias', status: 'Ativa', medico: 'Dra. Ana Manuel' },
+                { id: 2, medicamento: 'Paracetamol 500mg', dose: '500mg', frequencia: '6/6h', duracao: '5 dias', status: 'Concluída', medico: 'Dr. Carlos Santos' }
+            ];
+
+            // Internamento
+            let internamento = null;
+
+            // Faturas
+            let faturas = [
+                { id: 1, descricao: 'Consulta Pediatria', valor: 1500.00, status: 'Paga', data: '15/08/2026' },
+                { id: 2, descricao: 'Exames Laboratoriais', valor: 800.00, status: 'Pendente', data: '16/08/2026' }
+            ];
+
+            // Notificações
+            let notificacoes = [
+                { id: 1, texto: '📅 Lembrete: Consulta com Dra. Ana Manuel em 15/08/2026 às 09:30', tipo: 'info', hora: '14/08/2026 18:00' },
+                { id: 2, texto: '🧪 Resultado do Hemograma disponível para consulta', tipo: 'info', hora: '15/08/2026 10:30' },
+                { id: 3, texto: '💊 Lembrete: Tomar Amoxicilina às 08:00', tipo: 'warning', hora: '15/08/2026 07:00' }
+            ];
+
+            // ================================================================
+            // 6. FUNÇÕES PRINCIPAIS
+            // ================================================================
+            function updateDateTime() {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('pt-BR');
+                const timeStr = now.toLocaleTimeString('pt-BR');
+                $('#dateTimeDisplay').text(`${dateStr} ${timeStr}`);
+            }
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            function getStatusClass(status) {
+                const map = {
+                    'Agendada': 'scheduled',
+                    'Confirmada': 'confirmed',
+                    'Cancelada': 'cancelled',
+                    'Realizada': 'completed',
+                    'Pendente': 'pending',
+                    'Concluído': 'completed',
+                    'Ativa': 'confirmed',
+                    'Concluída': 'completed',
+                    'Paga': 'confirmed'
+                };
+                return map[status] || 'pending';
+            }
+
+            function getStatusEmoji(status) {
+                const map = {
+                    'Agendada': '🔵',
+                    'Confirmada': '🟢',
+                    'Cancelada': '⚪',
+                    'Realizada': '🟣',
+                    'Pendente': '🟡',
+                    'Concluído': '🟢',
+                    'Ativa': '🟢',
+                    'Concluída': '🟣',
+                    'Paga': '🟢'
+                };
+                return map[status] || '🟡';
+            }
+
+            function formatMoeda(valor) {
+                return 'Kz ' + valor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            }
+
+            function updateStats() {
+                const totalCons = consultas.length;
+                const confirmadas = consultas.filter(c => c.status === 'Confirmada' || c.status === 'Agendada').length;
+                const examesConc = exames.filter(e => e.status === 'Concluído').length;
+                const prescAtivas = prescricoes.filter(p => p.status === 'Ativa').length;
+                const pagPendentes = faturas.filter(f => f.status === 'Pendente').length;
+                const notifCount = notificacoes.length;
+
+                $('#totalConsultas').text(totalCons);
+                $('#consultasConfirmadas').text(confirmadas);
+                $('#examesConcluidos').text(examesConc);
+                $('#prescricoesAtivas').text(prescAtivas);
+                $('#pagamentosPendentes').text(pagPendentes);
+                $('#notificacoesCount').text(notifCount);
+            }
+            updateStats();
+
+            function renderConsultas() {
+                const container = $('#listaConsultas');
+                container.empty();
+
+                const status = $('#filterConsStatus').val();
+                let filtered = consultas;
+                if (status) filtered = filtered.filter(c => c.status === status);
+
+                if (filtered.length === 0) {
+                    container.append('<div class="text-muted text-center p-4">Nenhuma consulta encontrada.</div>');
+                    return;
+                }
+
+                filtered.forEach(c => {
+                    const statusClass = getStatusClass(c.status);
+                    const emoji = getStatusEmoji(c.status);
+                    container.append(`
+                        <div class="consulta-item" data-id="${c.id}">
+                            <div class="consulta-info">
+                                <div>
+                                    <span class="name">${c.especialidade}</span>
+                                    <span class="badge bg-secondary ms-2">${c.medico}</span>
+                                </div>
+                                <div class="details">
+                                    ${emoji} ${c.status} • ${c.data} ${c.hora} • ${c.motivo}
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-success confirmar-btn" data-id="${c.id}"><i class="fas fa-check"></i> Confirmar</button>
+                                <button class="btn btn-sm btn-outline-danger cancelar-cons-btn" data-id="${c.id}"><i class="fas fa-times"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderExames() {
+                const container = $('#listaExames');
+                container.empty();
+                if (exames.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhum exame encontrado</div>');
+                    return;
+                }
+                exames.forEach(e => {
+                    const statusClass = e.status === 'Concluído' ? 'success' : 'warning';
+                    container.append(`
+                        <div class="exame-result-item">
+                            <div class="exam-info">
+                                <div class="exam-name">${e.tipo}</div>
+                                <div class="exam-details">${e.medico} • ${e.data} • Resultado: ${e.resultado}</div>
+                            </div>
+                            <span class="badge bg-${statusClass}">${e.status}</span>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderPrescricoes() {
+                const container = $('#listaPrescricoes');
+                container.empty();
+                if (prescricoes.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma prescrição ativa</div>');
+                    return;
+                }
+                prescricoes.forEach(p => {
+                    const statusClass = p.status === 'Ativa' ? 'success' : 'secondary';
+                    container.append(`
+                        <div class="prescricao-item">
+                            <div class="presc-header">
+                                <span class="presc-name">${p.medicamento}</span>
+                                <span class="badge bg-${statusClass}">${p.status}</span>
+                            </div>
+                            <div class="text-muted small">${p.dose} • ${p.frequencia} • ${p.duracao} • ${p.medico}</div>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderInternamento() {
+                const container = $('#internamentoInfo');
+                container.empty();
+                if (!internamento) {
+                    container.append('<div class="text-muted text-center p-3">Nenhum internamento ativo</div>');
+                    return;
+                }
+                container.append(`
+                    <div class="internamento-card">
+                        <div class="intern-header">
+                            <h6>Internamento Ativo</h6>
+                            <span class="badge bg-primary">${internamento.enfermaria}</span>
+                        </div>
+                        <div class="intern-details">
+                            <div><strong>Cama:</strong> ${internamento.cama}</div>
+                            <div><strong>Data Início:</strong> ${internamento.dataInicio}</div>
+                            <div><strong>Médico Responsável:</strong> ${internamento.medico}</div>
+                            <div><strong>Previsão Alta:</strong> ${internamento.previsaoAlta || 'A definir'}</div>
+                            <div><strong>Evolução:</strong> ${internamento.evolucao}</div>
+                        </div>
+                    </div>
+                `);
+            }
+
+            function renderFaturas() {
+                const container = $('#listaFaturas');
+                container.empty();
+                if (faturas.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma fatura encontrada</div>');
+                    return;
+                }
+                faturas.forEach(f => {
+                    const statusClass = f.status === 'Paga' ? 'success' : 'warning';
+                    container.append(`
+                        <div class="financeiro-item">
+                            <div class="fin-info">
+                                <div class="fin-nome">${f.descricao}</div>
+                                <div class="fin-details">${f.data}</div>
+                            </div>
+                            <div>
+                                <span class="badge bg-${statusClass} me-2">${f.status}</span>
+                                <span class="fw-bold">${formatMoeda(f.valor)}</span>
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderNotificacoes() {
+                const container = $('#listaNotificacoes');
+                container.empty();
+                if (notificacoes.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma notificação</div>');
+                    return;
+                }
+                notificacoes.slice().reverse().forEach(n => {
+                    container.append(`
+                        <div class="notificacao-item ${n.tipo}">
+                            <div class="notif-time">${n.hora}</div>
+                            <div class="notif-text">${n.texto}</div>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderDadosClinicos() {
+                const container = $('#dadosClinicos');
+                container.html(`
+                    <div><strong>Nome:</strong> ${profileData.fullName}</div>
+                    <div><strong>Data Nascimento:</strong> ${profileData.dataNasc ? new Date(profileData.dataNasc).toLocaleDateString('pt-BR') : '--'}</div>
+                    <div><strong>Sexo:</strong> ${profileData.sexo}</div>
+                    <div><strong>Email:</strong> ${profileData.email}</div>
+                    <div><strong>Telefone:</strong> ${profileData.phone}</div>
+                    <div><strong>Contacto Emergência:</strong> ${profileData.emergencia}</div>
+                    <div><strong>Endereço:</strong> ${profileData.endereco}</div>
+                    <div><strong>Alergias:</strong> ${profileData.alergias}</div>
+                    <hr>
+                    <div><strong>ID Paciente:</strong> ${profileData.id}</div>
+                    <div><strong>Último Acesso:</strong> ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}</div>
+                `);
+            }
+
+            function renderHistoricoClinico() {
+                const container = $('#historicoClinico');
+                const historico = [
+                    { data: '15/08/2026', evento: 'Consulta com Dra. Ana Manuel - Pediatria', tipo: 'Consulta' },
+                    { data: '10/08/2026', evento: 'Hemograma - Resultado Normal', tipo: 'Exame' },
+                    { data: '05/08/2026', evento: 'Prescrição: Amoxicilina 500mg', tipo: 'Prescrição' }
+                ];
+                if (historico.length === 0) {
+                    container.html('<div class="text-muted text-center p-3">Nenhum histórico disponível</div>');
+                    return;
+                }
+                let html = '';
+                historico.forEach(h => {
+                    html += `
+                        <div class="evolucao-item">
+                            <div class="evolucao-date">${h.data}</div>
+                            <div class="evolucao-text"><strong>${h.tipo}</strong> - ${h.evento}</div>
+                        </div>
+                    `;
+                });
+                container.html(html);
+            }
+
+            // ================================================================
+            // 7. FUNÇÕES INDEPENDENTES PARA IMPRIMIR E BAIXAR PDF
+            // ================================================================
+            
+            // Função para imprimir o comprovativo
+            function imprimirComprovativo() {
+                const conteudo = document.getElementById('comprovativoContent');
+                const originalHTML = conteudo.innerHTML;
+                
+                const win = window.open('', '_blank');
+                win.document.write(`
+                    <html>
+                    <head>
+                        <title>Comprovativo de Consulta - VITALINKA</title>
+                        <style>
+                            body { 
+                                font-family: 'Times New Roman', Times, serif; 
+                                margin: 20px; 
+                                padding: 20px;
+                                background: #fff;
+                            }
+                            .comprovativo-container {
+                                max-width: 600px;
+                                margin: 0 auto;
+                                padding: 30px;
+                            }
+                            .header {
+                                text-align: center;
+                                border-bottom: 2px solid #2b7a4b;
+                                padding-bottom: 15px;
+                                margin-bottom: 20px;
+                            }
+                            .header h3 {
+                                color: #2b7a4b;
+                                font-weight: bold;
+                                margin: 0;
+                            }
+                            .header p {
+                                margin: 0;
+                                color: #6c757d;
+                                font-size: 0.9rem;
+                            }
+                            .info-row {
+                                display: flex;
+                                justify-content: space-between;
+                                padding: 8px 0;
+                                border-bottom: 1px solid #e9ecef;
+                            }
+                            .info-row .label {
+                                font-weight: 600;
+                                color: #495057;
+                            }
+                            .info-row .value {
+                                color: #212529;
+                            }
+                            .footer {
+                                margin-top: 20px;
+                                text-align: center;
+                                font-size: 0.8rem;
+                                color: #6c757d;
+                                border-top: 2px solid #2b7a4b;
+                                padding-top: 15px;
+                            }
+                            .qr-code-container {
+                                display: flex;
+                                justify-content: center;
+                                margin: 15px 0;
+                            }
+                            .qr-code-container #qrcode {
+                                background: #fff;
+                                padding: 10px;
+                                border-radius: 8px;
+                                border: 1px solid #dee2e6;
+                            }
+                            .status-confirmado {
+                                color: #198754;
+                                font-weight: bold;
+                            }
+                            .comprovativo-actions { display: none !important; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="comprovativo-container">
+                            ${originalHTML}
+                        </div>
+                        <script>
+                            window.onload = function() {
+                                window.print();
+                                window.close();
+                            };
+                        <\/script>
+                    </body>
+                    </html>
+                `);
+                win.document.close();
+            }
+
+            // Função para baixar PDF usando html2pdf.js
+            function baixarPDFComprovativo() {
+                const element = document.getElementById('comprovativoContent');
+                const btn = $('#btnSalvarPDFComprovativo');
+                const originalText = btn.html();
+                
+                btn.html('<i class="fas fa-spinner fa-spin me-2"></i> Gerando PDF...');
+                btn.prop('disabled', true);
+
+                const opt = {
+                    margin: 10,
+                    filename: `Comprovativo_Consulta_${new Date().toISOString().slice(0,10)}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2,
+                        useCORS: true,
+                        letterRendering: true
+                    },
+                    jsPDF: { 
+                        unit: 'mm', 
+                        format: 'a4', 
+                        orientation: 'portrait' 
+                    }
+                };
+
+                html2pdf().set(opt).from(element).save().then(function() {
+                    btn.html(originalText);
+                    btn.prop('disabled', false);
+                }).catch(function(err) {
+                    console.error('Erro ao gerar PDF:', err);
+                    alert('Ocorreu um erro ao gerar o PDF. Tente novamente.');
+                    btn.html(originalText);
+                    btn.prop('disabled', false);
+                });
+            }
+
+            // ================================================================
+            // 8. FUNÇÃO PARA GERAR COMPROVATIVO
+            // ================================================================
+            function gerarComprovativo(consulta) {
+                const container = $('#comprovativoContent');
+                const now = new Date();
+                const dataHora = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR');
+                const protocolo = 'C' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + String(consulta.id).padStart(4,'0');
+                
+                const qrData = JSON.stringify({
+                    tipo: 'COMPROVATIVO_CONSULTA',
+                    protocolo: protocolo,
+                    paciente: profileData.fullName,
+                    id_paciente: profileData.id,
+                    especialidade: consulta.especialidade,
+                    medico: consulta.medico,
+                    data: consulta.data,
+                    hora: consulta.hora,
+                    status: consulta.status,
+                    data_emissao: dataHora
+                });
+
+                container.html(`
+                    <div class="header">
+                        <h3>🏥 VITALINKA</h3>
+                        <p>Comprovativo de Marcação de Consulta</p>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="label">Protocolo</span>
+                        <span class="value"><strong>${protocolo}</strong></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Paciente</span>
+                        <span class="value">${profileData.fullName}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">ID Paciente</span>
+                        <span class="value">${profileData.id}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Especialidade</span>
+                        <span class="value">${consulta.especialidade}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Médico</span>
+                        <span class="value">${consulta.medico}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Data</span>
+                        <span class="value">${consulta.data}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Hora</span>
+                        <span class="value">${consulta.hora}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Motivo</span>
+                        <span class="value">${consulta.motivo || 'Não informado'}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Status</span>
+                        <span class="value status-confirmado">✅ ${consulta.status}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Data Emissão</span>
+                        <span class="value">${dataHora}</span>
+                    </div>
+
+                    <div class="qr-code-container">
+                        <div id="qrcode"></div>
+                    </div>
+
+                    <div class="footer">
+                        <p>Este comprovativo é válido como confirmação de agendamento.<br>
+                        Apresente este documento no dia da consulta.</p>
+                        <p><small>VITALINKA - Sistema de Gestão Hospitalar</small></p>
+                    </div>
+
+                    <div class="comprovativo-actions">
+                        <button class="btn btn-primary" id="btnImprimirComprovativo">
+                            <i class="fas fa-print me-2"></i> Imprimir
+                        </button>
+                        <button class="btn btn-success" id="btnSalvarPDFComprovativo">
+                            <i class="fas fa-file-pdf me-2"></i> Baixar PDF
+                        </button>
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i> Fechar
+                        </button>
+                    </div>
+                `);
+
+                const qrContainer = document.getElementById('qrcode');
+                qrContainer.innerHTML = '';
+                new QRCode(qrContainer, {
+                    text: qrData,
+                    width: 150,
+                    height: 150,
+                    colorDark: '#2b7a4b',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+                $('#btnImprimirComprovativo').off('click').on('click', function(e) {
+                    e.preventDefault();
+                    imprimirComprovativo();
+                });
+
+                $('#btnSalvarPDFComprovativo').off('click').on('click', function(e) {
+                    e.preventDefault();
+                    baixarPDFComprovativo();
+                });
+
+                comprovativoModal.show();
+            }
+
+            // ================================================================
+            // 9. EVENTOS - CONSULTAS
+            // ================================================================
+            $('#filterConsStatus').change(renderConsultas);
+
+            $('#btnSolicitarConsulta').click(function() {
+                solicitarConsultaModal.show();
+            });
+
+            $('#btnEnviarSolicitacao').click(function() {
+                const especialidade = $('#solEspecialidade').val();
+                const medico = $('#solMedico').val() || 'A definir';
+                const data = $('#solData').val();
+                const hora = $('#solHora').val() || '--:--';
+                const motivo = $('#solMotivo').val() || 'Não informado';
+
+                if (!data) {
+                    alert('Selecione uma data para a consulta.');
+                    return;
+                }
+
+                const novaConsulta = {
+                    id: consultaCounter++,
+                    especialidade,
+                    medico,
+                    data: new Date(data).toLocaleDateString('pt-BR'),
+                    hora: hora,
+                    status: 'Agendada',
+                    motivo
+                };
+
+                consultas.push(novaConsulta);
+
+                notificacoes.push({
+                    id: notificacoes.length + 1,
+                    texto: `📅 Nova consulta agendada: ${especialidade} com ${medico} em ${new Date(data).toLocaleDateString('pt-BR')} às ${hora}`,
+                    tipo: 'info',
+                    hora: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                });
+
+                renderConsultas();
+                renderNotificacoes();
+                updateStats();
+                solicitarConsultaModal.hide();
+                $('#solData, #solHora, #solMotivo').val('');
+                
+                gerarComprovativo(novaConsulta);
+                
+                alert(`✅ Consulta agendada com sucesso!\n\nEspecialidade: ${especialidade}\nData: ${new Date(data).toLocaleDateString('pt-BR')}\nHora: ${hora}`);
+            });
+
+            $(document).on('click', '.confirmar-btn', function() {
+                const id = $(this).data('id');
+                const consulta = consultas.find(c => c.id === id);
+                if (consulta && consulta.status !== 'Confirmada') {
+                    consulta.status = 'Confirmada';
+                    
+                    notificacoes.push({
+                        id: notificacoes.length + 1,
+                        texto: `✅ Consulta com ${consulta.medico} confirmada para ${consulta.data} ${consulta.hora}`,
+                        tipo: 'info',
+                        hora: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                    });
+                    renderConsultas();
+                    renderNotificacoes();
+                    updateStats();
+                    
+                    gerarComprovativo(consulta);
+                    alert(`✅ Consulta confirmada com sucesso!`);
+                }
+            });
+
+            $(document).on('click', '.cancelar-cons-btn', function() {
+                const id = $(this).data('id');
+                const consulta = consultas.find(c => c.id === id);
+                if (consulta && confirm(`Cancelar consulta de ${consulta.especialidade} em ${consulta.data}?`)) {
+                    consulta.status = 'Cancelada';
+                    notificacoes.push({
+                        id: notificacoes.length + 1,
+                        texto: `❌ Consulta com ${consulta.medico} cancelada para ${consulta.data}`,
+                        tipo: 'warning',
+                        hora: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                    });
+                    renderConsultas();
+                    renderNotificacoes();
+                    updateStats();
+                    alert(`❌ Consulta cancelada.`);
+                }
+            });
+
+            // ================================================================
+            // 10. EVENTOS - RELATÓRIOS
+            // ================================================================
+            $('.report-card').click(function() {
+                const type = $(this).attr('id').replace('relatorio', '').toLowerCase();
+                const titles = {
+                    consultas: 'Relatório de Consultas',
+                    exames: 'Relatório de Exames',
+                    financeiro: 'Relatório Financeiro'
+                };
+                alert(`📊 ${titles[type] || 'Relatório'}\n\nConsultas: ${consultas.length}\nExames: ${exames.length}\nFaturas: ${faturas.length}`);
+            });
+
+            // ================================================================
+            // 11. TIMER DE SESSÃO
+            // ================================================================
+            let totalSeconds = 900;
+            let timerInterval = null;
+            let sessionModalShown = false;
+            let sessionModal = new bootstrap.Modal(document.getElementById('sessionModal'), { backdrop: 'static', keyboard: false });
+
+            const timerProgress = document.getElementById('timerProgress');
+            const timerText = document.getElementById('timerText');
+            const timerContainer = document.getElementById('timerContainer');
+            const circumference = 2 * Math.PI * 27;
+
+            function updateTimer() {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                timerText.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+
+                const progress = totalSeconds / 900;
+                const offset = circumference * (1 - progress);
+                timerProgress.style.strokeDashoffset = offset;
+
+                timerContainer.classList.remove('timer-warning', 'timer-danger');
+                if (totalSeconds <= 120) timerContainer.classList.add('timer-danger');
+                else if (totalSeconds <= 300) timerContainer.classList.add('timer-warning');
+
+                if (totalSeconds === 120 && !sessionModalShown) {
+                    sessionModalShown = true;
+                    $('#sessionCountdown').text('2:00');
+                    sessionModal.show();
+                    const modalInterval = setInterval(() => {
+                        const remaining = totalSeconds;
+                        const mins = Math.floor(remaining / 60);
+                        const secs = remaining % 60;
+                        $('#sessionCountdown').text(`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`);
+                        if (remaining <= 0) clearInterval(modalInterval);
+                    }, 1000);
+                }
+
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    window.location.href = "408.html";
+                }
+            }
+
+            function startTimer() {
+                if (timerInterval) clearInterval(timerInterval);
+                totalSeconds = 900;
+                sessionModalShown = false;
+                timerProgress.style.strokeDasharray = circumference;
+                timerProgress.style.strokeDashoffset = circumference;
+                updateTimer();
+                timerInterval = setInterval(() => {
+                    totalSeconds--;
+                    updateTimer();
+                }, 1000);
+            }
+
+            $('#sessionContinueBtn').click(function() {
+                sessionModal.hide();
+                sessionModalShown = false;
+                startTimer();
+            });
+
+            $('#sessionEndBtn').click(function() {
+                sessionModal.hide();
+                clearInterval(timerInterval);
+                window.location.href = "index.html";
+            });
+
+            startTimer();
+
+            // ================================================================
+            // 12. CHATBOT VITA
+            // ================================================================
+            const chatbotToggle = $('#chatbotToggle');
+            const chatbotWindow = $('#chatbotWindow');
+            const chatbotClose = $('#chatbotClose');
+            const chatbotInput = $('#chatbotInput');
+            const chatbotSend = $('#chatbotSend');
+            const chatbotBody = $('#chatbotBody');
+
+            chatbotToggle.click(function() {
+                chatbotWindow.toggleClass('open');
+                $('.badge-notification').fadeOut();
+            });
+
+            chatbotClose.click(function() {
+                chatbotWindow.removeClass('open');
+            });
+
+            function addMessage(text, isUser = false) {
+                const msg = $('<div class="message ' + (isUser ? 'user' : 'bot') + '">' + text + '</div>');
+                chatbotBody.append(msg);
+                chatbotBody.scrollTop(chatbotBody[0].scrollHeight);
+            }
+
+            function processChatbotQuery(query) {
+                const q = query.toLowerCase();
+                let response = '';
+
+                if (q.includes('consulta')) {
+                    const proximas = consultas.filter(c => c.status === 'Confirmada' || c.status === 'Agendada');
+                    if (proximas.length === 0) {
+                        response = '📅 Você não tem consultas agendadas. Deseja solicitar uma?';
+                    } else {
+                        response = `📅 Você tem <strong>${proximas.length} consultas</strong> agendadas.\n${proximas.map(c => `• ${c.especialidade} com ${c.medico} em ${c.data} ${c.hora} (${c.status})`).join('\n')}`;
+                    }
+                } else if (q.includes('exame') || q.includes('resultado')) {
+                    const concluidos = exames.filter(e => e.status === 'Concluído');
+                    const pendentes = exames.filter(e => e.status === 'Pendente');
+                    response = `🧪 <strong>${concluidos.length} exames</strong> concluídos e <strong>${pendentes.length}</strong> pendentes.`;
+                } else if (q.includes('prescrição') || q.includes('medicamento')) {
+                    const ativas = prescricoes.filter(p => p.status === 'Ativa');
+                    if (ativas.length === 0) {
+                        response = '💊 Você não tem prescrições ativas no momento.';
+                    } else {
+                        response = `💊 Você tem <strong>${ativas.length} prescrições ativas</strong>.\n${ativas.map(p => `• ${p.medicamento} - ${p.dose} ${p.frequencia}`).join('\n')}`;
+                    }
+                } else if (q.includes('internamento')) {
+                    if (internamento) {
+                        response = `🏥 Você está internado na ${internamento.enfermaria}, cama ${internamento.cama}. Início: ${internamento.dataInicio}.`;
+                    } else {
+                        response = '🏥 Você não tem internamento ativo no momento.';
+                    }
+                } else if (q.includes('fatura') || q.includes('pagamento')) {
+                    const pendentes = faturas.filter(f => f.status === 'Pendente');
+                    const pagas = faturas.filter(f => f.status === 'Paga');
+                    response = `💰 <strong>${pagas.length} faturas</strong> pagas e <strong>${pendentes.length}</strong> pendentes.`;
+                } else if (q.includes('ajuda') || q.includes('ajudar')) {
+                    response = '💡 Posso ajudar com: consultas, exames, prescrições, internamentos, faturas e notificações.';
+                } else {
+                    response = '🤔 Pode reformular a pergunta? Sou a <strong>VITA</strong> e posso ajudar com consultas, exames, prescrições, internamentos, faturas e notificações.';
+                }
+
+                addMessage(response, false);
+            }
+
+            chatbotSend.click(function() {
+                const query = chatbotInput.val().trim();
+                if (!query) return;
+                addMessage(query, true);
+                chatbotInput.val('');
+                setTimeout(() => processChatbotQuery(query), 500);
+            });
+
+            chatbotInput.keypress(function(e) {
+                if (e.which === 13) chatbotSend.click();
+            });
+
+            setTimeout(() => {
+                addMessage('💡 Estou aqui para ajudar! Pergunte sobre consultas, exames, prescrições, internamentos, faturas e notificações.', false);
+            }, 2000);
+
+            // ================================================================
+            // 13. INICIALIZAÇÃO
+            // ================================================================
+            renderConsultas();
+            renderExames();
+            renderPrescricoes();
+            renderInternamento();
+            renderFaturas();
+            renderNotificacoes();
+            renderDadosClinicos();
+            renderHistoricoClinico();
+            updateStats();
+
+            console.log('✅ VITALINKA - Área do Paciente carregada com sucesso!');
+            console.log('🕐 Timer de sessão: 15 minutos');
+            console.log('🤖 Assistente VITA ativo');
+            console.log('🎨 Tema: ' + currentTheme);
+            console.log('👤 Perfil do Paciente disponível');
+            console.log('📋 Todas as funcionalidades do paciente implementadas!');
+            console.log('  - ✅ Dashboard com indicadores');
+            console.log('  - ✅ Gestão de consultas com HORA');
+            console.log('  - ✅ Prontuário eletrónico');
+            console.log('  - ✅ Visualização de exames');
+            console.log('  - ✅ Acompanhamento de prescrições');
+            console.log('  - ✅ Internamento');
+            console.log('  - ✅ Faturas e pagamentos');
+            console.log('  - ✅ Notificações');
+            console.log('  - ✅ Relatórios pessoais');
+            console.log('  - ✅ Chatbot VITA com comandos');
+            console.log('  - ✅ Comprovativo com QR Code para consultas');
+            console.log('  - ✅ Funções independentes: Imprimir e Baixar PDF');
+        });
+    </script>
+</body>
+</html>

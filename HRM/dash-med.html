@@ -1,0 +1,3495 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VITALINKA | Área do Médico</title>
+    <!-- Bootstrap 5 + Bootstrap Icons + Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Flatpickr para seleção de datas/horas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        /* ===== VARIÁVEIS DE TEMA ===== */
+        :root {
+            --bg-image: url('images/dash-med.png');
+            --bg-overlay: rgba(0, 0, 0, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.10);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-color: #f0f4f8;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --table-bg: rgba(255, 255, 255, 0.06);
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --input-border: rgba(255, 255, 255, 0.12);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --primary-glow: rgba(13, 110, 253, 0.25);
+            --success-color: #75f0a0;
+            --warning-color: #ffd75a;
+            --danger-color: #ff7a8a;
+            --info-color: #6ee7ff;
+            --chatbot-bg: rgba(20, 30, 28, 0.95);
+            --dropdown-bg: rgba(20, 30, 28, 0.95);
+            --modal-bg: rgba(20, 30, 28, 0.95);
+            --bg-pattern-opacity: 0.6;
+            --primary-color: #2b7a4b;
+            --primary-gradient: linear-gradient(135deg, #2b7a4b, #4c9f70);
+        }
+
+        /* Tema Claro */
+        [data-theme="light"] {
+            --bg-image: url('images/dash-med.png');
+            --bg-overlay: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --text-color: #1a2634;
+            --text-muted: rgba(0, 0, 0, 0.6);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --table-bg: rgba(255, 255, 255, 0.6);
+            --input-bg: rgba(255, 255, 255, 0.75);
+            --input-border: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --primary-glow: rgba(13, 110, 253, 0.15);
+            --success-color: #198754;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #0dcaf0;
+            --chatbot-bg: rgba(255, 255, 255, 0.95);
+            --dropdown-bg: rgba(255, 255, 255, 0.95);
+            --modal-bg: rgba(255, 255, 255, 0.95);
+            --bg-pattern-opacity: 0.3;
+            --primary-color: #2b7a4b;
+            --primary-gradient: linear-gradient(135deg, #2b7a4b, #4c9f70);
+        }
+
+        /* ===== ESTILOS GERAIS ===== */
+        * { font-family: 'Times New Roman', Times, serif; }
+        
+        body {
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            position: relative;
+            background-color: #1a2634;
+            transition: background-color 0.3s ease;
+        }
+
+        [data-theme="light"] body {
+            background-color: #e8ecef;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-overlay);
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+
+        .container-fluid { position: relative; z-index: 1; }
+
+        /* ===== GLASSMORPHISM ===== */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        /* ===== TABS ===== */
+        .nav-tabs .nav-link {
+            font-size: 16px;
+            color: var(--text-color);
+            border: none;
+            padding: 10px 20px;
+            margin-right: 5px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+        .nav-tabs .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        .nav-tabs .nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            color: var(--text-color);
+            border-bottom: 3px solid #0d6efd;
+            font-weight: bold;
+            box-shadow: 0 -2px 20px var(--primary-glow);
+        }
+        .tab-content {
+            padding: 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 0 8px 8px 8px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+
+        /* ===== INDICATOR CARDS ===== */
+        .indicator-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 15px 10px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-color);
+        }
+        .indicator-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .indicator-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            text-shadow: 0 2px 10px var(--shadow-color);
+        }
+        .indicator-card .label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .indicator-card.success .number { color: var(--success-color); }
+        .indicator-card.warning .number { color: var(--warning-color); }
+        .indicator-card.danger .number { color: var(--danger-color); }
+        .indicator-card.info .number { color: var(--info-color); }
+
+        /* ===== CARDS ===== */
+        .info-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .info-card .card-title {
+            color: var(--text-color);
+            border-bottom: 2px solid var(--glass-border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .info-card .info-label {
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .info-card .info-value { color: var(--text-color); }
+
+        /* ===== COMPROVATIVO PREVIEW ===== */
+        .comprovativo-preview {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .comprovativo-preview .header .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            text-shadow: 0 2px 15px var(--shadow-color);
+        }
+        .comprovativo-preview .header .subtitle {
+            color: var(--text-muted);
+        }
+        .comprovativo-preview .content .label {
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .comprovativo-preview .footer {
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
+        }
+        .comprovativo-preview .qr-placeholder {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed var(--glass-border);
+            color: var(--text-muted);
+        }
+
+        /* ===== STATUS BADGE ===== */
+        .status-badge.confirmed { background: rgba(25, 135, 84, 0.7); color: #fff; }
+        .status-badge.pending { background: rgba(255, 193, 7, 0.7); color: #000; }
+        .status-badge.rescheduled { background: rgba(13, 202, 240, 0.7); color: #000; }
+        .status-badge.canceled { background: rgba(220, 53, 69, 0.7); color: #fff; }
+        .status-badge.attended { background: rgba(13, 110, 253, 0.7); color: #fff; }
+        .status-badge.interned { background: rgba(255, 193, 7, 0.7); color: #000; }
+        .status-badge.discharged { background: rgba(25, 135, 84, 0.7); color: #fff; }
+
+        /* ===== HISTORY TABLE ===== */
+        .history-table {
+            background: var(--table-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+        .history-table th {
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 2px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .history-table td { color: var(--text-color); }
+        .history-table .table-hover tbody tr:hover { background: rgba(255, 255, 255, 0.05); }
+
+        /* ===== QUICK ACTIONS ===== */
+        .quick-actions .btn {
+            margin: 3px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .quick-actions .btn-primary { background: rgba(13, 110, 253, 0.6); }
+        .quick-actions .btn-success { background: rgba(25, 135, 84, 0.6); }
+        .quick-actions .btn-info { background: rgba(13, 202, 240, 0.6); }
+        .quick-actions .btn-warning { background: rgba(255, 193, 7, 0.6); color: #000; }
+        .quick-actions .btn-danger { background: rgba(220, 53, 69, 0.6); }
+        .quick-actions .btn-outline-secondary { background: rgba(255, 255, 255, 0.05); }
+        .quick-actions .btn:hover { transform: scale(1.05); }
+
+        /* ===== PAGE TITLE ===== */
+        .page-title {
+            color: var(--text-color);
+            text-shadow: 0 2px 20px var(--shadow-color);
+        }
+        .page-title .badge {
+            background: rgba(13, 110, 253, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== SEARCH SECTION ===== */
+        .search-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        .search-section h6 { color: var(--text-color); }
+        .search-section .form-control,
+        .search-section .form-select {
+            border-radius: 8px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+        }
+        .search-section .form-control::placeholder { color: var(--text-muted); }
+        .search-section .form-control:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .search-section .btn-outline-secondary { color: var(--text-muted); border-color: var(--glass-border); }
+        .search-section .btn-outline-secondary:hover { background: var(--glass-bg); color: var(--text-color); }
+        .search-section .btn-outline-primary { color: var(--text-color); border-color: var(--glass-border); }
+        .search-section .btn-outline-primary:hover { background: rgba(13, 110, 253, 0.3); }
+
+        /* ===== PATIENT AVATAR ===== */
+        .patient-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--text-color);
+            font-weight: bold;
+            margin: 0 auto 10px auto;
+        }
+
+        /* ===== REPORT CARDS ===== */
+        .report-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .report-card .card-body { color: var(--text-color); }
+        .report-card .card-title { color: var(--text-color); }
+        .report-card .card-text { color: var(--text-muted); }
+
+        /* ===== MODAL GLASS ===== */
+        .modal-content {
+            background: var(--modal-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .modal-header { border-bottom: 1px solid var(--glass-border); }
+        .modal-footer { border-top: 1px solid var(--glass-border); }
+        .modal .btn-close { 
+            filter: invert(1); 
+            opacity: 0.7;
+        }
+        [data-theme="light"] .modal .btn-close { 
+            filter: invert(0); 
+            opacity: 0.5;
+        }
+        .modal .form-control,
+        .modal .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+        }
+        .modal .form-control:focus,
+        .modal .form-select:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .modal .form-label {
+            color: var(--text-muted);
+        }
+        .modal .form-check-label {
+            color: var(--text-color);
+        }
+        .modal .btn-secondary {
+            background: var(--input-bg);
+            border-color: var(--glass-border);
+            color: var(--text-color);
+        }
+        .modal .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .modal .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* ===== DATETIME ===== */
+        #currentDateTime {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        /* ============================================================ */
+        /* ===== TIMER, DASHBOARD DROPDOWN, CHATBOT ===== */
+        /* ============================================================ */
+
+        .timer-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: inline-block;
+        }
+        .timer-container svg {
+            transform: rotate(-90deg);
+            width: 60px;
+            height: 60px;
+        }
+        .timer-container .timer-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 4;
+        }
+        [data-theme="light"] .timer-container .timer-bg {
+            stroke: rgba(0, 0, 0, 0.12);
+        }
+        .timer-container .timer-progress {
+            fill: none;
+            stroke: #4c9f70;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 169.646;
+            stroke-dashoffset: 169.646;
+            transition: stroke-dashoffset 1s linear;
+        }
+        .timer-container .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-shadow: 0 1px 5px var(--shadow-color);
+        }
+        .timer-warning .timer-progress { stroke: #ffc107; }
+        .timer-danger .timer-progress { stroke: #dc3545; }
+
+        /* --- DASHBOARD DROPDOWN --- */
+        .dashboard-dropdown .dropdown-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+        }
+        .dashboard-dropdown .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .dashboard-dropdown .dropdown-menu {
+            background: var(--dropdown-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 220px;
+            z-index: 9999 !important;
+        }
+        .dashboard-dropdown .dropdown-item {
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        .dashboard-dropdown .dropdown-item:hover {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+        }
+        .dashboard-dropdown .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            color: #4c9f70;
+        }
+        .dashboard-dropdown .dropdown-divider {
+            border-color: var(--glass-border);
+        }
+
+        /* --- CHATBOT VITA --- */
+        .chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+        }
+        .chatbot-toggle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 30px rgba(43, 122, 75, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 40px rgba(43, 122, 75, 0.5);
+        }
+        .chatbot-toggle .badge-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #dc3545;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            max-height: 480px;
+            background: var(--chatbot-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            box-shadow: 0 20px 60px var(--shadow-color);
+            display: none;
+            overflow: hidden;
+            flex-direction: column;
+            z-index: 9999;
+        }
+        .chatbot-window.open { display: flex; }
+        .chatbot-header {
+            padding: 15px 20px;
+            background: rgba(43, 122, 75, 0.2);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chatbot-header .chatbot-name {
+            color: var(--text-color);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .chatbot-header .chatbot-name i {
+            color: #4c9f70;
+            margin-right: 8px;
+        }
+        .chatbot-header .chatbot-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .chatbot-header .chatbot-close:hover { color: var(--text-color); }
+        .chatbot-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            max-height: 320px;
+        }
+        .chatbot-body .message {
+            margin-bottom: 12px;
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            animation: fadeInMsg 0.3s ease;
+        }
+        .chatbot-body .message.bot {
+            background: rgba(76, 159, 112, 0.15);
+            color: var(--text-color);
+            border-bottom-left-radius: 4px;
+            margin-right: auto;
+        }
+        .chatbot-body .message.user {
+            background: rgba(13, 110, 253, 0.2);
+            color: var(--text-color);
+            border-bottom-right-radius: 4px;
+            margin-left: auto;
+        }
+        @keyframes fadeInMsg {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chatbot-footer {
+            padding: 12px 15px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 8px;
+        }
+        .chatbot-footer input {
+            flex: 1;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: var(--input-bg);
+            color: var(--text-color);
+            outline: none;
+            font-size: 0.9rem;
+        }
+        .chatbot-footer input::placeholder { color: var(--text-muted); }
+        .chatbot-footer input:focus { border-color: #4c9f70; }
+        .chatbot-footer button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: var(--primary-gradient);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chatbot-footer button:hover { opacity: 0.85; transform: scale(0.97); }
+
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .indicator-card .number { font-size: 1.5rem; }
+            .comprovativo-preview { padding: 15px; }
+            .tab-content { padding: 15px; }
+            .page-title { font-size: 1.5rem; }
+            .chatbot-window {
+                width: 300px;
+                right: -10px;
+                bottom: 75px;
+            }
+            .timer-container { width: 45px; height: 45px; }
+            .timer-container svg { width: 45px; height: 45px; }
+            .timer-container .timer-text { font-size: 0.6rem; }
+            .header-timer-wrapper .timer-label { display: none; }
+        }
+        @media (max-width: 400px) {
+            .chatbot-window { width: 280px; right: -5px; }
+        }
+
+        .header-timer-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-timer-wrapper .timer-label {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .suggestion-item {
+            cursor: pointer;
+            padding: 8px 15px;
+            transition: all 0.2s ease;
+            color: var(--text-color);
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            border-top: none;
+        }
+        .suggestion-item:hover { background: rgba(255, 255, 255, 0.1); }
+        .suggestion-item:first-child { border-top: 1px solid var(--glass-border); border-radius: 8px 8px 0 0; }
+        .suggestion-item:last-child { border-radius: 0 0 8px 8px; }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Estilos para o modal de perfil */
+        .profile-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .profile-detail .label {
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .profile-detail .value {
+            color: var(--text-color);
+        }
+        .profile-avatar-lg {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 3px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: var(--text-color);
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+        }
+        .profile-permissions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .profile-permissions .badge {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Estilos para o preview do comprovativo */
+        .qr-code {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .qr-placeholder {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.05);
+            border: 2px dashed var(--glass-border);
+            border-radius: 8px;
+            font-size: 2rem;
+            color: var(--text-muted);
+        }
+
+        /* Badges de status na tabela */
+        .badge.bg-info { background-color: rgba(13, 202, 240, 0.7) !important; }
+        .badge.bg-success { background-color: rgba(25, 135, 84, 0.7) !important; }
+        .badge.bg-primary { background-color: rgba(13, 110, 253, 0.7) !important; }
+        .badge.bg-warning { background-color: rgba(255, 193, 7, 0.7) !important; color: #000; }
+        .badge.bg-danger { background-color: rgba(220, 53, 69, 0.7) !important; }
+
+        /* ===== ESTILOS DO MODAL DE EDIÇÃO DE PERFIL ===== */
+        .profile-edit-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 3px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--text-color);
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-size: cover;
+            background-position: center;
+        }
+        .profile-edit-avatar:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+        .profile-edit-avatar .avatar-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 4px;
+            border-radius: 0 0 50% 50%;
+            text-align: center;
+        }
+        .profile-edit-avatar .avatar-overlay i {
+            font-size: 0.8rem;
+        }
+        .edit-profile-form .form-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .edit-profile-form .form-control,
+        .edit-profile-form .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+            border-radius: 8px;
+        }
+        .edit-profile-form .form-control:focus,
+        .edit-profile-form .form-select:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .edit-profile-form .form-control::placeholder {
+            color: var(--text-muted);
+        }
+        .edit-profile-form .form-text {
+            color: var(--text-muted);
+        }
+        .permission-checkbox {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .permission-checkbox .form-check {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 8px 15px;
+            margin: 0;
+            transition: all 0.2s ease;
+        }
+        .permission-checkbox .form-check:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .permission-checkbox .form-check-input {
+            margin-right: 8px;
+        }
+        .permission-checkbox .form-check-label {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+        .edit-profile-form .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+        }
+        .edit-profile-form .btn-primary:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+        .edit-profile-form .btn-outline-secondary {
+            border-color: var(--glass-border);
+            color: var(--text-color);
+        }
+        .edit-profile-form .btn-outline-secondary:hover {
+            background: var(--glass-bg);
+            color: var(--text-color);
+        }
+
+        /* ===== PERFIL COMO IMAGEM (CARD) ===== */
+        .profile-image-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            position: relative;
+            z-index: 9998;
+        }
+        .profile-image-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.12);
+        }
+        .profile-image-card .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            flex-shrink: 0;
+        }
+        .profile-image-card .info h6 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.85rem;
+        }
+        .profile-image-card .info small {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+        .profile-image-card .dropdown-toggle {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 0 0 0 8px;
+            font-size: 0.8rem;
+        }
+        .profile-image-card .dropdown-toggle:hover {
+            color: var(--text-color);
+        }
+        .profile-image-card .dropdown-menu {
+            background: var(--dropdown-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 200px;
+            z-index: 99999 !important;
+        }
+        .profile-image-card .dropdown-item {
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        .profile-image-card .dropdown-item:hover {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+        }
+        .profile-image-card .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            color: #4c9f70;
+        }
+        .profile-image-card .dropdown-item.text-danger i { color: #dc3545; }
+        .profile-image-card .dropdown-item.text-danger:hover {
+            background: rgba(220, 53, 69, 0.15);
+        }
+        .profile-image-card .dropdown-divider {
+            border-color: var(--glass-border);
+        }
+
+        /* ===== BOTÕES PRIMÁRIOS ===== */
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+            color: #fff;
+        }
+
+        /* Ajustes para o input de pesquisa rápida */
+        .input-group .form-control {
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .input-group .form-control::placeholder {
+            color: var(--text-muted);
+        }
+        .input-group .btn-outline-primary {
+            border-color: var(--glass-border);
+            color: var(--text-color);
+        }
+        .input-group .btn-outline-primary:hover {
+            background: rgba(13, 110, 253, 0.2);
+        }
+
+        /* Badge de data/hora */
+        #currentDateTime {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: normal;
+        }
+        #currentDateTime i { margin-right: 6px; }
+        
+        .vita-med{
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* ===== OVERRIDES PARA GARANTIR QUE DROPDOWNS APAREÇAM ACIMA ===== */
+        .dropdown-menu {
+            z-index: 99999 !important;
+        }
+
+        .dropdown {
+            z-index: 9998 !important;
+        }
+
+        .dropdown-menu.show {
+            display: block !important;
+        }
+
+        /* ===== ESTILOS PARA A AGENDA ===== */
+        .agenda-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        .agenda-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+        .agenda-item:hover {
+            transform: translateX(5px);
+            background: rgba(255,255,255,0.05);
+        }
+        .agenda-item .time {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .agenda-item .patient-name {
+            font-weight: 600;
+        }
+        .agenda-item .status-badge {
+            font-size: 0.7rem;
+        }
+
+        /* ===== ESTILOS PARA ATENDIMENTO ===== */
+        .atendimento-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        .atendimento-section .section-title {
+            color: var(--text-color);
+            border-bottom: 2px solid var(--glass-border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .atendimento-section textarea {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+            border-radius: 8px;
+            width: 100%;
+            padding: 10px;
+            resize: vertical;
+        }
+        .atendimento-section textarea:focus {
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+            outline: none;
+        }
+
+        /* ===== ESTILOS PARA PRESCRIÇÃO ===== */
+        .prescricao-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--glass-border);
+        }
+        .prescricao-item .med-info {
+            flex: 1;
+        }
+        .prescricao-item .med-info strong {
+            color: var(--text-color);
+        }
+        .prescricao-item .med-info small {
+            color: var(--text-muted);
+        }
+        .prescricao-item .btn-remove {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+        }
+
+        /* ===== ESTILOS PARA EXAMES ===== */
+        .exame-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .exame-item .exame-info {
+            flex: 1;
+        }
+        .exame-item .exame-info strong {
+            color: var(--text-color);
+        }
+        .exame-item .exame-info small {
+            color: var(--text-muted);
+        }
+        .exame-item .status-badge {
+            font-size: 0.7rem;
+        }
+
+        /* ===== ESTILOS PARA EVOLUÇÃO CLÍNICA ===== */
+        .evolucao-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--info-color);
+        }
+        .evolucao-item .evolucao-date {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        .evolucao-item .evolucao-text {
+            margin-top: 5px;
+            color: var(--text-color);
+        }
+
+        /* ===== ESTILOS PARA INTERNAMENTO ===== */
+        .internamento-card {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 15px;
+        }
+        .internamento-card .internamento-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .internamento-card .internamento-header h6 {
+            color: var(--text-color);
+            margin: 0;
+        }
+        .internamento-card .internamento-details {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ===== ESTILOS PARA ALTA MÉDICA ===== */
+        .alta-summary {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid var(--success-color);
+        }
+        .alta-summary .alta-label {
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+        .alta-summary .alta-value {
+            color: var(--text-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- ========== CABEÇALHO ========== -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h2 class="page-title">
+                        <i class="bi bi-file-earmark-text text-primary"></i> 
+                        Área do Médico
+                        <span class="badge bg-primary ms-2 notification-badge">ATIVO</span>
+                    </h2>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        
+                        <!-- DASHBOARD DROPDOWN -->
+                        <div class="dashboard-dropdown dropdown">
+                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-th-large me-1"></i> Dashboard
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="dashboardMenu">
+                                <li><a class="dropdown-item" href="#dashboard-tab" data-tab="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+                                <li><a class="dropdown-item" href="#agenda-tab" data-tab="agenda"><i class="fas fa-calendar-alt"></i> Agenda</a></li>
+                                <li><a class="dropdown-item" href="#atendimento-tab" data-tab="atendimento"><i class="fas fa-stethoscope"></i> Atendimento</a></li>
+                                <li><a class="dropdown-item" href="#prescricao-tab" data-tab="prescricao"><i class="fas fa-prescription"></i> Prescrição</a></li>
+                                <li><a class="dropdown-item" href="#exames-tab" data-tab="exames"><i class="fas fa-flask"></i> Exames</a></li>
+                                <li><a class="dropdown-item" href="#internamento-tab" data-tab="internamento"><i class="fas fa-hospital"></i> Internamento</a></li>
+                                <li><a class="dropdown-item" href="#evolucao-tab" data-tab="evolucao"><i class="fas fa-notes-medical"></i> Evolução</a></li>
+                                <li><a class="dropdown-item" href="#alta-tab" data-tab="alta"><i class="fas fa-file-signature"></i> Alta</a></li>
+                                <li><a class="dropdown-item" href="#comprovativo-tab" data-tab="comprovativo"><i class="fas fa-file-alt"></i> Comprovativo</a></li>
+                                <li><a class="dropdown-item" href="#historico-tab" data-tab="historico"><i class="fas fa-clock"></i> Histórico</a></li>
+                                <li><a class="dropdown-item" href="#relatorios-tab" data-tab="relatorios"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" 
+                                       href="front-coci.html" 
+                                       ><i class="fas fa-comment-dots"></i> Comunicação (COCI)</a></li>
+                            </ul>
+                        </div>
+                        
+                        <!-- NOVO COMPROVATIVO -->
+                        <button class="btn btn-primary" id="btnNewComprovativo">
+                            <i class="bi bi-plus-circle"></i> Novo
+                        </button>
+
+                        <!-- RELÓGIO -->
+                        <span class="badge" id="currentDateTime">
+                            <i class="bi bi-clock"></i> 
+                            <span id="dateTimeDisplay">Carregando...</span>
+                        </span>
+
+                        <!-- THEME TOGGLE -->
+                        <div class="theme-toggle" id="themeToggle" title="Alterar Tema">
+                            <i class="fas fa-moon" id="themeIcon"></i>
+                        </div>
+
+                        <!-- TIMER CIRCULAR -->
+                        <div class="header-timer-wrapper">
+                            <span class="timer-label" id="timerLabel">Sessão</span>
+                            <div class="timer-container" id="timerContainer">
+                                <svg viewBox="0 0 60 60">
+                                    <circle class="timer-bg" cx="30" cy="30" r="27"/>
+                                    <circle class="timer-progress" id="timerProgress" cx="30" cy="30" r="27"/>
+                                </svg>
+                                <span class="timer-text" id="timerText">15:00</span>
+                            </div>
+                        </div>
+                        
+                        <!-- ===== PERFIL COMO IMAGEM (CARD) ===== -->
+                        <div class="profile-image-card dropdown" id="profileCard">
+                            <div class="avatar-img" id="profileCardAvatar">AM</div>
+                            <div class="info">
+                                <h6 id="profileCardName">Dra. Ana Manuel</h6>
+                                <small id="profileCardSpecialty">Pediatria</small>
+                            </div>
+                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="profileCardMenu">
+                                <li><a class="dropdown-item" href="#" id="profileCardView"><i class="fas fa-user"></i> Ver Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="profileCardEdit"><i class="fas fa-edit"></i> Editar Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="profileCardPassword"><i class="fas fa-key"></i> Alterar Senha</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="logout-per.html" id="profileCardLogout">
+                                        <i class="fas fa-sign-out-alt"></i> Sair
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- PESQUISA RÁPIDA -->
+                        <div class="input-group" style="width: 180px;">
+                            <input type="text" id="quickSearch" class="form-control" placeholder="🔍 Pesquisar...">
+                            <button class="btn btn-outline-primary" type="button">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== PAINEL DE ESTATÍSTICAS ========== -->
+        <div class="row mb-4" id="dashboard-tab">
+            <div class="col-md-2 col-6">
+                <div class="indicator-card fade-in">
+                    <div class="number" id="emittedToday">0</div>
+                    <div class="label"><i class="bi bi-file-earmark"></i> Emitidos Hoje</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card success fade-in">
+                    <div class="number" id="sentCount">0</div>
+                    <div class="label"><i class="bi bi-envelope"></i> Enviados</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card info fade-in">
+                    <div class="number" id="printedCount">0</div>
+                    <div class="label"><i class="bi bi-printer"></i> Impressos</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card warning fade-in">
+                    <div class="number" id="pendingCount">0</div>
+                    <div class="label"><i class="bi bi-clock"></i> Pendentes</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card success fade-in">
+                    <div class="number" id="confirmedCount">0</div>
+                    <div class="label"><i class="bi bi-check-circle"></i> Confirmadas</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card danger fade-in">
+                    <div class="number" id="canceledCount">0</div>
+                    <div class="label"><i class="bi bi-x-circle"></i> Canceladas</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TABS ========== -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item"><button class="nav-link active" id="comprovativo-tab" data-bs-toggle="tab" data-bs-target="#comprovativo" type="button"><i class="fas fa-file-alt"></i> Comprovativo</button></li>
+            <li class="nav-item"><button class="nav-link" id="agenda-tab" data-bs-toggle="tab" data-bs-target="#agenda" type="button"><i class="fas fa-calendar-alt"></i> Agenda</button></li>
+            <li class="nav-item"><button class="nav-link" id="atendimento-tab" data-bs-toggle="tab" data-bs-target="#atendimento" type="button"><i class="fas fa-stethoscope"></i> Atendimento</button></li>
+            <li class="nav-item"><button class="nav-link" id="prescricao-tab" data-bs-toggle="tab" data-bs-target="#prescricao" type="button"><i class="fas fa-prescription"></i> Prescrição</button></li>
+            <li class="nav-item"><button class="nav-link" id="exames-tab" data-bs-toggle="tab" data-bs-target="#exames" type="button"><i class="fas fa-flask"></i> Exames</button></li>
+            <li class="nav-item"><button class="nav-link" id="internamento-tab" data-bs-toggle="tab" data-bs-target="#internamento" type="button"><i class="fas fa-hospital"></i> Internamento</button></li>
+            <li class="nav-item"><button class="nav-link" id="evolucao-tab" data-bs-toggle="tab" data-bs-target="#evolucao" type="button"><i class="fas fa-notes-medical"></i> Evolução</button></li>
+            <li class="nav-item"><button class="nav-link" id="alta-tab" data-bs-toggle="tab" data-bs-target="#alta" type="button"><i class="fas fa-file-signature"></i> Alta</button></li>
+            <li class="nav-item"><button class="nav-link" id="historico-tab" data-bs-toggle="tab" data-bs-target="#historico" type="button"><i class="bi bi-clock-history"></i> Histórico</button></li>
+            <li class="nav-item"><button class="nav-link" id="relatorios-tab" data-bs-toggle="tab" data-bs-target="#relatorios" type="button"><i class="bi bi-file-earmark-bar-graph"></i> Relatórios</button></li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- ===== ABA COMPROVATIVO ===== -->
+            <div class="tab-pane fade show active" id="comprovativo" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-5">
+                        <!-- Pesquisa -->
+                        <div class="search-section">
+                            <h6><i class="bi bi-search"></i> Localizar Marcação</h6>
+                            <div class="input-group mb-3">
+                                <input type="text" id="searchAppointment" class="form-control" placeholder="Nome, processo, telefone...">
+                                <button class="btn btn-outline-secondary" type="button" id="btnSearch"><i class="bi bi-search"></i></button>
+                                <button class="btn btn-outline-primary" type="button" id="btnQRCode"><i class="bi bi-qr-code"></i></button>
+                            </div>
+                            <div id="suggestions" class="list-group" style="display:none;"></div>
+                            <div class="mt-2">
+                                <small class="text-muted"><i class="bi bi-clock-history"></i> Pesquisas recentes: </small>
+                                <span class="badge bg-light text-dark">Maria Silva</span>
+                                <span class="badge bg-light text-dark">A025</span>
+                                <span class="badge bg-light text-dark">987654321</span>
+                            </div>
+                        </div>
+
+                        <!-- Informações do Paciente -->
+                        <div class="info-card" id="patientInfo" style="display:none;">
+                            <div class="text-center">
+                                <div class="patient-avatar" id="patientAvatar">MS</div>
+                                <h5 id="patientName" class="mb-0">Maria Silva</h5>
+                                <small class="text-muted" id="patientId">Processo: P-2026-0158</small>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-6"><div class="info-label">Idade</div><div class="info-value" id="patientAge">28 anos</div></div>
+                                <div class="col-6"><div class="info-label">Sexo</div><div class="info-value" id="patientGender">Feminino</div></div>
+                                <div class="col-12 mt-2"><div class="info-label">Contacto</div><div class="info-value" id="patientPhone">+244 923 456 789</div></div>
+                            </div>
+                        </div>
+
+                        <!-- Dados da Consulta -->
+                        <div class="info-card" id="appointmentInfo" style="display:none;">
+                            <h6 class="card-title"><i class="bi bi-calendar-check"></i> Dados da Consulta</h6>
+                            <div class="row">
+                                <div class="col-6"><div class="info-label">Especialidade</div><div class="info-value" id="appointmentSpecialty">Pediatria</div></div>
+                                <div class="col-6"><div class="info-label">Médico</div><div class="info-value" id="appointmentDoctor">Dra. Ana Manuel</div></div>
+                                <div class="col-6 mt-2"><div class="info-label">Data</div><div class="info-value" id="appointmentDate">15/08/2026</div></div>
+                                <div class="col-6 mt-2"><div class="info-label">Hora</div><div class="info-value" id="appointmentTime">09:30</div></div>
+                                <div class="col-6 mt-2"><div class="info-label">Sala</div><div class="info-value" id="appointmentRoom">Consultório 03</div></div>
+                                <div class="col-6 mt-2"><div class="info-label">Tipo</div><div class="info-value" id="appointmentType">Consulta de Rotina</div></div>
+                                <div class="col-12 mt-2"><div class="info-label">Estado</div><div class="info-value"><span class="status-badge confirmed" id="appointmentStatus">Confirmada</span></div></div>
+                            </div>
+                        </div>
+
+                        <!-- Botões de Ação -->
+                        <div class="quick-actions d-flex flex-wrap gap-2">
+                            <button class="btn btn-primary" id="btnGerarComprovativo" disabled><i class="bi bi-file-earmark"></i> Gerar</button>
+                            <button class="btn btn-success" id="btnImprimir" disabled><i class="bi bi-printer"></i> Imprimir</button>
+                            <button class="btn btn-info" id="btnEnviar" disabled><i class="bi bi-envelope"></i> Enviar</button>
+                            <button class="btn btn-outline-secondary" id="btnVisualizar" disabled><i class="bi bi-eye"></i> Ver</button>
+                            <button class="btn btn-warning" id="btnReemitir" disabled><i class="bi bi-arrow-repeat"></i> Reemitir</button>
+                            <button class="btn btn-danger" id="btnCancelar" disabled><i class="bi bi-x-circle"></i> Cancelar</button>
+                        </div>
+                    </div>
+
+                    <!-- Coluna Direita - Pré-visualização -->
+                    <div class="col-md-7">
+                        <div class="comprovativo-preview" id="comprovativoPreview">
+                            <div class="header">
+                                <div class="logo">🏥 VITALINKA</div>
+                                <div class="subtitle">Sistema de Gestão Hospitalar</div>
+                                <div class="subtitle">Hospital Regional de Malanje</div>
+                            </div>
+                            <div class="content" id="previewContent">
+                                <div class="text-center">
+                                    <h5>COMPROVATIVO DE MARCAÇÃO</h5>
+                                    <p><strong>Nº:</strong> <span id="previewNumber">CMP-2026-0001</span></p>
+                                    <p><strong>Data de Emissão:</strong> <span id="previewEmissionDate">15/08/2026 09:30</span></p>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p><span class="label">Paciente:</span> <span id="previewPatient">Maria Silva</span></p>
+                                        <p><span class="label">Processo:</span> <span id="previewProcess">P-2026-0158</span></p>
+                                        <p><span class="label">Idade:</span> <span id="previewAge">28 anos</span></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p><span class="label">Especialidade:</span> <span id="previewSpecialty">Pediatria</span></p>
+                                        <p><span class="label">Médico:</span> <span id="previewDoctor">Dra. Ana Manuel</span></p>
+                                        <p><span class="label">Sala:</span> <span id="previewRoom">Consultório 03</span></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6"><p><span class="label">Data:</span> <span id="previewDate">15/08/2026</span></p></div>
+                                    <div class="col-6"><p><span class="label">Hora:</span> <span id="previewTime">09:30</span></p></div>
+                                </div>
+                                <div class="qr-code">
+                                    <div class="qr-placeholder"><i class="bi bi-qr-code"></i></div>
+                                </div>
+                                <div class="text-center"><small>Código de Validação: <strong id="previewCode">V2026-08-15-A001</strong></small></div>
+                            </div>
+                            <div class="footer">
+                                <p>Este comprovativo é válido e garante a marcação da consulta.</p>
+                                <p>Assinatura Digital: VITALINKA-2026-08-15T09:30:00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA AGENDA ===== -->
+            <div class="tab-pane fade" id="agenda" role="tabpanel">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="agenda-container">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5><i class="fas fa-calendar-alt me-2"></i>Agenda do Dia</h5>
+                                <div>
+                                    <button class="btn btn-outline-primary btn-sm" id="btnAgendaHoje"><i class="fas fa-calendar-day"></i> Hoje</button>
+                                    <button class="btn btn-outline-primary btn-sm" id="btnAgendaSemana"><i class="fas fa-calendar-week"></i> Semana</button>
+                                    <button class="btn btn-outline-primary btn-sm" id="btnAgendaMes"><i class="fas fa-calendar-alt"></i> Mês</button>
+                                </div>
+                            </div>
+                            <div id="agendaList">
+                                <!-- Itens da agenda serão inseridos via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA ATENDIMENTO ===== -->
+            <div class="tab-pane fade" id="atendimento" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="atendimento-section">
+                            <h6 class="section-title"><i class="fas fa-notes-medical me-2"></i> Avaliação Clínica</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Queixa Principal</label>
+                                <input type="text" class="form-control" id="queixaPrincipal" placeholder="Ex: Dor de cabeça há 3 dias">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Sintomas</label>
+                                <textarea class="form-control" id="sintomas" rows="3" placeholder="Descreva os sintomas..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Exame Físico</label>
+                                <textarea class="form-control" id="exameFisico" rows="3" placeholder="Registe os achados do exame físico..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Sinais Clínicos</label>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <input type="text" class="form-control" id="sinalPA" placeholder="PA">
+                                    </div>
+                                    <div class="col-4">
+                                        <input type="text" class="form-control" id="sinalFC" placeholder="FC">
+                                    </div>
+                                    <div class="col-4">
+                                        <input type="text" class="form-control" id="sinalTemp" placeholder="Temp">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Diagnóstico</label>
+                                <input type="text" class="form-control" id="diagnostico" placeholder="Diagnóstico principal">
+                                <small class="text-muted">CID-10: <span id="cidSugestao">--</span></small>
+                            </div>
+                            <button class="btn btn-primary" id="btnSalvarAtendimento"><i class="fas fa-save me-2"></i> Salvar Atendimento</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="atendimento-section">
+                            <h6 class="section-title"><i class="fas fa-history me-2"></i> Histórico do Paciente</h6>
+                            <div id="historicoPaciente">
+                                <div class="text-muted text-center p-3">Selecione um paciente para ver o histórico</div>
+                            </div>
+                            <hr>
+                            <h6 class="section-title"><i class="fas fa-exclamation-triangle me-2"></i> Alertas</h6>
+                            <div id="alertasPaciente">
+                                <div class="text-muted text-center p-3">Nenhum alerta registado</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA PRESCRIÇÃO ===== -->
+            <div class="tab-pane fade" id="prescricao" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="atendimento-section">
+                            <h6 class="section-title"><i class="fas fa-prescription me-2"></i> Nova Prescrição</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Medicamento</label>
+                                <input type="text" class="form-control" id="medicamentoNome" placeholder="Nome do medicamento" list="medicamentosList">
+                                <datalist id="medicamentosList">
+                                    <option value="Amoxicilina 500mg">
+                                    <option value="Paracetamol 500mg">
+                                    <option value="Ibuprofeno 400mg">
+                                    <option value="Omeprazol 20mg">
+                                    <option value="Losartana 50mg">
+                                    <option value="Metformina 850mg">
+                                    <option value="Atorvastatina 20mg">
+                                    <option value="Omeprazol 40mg">
+                                </datalist>
+                            </div>
+                            <div class="row">
+                                <div class="col-4"><label class="form-label">Dose</label><input type="text" class="form-control" id="medicamentoDose" placeholder="500mg"></div>
+                                <div class="col-4"><label class="form-label">Frequência</label>
+                                    <select class="form-select" id="medicamentoFrequencia">
+                                        <option value="12/12h">12/12h</option>
+                                        <option value="8/8h">8/8h</option>
+                                        <option value="6/6h">6/6h</option>
+                                        <option value="24/24h">24/24h</option>
+                                        <option value="1x/dia">1x/dia</option>
+                                        <option value="2x/dia">2x/dia</option>
+                                        <option value="3x/dia">3x/dia</option>
+                                    </select>
+                                </div>
+                                <div class="col-4"><label class="form-label">Duração</label><input type="text" class="form-control" id="medicamentoDuracao" placeholder="7 dias"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Via de Administração</label>
+                                <select class="form-select" id="medicamentoVia">
+                                    <option value="Oral">Oral</option>
+                                    <option value="Intravenosa">Intravenosa</option>
+                                    <option value="Intramuscular">Intramuscular</option>
+                                    <option value="Subcutânea">Subcutânea</option>
+                                    <option value="Tópica">Tópica</option>
+                                    <option value="Inalatória">Inalatória</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-success" id="btnAdicionarPrescricao"><i class="fas fa-plus me-2"></i> Adicionar</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="atendimento-section">
+                            <h6 class="section-title"><i class="fas fa-list me-2"></i> Prescrições Atuais</h6>
+                            <div id="prescricoesLista">
+                                <div class="text-muted text-center p-3">Nenhuma prescrição adicionada</div>
+                            </div>
+                            <div class="mt-3">
+                                <label class="form-label">Observações</label>
+                                <textarea class="form-control" id="prescricaoObs" rows="2" placeholder="Observações sobre a prescrição..."></textarea>
+                            </div>
+                            <button class="btn btn-primary mt-2" id="btnSalvarPrescricao"><i class="fas fa-save me-2"></i> Salvar Prescrições</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA EXAMES ===== -->
+            <div class="tab-pane fade" id="exames" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="atendimento-section">
+                            <h6 class="section-title"><i class="fas fa-flask me-2"></i> Solicitar Exame</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Tipo de Exame</label>
+                                <select class="form-select" id="exameTipo">
+                                    <option value="Análises Laboratoriais">Análises Laboratoriais</option>
+                                    <option value="TAC">TAC</option>
+                                    <option value="Raio-X">Raio-X</option>
+                                    <option value="Ecografia">Ecografia</option>
+                                    <option value="ECG">ECG</option>
+                                    <option value="Ressonância Magnética">Ressonância Magnética</option>
+                                    <option value="Endoscopia">Endoscopia</option>
+                                    <option value="Biopsia">Biopsia</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Prioridade</label>
+                                <select class="form-select" id="examePrioridade">
+                                    <option value="Normal">Normal</option>
+                                    <option value="Urgente">Urgente</option>
+                                    <option value="Emergência">Emergência</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Justificação</label>
+                                <textarea class="form-control" id="exameJustificacao" rows="3" placeholder="Justifique a solicitação..."></textarea>
+                            </div>
+                            <button class="btn btn-primary" id="btnSolicitarExame"><i class="fas fa-plus me-2"></i> Solicitar Exame</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="atendimento-section">
+                            <h6 class="section-title"><i class="fas fa-list me-2"></i> Exames Solicitados</h6>
+                            <div id="examesLista">
+                                <div class="text-muted text-center p-3">Nenhum exame solicitado</div>
+                            </div>
+                            <hr>
+                            <h6 class="section-title"><i class="fas fa-file-medical-alt me-2"></i> Resultados</h6>
+                            <div id="resultadosExames">
+                                <div class="text-muted text-center p-3">Nenhum resultado disponível</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA INTERNAMENTO ===== -->
+            <div class="tab-pane fade" id="internamento" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="atendimento-section">
+                            <h6 class="section-title"><i class="fas fa-hospital me-2"></i> Solicitar Internamento</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Paciente</label>
+                                <input type="text" class="form-control" id="internamentoPaciente" placeholder="Nome do paciente">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Enfermaria</label>
+                                <select class="form-select" id="internamentoEnfermaria">
+                                    <option value="Enfermaria Geral - Ala A">Enfermaria Geral - Ala A</option>
+                                    <option value="Enfermaria Geral - Ala B">Enfermaria Geral - Ala B</option>
+                                    <option value="Enfermaria Pediátrica">Enfermaria Pediátrica</option>
+                                    <option value="Unidade de Cuidados Intensivos">Unidade de Cuidados Intensivos</option>
+                                    <option value="Enfermaria de Cardiologia">Enfermaria de Cardiologia</option>
+                                    <option value="Enfermaria de Neurologia">Enfermaria de Neurologia</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Cama</label>
+                                <select class="form-select" id="internamentoCama">
+                                    <option value="Cama 01 - Disponível">Cama 01 - Disponível</option>
+                                    <option value="Cama 02 - Disponível">Cama 02 - Disponível</option>
+                                    <option value="Cama 03 - Disponível">Cama 03 - Disponível</option>
+                                    <option value="Cama 04 - Disponível">Cama 04 - Disponível</option>
+                                    <option value="Cama 05 - Disponível">Cama 05 - Disponível</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Motivo do Internamento</label>
+                                <textarea class="form-control" id="internamentoMotivo" rows="3" placeholder="Descreva o motivo..."></textarea>
+                            </div>
+                            <button class="btn btn-primary" id="btnSolicitarInternamento"><i class="fas fa-plus me-2"></i> Solicitar Internamento</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="atendimento-section">
+                            <h6 class="section-title"><i class="fas fa-users me-2"></i> Pacientes Internados</h6>
+                            <div id="internadosLista">
+                                <div class="text-muted text-center p-3">Nenhum paciente internado</div>
+                            </div>
+                            <hr>
+                            <h6 class="section-title"><i class="fas fa-exchange-alt me-2"></i> Transferências</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Paciente</label>
+                                <select class="form-select" id="transferenciaPaciente">
+                                    <option value="">-- Selecione --</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Destino</label>
+                                <select class="form-select" id="transferenciaDestino">
+                                    <option value="Enfermaria Geral - Ala A">Enfermaria Geral - Ala A</option>
+                                    <option value="Enfermaria Geral - Ala B">Enfermaria Geral - Ala B</option>
+                                    <option value="Enfermaria Pediátrica">Enfermaria Pediátrica</option>
+                                    <option value="Unidade de Cuidados Intensivos">Unidade de Cuidados Intensivos</option>
+                                    <option value="Enfermaria de Cardiologia">Enfermaria de Cardiologia</option>
+                                    <option value="Enfermaria de Neurologia">Enfermaria de Neurologia</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-warning" id="btnTransferir"><i class="fas fa-exchange-alt me-2"></i> Transferir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA EVOLUÇÃO CLÍNICA ===== -->
+            <div class="tab-pane fade" id="evolucao" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="atendimento-section">
+                            <h6 class="section-title"><i class="fas fa-notes-medical me-2"></i> Nova Evolução</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Paciente</label>
+                                <input type="text" class="form-control" id="evolucaoPaciente" placeholder="Nome do paciente">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Evolução Diária</label>
+                                <textarea class="form-control" id="evolucaoTexto" rows="5" placeholder="Registe a evolução do paciente..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Sinais Vitais</label>
+                                <div class="row">
+                                    <div class="col-4"><input type="text" class="form-control" placeholder="PA" id="evolucaoPA"></div>
+                                    <div class="col-4"><input type="text" class="form-control" placeholder="FC" id="evolucaoFC"></div>
+                                    <div class="col-4"><input type="text" class="form-control" placeholder="Temp" id="evolucaoTemp"></div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" id="btnSalvarEvolucao"><i class="fas fa-save me-2"></i> Salvar Evolução</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="atendimento-section">
+                            <h6 class="section-title"><i class="fas fa-history me-2"></i> Histórico de Evoluções</h6>
+                            <div id="evolucoesLista">
+                                <div class="text-muted text-center p-3">Nenhuma evolução registada</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA ALTA ===== -->
+            <div class="tab-pane fade" id="alta" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="atendimento-section">
+                            <h6 class="section-title"><i class="fas fa-file-signature me-2"></i> Emitir Alta Médica</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Paciente</label>
+                                <input type="text" class="form-control" id="altaPaciente" placeholder="Nome do paciente">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Diagnóstico Final</label>
+                                <input type="text" class="form-control" id="altaDiagnostico" placeholder="Diagnóstico final">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tratamento Realizado</label>
+                                <textarea class="form-control" id="altaTratamento" rows="3" placeholder="Descreva o tratamento realizado..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Medicação para Casa</label>
+                                <textarea class="form-control" id="altaMedicacao" rows="2" placeholder="Medicação prescrita para casa..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Recomendações</label>
+                                <textarea class="form-control" id="altaRecomendacoes" rows="2" placeholder="Recomendações para o paciente..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Consulta de Seguimento</label>
+                                <input type="date" class="form-control" id="altaSeguimento">
+                            </div>
+                            <button class="btn btn-success" id="btnEmitirAlta"><i class="fas fa-file-signature me-2"></i> Emitir Alta</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="atendimento-section">
+                            <h6 class="section-title"><i class="fas fa-file-alt me-2"></i> Resumo da Alta</h6>
+                            <div id="altaResumo">
+                                <div class="text-muted text-center p-3">Nenhuma alta emitida</div>
+                            </div>
+                            <div class="mt-3">
+                                <button class="btn btn-outline-primary" id="btnPDFAlta"><i class="fas fa-file-pdf me-2"></i> Exportar PDF</button>
+                                <button class="btn btn-outline-success" id="btnImprimirAlta"><i class="fas fa-print me-2"></i> Imprimir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA HISTÓRICO ===== -->
+            <div class="tab-pane fade" id="historico" role="tabpanel">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="history-table table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead><tr><th>Nº</th><th>Paciente</th><th>Data Consulta</th><th>Estado</th><th>Data Emissão</th><th>Ações</th></tr></thead>
+                                <tbody id="historyBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA RELATÓRIOS ===== -->
+            <div class="tab-pane fade" id="relatorios" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioEmitidos">
+                            <div class="card-body text-center">
+                                <i class="bi bi-file-earmark text-primary fs-1"></i>
+                                <h5 class="card-title mt-3">Comprovativos Emitidos</h5>
+                                <p class="card-text">Relatório de comprovativos por período</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioEnviados">
+                            <div class="card-body text-center">
+                                <i class="bi bi-envelope text-success fs-1"></i>
+                                <h5 class="card-title mt-3">Comprovativos Enviados</h5>
+                                <p class="card-text">Relatório de envios por período</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioImpressos">
+                            <div class="card-body text-center">
+                                <i class="bi bi-printer text-info fs-1"></i>
+                                <h5 class="card-title mt-3">Comprovativos Impressos</h5>
+                                <p class="card-text">Relatório de impressões por período</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAIS ========== -->
+    <!-- Modal de Envio -->
+    <div class="modal fade" id="sendModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-envelope"></i> Enviar Comprovativo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="sendForm">
+                        <div class="mb-3">
+                            <label class="form-label">Método de Envio</label>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="sendEmail" checked><label class="form-check-label" for="sendEmail">E-mail</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="sendSMS"><label class="form-check-label" for="sendSMS">SMS</label></div>
+                            <div class="form-check"><input class="form-check-input" type="checkbox" id="sendWhatsApp"><label class="form-check-label" for="sendWhatsApp">WhatsApp</label></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="sendDestination" class="form-label">Destinatário</label>
+                            <input type="text" class="form-control" id="sendDestination" value="maria.silva@email.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="sendMessage" class="form-label">Mensagem (opcional)</label>
+                            <textarea class="form-control" id="sendMessage" rows="2">Segue em anexo o comprovativo da sua consulta.</textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSendConfirm">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Visualização -->
+    <div class="modal fade" id="viewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-eye"></i> Visualizar Comprovativo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="comprovativo-preview" id="viewPreview">
+                        <div class="header">
+                            <div class="logo">🏥 VITALINKA</div>
+                            <div class="subtitle">Sistema de Gestão Hospitalar</div>
+                            <div class="subtitle">Hospital Regional de Malanje</div>
+                        </div>
+                        <div class="content" id="viewContent">
+                            <div class="text-center">
+                                <h5>COMPROVATIVO DE MARCAÇÃO</h5>
+                                <p><strong>Nº:</strong> <span id="viewNumber">CMP-2026-0001</span></p>
+                                <p><strong>Data de Emissão:</strong> <span id="viewEmissionDate">15/08/2026 09:30</span></p>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-6">
+                                    <p><span class="label">Paciente:</span> <span id="viewPatient">Maria Silva</span></p>
+                                    <p><span class="label">Processo:</span> <span id="viewProcess">P-2026-0158</span></p>
+                                    <p><span class="label">Idade:</span> <span id="viewAge">28 anos</span></p>
+                                </div>
+                                <div class="col-6">
+                                    <p><span class="label">Especialidade:</span> <span id="viewSpecialty">Pediatria</span></p>
+                                    <p><span class="label">Médico:</span> <span id="viewDoctor">Dra. Ana Manuel</span></p>
+                                    <p><span class="label">Sala:</span> <span id="viewRoom">Consultório 03</span></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6"><p><span class="label">Data:</span> <span id="viewDate">15/08/2026</span></p></div>
+                                <div class="col-6"><p><span class="label">Hora:</span> <span id="viewTime">09:30</span></p></div>
+                            </div>
+                            <div class="qr-code">
+                                <div class="qr-placeholder"><i class="bi bi-qr-code"></i></div>
+                            </div>
+                            <div class="text-center"><small>Código de Validação: <strong id="viewCode">V2026-08-15-A001</strong></small></div>
+                        </div>
+                        <div class="footer">
+                            <p>Este comprovativo é válido e garante a marcação da consulta.</p>
+                            <p>Assinatura Digital: VITALINKA-2026-08-15T09:30:00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="viewPrintBtn"><i class="bi bi-printer"></i> Imprimir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Reemissão -->
+    <div class="modal fade" id="reemitModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-arrow-repeat"></i> Reemitir Comprovativo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <i class="bi bi-exclamation-triangle" style="font-size: 2.5rem; color: var(--warning-color);"></i>
+                        <p class="mt-2">Tem certeza que deseja reemitir este comprovativo?</p>
+                        <p><strong>Comprovativo:</strong> <span id="reemitNumber">CMP-2026-0001</span></p>
+                        <p><strong>Paciente:</strong> <span id="reemitPatient">Maria Silva</span></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="reemitReason" class="form-label">Motivo da Reemissão</label>
+                        <select class="form-select" id="reemitReason">
+                            <option value="Perda do documento">Perda do documento</option>
+                            <option value="Dados incorretos">Dados incorretos</option>
+                            <option value="Solicitação do paciente">Solicitação do paciente</option>
+                            <option value="Erro no envio">Erro no envio</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="reemitObservation" class="form-label">Observação</label>
+                        <textarea class="form-control" id="reemitObservation" rows="2" placeholder="Observações sobre a reemissão..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-outline-warning" id="btnReemitConfirm"><i class="bi bi-arrow-repeat"></i> Confirmar Reemissão</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cancelamento -->
+    <div class="modal fade" id="cancelModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-x-circle text-danger"></i> Cancelar Marcação</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <i class="bi bi-exclamation-circle" style="font-size: 2.5rem; color: var(--danger-color);"></i>
+                        <p class="mt-2"><strong>Atenção!</strong> Esta ação não pode ser desfeita.</p>
+                        <p><strong>Paciente:</strong> <span id="cancelPatient">Maria Silva</span></p>
+                        <p><strong>Data da Consulta:</strong> <span id="cancelDate">15/08/2026 09:30</span></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cancelReason" class="form-label">Motivo do Cancelamento</label>
+                        <select class="form-select" id="cancelReason">
+                            <option value="Desistência do paciente">Desistência do paciente</option>
+                            <option value="Falta do paciente">Falta do paciente</option>
+                            <option value="Reagendamento">Reagendamento</option>
+                            <option value="Problemas técnicos">Problemas técnicos</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cancelObservation" class="form-label">Observação</label>
+                        <textarea class="form-control" id="cancelObservation" rows="2" placeholder="Observações sobre o cancelamento..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+                    <button type="button" class="btn btn-danger" id="btnCancelConfirm"><i class="bi bi-x-circle"></i> Confirmar Cancelamento</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Impressão -->
+    <div class="modal fade" id="printModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-printer"></i> Imprimir Comprovativo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <i class="bi bi-file-pdf" style="font-size: 2.5rem; color: var(--danger-color);"></i>
+                        <p class="mt-2">O comprovativo será enviado para impressão.</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Opções de Impressão</label>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="printOption" id="printA4" checked><label class="form-check-label" for="printA4">A4 - Tamanho padrão</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="printOption" id="printA5"><label class="form-check-label" for="printA5">A5 - Tamanho pequeno</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="printOption" id="printCarta"><label class="form-check-label" for="printCarta">Carta - Tamanho ofício</label></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Cópias</label>
+                        <input type="number" class="form-control" id="printCopies" value="1" min="1" max="10">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="btnPrintConfirm"><i class="bi bi-printer"></i> Imprimir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Relatórios -->
+    <div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportModalTitle">Filtros do Relatório</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="reportForm">
+                        <div class="mb-3"><label for="reportStartDate" class="form-label">Data Inicial</label><input type="date" class="form-control" id="reportStartDate"></div>
+                        <div class="mb-3"><label for="reportEndDate" class="form-label">Data Final</label><input type="date" class="form-control" id="reportEndDate"></div>
+                        <div class="mb-3"><label for="reportStatus" class="form-label">Estado</label><select class="form-select" id="reportStatus"><option value="">Todos</option><option value="Emitido">Emitido</option><option value="Enviado">Enviado</option><option value="Impresso">Impresso</option></select></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-outline-primary" id="btnGenerateReport">Gerar Relatório</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Sessão -->
+    <div class="modal fade" id="sessionModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-clock me-2" style="color:#ffc107;"></i> Sessão a expirar</h5>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="fas fa-exclamation-triangle" style="font-size:3rem; color:#ffc107; margin-bottom:15px;"></i>
+                    <h4>Tem a certeza que pretende terminar a sessão?</h4>
+                    <p class="text-muted" style="color:var(--text-muted) !important;">A sua sessão irá expirar em <strong id="sessionCountdown">2:00</strong> minutos.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-success" id="sessionContinueBtn"><i class="fas fa-check me-2"></i> Não, continuar</button>
+                    <button type="button" class="btn btn-danger" id="sessionEndBtn"><i class="fas fa-sign-out-alt me-2"></i> Sim, terminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Perfil -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-md me-2"></i> Perfil do Médico</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <div class="profile-avatar-lg">AM</div>
+                        <h4 id="profileDoctorName">Dra. Ana Manuel</h4>
+                        <span class="badge bg-primary">CRM: 12345</span>
+                        <span class="badge bg-success">Ativo</span>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="profile-detail"><span class="label">Nome Completo</span><span class="value">Ana Paula Manuel</span></div>
+                            <div class="profile-detail"><span class="label">Especialidade</span><span class="value">Pediatria</span></div>
+                            <div class="profile-detail"><span class="label">CRM</span><span class="value">12345</span></div>
+                            <div class="profile-detail"><span class="label">Email</span><span class="value">ana.manuel@vitalinka.ao</span></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="profile-detail"><span class="label">Telefone</span><span class="value">+244 923 456 789</span></div>
+                            <div class="profile-detail"><span class="label">Departamento</span><span class="value">Pediatria</span></div>
+                            <div class="profile-detail"><span class="label">Data de Admissão</span><span class="value">15/01/2020</span></div>
+                            <div class="profile-detail"><span class="label">Último Acesso</span><span class="value">15/08/2026 09:30</span></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h6>Responsabilidades e Permissões</h6>
+                    <div class="profile-permissions">
+                        <span class="badge">👨‍⚕️ Consultas</span>
+                        <span class="badge">📋 Diagnósticos</span>
+                        <span class="badge">💊 Prescrições</span>
+                        <span class="badge">🧪 Exames</span>
+                        <span class="badge">📊 Relatórios</span>
+                        <span class="badge">🏥 Internamentos</span>
+                        <span class="badge">📝 Evolução Clínica</span>
+                        <span class="badge">📄 Alta Médica</span>
+                        <span class="badge">📨 Comunicação</span>
+                        <span class="badge">📑 Documentação</span>
+                    </div>
+                    <hr>
+                    <h6>Estatísticas do Médico</h6>
+                    <div class="row text-center">
+                        <div class="col-3">
+                            <h5 class="text-primary">47</h5>
+                            <small class="text-muted">Consultas</small>
+                        </div>
+                        <div class="col-3">
+                            <h5 class="text-success">12</h5>
+                            <small class="text-muted">Exames</small>
+                        </div>
+                        <div class="col-3">
+                            <h5 class="text-warning">8</h5>
+                            <small class="text-muted">Prescrições</small>
+                        </div>
+                        <div class="col-3">
+                            <h5 class="text-info">3</h5>
+                            <small class="text-muted">Internamentos</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="profileEditBtn"><i class="fas fa-edit me-1"></i> Editar Perfil</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Perfil -->
+    <div class="modal fade" id="profileEditModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-edit me-2"></i> Editar Perfil do Médico</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="profileEditForm" class="edit-profile-form">
+                        <div class="text-center mb-4">
+                            <div class="profile-edit-avatar" id="avatarUpload">
+                                <span id="avatarInitials">AM</span>
+                                <div class="avatar-overlay">
+                                    <i class="fas fa-camera"></i> Alterar
+                                </div>
+                            </div>
+                            <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
+                            <small class="text-muted">Clique na imagem para alterar a foto</small>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editFullName" class="form-label">Nome Completo</label>
+                                    <input type="text" class="form-control" id="editFullName" value="Ana Paula Manuel" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editSpecialty" class="form-label">Especialidade</label>
+                                    <select class="form-select" id="editSpecialty">
+                                        <option value="Pediatria" selected>Pediatria</option>
+                                        <option value="Cardiologia">Cardiologia</option>
+                                        <option value="Ginecologia">Ginecologia</option>
+                                        <option value="Ortopedia">Ortopedia</option>
+                                        <option value="Neurologia">Neurologia</option>
+                                        <option value="Dermatologia">Dermatologia</option>
+                                        <option value="Oftalmologia">Oftalmologia</option>
+                                        <option value="Psiquiatria">Psiquiatria</option>
+                                        <option value="Oncologia">Oncologia</option>
+                                        <option value="Endocrinologia">Endocrinologia</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editCRM" class="form-label">CRM</label>
+                                    <input type="text" class="form-control" id="editCRM" value="12345" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editEmail" class="form-label">E-mail</label>
+                                    <input type="email" class="form-control" id="editEmail" value="ana.manuel@vitalinka.ao" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editPhone" class="form-label">Telefone</label>
+                                    <input type="text" class="form-control" id="editPhone" value="+244 923 456 789" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editDepartment" class="form-label">Departamento</label>
+                                    <select class="form-select" id="editDepartment">
+                                        <option value="Pediatria" selected>Pediatria</option>
+                                        <option value="Cardiologia">Cardiologia</option>
+                                        <option value="Ginecologia">Ginecologia</option>
+                                        <option value="Ortopedia">Ortopedia</option>
+                                        <option value="Neurologia">Neurologia</option>
+                                        <option value="Dermatologia">Dermatologia</option>
+                                        <option value="Oftalmologia">Oftalmologia</option>
+                                        <option value="Psiquiatria">Psiquiatria</option>
+                                        <option value="Oncologia">Oncologia</option>
+                                        <option value="Endocrinologia">Endocrinologia</option>
+                                        <option value="Urgência">Urgência</option>
+                                        <option value="Internamento">Internamento</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editAdmissionDate" class="form-label">Data de Admissão</label>
+                                    <input type="date" class="form-control" id="editAdmissionDate" value="2020-01-15">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editStatus" class="form-label">Status</label>
+                                    <select class="form-select" id="editStatus">
+                                        <option value="Ativo" selected>Ativo</option>
+                                        <option value="Inativo">Inativo</option>
+                                        <option value="Férias">Férias</option>
+                                        <option value="Licença">Licença</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>Permissões do Médico</h6>
+                        <div class="permission-checkbox mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="consultas" id="permConsultas" checked>
+                                <label class="form-check-label" for="permConsultas">Consultas</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="diagnosticos" id="permDiagnosticos" checked>
+                                <label class="form-check-label" for="permDiagnosticos">Diagnósticos</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="prescricoes" id="permPrescricoes" checked>
+                                <label class="form-check-label" for="permPrescricoes">Prescrições</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="exames" id="permExames" checked>
+                                <label class="form-check-label" for="permExames">Exames</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="relatorios" id="permRelatorios" checked>
+                                <label class="form-check-label" for="permRelatorios">Relatórios</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="internamentos" id="permInternamentos" checked>
+                                <label class="form-check-label" for="permInternamentos">Internamentos</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="evolucao" id="permEvolucao" checked>
+                                <label class="form-check-label" for="permEvolucao">Evolução Clínica</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="alta" id="permAlta" checked>
+                                <label class="form-check-label" for="permAlta">Alta Médica</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="comunicacao" id="permComunicacao" checked>
+                                <label class="form-check-label" for="permComunicacao">Comunicação</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="documentacao" id="permDocumentacao" checked>
+                                <label class="form-check-label" for="permDocumentacao">Documentação</label>
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>Preferências do Sistema</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editLanguage" class="form-label">Idioma</label>
+                                    <select class="form-select" id="editLanguage">
+                                        <option value="pt" selected>Português</option>
+                                        <option value="en">Inglês</option>
+                                        <option value="fr">Francês</option>
+                                        <option value="es">Espanhol</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editTheme" class="form-label">Tema Padrão</label>
+                                    <select class="form-select" id="editTheme">
+                                        <option value="dark" selected>Escuro</option>
+                                        <option value="light">Claro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveProfile"><i class="fas fa-save me-1"></i> Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CHATBOT VITA ========== -->
+    <div class="chatbot-container">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <span class="chatbot-name"><i class="fas fa-robot"></i> VITA</span>
+                <button class="chatbot-close" id="chatbotClose"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chatbot-body" id="chatbotBody">
+                <div class="message bot">
+                    <i class="fas fa-robot me-1"></i> Olá! Sou a <strong>VITA</strong>, sua assistente virtual.<br>
+                    Como posso ajudar? Pergunte sobre pacientes, consultas, exames, medicamentos, internamentos ou altas.
+                </div>
+            </div>
+             <a href="ia-med.html">
+                <button class="ml-5" 
+                        style="margin-left: 20px;
+                               margin-bottom: 20px; 
+                               border-radius: 50px;
+                               color: green;
+                               background-color: #0b3b3b">
+                    <i class="fas fa-headset" 
+                   style="color: rgba(204, 185, 204, 0.39)">
+                </i> Vita AI </button>
+            </a>
+            <div class="chatbot-footer">
+                <input type="text" id="chatbotInput" placeholder="Digite sua pergunta...">
+                <button id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <button class="chatbot-toggle" id="chatbotToggle">
+            <img class="vita-med" src="images/chat-bot.png" alt="VITA">
+            <span class="badge-notification">1</span>
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // ================================================================
+            // 1. THEME TOGGLE
+            // ================================================================
+            let currentTheme = 'dark';
+            const themeToggle = $('#themeToggle');
+            const themeIcon = $('#themeIcon');
+
+            function setTheme(theme) {
+                currentTheme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                if (theme === 'light') {
+                    themeIcon.removeClass('fa-moon').addClass('fa-sun');
+                } else {
+                    themeIcon.removeClass('fa-sun').addClass('fa-moon');
+                }
+                localStorage.setItem('vitalinka-theme', theme);
+            }
+
+            const savedTheme = localStorage.getItem('vitalinka-theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            }
+
+            themeToggle.click(function() {
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+            });
+
+            // ================================================================
+            // 2. DASHBOARD DROPDOWN -> Sincronizar com Tabs
+            // ================================================================
+            $('#dashboardMenu .dropdown-item[data-tab]').click(function(e) {
+                e.preventDefault();
+                const tabId = $(this).data('tab');
+                const tabButton = $(`#${tabId}-tab`);
+                if (tabButton.length) {
+                    const tab = new bootstrap.Tab(tabButton[0]);
+                    tab.show();
+                }
+                $(this).closest('.dropdown').find('.dropdown-toggle').dropdown('toggle');
+            });
+
+            // ================================================================
+            // 3. PERFIL - Modais
+            // ================================================================
+            const profileModal = new bootstrap.Modal(document.getElementById('profileModal'));
+            const profileEditModal = new bootstrap.Modal(document.getElementById('profileEditModal'));
+
+            $('#profileCardView').click(function(e) {
+                e.preventDefault();
+                profileModal.show();
+            });
+
+            $('#profileEditBtn').click(function() {
+                profileModal.hide();
+                loadProfileDataToEdit();
+                profileEditModal.show();
+            });
+
+            $('#profileCardEdit').click(function(e) {
+                e.preventDefault();
+                loadProfileDataToEdit();
+                profileEditModal.show();
+            });
+
+            $('#profileCardLogout').click(function(e) {
+                e.preventDefault();
+                if (confirm('Tem certeza que deseja sair?')) {
+                    clearInterval(timerInterval);
+                    window.location.href = "logout-per.html";
+                }
+            });
+
+            $('#profileCardPassword').click(function(e) {
+                e.preventDefault();
+                alert('🔐 Redirecionando para a página de alteração de senha...');
+            });
+
+            // ================================================================
+            // 4. EDIÇÃO DE PERFIL
+            // ================================================================
+            let profileData = {
+                fullName: 'Ana Paula Manuel',
+                specialty: 'Pediatria',
+                crm: '12345',
+                email: 'ana.manuel@vitalinka.ao',
+                phone: '+244 923 456 789',
+                department: 'Pediatria',
+                admissionDate: '2020-01-15',
+                status: 'Ativo',
+                permissions: ['consultas', 'diagnosticos', 'prescricoes', 'exames', 'relatorios', 'internamentos', 'evolucao', 'alta', 'comunicacao', 'documentacao'],
+                language: 'pt',
+                theme: 'dark'
+            };
+
+            function loadProfileDataToEdit() {
+                $('#editFullName').val(profileData.fullName);
+                $('#editSpecialty').val(profileData.specialty);
+                $('#editCRM').val(profileData.crm);
+                $('#editEmail').val(profileData.email);
+                $('#editPhone').val(profileData.phone);
+                $('#editDepartment').val(profileData.department);
+                $('#editAdmissionDate').val(profileData.admissionDate);
+                $('#editStatus').val(profileData.status);
+                
+                $('.permission-checkbox .form-check-input').prop('checked', false);
+                profileData.permissions.forEach(perm => {
+                    $(`#perm${perm.charAt(0).toUpperCase() + perm.slice(1)}`).prop('checked', true);
+                });
+                
+                $('#editLanguage').val(profileData.language);
+                $('#editTheme').val(profileData.theme);
+                
+                const initials = profileData.fullName.split(' ').map(n => n[0]).join('');
+                $('#avatarInitials').text(initials);
+                $('#avatarUpload').css('background-image', 'none');
+                $('#avatarInitials').show();
+            }
+
+            function saveProfileData() {
+                profileData.fullName = $('#editFullName').val() || profileData.fullName;
+                profileData.specialty = $('#editSpecialty').val() || profileData.specialty;
+                profileData.crm = $('#editCRM').val() || profileData.crm;
+                profileData.email = $('#editEmail').val() || profileData.email;
+                profileData.phone = $('#editPhone').val() || profileData.phone;
+                profileData.department = $('#editDepartment').val() || profileData.department;
+                profileData.admissionDate = $('#editAdmissionDate').val() || profileData.admissionDate;
+                profileData.status = $('#editStatus').val() || profileData.status;
+                
+                profileData.permissions = [];
+                $('.permission-checkbox .form-check-input:checked').each(function() {
+                    profileData.permissions.push($(this).val());
+                });
+                
+                profileData.language = $('#editLanguage').val() || profileData.language;
+                profileData.theme = $('#editTheme').val() || profileData.theme;
+                
+                updateProfileDisplay();
+                profileEditModal.hide();
+                
+                alert('✅ Perfil atualizado com sucesso!\n\n' +
+                      '📋 Nome: ' + profileData.fullName + '\n' +
+                      '🏥 Especialidade: ' + profileData.specialty + '\n' +
+                      '📧 Email: ' + profileData.email);
+            }
+
+            function updateProfileDisplay() {
+                const initials = profileData.fullName.split(' ').map(n => n[0]).join('');
+                $('.profile-avatar-lg').text(initials);
+                $('#profileDoctorName').text(profileData.fullName);
+                
+                $('.profile-detail').each(function() {
+                    const label = $(this).find('.label').text().trim();
+                    const valueEl = $(this).find('.value');
+                    switch(label) {
+                        case 'Nome Completo': valueEl.text(profileData.fullName); break;
+                        case 'Especialidade': valueEl.text(profileData.specialty); break;
+                        case 'CRM': valueEl.text(profileData.crm); break;
+                        case 'Email': valueEl.text(profileData.email); break;
+                        case 'Telefone': valueEl.text(profileData.phone); break;
+                        case 'Departamento': valueEl.text(profileData.department); break;
+                        case 'Data de Admissão': valueEl.text(formatDate(profileData.admissionDate)); break;
+                        case 'Último Acesso': valueEl.text(new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')); break;
+                    }
+                });
+                
+                $('.badge.bg-success').text(profileData.status);
+                
+                const permLabels = {
+                    'consultas': '👨‍⚕️ Consultas',
+                    'diagnosticos': '📋 Diagnósticos',
+                    'prescricoes': '💊 Prescrições',
+                    'exames': '🧪 Exames',
+                    'relatorios': '📊 Relatórios',
+                    'internamentos': '🏥 Internamentos',
+                    'evolucao': '📝 Evolução Clínica',
+                    'alta': '📄 Alta Médica',
+                    'comunicacao': '📨 Comunicação',
+                    'documentacao': '📑 Documentação'
+                };
+                const container = $('.profile-permissions');
+                container.empty();
+                profileData.permissions.forEach(perm => {
+                    container.append(`<span class="badge">${permLabels[perm] || perm}</span>`);
+                });
+                
+                $('#profileCardAvatar').text(initials);
+                $('#profileCardName').text(profileData.fullName);
+                $('#profileCardSpecialty').text(profileData.specialty);
+                
+                if (profileData.theme !== currentTheme) {
+                    setTheme(profileData.theme);
+                }
+            }
+
+            function formatDate(dateStr) {
+                if (!dateStr) return '--/--/----';
+                const parts = dateStr.split('-');
+                return parts[2] + '/' + parts[1] + '/' + parts[0];
+            }
+
+            $('#btnSaveProfile').click(function() {
+                saveProfileData();
+            });
+
+            $('#avatarUpload').click(function() {
+                $('#avatarFileInput').click();
+            });
+
+            $('#avatarFileInput').change(function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        $('#avatarUpload').css({
+                            'background-image': `url(${event.target.result})`,
+                            'background-size': 'cover',
+                            'background-position': 'center'
+                        });
+                        $('#avatarInitials').hide();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // ================================================================
+            // 5. DADOS DE EXEMPLO
+            // ================================================================
+            const appointments = [
+                { id:1, nome:'Maria Silva', processo:'P-2026-0158', idade:'28 anos', sexo:'Feminino', telefone:'+244 923 456 789', especialidade:'Pediatria', medico:'Dra. Ana Manuel', data:'15/08/2026', hora:'09:30', sala:'Consultório 03', tipo:'Consulta de Rotina', estado:'Confirmada' },
+                { id:2, nome:'João Pedro', processo:'P-2026-0159', idade:'35 anos', sexo:'Masculino', telefone:'+244 923 456 790', especialidade:'Cardiologia', medico:'Dr. Carlos Santos', data:'16/08/2026', hora:'14:00', sala:'Consultório 05', tipo:'Consulta de Acompanhamento', estado:'Pendente' },
+                { id:3, nome:'Ana Oliveira', processo:'P-2026-0160', idade:'42 anos', sexo:'Feminino', telefone:'+244 923 456 791', especialidade:'Ginecologia', medico:'Dra. Maria Santos', data:'17/08/2026', hora:'11:00', sala:'Consultório 02', tipo:'Consulta de Rotina', estado:'Reagendada' }
+            ];
+
+            let historyData = [
+                { id:'CMP001', paciente:'Maria Silva', data:'15/08/2026', estado:'Emitido', emissao:'15/08/2026 09:30' },
+                { id:'CMP002', paciente:'Ana Gomes', data:'15/08/2026', estado:'Enviado', emissao:'15/08/2026 10:15' },
+                { id:'CMP003', paciente:'João Pedro', data:'16/08/2026', estado:'Impresso', emissao:'15/08/2026 11:00' },
+                { id:'CMP004', paciente:'Carlos Silva', data:'16/08/2026', estado:'Emitido', emissao:'15/08/2026 11:45' },
+                { id:'CMP005', paciente:'Maria Santos', data:'17/08/2026', estado:'Pendente', emissao:'15/08/2026 12:30' }
+            ];
+
+            let agendaItems = [
+                { paciente: 'Maria Silva', hora: '08:30', especialidade: 'Pediatria', status: 'confirmada' },
+                { paciente: 'João Pedro', hora: '09:30', especialidade: 'Cardiologia', status: 'pendente' },
+                { paciente: 'Ana Oliveira', hora: '11:00', especialidade: 'Ginecologia', status: 'confirmada' },
+                { paciente: 'Carlos Santos', hora: '14:00', especialidade: 'Ortopedia', status: 'confirmada' },
+                { paciente: 'Mariana Costa', hora: '15:30', especialidade: 'Neurologia', status: 'pendente' }
+            ];
+
+            let currentAppointment = null;
+            let comprovativoCounter = 6;
+            let prescricoes = [];
+            let exames = [];
+            let internados = [];
+            let evolucoes = [];
+
+            // ================================================================
+            // 6. FUNÇÕES PRINCIPAIS
+            // ================================================================
+            function updateDateTime() {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('pt-BR');
+                const timeStr = now.toLocaleTimeString('pt-BR');
+                $('#dateTimeDisplay').text(`${dateStr} ${timeStr}`);
+            }
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            function updateStats() {
+                $('#emittedToday').text(historyData.length);
+                $('#sentCount').text(historyData.filter(h => h.estado === 'Enviado').length);
+                $('#printedCount').text(historyData.filter(h => h.estado === 'Impresso').length);
+                $('#pendingCount').text(historyData.filter(h => h.estado === 'Pendente').length);
+                $('#confirmedCount').text(appointments.filter(a => a.estado === 'Confirmada').length);
+                $('#canceledCount').text(appointments.filter(a => a.estado === 'Cancelada').length);
+            }
+            updateStats();
+
+            function renderHistory() {
+                const tbody = $('#historyBody');
+                tbody.empty();
+                if (historyData.length === 0) {
+                    tbody.append('<tr><td colspan="6" class="text-center text-muted">Nenhum comprovativo registado.</td></tr>');
+                    return;
+                }
+                historyData.forEach((item, index) => {
+                    const statusClass = { 'Emitido':'info', 'Enviado':'success', 'Impresso':'primary', 'Pendente':'warning', 'Cancelado':'danger' }[item.estado] || 'secondary';
+                    tbody.append(`<tr>
+                        <td><strong>${item.id}</strong></td>
+                        <td>${item.paciente}</td>
+                        <td>${item.data}</td>
+                        <td><span class="badge bg-${statusClass}">${item.estado}</span></td>
+                        <td>${item.emissao}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary action-btn" data-action="view" data-index="${index}"><i class="bi bi-eye"></i></button>
+                            <button class="btn btn-sm btn-outline-warning action-btn" data-action="reemit" data-index="${index}"><i class="bi bi-arrow-repeat"></i></button>
+                            <button class="btn btn-sm btn-outline-danger action-btn" data-action="cancel" data-index="${index}"><i class="bi bi-x-circle"></i></button>
+                        </td>
+                    </tr>`);
+                });
+            }
+            renderHistory();
+
+            function renderAgenda() {
+                const container = $('#agendaList');
+                container.empty();
+                agendaItems.forEach(item => {
+                    const statusClass = item.status === 'confirmada' ? 'confirmed' : 'pending';
+                    container.append(`
+                        <div class="agenda-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="time">${item.hora}</span>
+                                    <span class="patient-name ms-2">${item.paciente}</span>
+                                    <span class="badge bg-secondary ms-2">${item.especialidade}</span>
+                                </div>
+                                <span class="status-badge ${statusClass}">${item.status === 'confirmada' ? 'Confirmada' : 'Pendente'}</span>
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+            renderAgenda();
+
+            function renderInternados() {
+                const container = $('#internadosLista');
+                container.empty();
+                if (internados.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhum paciente internado</div>');
+                    return;
+                }
+                internados.forEach((item, index) => {
+                    container.append(`
+                        <div class="internamento-card">
+                            <div class="internamento-header">
+                                <h6>${item.paciente}</h6>
+                                <span class="badge bg-primary">${item.enfermaria}</span>
+                            </div>
+                            <div class="internamento-details">
+                                <div>Cama: ${item.cama}</div>
+                                <div>Motivo: ${item.motivo}</div>
+                                <div>Internado desde: ${item.data}</div>
+                            </div>
+                        </div>
+                    `);
+                });
+                // Atualizar select de transferência
+                const select = $('#transferenciaPaciente');
+                select.empty().append('<option value="">-- Selecione --</option>');
+                internados.forEach(item => {
+                    select.append(`<option value="${item.paciente}">${item.paciente}</option>`);
+                });
+            }
+            renderInternados();
+
+            function renderEvolucoes() {
+                const container = $('#evolucoesLista');
+                container.empty();
+                if (evolucoes.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma evolução registada</div>');
+                    return;
+                }
+                evolucoes.forEach(item => {
+                    container.append(`
+                        <div class="evolucao-item">
+                            <div class="evolucao-date">${item.data} - ${item.paciente}</div>
+                            <div class="evolucao-text">${item.texto}</div>
+                            ${item.sinais ? `<small class="text-muted">PA: ${item.sinais.pa} | FC: ${item.sinais.fc} | Temp: ${item.sinais.temp}</small>` : ''}
+                        </div>
+                    `);
+                });
+            }
+            renderEvolucoes();
+
+            function renderPrescricoes() {
+                const container = $('#prescricoesLista');
+                container.empty();
+                if (prescricoes.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma prescrição adicionada</div>');
+                    return;
+                }
+                prescricoes.forEach((item, index) => {
+                    container.append(`
+                        <div class="prescricao-item">
+                            <div class="med-info">
+                                <strong>${item.medicamento}</strong>
+                                <small>${item.dose} - ${item.frequencia} - ${item.duracao} - ${item.via}</small>
+                            </div>
+                            <button class="btn-remove" data-index="${index}"><i class="fas fa-times"></i></button>
+                        </div>
+                    `);
+                });
+            }
+            renderPrescricoes();
+
+            function renderExames() {
+                const container = $('#examesLista');
+                container.empty();
+                if (exames.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhum exame solicitado</div>');
+                    return;
+                }
+                exames.forEach((item, index) => {
+                    const priorityClass = item.prioridade === 'Emergência' ? 'danger' : item.prioridade === 'Urgente' ? 'warning' : 'info';
+                    container.append(`
+                        <div class="exame-item">
+                            <div class="exame-info">
+                                <strong>${item.tipo}</strong>
+                                <small>${item.justificacao}</small>
+                            </div>
+                            <span class="badge bg-${priorityClass}">${item.prioridade}</span>
+                        </div>
+                    `);
+                });
+            }
+            renderExames();
+
+            function selectAppointment(appointment) {
+                currentAppointment = appointment;
+                $('#patientInfo').show();
+                $('#patientAvatar').text(appointment.nome.split(' ').map(n=>n[0]).join(''));
+                $('#patientName').text(appointment.nome);
+                $('#patientId').text(`Processo: ${appointment.processo}`);
+                $('#patientAge').text(appointment.idade);
+                $('#patientGender').text(appointment.sexo);
+                $('#patientPhone').text(appointment.telefone);
+                $('#appointmentInfo').show();
+                $('#appointmentSpecialty').text(appointment.especialidade);
+                $('#appointmentDoctor').text(appointment.medico);
+                $('#appointmentDate').text(appointment.data);
+                $('#appointmentTime').text(appointment.hora);
+                $('#appointmentRoom').text(appointment.sala);
+                $('#appointmentType').text(appointment.tipo);
+                const statusClass = { 'Confirmada':'confirmed', 'Pendente':'pending', 'Reagendada':'rescheduled' }[appointment.estado] || 'pending';
+                $('#appointmentStatus').removeClass().addClass(`status-badge ${statusClass}`).text(appointment.estado);
+                const now = new Date();
+                const emissionDate = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR');
+                const comprovativoNum = 'CMP-2026-' + String(comprovativoCounter).padStart(4,'0');
+                $('#previewNumber').text(comprovativoNum);
+                $('#previewEmissionDate').text(emissionDate);
+                $('#previewPatient').text(appointment.nome);
+                $('#previewProcess').text(appointment.processo);
+                $('#previewAge').text(appointment.idade);
+                $('#previewSpecialty').text(appointment.especialidade);
+                $('#previewDoctor').text(appointment.medico);
+                $('#previewRoom').text(appointment.sala);
+                $('#previewDate').text(appointment.data);
+                $('#previewTime').text(appointment.hora);
+                $('#previewCode').text('V2026-08-' + comprovativoNum);
+                $('#btnGerarComprovativo, #btnImprimir, #btnEnviar, #btnVisualizar, #btnReemitir, #btnCancelar').prop('disabled', false);
+            }
+
+            // ================================================================
+            // 7. EVENTOS E AÇÕES
+            // ================================================================
+
+            // Pesquisa
+            $('#searchAppointment').on('input', function() {
+                const term = $(this).val().toLowerCase();
+                if (term.length < 2) { $('#suggestions').hide(); return; }
+                const results = appointments.filter(a => a.nome.toLowerCase().includes(term) || a.processo.toLowerCase().includes(term) || a.telefone.includes(term));
+                if (results.length === 0) { $('#suggestions').hide(); return; }
+                let html = '';
+                results.forEach(a => { html += `<div class="suggestion-item" data-id="${a.id}"><strong>${a.nome}</strong> - ${a.processo}<br><small>${a.especialidade} - ${a.data} ${a.hora}</small></div>`; });
+                $('#suggestions').html(html).show();
+            });
+
+            $(document).on('click', '.suggestion-item', function() {
+                const id = parseInt($(this).data('id'));
+                const appointment = appointments.find(a => a.id === id);
+                if (appointment) { selectAppointment(appointment); $('#suggestions').hide(); $('#searchAppointment').val(appointment.nome); }
+            });
+
+            $('#btnSearch').click(function() {
+                const term = $('#searchAppointment').val().toLowerCase();
+                if (term === '') { alert('Digite um termo para pesquisar.'); return; }
+                const result = appointments.find(a => a.nome.toLowerCase().includes(term) || a.processo.toLowerCase().includes(term) || a.telefone.includes(term));
+                if (result) selectAppointment(result);
+                else alert('Nenhum paciente encontrado.');
+            });
+
+            $('#btnQRCode').click(function() { 
+                alert('📷 Leitor de QR Code ativado.\n\nAponte a câmera para o código QR do paciente.\n\n🔍 Função: localizar paciente por QR Code.'); 
+            });
+
+            // ================================================================
+            // 8. AÇÕES DOS BOTÕES COM MODAIS
+            // ================================================================
+            
+            $('#btnGerarComprovativo').click(function() {
+                if (!currentAppointment) return;
+                const now = new Date();
+                const num = 'CMP-2026-' + String(comprovativoCounter).padStart(4,'0');
+                comprovativoCounter++;
+                historyData.unshift({ 
+                    id: num, 
+                    paciente: currentAppointment.nome, 
+                    data: currentAppointment.data, 
+                    estado: 'Emitido', 
+                    emissao: now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR') 
+                });
+                renderHistory(); 
+                updateStats(); 
+                $('#previewNumber').text(num);
+                $('#previewEmissionDate').text(now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR'));
+                alert(`✅ Comprovativo ${num} gerado com sucesso!`);
+            });
+
+            $('#btnImprimir').click(function() {
+                if (!currentAppointment) return;
+                $('#printModal').modal('show');
+            });
+
+            $('#btnPrintConfirm').click(function() {
+                const copies = parseInt($('#printCopies').val()) || 1;
+                const option = $('input[name="printOption"]:checked').val();
+                const optionLabel = option === 'printA4' ? 'A4' : option === 'printA5' ? 'A5' : 'Carta';
+                
+                if (historyData[0]) { 
+                    historyData[0].estado = 'Impresso'; 
+                    renderHistory(); 
+                    updateStats(); 
+                }
+                
+                $('#printModal').modal('hide');
+                alert(`🖨️ Enviando para impressão...\n\n📄 Comprovativo: ${$('#previewNumber').text()}\n📐 Tamanho: ${optionLabel}\n📑 Cópias: ${copies}`);
+            });
+
+            $('#btnEnviar').click(function() { 
+                if (currentAppointment) {
+                    $('#sendDestination').val(currentAppointment.telefone);
+                    $('#sendModal').modal('show'); 
+                }
+            });
+
+            $('#btnSendConfirm').click(function() {
+                const methods = [];
+                if ($('#sendEmail').is(':checked')) methods.push('E-mail');
+                if ($('#sendSMS').is(':checked')) methods.push('SMS');
+                if ($('#sendWhatsApp').is(':checked')) methods.push('WhatsApp');
+                if (methods.length === 0) { alert('Selecione pelo menos um método.'); return; }
+                
+                const destination = $('#sendDestination').val();
+                const message = $('#sendMessage').val();
+                
+                if (historyData[0]) { 
+                    historyData[0].estado = 'Enviado'; 
+                    renderHistory(); 
+                    updateStats(); 
+                }
+                
+                $('#sendModal').modal('hide');
+                alert(`📨 Comprovativo enviado com sucesso!\n\n📧 Métodos: ${methods.join(', ')}\n📱 Destinatário: ${destination}\n📝 Mensagem: ${message || 'N/A'}`);
+            });
+
+            $('#btnVisualizar').click(function() {
+                if (!currentAppointment) return;
+                
+                $('#viewNumber').text($('#previewNumber').text());
+                $('#viewEmissionDate').text($('#previewEmissionDate').text());
+                $('#viewPatient').text($('#previewPatient').text());
+                $('#viewProcess').text($('#previewProcess').text());
+                $('#viewAge').text($('#previewAge').text());
+                $('#viewSpecialty').text($('#previewSpecialty').text());
+                $('#viewDoctor').text($('#previewDoctor').text());
+                $('#viewRoom').text($('#previewRoom').text());
+                $('#viewDate').text($('#previewDate').text());
+                $('#viewTime').text($('#previewTime').text());
+                $('#viewCode').text($('#previewCode').text());
+                
+                $('#viewModal').modal('show');
+            });
+
+            $('#viewPrintBtn').click(function() {
+                $('#viewModal').modal('hide');
+                $('#printModal').modal('show');
+            });
+
+            $('#btnReemitir').click(function() {
+                if (!currentAppointment) return;
+                
+                $('#reemitNumber').text($('#previewNumber').text());
+                $('#reemitPatient').text(currentAppointment.nome);
+                $('#reemitReason').val('Solicitação do paciente');
+                $('#reemitObservation').val('');
+                $('#reemitModal').modal('show');
+            });
+
+            $('#btnReemitConfirm').off('click').on('click', function() {
+                const number = $('#reemitNumber').text();
+                const reason = $('#reemitReason').val();
+                const obs = $('#reemitObservation').val();
+                
+                const now = new Date();
+                const newNum = 'CMP-2026-' + String(comprovativoCounter).padStart(4,'0');
+                comprovativoCounter++;
+                
+                historyData.unshift({ 
+                    id: newNum, 
+                    paciente: currentAppointment.nome, 
+                    data: currentAppointment.data, 
+                    estado: 'Emitido', 
+                    emissao: now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR') 
+                });
+                
+                renderHistory();
+                updateStats();
+                $('#previewNumber').text(newNum);
+                $('#previewEmissionDate').text(now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR'));
+                
+                $('#reemitModal').modal('hide');
+                alert(`✅ Comprovativo ${newNum} reemitido com sucesso!\n\nMotivo: ${reason}\nObservação: ${obs || 'N/A'}`);
+            });
+
+            $('#btnCancelar').click(function() {
+                if (!currentAppointment) return;
+                
+                $('#cancelPatient').text(currentAppointment.nome);
+                $('#cancelDate').text(currentAppointment.data + ' ' + currentAppointment.hora);
+                $('#cancelReason').val('Desistência do paciente');
+                $('#cancelObservation').val('');
+                $('#cancelModal').modal('show');
+            });
+
+            $('#btnCancelConfirm').off('click').on('click', function() {
+                const reason = $('#cancelReason').val();
+                const obs = $('#cancelObservation').val();
+                
+                currentAppointment.estado = 'Cancelada';
+                $('#appointmentStatus').removeClass().addClass('status-badge canceled').text('Cancelada');
+                updateStats();
+                
+                const item = historyData.find(h => h.paciente === currentAppointment.nome);
+                if (item) {
+                    item.estado = 'Cancelado';
+                    renderHistory();
+                }
+                
+                $('#cancelModal').modal('hide');
+                alert(`❌ Marcação de ${currentAppointment.nome} cancelada com sucesso!\n\nMotivo: ${reason}\nObservação: ${obs || 'N/A'}`);
+            });
+
+            $('#btnNewComprovativo').click(function() {
+                $('#searchAppointment').val('').focus();
+                $('#patientInfo, #appointmentInfo').hide();
+                $('#btnGerarComprovativo, #btnImprimir, #btnEnviar, #btnVisualizar, #btnReemitir, #btnCancelar').prop('disabled', true);
+                const now = new Date();
+                $('#previewNumber').text('CMP-2026-XXXX');
+                $('#previewEmissionDate').text(now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR'));
+                $('#previewPatient, #previewProcess, #previewAge, #previewSpecialty, #previewDoctor, #previewRoom').text('---');
+                $('#previewDate, #previewTime').text('--/--/----');
+                $('#previewCode').text('---');
+                alert('📄 Selecione uma marcação para gerar um novo comprovativo.');
+            });
+
+            // ================================================================
+            // 9. ATENDIMENTO
+            // ================================================================
+            $('#btnSalvarAtendimento').click(function() {
+                const queixa = $('#queixaPrincipal').val();
+                const sintomas = $('#sintomas').val();
+                const exameFisico = $('#exameFisico').val();
+                const diagnostico = $('#diagnostico').val();
+                
+                if (!queixa && !sintomas && !diagnostico) {
+                    alert('Preencha pelo menos a queixa principal, sintomas ou diagnóstico.');
+                    return;
+                }
+                
+                alert(`✅ Atendimento salvo com sucesso!\n\n📋 Queixa: ${queixa || 'N/A'}\n🔬 Diagnóstico: ${diagnostico || 'N/A'}\n📝 Sintomas: ${sintomas || 'N/A'}`);
+                
+                // Limpar campos
+                $('#queixaPrincipal, #sintomas, #exameFisico, #diagnostico').val('');
+                $('#sinalPA, #sinalFC, #sinalTemp').val('');
+            });
+
+            // ================================================================
+            // 10. PRESCRIÇÃO
+            // ================================================================
+            $('#btnAdicionarPrescricao').click(function() {
+                const medicamento = $('#medicamentoNome').val();
+                const dose = $('#medicamentoDose').val();
+                const frequencia = $('#medicamentoFrequencia').val();
+                const duracao = $('#medicamentoDuracao').val();
+                const via = $('#medicamentoVia').val();
+                
+                if (!medicamento) {
+                    alert('Digite o nome do medicamento.');
+                    return;
+                }
+                
+                prescricoes.push({ medicamento, dose, frequencia, duracao, via });
+                renderPrescricoes();
+                
+                $('#medicamentoNome, #medicamentoDose, #medicamentoDuracao').val('');
+                $('#medicamentoFrequencia').val('12/12h');
+                $('#medicamentoVia').val('Oral');
+            });
+
+            $(document).on('click', '.prescricao-item .btn-remove', function() {
+                const index = $(this).data('index');
+                prescricoes.splice(index, 1);
+                renderPrescricoes();
+            });
+
+            $('#btnSalvarPrescricao').click(function() {
+                if (prescricoes.length === 0) {
+                    alert('Adicione pelo menos uma prescrição.');
+                    return;
+                }
+                const obs = $('#prescricaoObs').val();
+                alert(`✅ Prescrições salvas com sucesso!\n\n💊 Total: ${prescricoes.length} medicamentos\n📝 Observações: ${obs || 'N/A'}`);
+                prescricoes = [];
+                renderPrescricoes();
+                $('#prescricaoObs').val('');
+            });
+
+            // ================================================================
+            // 11. EXAMES
+            // ================================================================
+            $('#btnSolicitarExame').click(function() {
+                const tipo = $('#exameTipo').val();
+                const prioridade = $('#examePrioridade').val();
+                const justificacao = $('#exameJustificacao').val();
+                
+                if (!justificacao) {
+                    alert('Preencha a justificação para o exame.');
+                    return;
+                }
+                
+                exames.push({ tipo, prioridade, justificacao });
+                renderExames();
+                
+                $('#exameJustificacao').val('');
+                alert(`✅ Exame solicitado com sucesso!\n\n🔬 Tipo: ${tipo}\n⚡ Prioridade: ${prioridade}`);
+            });
+
+            // ================================================================
+            // 12. INTERNAMENTO
+            // ================================================================
+            $('#btnSolicitarInternamento').click(function() {
+                const paciente = $('#internamentoPaciente').val();
+                const enfermaria = $('#internamentoEnfermaria').val();
+                const cama = $('#internamentoCama').val();
+                const motivo = $('#internamentoMotivo').val();
+                
+                if (!paciente || !motivo) {
+                    alert('Preencha o nome do paciente e o motivo do internamento.');
+                    return;
+                }
+                
+                internados.push({
+                    paciente,
+                    enfermaria,
+                    cama,
+                    motivo,
+                    data: new Date().toLocaleDateString('pt-BR')
+                });
+                
+                renderInternados();
+                
+                $('#internamentoPaciente, #internamentoMotivo').val('');
+                alert(`✅ Internamento solicitado com sucesso!\n\n🏥 Paciente: ${paciente}\n🛏️ Enfermaria: ${enfermaria}\n📋 Motivo: ${motivo}`);
+            });
+
+            $('#btnTransferir').click(function() {
+                const paciente = $('#transferenciaPaciente').val();
+                const destino = $('#transferenciaDestino').val();
+                
+                if (!paciente) {
+                    alert('Selecione um paciente para transferir.');
+                    return;
+                }
+                
+                const item = internados.find(i => i.paciente === paciente);
+                if (item) {
+                    item.enfermaria = destino;
+                    renderInternados();
+                    alert(`✅ Paciente ${paciente} transferido com sucesso para ${destino}!`);
+                }
+            });
+
+            // ================================================================
+            // 13. EVOLUÇÃO CLÍNICA
+            // ================================================================
+            $('#btnSalvarEvolucao').click(function() {
+                const paciente = $('#evolucaoPaciente').val();
+                const texto = $('#evolucaoTexto').val();
+                const pa = $('#evolucaoPA').val();
+                const fc = $('#evolucaoFC').val();
+                const temp = $('#evolucaoTemp').val();
+                
+                if (!paciente || !texto) {
+                    alert('Preencha o nome do paciente e a evolução.');
+                    return;
+                }
+                
+                evolucoes.push({
+                    paciente,
+                    texto,
+                    data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR'),
+                    sinais: { pa, fc, temp }
+                });
+                
+                renderEvolucoes();
+                
+                $('#evolucaoPaciente, #evolucaoTexto, #evolucaoPA, #evolucaoFC, #evolucaoTemp').val('');
+                alert('✅ Evolução registada com sucesso!');
+            });
+
+            // ================================================================
+            // 14. ALTA MÉDICA
+            // ================================================================
+            let altasEmitidas = [];
+
+            $('#btnEmitirAlta').click(function() {
+                const paciente = $('#altaPaciente').val();
+                const diagnostico = $('#altaDiagnostico').val();
+                const tratamento = $('#altaTratamento').val();
+                const medicacao = $('#altaMedicacao').val();
+                const recomendacoes = $('#altaRecomendacoes').val();
+                const seguimento = $('#altaSeguimento').val();
+                
+                if (!paciente || !diagnostico) {
+                    alert('Preencha o nome do paciente e o diagnóstico final.');
+                    return;
+                }
+                
+                const alta = {
+                    paciente,
+                    diagnostico,
+                    tratamento,
+                    medicacao,
+                    recomendacoes,
+                    seguimento,
+                    data: new Date().toLocaleDateString('pt-BR'),
+                    medico: profileData.fullName
+                };
+                
+                altasEmitidas.push(alta);
+                
+                // Atualizar resumo
+                $('#altaResumo').html(`
+                    <div class="alta-summary">
+                        <div><span class="alta-label">Paciente:</span> <span class="alta-value">${paciente}</span></div>
+                        <div><span class="alta-label">Diagnóstico Final:</span> <span class="alta-value">${diagnostico}</span></div>
+                        <div><span class="alta-label">Data da Alta:</span> <span class="alta-value">${alta.data}</span></div>
+                        <div><span class="alta-label">Médico Responsável:</span> <span class="alta-value">${alta.medico}</span></div>
+                        <hr>
+                        <div><span class="alta-label">Tratamento:</span> <span class="alta-value">${tratamento || 'N/A'}</span></div>
+                        <div><span class="alta-label">Medicação para Casa:</span> <span class="alta-value">${medicacao || 'N/A'}</span></div>
+                        <div><span class="alta-label">Recomendações:</span> <span class="alta-value">${recomendacoes || 'N/A'}</span></div>
+                        <div><span class="alta-label">Consulta de Seguimento:</span> <span class="alta-value">${seguimento ? formatDate(seguimento) : 'Não agendada'}</span></div>
+                    </div>
+                `);
+                
+                // Remover dos internados se estiver lá
+                const index = internados.findIndex(i => i.paciente === paciente);
+                if (index !== -1) {
+                    internados.splice(index, 1);
+                    renderInternados();
+                }
+                
+                $('#altaPaciente, #altaDiagnostico, #altaTratamento, #altaMedicacao, #altaRecomendacoes').val('');
+                $('#altaSeguimento').val('');
+                
+                alert(`✅ Alta médica emitida com sucesso!\n\n🏥 Paciente: ${paciente}\n📋 Diagnóstico: ${diagnostico}`);
+            });
+
+            $('#btnPDFAlta').click(function() {
+                if (altasEmitidas.length === 0) {
+                    alert('Nenhuma alta emitida para exportar.');
+                    return;
+                }
+                const ultima = altasEmitidas[altasEmitidas.length - 1];
+                alert(`📄 Gerando PDF da alta de ${ultima.paciente}...\n\n📋 Diagnóstico: ${ultima.diagnostico}`);
+            });
+
+            $('#btnImprimirAlta').click(function() {
+                if (altasEmitidas.length === 0) {
+                    alert('Nenhuma alta emitida para imprimir.');
+                    return;
+                }
+                alert('🖨️ Enviando alta para impressão...');
+            });
+
+            // ================================================================
+            // 15. RELATÓRIOS
+            // ================================================================
+            $('.report-card').click(function() {
+                const type = $(this).attr('id').replace('relatorio', '').toLowerCase();
+                const titles = { emitidos:'Comprovativos Emitidos', enviados:'Comprovativos Enviados', impressos:'Comprovativos Impressos' };
+                $('#reportModalTitle').text('Relatório de ' + (titles[type] || ''));
+                $('#reportModal').modal('show');
+            });
+
+            $('#btnGenerateReport').click(function() {
+                const start = $('#reportStartDate').val(), end = $('#reportEndDate').val();
+                if (!start || !end) { alert('Preencha as datas.'); return; }
+                const status = $('#reportStatus').val() || 'Todos';
+                const filtered = status ? historyData.filter(h => h.estado === status) : historyData;
+                $('#reportModal').modal('hide');
+                alert(`📊 Relatório gerado para o período de ${start} a ${end}\n📋 Estado: ${status}\n📈 Total de registos: ${filtered.length}`);
+            });
+
+            // ================================================================
+            // 16. AGENDA - Botões de visualização
+            // ================================================================
+            $('#btnAgendaHoje').click(function() {
+                alert('📅 Mostrando agenda de hoje (15/08/2026)');
+                renderAgenda();
+            });
+
+            $('#btnAgendaSemana').click(function() {
+                alert('📅 Mostrando agenda da semana (10/08/2026 a 16/08/2026)');
+            });
+
+            $('#btnAgendaMes').click(function() {
+                alert('📅 Mostrando agenda do mês (Agosto 2026)');
+            });
+
+            // ================================================================
+            // 17. Ações do histórico
+            // ================================================================
+            $(document).on('click', '.action-btn', function() {
+                const action = $(this).data('action');
+                const index = $(this).data('index');
+                const item = historyData[index];
+                if (!item) return;
+
+                if (action === 'view') {
+                    $('#viewNumber').text(item.id);
+                    $('#viewEmissionDate').text(item.emissao);
+                    $('#viewPatient').text(item.paciente);
+                    $('#viewProcess').text('P-2026-XXXX');
+                    $('#viewAge').text('-- anos');
+                    $('#viewSpecialty').text('--');
+                    $('#viewDoctor').text('--');
+                    $('#viewRoom').text('--');
+                    $('#viewDate').text(item.data);
+                    $('#viewTime').text('--:--');
+                    $('#viewCode').text('V' + item.data.replace(/\//g, '-') + '-A001');
+                    $('#viewModal').modal('show');
+                } else if (action === 'reemit') {
+                    $('#reemitNumber').text(item.id);
+                    $('#reemitPatient').text(item.paciente);
+                    $('#reemitModal').modal('show');
+                } else if (action === 'cancel') {
+                    $('#cancelPatient').text(item.paciente);
+                    $('#cancelDate').text(item.data);
+                    $('#cancelModal').modal('show');
+                }
+            });
+
+            // ================================================================
+            // 18. TIMER DE SESSÃO
+            // ================================================================
+            let totalSeconds = 900;
+            let timerInterval = null;
+            let sessionModalShown = false;
+            let sessionModal = new bootstrap.Modal(document.getElementById('sessionModal'), { backdrop: 'static', keyboard: false });
+
+            const timerProgress = document.getElementById('timerProgress');
+            const timerText = document.getElementById('timerText');
+            const timerContainer = document.getElementById('timerContainer');
+            const circumference = 2 * Math.PI * 27;
+
+            function updateTimer() {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                timerText.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+
+                const progress = totalSeconds / 900;
+                const offset = circumference * (1 - progress);
+                timerProgress.style.strokeDashoffset = offset;
+
+                timerContainer.classList.remove('timer-warning', 'timer-danger');
+                if (totalSeconds <= 120) timerContainer.classList.add('timer-danger');
+                else if (totalSeconds <= 300) timerContainer.classList.add('timer-warning');
+
+                if (totalSeconds === 120 && !sessionModalShown) {
+                    sessionModalShown = true;
+                    $('#sessionCountdown').text('2:00');
+                    sessionModal.show();
+                    const modalInterval = setInterval(() => {
+                        const remaining = totalSeconds;
+                        const mins = Math.floor(remaining / 60);
+                        const secs = remaining % 60;
+                        $('#sessionCountdown').text(`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`);
+                        if (remaining <= 0) clearInterval(modalInterval);
+                    }, 1000);
+                }
+
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    window.location.href = "408.html";
+                }
+            }
+
+            function startTimer() {
+                if (timerInterval) clearInterval(timerInterval);
+                totalSeconds = 900;
+                sessionModalShown = false;
+                timerProgress.style.strokeDasharray = circumference;
+                timerProgress.style.strokeDashoffset = circumference;
+                updateTimer();
+                timerInterval = setInterval(() => {
+                    totalSeconds--;
+                    updateTimer();
+                }, 1000);
+            }
+
+            $('#sessionContinueBtn').click(function() {
+                sessionModal.hide();
+                sessionModalShown = false;
+                startTimer();
+            });
+
+            $('#sessionEndBtn').click(function() {
+                sessionModal.hide();
+                clearInterval(timerInterval);
+                window.location.href = "index.html";
+            });
+
+            startTimer();
+
+            // ================================================================
+            // 19. CHATBOT VITA
+            // ================================================================
+            const chatbotToggle = $('#chatbotToggle');
+            const chatbotWindow = $('#chatbotWindow');
+            const chatbotClose = $('#chatbotClose');
+            const chatbotInput = $('#chatbotInput');
+            const chatbotSend = $('#chatbotSend');
+            const chatbotBody = $('#chatbotBody');
+
+            chatbotToggle.click(function() {
+                chatbotWindow.toggleClass('open');
+                $('.badge-notification').fadeOut();
+            });
+
+            chatbotClose.click(function() {
+                chatbotWindow.removeClass('open');
+            });
+
+            function addMessage(text, isUser = false) {
+                const msg = $('<div class="message ' + (isUser ? 'user' : 'bot') + '">' + text + '</div>');
+                chatbotBody.append(msg);
+                chatbotBody.scrollTop(chatbotBody[0].scrollHeight);
+            }
+
+            function processChatbotQuery(query) {
+                const q = query.toLowerCase();
+                let response = '';
+
+                if (q.includes('paciente') || q.includes('internado') || q.includes('hospitalizado')) {
+                    const count = internados.length;
+                    response = `🩺 Atualmente temos <strong>${count} pacientes internados</strong> na enfermaria geral.`;
+                } else if (q.includes('consulta') || q.includes('agendamento') || q.includes('marcação')) {
+                    const count = agendaItems.length;
+                    response = `📋 Hoje temos <strong>${count} consultas agendadas</strong>. A primeira consulta está marcada para as <strong>${agendaItems[0]?.hora || '--'}</strong>.`;
+                } else if (q.includes('exame') || q.includes('resultado')) {
+                    const count = exames.length;
+                    response = `🧪 Existem <strong>${count} exames solicitados</strong>. Os resultados estarão disponíveis em breve.`;
+                } else if (q.includes('medicamento') || q.includes('farmácia')) {
+                    const count = prescricoes.length;
+                    response = `💊 A farmácia tem <strong>disponibilidade</strong> para a maioria dos medicamentos. Você tem <strong>${count} prescrições</strong> em aberto.`;
+                } else if (q.includes('alta') || q.includes('receber alta')) {
+                    const count = altasEmitidas.length;
+                    response = `🏥 Hoje temos <strong>${count} altas</strong> emitidas. Os relatórios estão sendo finalizados.`;
+                } else if (q.includes('enfermeiro') || q.includes('enfermagem')) {
+                    response = '👩‍⚕️ A equipe de enfermagem está de plantão 24h. A enfermeira-chefe é a <strong>Enfª Maria José</strong>.';
+                } else if (q.includes('urgência') || q.includes('emergência')) {
+                    response = '🚨 O serviço de urgência está a funcionar normalmente. Temos <strong>1 caso em espera</strong> no momento.';
+                } else if (q.includes('horário') || q.includes('funcionamento')) {
+                    response = '🕐 O hospital funciona <strong>24 horas</strong>, todos os dias. O atendimento administrativo é das <strong>08:00 às 17:00</strong>.';
+                } else if (q.includes('perfil') || q.includes('médico') || q.includes('quem sou')) {
+                    response = `👨‍⚕️ Você é a <strong>${profileData.fullName}</strong>, especialista em ${profileData.specialty}.`;
+                } else if (q.includes('ajuda') || q.includes('ajudar')) {
+                    response = '💡 Posso ajudar com informações sobre: pacientes, consultas, exames, medicamentos, internamentos, altas, enfermagem, urgências, horários e perfil do médico.';
+                } else {
+                    response = '🤔 Pode reformular a pergunta? Sou a <strong>VITA</strong> e posso ajudar com informações sobre pacientes, consultas, exames, medicamentos, internamentos, altas, enfermagem, urgências e horários.';
+                }
+
+                addMessage(response, false);
+            }
+
+            chatbotSend.click(function() {
+                const query = chatbotInput.val().trim();
+                if (!query) return;
+                addMessage(query, true);
+                chatbotInput.val('');
+                setTimeout(() => processChatbotQuery(query), 500);
+            });
+
+            chatbotInput.keypress(function(e) {
+                if (e.which === 13) chatbotSend.click();
+            });
+
+            setTimeout(() => {
+                addMessage('💡 Estou aqui para ajudar! Pergunte sobre pacientes, consultas, exames, medicamentos, internamentos, altas ou o seu perfil.', false);
+            }, 2000);
+
+            console.log('✅ VITALINKA - Área do Médico carregada com sucesso!');
+            console.log('🕐 Timer de sessão: 15 minutos');
+            console.log('🤖 Assistente VITA ativo');
+            console.log('🎨 Tema: ' + currentTheme);
+            console.log('👨‍⚕️ Perfil do Médico disponível no card de perfil');
+            console.log('📋 Todas as funcionalidades clínicas implementadas!');
+            console.log('  - ✅ Dashboard com indicadores');
+            console.log('  - ✅ Agenda de consultas');
+            console.log('  - ✅ Atendimento completo');
+            console.log('  - ✅ Prescrições com verificação');
+            console.log('  - ✅ Solicitação de exames');
+            console.log('  - ✅ Gestão de internamentos');
+            console.log('  - ✅ Evolução clínica');
+            console.log('  - ✅ Alta médica com resumo');
+            console.log('  - ✅ Comprovativos e emissão');
+            console.log('  - ✅ Histórico e relatórios');
+            console.log('  - ✅ Chatbot VITA com comandos');
+        });
+    </script>
+</body>
+</html>

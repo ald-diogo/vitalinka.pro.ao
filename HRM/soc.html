@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VITALINKA | SOC - Security Operations Center</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ===== ESTILO GERAL ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        body {
+            background-image: url('images/soc.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 0;
+            transition: all 0.4s ease;
+        }
+
+        .container-fluid {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== TEMA CLARO ===== */
+        body.light-theme::before {
+            background: rgba(245, 247, 250, 0.95);
+        }
+
+        /* Textos - Tema Claro */
+        body.light-theme .page-title,
+        body.light-theme .page-title .badge,
+        body.light-theme .glass-card h5,
+        body.light-theme .glass-card p,
+        body.light-theme .glass-card .text-muted,
+        body.light-theme .banner-message,
+        body.light-theme .nav-tabs .nav-link,
+        body.light-theme .modal-content,
+        body.light-theme .modal .form-label,
+        body.light-theme .feature-card h6,
+        body.light-theme .feature-card p,
+        body.light-theme .benefit-item span,
+        body.light-theme .stat-number,
+        body.light-theme .stat-label,
+        body.light-theme .footer-link,
+        body.light-theme .newsletter-text,
+        body.light-theme .assistant-card h5,
+        body.light-theme .assistant-card p,
+        body.light-theme .banner-content h1,
+        body.light-theme .banner-content .banner-message,
+        body.light-theme .timer-container .timer-item .timer-number,
+        body.light-theme .timer-container .timer-item .timer-label,
+        body.light-theme .newsletter-card h4,
+        body.light-theme .newsletter-card .newsletter-text,
+        body.light-theme #currentDateTime,
+        body.light-theme .dropdown-menu,
+        body.light-theme .dropdown-item,
+        body.light-theme .modal .modal-title,
+        body.light-theme .modal p,
+        body.light-theme .form-check-label,
+        body.light-theme .form-check-label strong,
+        body.light-theme .soc-status-text,
+        body.light-theme .soc-metric-label,
+        body.light-theme .soc-card .soc-label,
+        body.light-theme .soc-card .soc-value,
+        body.light-theme .soc-status-bar .soc-status-item,
+        body.light-theme .soc-table td,
+        body.light-theme .soc-table th,
+        body.light-theme .glass-card .d-flex span,
+        body.light-theme .glass-card .d-flex .text-success,
+        body.light-theme .glass-card .d-flex .text-warning,
+        body.light-theme .glass-card .d-flex .text-info,
+        body.light-theme .glass-card .d-flex .text-danger {
+            color: #1a1a2e !important;
+        }
+
+        /* Cards - Tema Claro */
+        body.light-theme .glass-card,
+        body.light-theme .banner-content,
+        body.light-theme .feature-card,
+        body.light-theme .benefit-card,
+        body.light-theme .assistant-card,
+        body.light-theme .newsletter-card,
+        body.light-theme .soc-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(15px);
+            border-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        body.light-theme .soc-card:hover {
+            background: rgba(255, 255, 255, 0.97);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .glass-card:hover {
+            background: rgba(255, 255, 255, 0.97);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* SOC Cards - Tema Claro */
+        body.light-theme .soc-card .soc-label {
+            color: rgba(0, 0, 0, 0.5) !important;
+        }
+
+        body.light-theme .soc-card .soc-value {
+            color: #1a1a2e !important;
+        }
+
+        body.light-theme .soc-card .soc-icon {
+            color: #2b7a4b;
+        }
+
+        /* Tema Claro - Status Bar */
+        body.light-theme .soc-status-bar .soc-status-item {
+            color: rgba(0, 0, 0, 0.6) !important;
+        }
+
+        body.light-theme .soc-status-bar .soc-status-item strong {
+            color: #1a1a2e !important;
+        }
+
+        /* Tema Claro - Tabela SOC */
+        body.light-theme .soc-table {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        body.light-theme .soc-table th {
+            color: rgba(0, 0, 0, 0.5) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-theme .soc-table td {
+            color: #1a1a2e !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .soc-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Tema Claro - Progress Bars */
+        body.light-theme .progress {
+            background: rgba(0, 0, 0, 0.08) !important;
+        }
+
+        body.light-theme .progress-bar.bg-success {
+            background: #2b7a4b !important;
+        }
+
+        body.light-theme .progress-bar.bg-warning {
+            background: #f59e0b !important;
+        }
+
+        body.light-theme .progress-bar.bg-info {
+            background: #0ea5e9 !important;
+        }
+
+        /* Tema Claro - Timer */
+        body.light-theme .timer-container .timer-item {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-theme .timer-container .timer-item .timer-number {
+            color: #2b7a4b !important;
+        }
+
+        body.light-theme .timer-container .timer-item .timer-label {
+            color: rgba(0, 0, 0, 0.4) !important;
+        }
+
+        /* Tema Claro - Theme Toggle */
+        body.light-theme .theme-toggle-btn {
+            background: rgba(0, 0, 0, 0.08);
+            border-color: rgba(0, 0, 0, 0.12);
+            color: #1a1a2e;
+        }
+
+        body.light-theme .theme-toggle-btn:hover {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        /* Tema Claro - DateTime */
+        body.light-theme #currentDateTime {
+            background: rgba(0, 0, 0, 0.06);
+            color: #1a1a2e !important;
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        /* Tema Claro - Dropdown */
+        body.light-theme .dropdown-menu {
+            background: rgba(255, 255, 255, 0.97) !important;
+            backdrop-filter: blur(15px);
+            border-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .dropdown-item {
+            color: #1a1a2e !important;
+        }
+
+        body.light-theme .dropdown-item:hover {
+            background: rgba(43, 122, 75, 0.1) !important;
+            color: #2b7a4b !important;
+        }
+
+        body.light-theme .btn-outline-primary.dropdown-toggle {
+            color: #1a1a2e !important;
+            border-color: rgba(0, 0, 0, 0.15) !important;
+        }
+
+        body.light-theme .btn-outline-primary.dropdown-toggle:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Tema Claro - Modal */
+        body.light-theme .modal-content {
+            background: rgba(255, 255, 255, 0.98);
+            color: #1a1a2e;
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-theme .modal .modal-title {
+            color: #1a1a2e !important;
+        }
+
+        body.light-theme .modal .btn-close {
+            filter: invert(0);
+        }
+
+        body.light-theme .modal .form-control {
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a2e;
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        body.light-theme .modal .form-control:focus {
+            border-color: #2b7a4b;
+            box-shadow: 0 0 0 3px rgba(43, 122, 75, 0.1);
+        }
+
+        body.light-theme .modal .form-label {
+            color: rgba(0, 0, 0, 0.7) !important;
+        }
+
+        body.light-theme .modal-footer .btn-secondary {
+            background: rgba(0, 0, 0, 0.08);
+            color: #1a1a2e;
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        body.light-theme .modal-footer .btn-secondary:hover {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        /* Tema Claro - Banner */
+        body.light-theme .banner-content h1 {
+            color: #1a1a2e !important;
+        }
+
+        body.light-theme .banner-content .banner-message {
+            color: rgba(0, 0, 0, 0.7) !important;
+        }
+
+        body.light-theme .banner-content .btn-outline-light {
+            border-color: rgba(0, 0, 0, 0.2);
+            color: #1a1a2e;
+        }
+
+        body.light-theme .banner-content .btn-outline-light:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .banner-content .btn-success {
+            background: rgba(43, 122, 75, 0.9);
+            color: #fff;
+        }
+
+        /* Tema Claro - Nav Tabs */
+        body.light-theme .nav-tabs .nav-link {
+            color: rgba(0, 0, 0, 0.6) !important;
+            border-color: transparent;
+        }
+
+        body.light-theme .nav-tabs .nav-link:hover {
+            color: #1a1a2e !important;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .nav-tabs .nav-link.active {
+            color: #2b7a4b !important;
+            background: rgba(43, 122, 75, 0.08);
+            border-color: rgba(43, 122, 75, 0.2);
+        }
+
+        /* Tema Claro - Footer */
+        body.light-theme .footer-link {
+            color: rgba(0, 0, 0, 0.4) !important;
+        }
+
+        body.light-theme .footer-link:hover {
+            color: #2b7a4b !important;
+        }
+
+        body.light-theme footer p {
+            color: rgba(0, 0, 0, 0.4) !important;
+        }
+
+        body.light-theme footer {
+            border-top-color: rgba(0, 0, 0, 0.06) !important;
+        }
+
+        /* Tema Claro - Badges */
+        body.light-theme .badge-soc.critical {
+            background: rgba(220, 53, 69, 0.12);
+            color: #dc3545;
+        }
+
+        body.light-theme .badge-soc.high {
+            background: rgba(255, 193, 7, 0.12);
+            color: #d97706;
+        }
+
+        body.light-theme .badge-soc.medium {
+            background: rgba(13, 202, 240, 0.12);
+            color: #0ea5e9;
+        }
+
+        body.light-theme .badge-soc.low {
+            background: rgba(76, 159, 112, 0.12);
+            color: #2b7a4b;
+        }
+
+        body.light-theme .badge-soc.resolved {
+            background: rgba(76, 159, 112, 0.12);
+            color: #2b7a4b;
+        }
+
+        body.light-theme .badge-soc.pending {
+            background: rgba(255, 193, 7, 0.12);
+            color: #d97706;
+        }
+
+        /* Tema Claro - Assistant Card (mantém gradiente) */
+        body.light-theme .assistant-card {
+            background: linear-gradient(135deg, rgba(43, 122, 75, 0.92) 0%, rgba(76, 159, 112, 0.92) 100%);
+        }
+
+        body.light-theme .assistant-card h5,
+        body.light-theme .assistant-card p,
+        body.light-theme .assistant-card .chat-input,
+        body.light-theme .assistant-card .chat-input::placeholder {
+            color: #fff !important;
+        }
+
+        /* Tema Claro - Stats */
+        body.light-theme .stat-item .stat-number {
+            color: #2b7a4b !important;
+        }
+
+        body.light-theme .stat-item .stat-label {
+            color: rgba(0, 0, 0, 0.5) !important;
+        }
+
+        /* Tema Claro - Logo e Badge */
+        body.light-theme .page-title .badge.bg-success {
+            background: #2b7a4b !important;
+            color: #fff !important;
+        }
+
+        /* ===== GLASSMORPHISM (Dark) ===== */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* ===== SOC CARDS (Dark) ===== */
+        .soc-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .soc-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.10);
+        }
+
+        .soc-card .soc-icon {
+            font-size: 2.2rem;
+            color: #4c9f70;
+            margin-bottom: 8px;
+        }
+
+        .soc-card .soc-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .soc-card .soc-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== BANNER (Dark) ===== */
+        .banner-content {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .banner-content h1 {
+            color: #fff;
+            font-size: 2.8rem;
+            font-weight: 800;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .banner-content h1 .highlight {
+            color: #4c9f70;
+        }
+
+        .banner-content .banner-message {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ===== PAGE TITLE ===== */
+        .page-title {
+            color: #fff;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .page-title .badge {
+            background: rgba(43, 122, 75, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== THEME TOGGLE (Dark) ===== */
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.20);
+            transform: rotate(30deg);
+        }
+
+        /* ===== STATS ===== */
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #4c9f70;
+        }
+
+        .stat-item .stat-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== HEADER ACTIONS ===== */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        #currentDateTime {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+        }
+
+        /* ===== DROPDOWN ===== */
+        .dropdown-menu {
+            background: rgba(0, 0, 0, 0.88) !important;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .dropdown-item {
+            color: #fff !important;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(43, 122, 75, 0.25) !important;
+            color: #fff !important;
+        }
+
+        .btn-outline-primary.dropdown-toggle {
+            color: #fff !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer-link {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: #4c9f70;
+        }
+
+        /* ===== TIMER ===== */
+        .timer-container {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 16px 0;
+        }
+
+        .timer-container .timer-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            min-width: 70px;
+        }
+
+        .timer-container .timer-item .timer-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #4c9f70;
+            display: block;
+        }
+
+        .timer-container .timer-item .timer-label {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== SOC STATUS BAR ===== */
+        .soc-status-bar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 10px 0;
+        }
+
+        .soc-status-bar .soc-status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .soc-status-bar .soc-status-item .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .soc-status-bar .soc-status-item .dot.green {
+            background: #4c9f70;
+            box-shadow: 0 0 8px rgba(76, 159, 112, 0.3);
+        }
+
+        .soc-status-bar .soc-status-item .dot.yellow {
+            background: #ffc107;
+            box-shadow: 0 0 8px rgba(255, 193, 7, 0.3);
+        }
+
+        .soc-status-bar .soc-status-item .dot.red {
+            background: #dc3545;
+            box-shadow: 0 0 8px rgba(220, 53, 69, 0.3);
+        }
+
+        .soc-status-bar .soc-status-item .dot.gray {
+            background: #6c757d;
+        }
+
+        /* ===== SOC TABLE ===== */
+        .soc-table {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .soc-table th {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .soc-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.85rem;
+        }
+
+        .soc-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== BADGES SOC ===== */
+        .badge-soc {
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+
+        .badge-soc.critical {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+        }
+
+        .badge-soc.high {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .badge-soc.medium {
+            background: rgba(13, 202, 240, 0.2);
+            color: #6ee7ff;
+        }
+
+        .badge-soc.low {
+            background: rgba(76, 159, 112, 0.2);
+            color: #4c9f70;
+        }
+
+        .badge-soc.resolved {
+            background: rgba(76, 159, 112, 0.2);
+            color: #4c9f70;
+        }
+
+        .badge-soc.pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        /* ===== NAV TABS ===== */
+        .nav-tabs {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-tabs .nav-link {
+            color: rgba(255, 255, 255, 0.5);
+            border: none;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: rgba(255, 255, 255, 0.8);
+            border-color: transparent;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #4c9f70;
+            background: transparent;
+            border-bottom: 2px solid #4c9f70;
+        }
+
+        .nav-tabs .nav-link i {
+            margin-right: 6px;
+        }
+
+        /* ===== PROGRESS ===== */
+        .progress {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            overflow: hidden;
+            height: 6px;
+        }
+
+        .progress-bar {
+            border-radius: 10px;
+        }
+
+        /* ===== LOGO ===== */
+        .logo-point {
+            width: 120px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-content {
+            background: rgba(0, 0, 0, 0.90);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .modal .modal-title {
+            color: #fff;
+        }
+
+        .modal .btn-close {
+            filter: invert(1);
+        }
+
+        .modal .form-control {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .modal .form-control:focus {
+            background: rgba(255, 255, 255, 0.10);
+            color: #fff;
+            border-color: rgba(76, 159, 112, 0.3);
+            box-shadow: 0 0 0 3px rgba(76, 159, 112, 0.1);
+        }
+
+        .modal .form-label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #2b7a4b, #4c9f70);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(76, 159, 112, 0.3);
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .banner-content h1 {
+                font-size: 1.8rem;
+            }
+            .banner-content {
+                padding: 24px;
+            }
+            .header-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .page-title {
+                font-size: 1.2rem;
+            }
+            .timer-container .timer-item {
+                min-width: 55px;
+                padding: 6px 12px;
+            }
+            .timer-container .timer-item .timer-number {
+                font-size: 1.5rem;
+            }
+            .stat-item .stat-number {
+                font-size: 1.6rem;
+            }
+            .soc-card .soc-value {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .banner-content h1 {
+                font-size: 1.4rem;
+            }
+            .timer-container {
+                gap: 8px;
+            }
+            .timer-container .timer-item {
+                min-width: 45px;
+                padding: 4px 8px;
+            }
+            .timer-container .timer-item .timer-number {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* ===== ANIMAÇÕES ===== */
+        .fade-in {
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(76, 159, 112, 0.4);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(76, 159, 112, 0.6);
+        }
+
+        body.light-theme ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme ::-webkit-scrollbar-thumb {
+            background: rgba(43, 122, 75, 0.3);
+        }
+
+        body.light-theme ::-webkit-scrollbar-thumb:hover {
+            background: rgba(43, 122, 75, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid py-4">
+
+        <!-- ===== HEADER ===== -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap header-actions">
+                    <h2 class="page-title">
+                        <a href="index.html">
+                            <img src="images/vitalinka-rbg.png" class="logo-point" alt="VITALINKA">
+                        </a>
+                        <span class="badge bg-success ms-2" data-i18n="soc-badge">SOC</span>
+                    </h2>
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <button class="theme-toggle-btn" id="themeToggle" title="Alternar Tema">
+                            <i class="bi bi-moon-stars" id="themeIcon"></i>
+                        </button>
+
+                        <div class="timer-container" id="timerContainer" style="gap:8px; margin:0;">
+                            <div class="timer-item" style="min-width:50px; padding:4px 10px;">
+                                <span class="timer-number" id="timerDays" style="font-size:1.2rem;">00</span>
+                                <span class="timer-label" data-i18n="days" style="font-size:0.5rem;">Dias</span>
+                            </div>
+                            <div class="timer-item" style="min-width:50px; padding:4px 10px;">
+                                <span class="timer-number" id="timerHours" style="font-size:1.2rem;">00</span>
+                                <span class="timer-label" data-i18n="hours" style="font-size:0.5rem;">Horas</span>
+                            </div>
+                            <div class="timer-item" style="min-width:50px; padding:4px 10px;">
+                                <span class="timer-number" id="timerMinutes" style="font-size:1.2rem;">00</span>
+                                <span class="timer-label" data-i18n="minutes" style="font-size:0.5rem;">Min</span>
+                            </div>
+                            <div class="timer-item" style="min-width:50px; padding:4px 10px;">
+                                <span class="timer-number" id="timerSeconds" style="font-size:1.2rem;">00</span>
+                                <span class="timer-label" data-i18n="seconds" style="font-size:0.5rem;">Seg</span>
+                            </div>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="padding:6px 14px; border-radius:30px; font-size:0.85rem;">
+                                <i class="bi bi-globe"></i> <span id="currentLangLabel">🇦🇴 Português</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" data-lang="pt"><span class="flag">🇦🇴</span> Português</a></li>
+                                <li><a class="dropdown-item" href="#" data-lang="en"><span class="flag">🇬🇧</span> English</a></li>
+                                <li><a class="dropdown-item" href="#" data-lang="fr"><span class="flag">🇫🇷</span> Français</a></li>
+                                <li><a class="dropdown-item" href="#" data-lang="es"><span class="flag">🇪🇸</span> Español</a></li>
+                            </ul>
+                        </div>
+
+                        <span class="badge" id="currentDateTime">
+                            <i class="bi bi-clock"></i> <span id="dateTimeDisplay">Carregando...</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== BANNER SOC ===== -->
+        <div class="banner-content fade-in">
+            <div class="row align-items-center">
+                <div class="col-lg-8 text-center text-lg-start">
+                    <h1><span class="highlight">🛡️ SOC</span> <span data-i18n="soc-title">Security Operations Center</span></h1>
+                    <p class="banner-message" data-i18n="soc-description">
+                        Centro de Operações de Segurança Digital do VITALINKA. Monitorização contínua,
+                        deteção de ameaças, resposta a incidentes e proteção dos dados clínicos.
+                    </p>
+                    <div class="soc-status-bar">
+                        <div class="soc-status-item">
+                            <span class="dot green"></span> <span data-i18n="system-label">Sistema:</span> <strong style="color:#4c9f70;" data-i18n="system-status">Operacional</strong>
+                        </div>
+                        <div class="soc-status-item">
+                            <span class="dot green"></span> <span data-i18n="servers-label">Servidores:</span> <strong style="color:#4c9f70;" data-i18n="servers-status">Online</strong>
+                        </div>
+                        <div class="soc-status-item">
+                            <span class="dot green"></span> <span data-i18n="database-label">Base de Dados:</span> <strong style="color:#4c9f70;" data-i18n="database-status">Online</strong>
+                        </div>
+                        <div class="soc-status-item">
+                            <span class="dot yellow"></span> <span data-i18n="apis-label">APIs:</span> <strong style="color:#ffc107;">3 <span data-i18n="alerts">alertas</span></strong>
+                        </div>
+                        <div class="soc-status-item">
+                            <span class="dot green"></span> <span data-i18n="users-label">Utilizadores:</span> <strong style="color:#4c9f70;">127 <span data-i18n="online">online</span></strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 d-none d-lg-block">
+                    <div class="glass-card text-center" style="border-color:rgba(76,159,112,0.2);">
+                        <div class="stat-item">
+                            <div class="stat-number" style="font-size:1.8rem;">99.97%</div>
+                            <div class="stat-label" data-i18n="availability">Disponibilidade</div>
+                        </div>
+                        <hr style="border-color:rgba(255,255,255,0.06);">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <div class="stat-number" style="font-size:1.5rem;">0</div>
+                                    <div class="stat-label" data-i18n="critical-incidents">Incidentes Críticos</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <div class="stat-number" style="font-size:1.5rem;">12</div>
+                                    <div class="stat-label" data-i18n="active-alerts">Alertas Ativos</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SOC DASHBOARD ===== -->
+        <div class="row mb-4">
+            <div class="col-md-3 col-6 mb-3">
+                <div class="soc-card text-center">
+                    <div class="soc-icon"><i class="bi bi-shield-check"></i></div>
+                    <div class="soc-value">127</div>
+                    <div class="soc-label" data-i18n="users-online">Utilizadores Online</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="soc-card text-center">
+                    <div class="soc-icon"><i class="bi bi-lock"></i></div>
+                    <div class="soc-value">1,247</div>
+                    <div class="soc-label" data-i18n="active-sessions">Sessões Ativas Hoje</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="soc-card text-center">
+                    <div class="soc-icon"><i class="bi bi-exclamation-triangle"></i></div>
+                    <div class="soc-value" style="color:#ffc107;">12</div>
+                    <div class="soc-label" data-i18n="pending-alerts">Alertas Pendentes</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="soc-card text-center">
+                    <div class="soc-icon"><i class="bi bi-check-circle"></i></div>
+                    <div class="soc-value" style="color:#4c9f70;">98</div>
+                    <div class="soc-label" data-i18n="resolved-incidents">Incidentes Resolvidos</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SOC TABS ===== -->
+        <ul class="nav nav-tabs" id="socTabs" role="tablist">
+            <li class="nav-item"><button class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard"><i class="bi bi-speedometer2"></i> <span data-i18n="tab-dashboard">Dashboard</span></button></li>
+            <li class="nav-item"><button class="nav-link" id="monitoring-tab" data-bs-toggle="tab" data-bs-target="#monitoring"><i class="bi bi-eye"></i> <span data-i18n="tab-monitoring">Monitorização</span></button></li>
+            <li class="nav-item"><button class="nav-link" id="alerts-tab" data-bs-toggle="tab" data-bs-target="#alerts"><i class="bi bi-bell"></i> <span data-i18n="tab-alerts">Alertas</span></button></li>
+            <li class="nav-item"><button class="nav-link" id="audit-tab" data-bs-toggle="tab" data-bs-target="#audit"><i class="bi bi-clipboard-check"></i> <span data-i18n="tab-audit">Auditoria</span></button></li>
+            <li class="nav-item"><button class="nav-link" id="incidents-tab" data-bs-toggle="tab" data-bs-target="#incidents"><i class="bi bi-shield-exclamation"></i> <span data-i18n="tab-incidents">Incidentes</span></button></li>
+        </ul>
+
+        <div class="tab-content" id="socTabContent">
+            <!-- ===== TAB DASHBOARD ===== -->
+            <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="glass-card">
+                            <h5 style="color:#fff;"><i class="bi bi-cpu text-success"></i> <span data-i18n="system-resources">Recursos do Sistema</span></h5>
+                            <div class="mt-2">
+                                <div class="d-flex justify-content-between">
+                                    <span style="color:rgba(255,255,255,0.6);" data-i18n="cpu">CPU</span>
+                                    <span style="color:#4c9f70;">32%</span>
+                                </div>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-success" style="width:32%;"></div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span style="color:rgba(255,255,255,0.6);" data-i18n="memory">Memória</span>
+                                    <span style="color:#4c9f70;">58%</span>
+                                </div>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-warning" style="width:58%;"></div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span style="color:rgba(255,255,255,0.6);" data-i18n="storage">Armazenamento</span>
+                                    <span style="color:#4c9f70;">43%</span>
+                                </div>
+                                <div class="progress mb-2">
+                                    <div class="progress-bar bg-success" style="width:43%;"></div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span style="color:rgba(255,255,255,0.6);" data-i18n="network">Rede</span>
+                                    <span style="color:#4c9f70;">12 Mbps</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-info" style="width:12%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="glass-card">
+                            <h5 style="color:#fff;"><i class="bi bi-graph-up text-success"></i> <span data-i18n="security-stats">Estatísticas de Segurança</span></h5>
+                            <div class="mt-2">
+                                <div class="d-flex justify-content-between border-bottom border-secondary border-opacity-10 py-1">
+                                    <span style="color:rgba(255,255,255,0.6);" data-i18n="failed-attempts">Tentativas falhadas</span>
+                                    <span style="color:#ffc107;">47 <span data-i18n="last-hour">(última hora)</span></span>
+                                </div>
+                                <div class="d-flex justify-content-between border-bottom border-secondary border-opacity-10 py-1">
+                                    <span style="color:rgba(255,255,255,0.6);" data-i18n="blocked-accounts">Contas bloqueadas</span>
+                                    <span style="color:#dc3545;">3</span>
+                                </div>
+                                <div class="d-flex justify-content-between border-bottom border-secondary border-opacity-10 py-1">
+                                    <span style="color:rgba(255,255,255,0.6);" data-i18n="suspicious-access">Acessos suspeitos</span>
+                                    <span style="color:#ffc107;">8</span>
+                                </div>
+                                <div class="d-flex justify-content-between py-1">
+                                    <span style="color:rgba(255,255,255,0.6);" data-i18n="valid-certificates">Certificados válidos</span>
+                                    <span style="color:#4c9f70;">12/12</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TAB MONITORIZAÇÃO ===== -->
+            <div class="tab-pane fade" id="monitoring" role="tabpanel">
+                <div class="row mt-3">
+                    <div class="col-md-4 mb-3">
+                        <div class="soc-card text-center">
+                            <div class="soc-icon"><i class="bi bi-server"></i></div>
+                            <div class="soc-value" style="font-size:1.5rem; color:#4c9f70;">● <span data-i18n="online">Online</span></div>
+                            <div class="soc-label" data-i18n="main-server">Servidor Principal</div>
+                            <div style="font-size:0.7rem; color:rgba(255,255,255,0.3);"><span data-i18n="uptime">Uptime</span>: 127d 14h</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="soc-card text-center">
+                            <div class="soc-icon"><i class="bi bi-database"></i></div>
+                            <div class="soc-value" style="font-size:1.5rem; color:#4c9f70;">● <span data-i18n="online">Online</span></div>
+                            <div class="soc-label" data-i18n="database">Base de Dados</div>
+                            <div style="font-size:0.7rem; color:rgba(255,255,255,0.3);"><span data-i18n="queries">Queries</span>: 1.2M/h</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="soc-card text-center">
+                            <div class="soc-icon"><i class="bi bi-plug"></i></div>
+                            <div class="soc-value" style="font-size:1.5rem; color:#ffc107;">● <span data-i18n="attention">Atenção</span></div>
+                            <div class="soc-label" data-i18n="apis">APIs</div>
+                            <div style="font-size:0.7rem; color:rgba(255,255,255,0.3);">3 <span data-i18n="active-alerts">alertas ativos</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card mt-2">
+                    <h5 style="color:#fff;"><i class="bi bi-clock-history text-success"></i> <span data-i18n="recent-events">Últimos Eventos</span></h5>
+                    <div class="soc-table">
+                        <table class="table table-borderless mb-0">
+                            <thead><tr><th data-i18n="time">Hora</th><th data-i18n="event">Evento</th><th data-i18n="service">Serviço</th><th data-i18n="status">Status</th></tr></thead>
+                            <tbody>
+                                <tr><td>14:32</td><td data-i18n="event1">Login falhado - Utilizador: jose.silva</td><td data-i18n="auth">Autenticação</td><td><span class="badge-soc high">⚠️ <span data-i18n="critical">Crítico</span></span></td></tr>
+                                <tr><td>14:28</td><td data-i18n="event2">API de exames respondeu com erro 503</td><td>API</td><td><span class="badge-soc high">⚠️ <span data-i18n="high">Alto</span></span></td></tr>
+                                <tr><td>14:15</td><td data-i18n="event3">Backup diário concluído</td><td data-i18n="backup">Backup</td><td><span class="badge-soc resolved">✅ <span data-i18n="success">Sucesso</span></span></td></tr>
+                                <tr><td>13:50</td><td data-i18n="event4">Atualização de segurança instalada</td><td data-i18n="system">Sistema</td><td><span class="badge-soc resolved">✅ <span data-i18n="success">Sucesso</span></span></td></tr>
+                                <tr><td>13:10</td><td data-i18n="event5">Tentativa de acesso não autorizado</td><td data-i18n="security">Segurança</td><td><span class="badge-soc pending">⏳ <span data-i18n="in-analysis">Em análise</span></span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TAB ALERTAS ===== -->
+            <div class="tab-pane fade" id="alerts" role="tabpanel">
+                <div class="glass-card mt-3">
+                    <h5 style="color:#fff;"><i class="bi bi-bell text-warning"></i> <span data-i18n="active-alerts-title">Alertas Ativos</span></h5>
+                    <div class="soc-table">
+                        <table class="table table-borderless mb-0">
+                            <thead><tr><th data-i18n="priority">Prioridade</th><th data-i18n="alert">Alerta</th><th data-i18n="date">Data</th><th data-i18n="responsible">Responsável</th><th data-i18n="status">Status</th></tr></thead>
+                            <tbody>
+                                <tr><td><span class="badge-soc critical" data-i18n="critical">Crítico</span></td><td data-i18n="alert1">Múltiplas tentativas de login falhadas</td><td>14:32</td><td>Super Admin</td><td><span class="badge-soc pending" data-i18n="pending">Pendente</span></td></tr>
+                                <tr><td><span class="badge-soc high" data-i18n="high">Alto</span></td><td data-i18n="alert2">API de exames com erro 503</td><td>14:28</td><td>Developer</td><td><span class="badge-soc pending" data-i18n="pending">Pendente</span></td></tr>
+                                <tr><td><span class="badge-soc medium" data-i18n="medium">Médio</span></td><td data-i18n="alert3">Utilização de CPU acima de 80%</td><td>13:45</td><td>SysAdmin</td><td><span class="badge-soc resolved" data-i18n="resolved">Resolvido</span></td></tr>
+                                <tr><td><span class="badge-soc low" data-i18n="low">Baixo</span></td><td data-i18n="alert4">Certificado SSL expira em 30 dias</td><td>12:00</td><td>Developer</td><td><span class="badge-soc pending" data-i18n="pending">Pendente</span></td></tr>
+                                <tr><td><span class="badge-soc high" data-i18n="high">Alto</span></td><td data-i18n="alert5">Erro repetitivo no módulo de prescrições</td><td>11:20</td><td>Developer</td><td><span class="badge-soc pending" data-i18n="in-analysis">Em análise</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TAB AUDITORIA ===== -->
+            <div class="tab-pane fade" id="audit" role="tabpanel">
+                <div class="glass-card mt-3">
+                    <h5 style="color:#fff;"><i class="bi bi-clipboard-check text-success"></i> <span data-i18n="audit-logs">Logs de Auditoria</span></h5>
+                    <div class="soc-table">
+                        <table class="table table-borderless mb-0">
+                            <thead><tr><th data-i18n="user">Utilizador</th><th data-i18n="profile">Perfil</th><th data-i18n="action">Ação</th><th data-i18n="module">Módulo</th><th data-i18n="datetime">Data/Hora</th></tr></thead>
+                            <tbody>
+                                <tr><td>António Lourenço</td><td>Super Admin</td><td data-i18n="login-action">Login</td><td data-i18n="auth">Autenticação</td><td>14:30:22</td></tr>
+                                <tr><td>Dr. João Silva</td><td data-i18n="doctor">Médico</td><td data-i18n="prescription-action">Prescrição emitida</td><td data-i18n="prescriptions">Prescrições</td><td>14:28:15</td></tr>
+                                <tr><td>Enfª Maria José</td><td data-i18n="nurse">Enfermeiro</td><td data-i18n="vital-signs-action">Registo de sinais vitais</td><td data-i18n="patients">Pacientes</td><td>14:25:03</td></tr>
+                                <tr><td>Pedro Luís</td><td data-i18n="receptionist">Rececionista</td><td data-i18n="appointment-action">Agendamento de consulta</td><td data-i18n="schedule">Agenda</td><td>14:20:47</td></tr>
+                                <tr><td>Carlos Santos</td><td data-i18n="financial">Financeiro</td><td data-i18n="invoice-action">Emissão de fatura</td><td data-i18n="financial-module">Financeiro</td><td>14:15:30</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TAB INCIDENTES ===== -->
+            <div class="tab-pane fade" id="incidents" role="tabpanel">
+                <div class="glass-card mt-3">
+                    <h5 style="color:#fff;"><i class="bi bi-shield-exclamation text-danger"></i> <span data-i18n="incident-history">Histórico de Incidentes</span></h5>
+                    <div class="soc-table">
+                        <table class="table table-borderless mb-0">
+                            <thead><tr><th>ID</th><th data-i18n="description">Descrição</th><th data-i18n="date">Data</th><th data-i18n="status">Status</th><th data-i18n="actions">Ações</th></tr></thead>
+                            <tbody>
+                                <tr><td>#INC-001</td><td data-i18n="incident1">Tentativa de acesso não autorizado à base de dados</td><td>13/08/2026</td><td><span class="badge-soc resolved" data-i18n="resolved">Resolvido</span></td><td><button class="btn btn-sm btn-outline-secondary" onclick="openIncident('#INC-001', 'Tentativa de acesso não autorizado à base de dados', '13/08/2026 14:32', 'Resolvido', 'António Lourenço')" data-i18n="view">Ver</button></td></tr>
+                                <tr><td>#INC-002</td><td data-i18n="incident2">Indisponibilidade da API de exames</td><td>12/08/2026</td><td><span class="badge-soc pending" data-i18n="in-analysis">Em análise</span></td><td><button class="btn btn-sm btn-outline-secondary" onclick="openIncident('#INC-002', 'Indisponibilidade da API de exames', '12/08/2026 10:15', 'Em análise', 'Developer Team')" data-i18n="view">Ver</button></td></tr>
+                                <tr><td>#INC-003</td><td data-i18n="incident3">Erro crítico no módulo de prescrições</td><td>11/08/2026</td><td><span class="badge-soc resolved" data-i18n="resolved">Resolvido</span></td><td><button class="btn btn-sm btn-outline-secondary" onclick="openIncident('#INC-003', 'Erro crítico no módulo de prescrições', '11/08/2026 09:00', 'Resolvido', 'Developer Team')" data-i18n="view">Ver</button></td></tr>
+                                <tr><td>#INC-004</td><td data-i18n="incident4">Tentativa de brute force em conta administrativa</td><td>10/08/2026</td><td><span class="badge-soc resolved" data-i18n="resolved">Resolvido</span></td><td><button class="btn btn-sm btn-outline-secondary" onclick="openIncident('#INC-004', 'Tentativa de brute force em conta administrativa', '10/08/2026 03:20', 'Resolvido', 'Super Admin')" data-i18n="view">Ver</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="mt-4 text-center" style="border-top:1px solid rgba(255,255,255,0.06); padding-top:20px;">
+            <p style="color:rgba(255,255,255,0.4); font-size:0.8rem;">
+                © 2026 VITALINKA - <span data-i18n="footer-soc">Security Operations Center</span>
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="#" class="footer-link"><i class="bi bi-envelope"></i> soc@vitalinka.ao</a>
+                <a href="#" class="footer-link"><i class="bi bi-shield-check"></i> <span data-i18n="security-policy">Política de Segurança</span></a>
+                <a href="#" class="footer-link"><i class="bi bi-file-lock"></i> <span data-i18n="security-report">Relatório de Segurança</span></a>
+                <a href="#" class="footer-link"><i class="bi bi-box-arrow-left"></i> <span data-i18n="back-to-site">Voltar ao Site</span></a>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MODAL: DETALHES DO INCIDENTE -->
+    <!-- ============================================================ -->
+    <div class="modal fade" id="incidentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-shield-exclamation text-danger"></i> <span data-i18n="incident-details">Detalhes do Incidente</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6"><strong data-i18n="id">ID:</strong> <span id="incidentId">#INC-001</span></div>
+                        <div class="col-6"><strong data-i18n="date">Data:</strong> <span id="incidentDate">13/08/2026 14:32</span></div>
+                        <div class="col-12 mt-2"><strong data-i18n="description">Descrição:</strong> <span id="incidentDesc">Tentativa de acesso não autorizado à base de dados</span></div>
+                        <div class="col-12 mt-2"><strong data-i18n="status">Status:</strong> <span id="incidentStatus" class="badge-soc resolved" data-i18n="resolved">Resolvido</span></div>
+                        <div class="col-12 mt-2"><strong data-i18n="responsible">Responsável:</strong> <span id="incidentResponsible">António Lourenço</span></div>
+                        <div class="col-12 mt-3"><strong data-i18n="history">Histórico:</strong></div>
+                        <div class="col-12" style="font-size:0.85rem; color:rgba(255,255,255,0.6);">
+                            <ul>
+                                <li>13/08 14:32 - <span data-i18n="history1">Incidente detetado</span></li>
+                                <li>13/08 14:45 - <span data-i18n="history2">Classificado como Crítico</span></li>
+                                <li>13/08 15:10 - <span data-i18n="history3">Atribuído ao Super Admin</span></li>
+                                <li>13/08 16:30 - <span data-i18n="history4">Mitigação aplicada</span></li>
+                                <li>13/08 17:00 - <span data-i18n="history5">Incidente resolvido</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" data-i18n="close">Fechar</button>
+                    <button type="button" class="btn btn-outline-primary" data-i18n="export-report">Exportar Relatório</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            // ================================================================
+            // 1. TEMA
+            // ================================================================
+            let isDarkTheme = true;
+
+            function toggleTheme() {
+                isDarkTheme = !isDarkTheme;
+                if (isDarkTheme) {
+                    $('body').removeClass('light-theme');
+                    $('#themeIcon').removeClass('bi-sun-fill').addClass('bi-moon-stars');
+                } else {
+                    $('body').addClass('light-theme');
+                    $('#themeIcon').removeClass('bi-moon-stars').addClass('bi-sun-fill');
+                }
+                localStorage.setItem('vitalinka-theme-info', isDarkTheme ? 'dark' : 'light');
+            }
+
+            const savedTheme = localStorage.getItem('vitalinka-theme-info');
+            if (savedTheme === 'light') {
+                isDarkTheme = false;
+                $('body').addClass('light-theme');
+                $('#themeIcon').removeClass('bi-moon-stars').addClass('bi-sun-fill');
+            }
+
+            $('#themeToggle').click(toggleTheme);
+
+            // ================================================================
+            // 2. DATA E HORA
+            // ================================================================
+            function updateDateTime() {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('pt-BR');
+                const timeStr = now.toLocaleTimeString('pt-BR');
+                $('#dateTimeDisplay').text(`${dateStr} ${timeStr}`);
+            }
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            // ================================================================
+            // 3. TIMER REGRESSIVO
+            // ================================================================
+            const targetDate = new Date();
+            targetDate.setDate(targetDate.getDate() + 30);
+
+            function updateTimer() {
+                const now = new Date();
+                const diff = targetDate - now;
+                if (diff <= 0) {
+                    document.getElementById('timerDays').textContent = '00';
+                    document.getElementById('timerHours').textContent = '00';
+                    document.getElementById('timerMinutes').textContent = '00';
+                    document.getElementById('timerSeconds').textContent = '00';
+                    return;
+                }
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                document.getElementById('timerDays').textContent = String(days).padStart(2, '0');
+                document.getElementById('timerHours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('timerMinutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('timerSeconds').textContent = String(seconds).padStart(2, '0');
+            }
+            updateTimer();
+            setInterval(updateTimer, 1000);
+
+            // ================================================================
+            // 4. IDIOMA - Sistema de Tradução Completo
+            // ================================================================
+            const translations = {
+                'pt': {
+                    'soc-badge': 'SOC',
+                    'days': 'Dias',
+                    'hours': 'Horas',
+                    'minutes': 'Min',
+                    'seconds': 'Seg',
+                    'soc-title': 'Security Operations Center',
+                    'soc-description': 'Centro de Operações de Segurança Digital do VITALINKA. Monitorização contínua, deteção de ameaças, resposta a incidentes e proteção dos dados clínicos.',
+                    'system-label': 'Sistema:',
+                    'system-status': 'Operacional',
+                    'servers-label': 'Servidores:',
+                    'servers-status': 'Online',
+                    'database-label': 'Base de Dados:',
+                    'database-status': 'Online',
+                    'apis-label': 'APIs:',
+                    'alerts': 'alertas',
+                    'users-label': 'Utilizadores:',
+                    'online': 'online',
+                    'availability': 'Disponibilidade',
+                    'critical-incidents': 'Incidentes Críticos',
+                    'active-alerts': 'Alertas Ativos',
+                    'users-online': 'Utilizadores Online',
+                    'active-sessions': 'Sessões Ativas Hoje',
+                    'pending-alerts': 'Alertas Pendentes',
+                    'resolved-incidents': 'Incidentes Resolvidos',
+                    'tab-dashboard': 'Dashboard',
+                    'tab-monitoring': 'Monitorização',
+                    'tab-alerts': 'Alertas',
+                    'tab-audit': 'Auditoria',
+                    'tab-incidents': 'Incidentes',
+                    'system-resources': 'Recursos do Sistema',
+                    'cpu': 'CPU',
+                    'memory': 'Memória',
+                    'storage': 'Armazenamento',
+                    'network': 'Rede',
+                    'security-stats': 'Estatísticas de Segurança',
+                    'failed-attempts': 'Tentativas falhadas',
+                    'last-hour': '(última hora)',
+                    'blocked-accounts': 'Contas bloqueadas',
+                    'suspicious-access': 'Acessos suspeitos',
+                    'valid-certificates': 'Certificados válidos',
+                    'main-server': 'Servidor Principal',
+                    'uptime': 'Uptime',
+                    'database': 'Base de Dados',
+                    'queries': 'Queries',
+                    'attention': 'Atenção',
+                    'apis': 'APIs',
+                    'recent-events': 'Últimos Eventos',
+                    'time': 'Hora',
+                    'event': 'Evento',
+                    'service': 'Serviço',
+                    'status': 'Status',
+                    'event1': 'Login falhado - Utilizador: jose.silva',
+                    'auth': 'Autenticação',
+                    'critical': 'Crítico',
+                    'event2': 'API de exames respondeu com erro 503',
+                    'high': 'Alto',
+                    'event3': 'Backup diário concluído',
+                    'backup': 'Backup',
+                    'success': 'Sucesso',
+                    'event4': 'Atualização de segurança instalada',
+                    'system': 'Sistema',
+                    'event5': 'Tentativa de acesso não autorizado',
+                    'security': 'Segurança',
+                    'in-analysis': 'Em análise',
+                    'active-alerts-title': 'Alertas Ativos',
+                    'priority': 'Prioridade',
+                    'alert': 'Alerta',
+                    'date': 'Data',
+                    'responsible': 'Responsável',
+                    'alert1': 'Múltiplas tentativas de login falhadas',
+                    'pending': 'Pendente',
+                    'alert2': 'API de exames com erro 503',
+                    'medium': 'Médio',
+                    'alert3': 'Utilização de CPU acima de 80%',
+                    'resolved': 'Resolvido',
+                    'low': 'Baixo',
+                    'alert4': 'Certificado SSL expira em 30 dias',
+                    'alert5': 'Erro repetitivo no módulo de prescrições',
+                    'audit-logs': 'Logs de Auditoria',
+                    'user': 'Utilizador',
+                    'profile': 'Perfil',
+                    'action': 'Ação',
+                    'module': 'Módulo',
+                    'datetime': 'Data/Hora',
+                    'login-action': 'Login',
+                    'doctor': 'Médico',
+                    'prescription-action': 'Prescrição emitida',
+                    'prescriptions': 'Prescrições',
+                    'nurse': 'Enfermeiro',
+                    'vital-signs-action': 'Registo de sinais vitais',
+                    'patients': 'Pacientes',
+                    'receptionist': 'Rececionista',
+                    'appointment-action': 'Agendamento de consulta',
+                    'schedule': 'Agenda',
+                    'financial': 'Financeiro',
+                    'invoice-action': 'Emissão de fatura',
+                    'financial-module': 'Financeiro',
+                    'incident-history': 'Histórico de Incidentes',
+                    'description': 'Descrição',
+                    'actions': 'Ações',
+                    'incident1': 'Tentativa de acesso não autorizado à base de dados',
+                    'view': 'Ver',
+                    'incident2': 'Indisponibilidade da API de exames',
+                    'incident3': 'Erro crítico no módulo de prescrições',
+                    'incident4': 'Tentativa de brute force em conta administrativa',
+                    'footer-soc': 'Security Operations Center',
+                    'security-policy': 'Política de Segurança',
+                    'security-report': 'Relatório de Segurança',
+                    'back-to-site': 'Voltar ao Site',
+                    'incident-details': 'Detalhes do Incidente',
+                    'id': 'ID:',
+                    'history': 'Histórico:',
+                    'history1': 'Incidente detetado',
+                    'history2': 'Classificado como Crítico',
+                    'history3': 'Atribuído ao Super Admin',
+                    'history4': 'Mitigação aplicada',
+                    'history5': 'Incidente resolvido',
+                    'close': 'Fechar',
+                    'export-report': 'Exportar Relatório'
+                },
+                'en': {
+                    'soc-badge': 'SOC',
+                    'days': 'Days',
+                    'hours': 'Hours',
+                    'minutes': 'Min',
+                    'seconds': 'Sec',
+                    'soc-title': 'Security Operations Center',
+                    'soc-description': 'VITALINKA Digital Security Operations Center. Continuous monitoring, threat detection, incident response and protection of clinical data.',
+                    'system-label': 'System:',
+                    'system-status': 'Operational',
+                    'servers-label': 'Servers:',
+                    'servers-status': 'Online',
+                    'database-label': 'Database:',
+                    'database-status': 'Online',
+                    'apis-label': 'APIs:',
+                    'alerts': 'alerts',
+                    'users-label': 'Users:',
+                    'online': 'online',
+                    'availability': 'Availability',
+                    'critical-incidents': 'Critical Incidents',
+                    'active-alerts': 'Active Alerts',
+                    'users-online': 'Users Online',
+                    'active-sessions': 'Active Sessions Today',
+                    'pending-alerts': 'Pending Alerts',
+                    'resolved-incidents': 'Resolved Incidents',
+                    'tab-dashboard': 'Dashboard',
+                    'tab-monitoring': 'Monitoring',
+                    'tab-alerts': 'Alerts',
+                    'tab-audit': 'Audit',
+                    'tab-incidents': 'Incidents',
+                    'system-resources': 'System Resources',
+                    'cpu': 'CPU',
+                    'memory': 'Memory',
+                    'storage': 'Storage',
+                    'network': 'Network',
+                    'security-stats': 'Security Statistics',
+                    'failed-attempts': 'Failed attempts',
+                    'last-hour': '(last hour)',
+                    'blocked-accounts': 'Blocked accounts',
+                    'suspicious-access': 'Suspicious accesses',
+                    'valid-certificates': 'Valid certificates',
+                    'main-server': 'Main Server',
+                    'uptime': 'Uptime',
+                    'database': 'Database',
+                    'queries': 'Queries',
+                    'attention': 'Attention',
+                    'apis': 'APIs',
+                    'recent-events': 'Recent Events',
+                    'time': 'Time',
+                    'event': 'Event',
+                    'service': 'Service',
+                    'status': 'Status',
+                    'event1': 'Failed login - User: jose.silva',
+                    'auth': 'Authentication',
+                    'critical': 'Critical',
+                    'event2': 'Exams API responded with error 503',
+                    'high': 'High',
+                    'event3': 'Daily backup completed',
+                    'backup': 'Backup',
+                    'success': 'Success',
+                    'event4': 'Security update installed',
+                    'system': 'System',
+                    'event5': 'Unauthorized access attempt',
+                    'security': 'Security',
+                    'in-analysis': 'In analysis',
+                    'active-alerts-title': 'Active Alerts',
+                    'priority': 'Priority',
+                    'alert': 'Alert',
+                    'date': 'Date',
+                    'responsible': 'Responsible',
+                    'alert1': 'Multiple failed login attempts',
+                    'pending': 'Pending',
+                    'alert2': 'Exams API with error 503',
+                    'medium': 'Medium',
+                    'alert3': 'CPU usage above 80%',
+                    'resolved': 'Resolved',
+                    'low': 'Low',
+                    'alert4': 'SSL certificate expires in 30 days',
+                    'alert5': 'Repetitive error in prescriptions module',
+                    'audit-logs': 'Audit Logs',
+                    'user': 'User',
+                    'profile': 'Profile',
+                    'action': 'Action',
+                    'module': 'Module',
+                    'datetime': 'Date/Time',
+                    'login-action': 'Login',
+                    'doctor': 'Doctor',
+                    'prescription-action': 'Prescription issued',
+                    'prescriptions': 'Prescriptions',
+                    'nurse': 'Nurse',
+                    'vital-signs-action': 'Vital signs recording',
+                    'patients': 'Patients',
+                    'receptionist': 'Receptionist',
+                    'appointment-action': 'Appointment scheduling',
+                    'schedule': 'Schedule',
+                    'financial': 'Financial',
+                    'invoice-action': 'Invoice issuance',
+                    'financial-module': 'Financial',
+                    'incident-history': 'Incident History',
+                    'description': 'Description',
+                    'actions': 'Actions',
+                    'incident1': 'Unauthorized access attempt to the database',
+                    'view': 'View',
+                    'incident2': 'Exams API unavailability',
+                    'incident3': 'Critical error in prescriptions module',
+                    'incident4': 'Brute force attempt on administrative account',
+                    'footer-soc': 'Security Operations Center',
+                    'security-policy': 'Security Policy',
+                    'security-report': 'Security Report',
+                    'back-to-site': 'Back to Site',
+                    'incident-details': 'Incident Details',
+                    'id': 'ID:',
+                    'history': 'History:',
+                    'history1': 'Incident detected',
+                    'history2': 'Classified as Critical',
+                    'history3': 'Assigned to Super Admin',
+                    'history4': 'Mitigation applied',
+                    'history5': 'Incident resolved',
+                    'close': 'Close',
+                    'export-report': 'Export Report'
+                },
+                'fr': {
+                    'soc-badge': 'SOC',
+                    'days': 'Jours',
+                    'hours': 'Heures',
+                    'minutes': 'Min',
+                    'seconds': 'Sec',
+                    'soc-title': 'Security Operations Center',
+                    'soc-description': 'Centre des Opérations de Sécurité Numérique de VITALINKA. Surveillance continue, détection des menaces, réponse aux incidents et protection des données cliniques.',
+                    'system-label': 'Système:',
+                    'system-status': 'Opérationnel',
+                    'servers-label': 'Serveurs:',
+                    'servers-status': 'En ligne',
+                    'database-label': 'Base de données:',
+                    'database-status': 'En ligne',
+                    'apis-label': 'APIs:',
+                    'alerts': 'alertes',
+                    'users-label': 'Utilisateurs:',
+                    'online': 'en ligne',
+                    'availability': 'Disponibilité',
+                    'critical-incidents': 'Incidents Critiques',
+                    'active-alerts': 'Alertes Actives',
+                    'users-online': 'Utilisateurs En Ligne',
+                    'active-sessions': 'Sessions Actives Aujourd\'hui',
+                    'pending-alerts': 'Alertes en Attente',
+                    'resolved-incidents': 'Incidents Résolus',
+                    'tab-dashboard': 'Tableau de Bord',
+                    'tab-monitoring': 'Surveillance',
+                    'tab-alerts': 'Alertes',
+                    'tab-audit': 'Audit',
+                    'tab-incidents': 'Incidents',
+                    'system-resources': 'Ressources Système',
+                    'cpu': 'CPU',
+                    'memory': 'Mémoire',
+                    'storage': 'Stockage',
+                    'network': 'Réseau',
+                    'security-stats': 'Statistiques de Sécurité',
+                    'failed-attempts': 'Tentatives échouées',
+                    'last-hour': '(dernière heure)',
+                    'blocked-accounts': 'Comptes bloqués',
+                    'suspicious-access': 'Accès suspects',
+                    'valid-certificates': 'Certificats valides',
+                    'main-server': 'Serveur Principal',
+                    'uptime': 'Disponibilité',
+                    'database': 'Base de données',
+                    'queries': 'Requêtes',
+                    'attention': 'Attention',
+                    'apis': 'APIs',
+                    'recent-events': 'Événements Récents',
+                    'time': 'Heure',
+                    'event': 'Événement',
+                    'service': 'Service',
+                    'status': 'Statut',
+                    'event1': 'Échec de connexion - Utilisateur: jose.silva',
+                    'auth': 'Authentification',
+                    'critical': 'Critique',
+                    'event2': 'L\'API d\'examens a répondu avec l\'erreur 503',
+                    'high': 'Élevé',
+                    'event3': 'Sauvegarde quotidienne terminée',
+                    'backup': 'Sauvegarde',
+                    'success': 'Succès',
+                    'event4': 'Mise à jour de sécurité installée',
+                    'system': 'Système',
+                    'event5': 'Tentative d\'accès non autorisé',
+                    'security': 'Sécurité',
+                    'in-analysis': 'En analyse',
+                    'active-alerts-title': 'Alertes Actives',
+                    'priority': 'Priorité',
+                    'alert': 'Alerte',
+                    'date': 'Date',
+                    'responsible': 'Responsable',
+                    'alert1': 'Multiples tentatives de connexion échouées',
+                    'pending': 'En attente',
+                    'alert2': 'API d\'examens avec erreur 503',
+                    'medium': 'Moyen',
+                    'alert3': 'Utilisation CPU supérieure à 80%',
+                    'resolved': 'Résolu',
+                    'low': 'Bas',
+                    'alert4': 'Le certificat SSL expire dans 30 jours',
+                    'alert5': 'Erreur répétitive dans le module de prescriptions',
+                    'audit-logs': 'Journaux d\'Audit',
+                    'user': 'Utilisateur',
+                    'profile': 'Profil',
+                    'action': 'Action',
+                    'module': 'Module',
+                    'datetime': 'Date/Heure',
+                    'login-action': 'Connexion',
+                    'doctor': 'Médecin',
+                    'prescription-action': 'Prescription émise',
+                    'prescriptions': 'Prescriptions',
+                    'nurse': 'Infirmier',
+                    'vital-signs-action': 'Enregistrement des signes vitaux',
+                    'patients': 'Patients',
+                    'receptionist': 'Réceptionniste',
+                    'appointment-action': 'Planification de rendez-vous',
+                    'schedule': 'Agenda',
+                    'financial': 'Financier',
+                    'invoice-action': 'Émission de facture',
+                    'financial-module': 'Financier',
+                    'incident-history': 'Historique des Incidents',
+                    'description': 'Description',
+                    'actions': 'Actions',
+                    'incident1': 'Tentative d\'accès non autorisé à la base de données',
+                    'view': 'Voir',
+                    'incident2': 'Indisponibilité de l\'API d\'examens',
+                    'incident3': 'Erreur critique dans le module de prescriptions',
+                    'incident4': 'Tentative de force brute sur compte administratif',
+                    'footer-soc': 'Security Operations Center',
+                    'security-policy': 'Politique de Sécurité',
+                    'security-report': 'Rapport de Sécurité',
+                    'back-to-site': 'Retour au Site',
+                    'incident-details': 'Détails de l\'Incident',
+                    'id': 'ID:',
+                    'history': 'Historique:',
+                    'history1': 'Incident détecté',
+                    'history2': 'Classé comme Critique',
+                    'history3': 'Attribué au Super Admin',
+                    'history4': 'Atténuation appliquée',
+                    'history5': 'Incident résolu',
+                    'close': 'Fermer',
+                    'export-report': 'Exporter le Rapport'
+                },
+                'es': {
+                    'soc-badge': 'SOC',
+                    'days': 'Días',
+                    'hours': 'Horas',
+                    'minutes': 'Min',
+                    'seconds': 'Seg',
+                    'soc-title': 'Security Operations Center',
+                    'soc-description': 'Centro de Operaciones de Seguridad Digital de VITALINKA. Monitoreo continuo, detección de amenazas, respuesta a incidentes y protección de datos clínicos.',
+                    'system-label': 'Sistema:',
+                    'system-status': 'Operacional',
+                    'servers-label': 'Servidores:',
+                    'servers-status': 'En línea',
+                    'database-label': 'Base de Datos:',
+                    'database-status': 'En línea',
+                    'apis-label': 'APIs:',
+                    'alerts': 'alertas',
+                    'users-label': 'Usuarios:',
+                    'online': 'en línea',
+                    'availability': 'Disponibilidad',
+                    'critical-incidents': 'Incidentes Críticos',
+                    'active-alerts': 'Alertas Activas',
+                    'users-online': 'Usuarios En Línea',
+                    'active-sessions': 'Sesiones Activas Hoy',
+                    'pending-alerts': 'Alertas Pendientes',
+                    'resolved-incidents': 'Incidentes Resueltos',
+                    'tab-dashboard': 'Panel',
+                    'tab-monitoring': 'Monitoreo',
+                    'tab-alerts': 'Alertas',
+                    'tab-audit': 'Auditoría',
+                    'tab-incidents': 'Incidentes',
+                    'system-resources': 'Recursos del Sistema',
+                    'cpu': 'CPU',
+                    'memory': 'Memoria',
+                    'storage': 'Almacenamiento',
+                    'network': 'Red',
+                    'security-stats': 'Estadísticas de Seguridad',
+                    'failed-attempts': 'Intentos fallidos',
+                    'last-hour': '(última hora)',
+                    'blocked-accounts': 'Cuentas bloqueadas',
+                    'suspicious-access': 'Accesos sospechosos',
+                    'valid-certificates': 'Certificados válidos',
+                    'main-server': 'Servidor Principal',
+                    'uptime': 'Tiempo activo',
+                    'database': 'Base de Datos',
+                    'queries': 'Consultas',
+                    'attention': 'Atención',
+                    'apis': 'APIs',
+                    'recent-events': 'Eventos Recientes',
+                    'time': 'Hora',
+                    'event': 'Evento',
+                    'service': 'Servicio',
+                    'status': 'Estado',
+                    'event1': 'Inicio de sesión fallido - Usuario: jose.silva',
+                    'auth': 'Autenticación',
+                    'critical': 'Crítico',
+                    'event2': 'La API de exámenes respondió con error 503',
+                    'high': 'Alto',
+                    'event3': 'Copia de seguridad diaria completada',
+                    'backup': 'Copia de seguridad',
+                    'success': 'Éxito',
+                    'event4': 'Actualización de seguridad instalada',
+                    'system': 'Sistema',
+                    'event5': 'Intento de acceso no autorizado',
+                    'security': 'Seguridad',
+                    'in-analysis': 'En análisis',
+                    'active-alerts-title': 'Alertas Activas',
+                    'priority': 'Prioridad',
+                    'alert': 'Alerta',
+                    'date': 'Fecha',
+                    'responsible': 'Responsable',
+                    'alert1': 'Múltiples intentos de inicio de sesión fallidos',
+                    'pending': 'Pendiente',
+                    'alert2': 'API de exámenes con error 503',
+                    'medium': 'Medio',
+                    'alert3': 'Uso de CPU superior al 80%',
+                    'resolved': 'Resuelto',
+                    'low': 'Bajo',
+                    'alert4': 'El certificado SSL expira en 30 días',
+                    'alert5': 'Error repetitivo en el módulo de prescripciones',
+                    'audit-logs': 'Registros de Auditoría',
+                    'user': 'Usuario',
+                    'profile': 'Perfil',
+                    'action': 'Acción',
+                    'module': 'Módulo',
+                    'datetime': 'Fecha/Hora',
+                    'login-action': 'Inicio de sesión',
+                    'doctor': 'Médico',
+                    'prescription-action': 'Prescripción emitida',
+                    'prescriptions': 'Prescripciones',
+                    'nurse': 'Enfermero',
+                    'vital-signs-action': 'Registro de signos vitales',
+                    'patients': 'Pacientes',
+                    'receptionist': 'Recepcionista',
+                    'appointment-action': 'Agendamiento de cita',
+                    'schedule': 'Agenda',
+                    'financial': 'Financiero',
+                    'invoice-action': 'Emisión de factura',
+                    'financial-module': 'Financiero',
+                    'incident-history': 'Historial de Incidentes',
+                    'description': 'Descripción',
+                    'actions': 'Acciones',
+                    'incident1': 'Intento de acceso no autorizado a la base de datos',
+                    'view': 'Ver',
+                    'incident2': 'Indisponibilidad de la API de exámenes',
+                    'incident3': 'Error crítico en el módulo de prescripciones',
+                    'incident4': 'Intento de fuerza bruta en cuenta administrativa',
+                    'footer-soc': 'Security Operations Center',
+                    'security-policy': 'Política de Seguridad',
+                    'security-report': 'Informe de Seguridad',
+                    'back-to-site': 'Volver al Sitio',
+                    'incident-details': 'Detalles del Incidente',
+                    'id': 'ID:',
+                    'history': 'Historial:',
+                    'history1': 'Incidente detectado',
+                    'history2': 'Clasificado como Crítico',
+                    'history3': 'Asignado al Super Admin',
+                    'history4': 'Mitigación aplicada',
+                    'history5': 'Incidente resuelto',
+                    'close': 'Cerrar',
+                    'export-report': 'Exportar Informe'
+                }
+            };
+
+            let currentLang = localStorage.getItem('vitalinka-lang') || 'pt';
+
+            function applyTranslations(lang) {
+                const langData = translations[lang];
+                if (!langData) return;
+
+                $('[data-i18n]').each(function() {
+                    const key = $(this).data('i18n');
+                    if (langData[key]) {
+                        // Se o elemento tem filhos HTML, preserva-os
+                        if ($(this).children().length === 0) {
+                            $(this).text(langData[key]);
+                        } else {
+                            // Para elementos com HTML interno, substitui apenas o texto
+                            const html = $(this).html();
+                            const textOnly = $(this).clone().children().remove().end().text();
+                            if (textOnly.trim() !== '') {
+                                const newHtml = html.replace(textOnly, langData[key]);
+                                $(this).html(newHtml);
+                            }
+                        }
+                    }
+                });
+
+                // Atualiza o label do dropdown
+                const langNames = {
+                    'pt': '🇦🇴 Português',
+                    'en': '🇬🇧 English',
+                    'fr': '🇫🇷 Français',
+                    'es': '🇪🇸 Español'
+                };
+                $('#currentLangLabel').text(langNames[lang] || 'Idioma');
+
+                // Atualiza os badges que precisam de tradução especial
+                $('.badge-soc').each(function() {
+                    const text = $(this).text().trim();
+                    const key = text.toLowerCase().replace(/[^a-záéíóúàèìòùâêîôûãõç]/g, '');
+                    // Mapeia textos para chaves de tradução
+                    const map = {
+                        'crítico': 'critical',
+                        'alto': 'high',
+                        'médio': 'medium',
+                        'baixo': 'low',
+                        'resolvido': 'resolved',
+                        'pendente': 'pending',
+                        'emanálise': 'in-analysis',
+                        'sucesso': 'success'
+                    };
+                    if (map[key] && langData[map[key]]) {
+                        // Preserva ícones se existirem
+                        const icon = $(this).find('i, span').clone();
+                        $(this).text(langData[map[key]]);
+                        if (icon.length > 0) {
+                            $(this).prepend(icon);
+                        }
+                    }
+                });
+
+                localStorage.setItem('vitalinka-lang', lang);
+                currentLang = lang;
+            }
+
+            // Inicializa com o idioma salvo ou padrão
+            applyTranslations(currentLang);
+
+            // Evento de mudança de idioma
+            $('.dropdown-item[data-lang]').click(function(e) {
+                e.preventDefault();
+                const lang = $(this).data('lang');
+                applyTranslations(lang);
+            });
+
+            // ================================================================
+            // 5. ABRIR MODAL DE INCIDENTE
+            // ================================================================
+            window.openIncident = function(id, desc, date, status, responsible) {
+                $('#incidentId').text(id);
+                $('#incidentDesc').text(desc);
+                $('#incidentDate').text(date);
+                $('#incidentResponsible').text(responsible);
+                
+                // Atualizar status
+                const statusBadge = $('#incidentStatus');
+                const statusText = status;
+                statusBadge.text(statusText);
+                statusBadge.removeClass('critical high medium low resolved pending');
+                
+                if (statusText === 'Resolvido' || statusText === 'Resolved' || statusText === 'Résolu' || statusText === 'Resuelto') {
+                    statusBadge.addClass('resolved');
+                } else if (statusText === 'Em análise' || statusText === 'In analysis' || statusText === 'En analyse' || statusText === 'En análisis') {
+                    statusBadge.addClass('pending');
+                } else if (statusText === 'Crítico' || statusText === 'Critical' || statusText === 'Critique' || statusText === 'Crítico') {
+                    statusBadge.addClass('critical');
+                } else if (statusText === 'Alto' || statusText === 'High' || statusText === 'Élevé' || statusText === 'Alto') {
+                    statusBadge.addClass('high');
+                }
+                
+                // Aplica tradução ao modal
+                applyTranslations(currentLang);
+                
+                $('#incidentModal').modal('show');
+            };
+
+            // ================================================================
+            // 6. SIMULAR ATUALIZAÇÃO DE DADOS
+            // ================================================================
+            let counter = 127;
+            setInterval(() => {
+                counter = 120 + Math.floor(Math.random() * 30);
+                $('.soc-card .soc-value').first().text(counter);
+            }, 15000);
+
+            let alertCount = 12;
+            setInterval(() => {
+                alertCount = 8 + Math.floor(Math.random() * 10);
+                $('.soc-card .soc-value:eq(2)').text(alertCount);
+            }, 20000);
+
+            console.log('✅ VITALINKA - Security Operations Center (SOC) carregado!');
+            console.log('🛡️ Monitorização de segurança ativa!');
+            console.log('🌍 Suporte multilíngue ativo (Português, English, Français, Español)');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,3884 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VITALINKA | Área do Enfermeiro</title>
+    <!-- Bootstrap 5 + Bootstrap Icons + Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- html2pdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        /* ===== VARIÁVEIS DE TEMA ===== */
+        :root {
+            --bg-image: url('images/dash-enf.png');
+            --bg-overlay: rgba(0, 0, 0, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.10);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-color: #f0f4f8;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --table-bg: rgba(255, 255, 255, 0.06);
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --input-border: rgba(255, 255, 255, 0.12);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --primary-glow: rgba(13, 110, 253, 0.25);
+            --success-color: #75f0a0;
+            --warning-color: #ffd75a;
+            --danger-color: #ff7a8a;
+            --info-color: #6ee7ff;
+            --chatbot-bg: rgba(20, 30, 28, 0.95);
+            --dropdown-bg: rgba(20, 30, 28, 0.95);
+            --modal-bg: rgba(20, 30, 28, 0.95);
+            --bg-pattern-opacity: 0.6;
+            --primary-color: #2b7a4b;
+            --primary-gradient: linear-gradient(135deg, #2b7a4b, #4c9f70);
+            --status-stable: #75f0a0;
+            --status-observation: #ffd75a;
+            --status-priority: #ff9f43;
+            --status-critical: #ff7a8a;
+        }
+
+        /* Tema Claro */
+        [data-theme="light"] {
+            --bg-image: url('images/dash-enf.png');
+            --bg-overlay: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --text-color: #1a2634;
+            --text-muted: rgba(0, 0, 0, 0.6);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --table-bg: rgba(255, 255, 255, 0.6);
+            --input-bg: rgba(255, 255, 255, 0.75);
+            --input-border: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --primary-glow: rgba(13, 110, 253, 0.15);
+            --success-color: #198754;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #0dcaf0;
+            --chatbot-bg: rgba(255, 255, 255, 0.95);
+            --dropdown-bg: rgba(255, 255, 255, 0.95);
+            --modal-bg: rgba(255, 255, 255, 0.95);
+            --bg-pattern-opacity: 0.3;
+        }
+
+        /* ===== ESTILOS GERAIS ===== */
+        * { font-family: 'Times New Roman', Times, serif; }
+        
+        body {
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            position: relative;
+            background-color: #1a2634;
+            transition: background-color 0.3s ease;
+        }
+
+        [data-theme="light"] body {
+            background-color: #e8ecef;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-overlay);
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+
+        .container-fluid { position: relative; z-index: 1; }
+
+        /* ===== GLASSMORPHISM ===== */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        /* ===== TABS ===== */
+        .nav-tabs .nav-link {
+            font-size: 15px;
+            color: var(--text-color);
+            border: none;
+            padding: 10px 18px;
+            margin-right: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+        .nav-tabs .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        .nav-tabs .nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            color: var(--text-color);
+            border-bottom: 3px solid #0d6efd;
+            font-weight: bold;
+            box-shadow: 0 -2px 20px var(--primary-glow);
+        }
+        .tab-content {
+            padding: 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 0 8px 8px 8px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+
+        /* ===== INDICATOR CARDS ===== */
+        .indicator-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 15px 10px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        .indicator-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .indicator-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            text-shadow: 0 2px 10px var(--shadow-color);
+        }
+        .indicator-card .label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .indicator-card.success .number { color: var(--success-color); }
+        .indicator-card.warning .number { color: var(--warning-color); }
+        .indicator-card.danger .number { color: var(--danger-color); }
+        .indicator-card.info .number { color: var(--info-color); }
+        .indicator-card.primary .number { color: #6ea8fe; }
+
+        /* ===== CARDS ===== */
+        .info-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .info-card .card-title {
+            color: var(--text-color);
+            border-bottom: 2px solid var(--glass-border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .info-card .info-label {
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .info-card .info-value { color: var(--text-color); }
+
+        /* ===== STATUS BADGE ===== */
+        .status-badge.stable { background: rgba(25, 135, 84, 0.7); color: #fff; }
+        .status-badge.observation { background: rgba(255, 193, 7, 0.7); color: #000; }
+        .status-badge.priority { background: rgba(255, 159, 67, 0.7); color: #fff; }
+        .status-badge.critical { background: rgba(220, 53, 69, 0.7); color: #fff; }
+
+        /* ===== HISTORY TABLE ===== */
+        .history-table {
+            background: var(--table-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+        .history-table th {
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 2px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .history-table td { color: var(--text-color); }
+        .history-table .table-hover tbody tr:hover { background: rgba(255, 255, 255, 0.05); }
+
+        /* ===== QUICK ACTIONS ===== */
+        .quick-actions .btn {
+            margin: 3px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .quick-actions .btn-primary { background: rgba(13, 110, 253, 0.6); }
+        .quick-actions .btn-success { background: rgba(25, 135, 84, 0.6); }
+        .quick-actions .btn-info { background: rgba(13, 202, 240, 0.6); }
+        .quick-actions .btn-warning { background: rgba(255, 193, 7, 0.6); color: #000; }
+        .quick-actions .btn-danger { background: rgba(220, 53, 69, 0.6); }
+        .quick-actions .btn-outline-secondary { background: rgba(255, 255, 255, 0.05); }
+        .quick-actions .btn:hover { transform: scale(1.05); }
+
+        /* ===== PAGE TITLE ===== */
+        .page-title {
+            color: var(--text-color);
+            text-shadow: 0 2px 20px var(--shadow-color);
+        }
+        .page-title .badge {
+            background: rgba(13, 110, 253, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== SEARCH SECTION ===== */
+        .search-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        .search-section h6 { color: var(--text-color); }
+        .search-section .form-control,
+        .search-section .form-select {
+            border-radius: 8px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+        }
+        .search-section .form-control::placeholder { color: var(--text-muted); }
+        .search-section .form-control:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .search-section .btn-outline-secondary { color: var(--text-muted); border-color: var(--glass-border); }
+        .search-section .btn-outline-secondary:hover { background: var(--glass-bg); color: var(--text-color); }
+        .search-section .btn-outline-primary { color: var(--text-color); border-color: var(--glass-border); }
+        .search-section .btn-outline-primary:hover { background: rgba(13, 110, 253, 0.3); }
+
+        /* ===== PATIENT AVATAR ===== */
+        .patient-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--text-color);
+            font-weight: bold;
+            margin: 0 auto 10px auto;
+        }
+
+        /* ===== REPORT CARDS ===== */
+        .report-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .report-card .card-body { color: var(--text-color); }
+        .report-card .card-title { color: var(--text-color); }
+        .report-card .card-text { color: var(--text-muted); }
+
+        /* ===== MODAL GLASS ===== */
+        .modal-content {
+            background: var(--modal-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .modal-header { border-bottom: 1px solid var(--glass-border); }
+        .modal-footer { border-top: 1px solid var(--glass-border); }
+        .modal .btn-close { 
+            filter: invert(1); 
+            opacity: 0.7;
+        }
+        [data-theme="light"] .modal .btn-close { 
+            filter: invert(0); 
+            opacity: 0.5;
+        }
+        .modal .form-control,
+        .modal .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+        }
+        .modal .form-control:focus,
+        .modal .form-select:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .modal .form-label {
+            color: var(--text-muted);
+        }
+        .modal .form-check-label {
+            color: var(--text-color);
+        }
+        .modal .btn-secondary {
+            background: var(--input-bg);
+            border-color: var(--glass-border);
+            color: var(--text-color);
+        }
+        .modal .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .modal .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* ===== DATETIME ===== */
+        #currentDateTime {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        /* ============================================================ */
+        /* ===== TIMER, DASHBOARD DROPDOWN, CHATBOT ===== */
+        /* ============================================================ */
+
+        .timer-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: inline-block;
+        }
+        .timer-container svg {
+            transform: rotate(-90deg);
+            width: 60px;
+            height: 60px;
+        }
+        .timer-container .timer-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 4;
+        }
+        [data-theme="light"] .timer-container .timer-bg {
+            stroke: rgba(0, 0, 0, 0.12);
+        }
+        .timer-container .timer-progress {
+            fill: none;
+            stroke: #4c9f70;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 169.646;
+            stroke-dashoffset: 169.646;
+            transition: stroke-dashoffset 1s linear;
+        }
+        .timer-container .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-shadow: 0 1px 5px var(--shadow-color);
+        }
+        .timer-warning .timer-progress { stroke: #ffc107; }
+        .timer-danger .timer-progress { stroke: #dc3545; }
+
+        /* --- DASHBOARD DROPDOWN --- */
+        .dashboard-dropdown .dropdown-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+        }
+        .dashboard-dropdown .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .dashboard-dropdown .dropdown-menu {
+            background: var(--dropdown-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 220px;
+            z-index: 9999 !important;
+        }
+        .dashboard-dropdown .dropdown-item {
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        .dashboard-dropdown .dropdown-item:hover {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+        }
+        .dashboard-dropdown .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            color: #4c9f70;
+        }
+        .dashboard-dropdown .dropdown-divider {
+            border-color: var(--glass-border);
+        }
+
+        /* --- CHATBOT VITA --- */
+        .chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+        }
+        .chatbot-toggle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 30px rgba(43, 122, 75, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 40px rgba(43, 122, 75, 0.5);
+        }
+        .chatbot-toggle .badge-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #dc3545;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            max-height: 480px;
+            background: var(--chatbot-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            box-shadow: 0 20px 60px var(--shadow-color);
+            display: none;
+            overflow: hidden;
+            flex-direction: column;
+            z-index: 9999;
+        }
+        .chatbot-window.open { display: flex; }
+        .chatbot-header {
+            padding: 15px 20px;
+            background: rgba(43, 122, 75, 0.2);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chatbot-header .chatbot-name {
+            color: var(--text-color);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .chatbot-header .chatbot-name i {
+            color: #4c9f70;
+            margin-right: 8px;
+        }
+        .chatbot-header .chatbot-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .chatbot-header .chatbot-close:hover { color: var(--text-color); }
+        .chatbot-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            max-height: 320px;
+        }
+        .chatbot-body .message {
+            margin-bottom: 12px;
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            animation: fadeInMsg 0.3s ease;
+        }
+        .chatbot-body .message.bot {
+            background: rgba(76, 159, 112, 0.15);
+            color: var(--text-color);
+            border-bottom-left-radius: 4px;
+            margin-right: auto;
+        }
+        .chatbot-body .message.user {
+            background: rgba(13, 110, 253, 0.2);
+            color: var(--text-color);
+            border-bottom-right-radius: 4px;
+            margin-left: auto;
+        }
+        @keyframes fadeInMsg {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chatbot-footer {
+            padding: 12px 15px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 8px;
+        }
+        .chatbot-footer input {
+            flex: 1;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: var(--input-bg);
+            color: var(--text-color);
+            outline: none;
+            font-size: 0.9rem;
+        }
+        .chatbot-footer input::placeholder { color: var(--text-muted); }
+        .chatbot-footer input:focus { border-color: #4c9f70; }
+        .chatbot-footer button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: var(--primary-gradient);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chatbot-footer button:hover { opacity: 0.85; transform: scale(0.97); }
+
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .indicator-card .number { font-size: 1.5rem; }
+            .tab-content { padding: 15px; }
+            .page-title { font-size: 1.5rem; }
+            .chatbot-window {
+                width: 300px;
+                right: -10px;
+                bottom: 75px;
+            }
+            .timer-container { width: 45px; height: 45px; }
+            .timer-container svg { width: 45px; height: 45px; }
+            .timer-container .timer-text { font-size: 0.6rem; }
+            .header-timer-wrapper .timer-label { display: none; }
+        }
+        @media (max-width: 400px) {
+            .chatbot-window { width: 280px; right: -5px; }
+        }
+
+        .header-timer-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-timer-wrapper .timer-label {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .suggestion-item {
+            cursor: pointer;
+            padding: 8px 15px;
+            transition: all 0.2s ease;
+            color: var(--text-color);
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            border-top: none;
+        }
+        .suggestion-item:hover { background: rgba(255, 255, 255, 0.1); }
+        .suggestion-item:first-child { border-top: 1px solid var(--glass-border); border-radius: 8px 8px 0 0; }
+        .suggestion-item:last-child { border-radius: 0 0 8px 8px; }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* ===== ESTILOS PERFIL ===== */
+        .profile-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .profile-detail .label {
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .profile-detail .value {
+            color: var(--text-color);
+        }
+        .profile-avatar-lg {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 3px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: var(--text-color);
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+        }
+        .profile-permissions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .profile-permissions .badge {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* ===== PERFIL CARD ===== */
+        .profile-image-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            position: relative;
+            z-index: 9998;
+        }
+        .profile-image-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.12);
+        }
+        .profile-image-card .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            flex-shrink: 0;
+        }
+        .profile-image-card .info h6 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.85rem;
+        }
+        .profile-image-card .info small {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+        .profile-image-card .dropdown-toggle {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 0 0 0 8px;
+            font-size: 0.8rem;
+        }
+        .profile-image-card .dropdown-toggle:hover {
+            color: var(--text-color);
+        }
+        .profile-image-card .dropdown-menu {
+            background: var(--dropdown-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 200px;
+            z-index: 99999 !important;
+        }
+        .profile-image-card .dropdown-item {
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        .profile-image-card .dropdown-item:hover {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+        }
+        .profile-image-card .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            color: #4c9f70;
+        }
+        .profile-image-card .dropdown-item.text-danger i { color: #dc3545; }
+        .profile-image-card .dropdown-item.text-danger:hover {
+            background: rgba(220, 53, 69, 0.15);
+        }
+        .profile-image-card .dropdown-divider {
+            border-color: var(--glass-border);
+        }
+
+        .profile-edit-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 3px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--text-color);
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-size: cover;
+            background-position: center;
+        }
+        .profile-edit-avatar:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+        .profile-edit-avatar .avatar-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 4px;
+            border-radius: 0 0 50% 50%;
+            text-align: center;
+        }
+        .profile-edit-avatar .avatar-overlay i {
+            font-size: 0.8rem;
+        }
+        .edit-profile-form .form-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .edit-profile-form .form-control,
+        .edit-profile-form .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+            border-radius: 8px;
+        }
+        .edit-profile-form .form-control:focus,
+        .edit-profile-form .form-select:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .edit-profile-form .form-control::placeholder {
+            color: var(--text-muted);
+        }
+        .edit-profile-form .form-text {
+            color: var(--text-muted);
+        }
+        .permission-checkbox {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .permission-checkbox .form-check {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 8px 15px;
+            margin: 0;
+            transition: all 0.2s ease;
+        }
+        .permission-checkbox .form-check:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .permission-checkbox .form-check-input {
+            margin-right: 8px;
+        }
+        .permission-checkbox .form-check-label {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        /* ===== ESTILOS PACIENTES ===== */
+        .patient-list-item {
+            background: var(--glass-bg);
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .patient-list-item:hover {
+            transform: translateX(5px);
+            background: rgba(255,255,255,0.05);
+        }
+        .patient-list-item .patient-info {
+            flex: 1;
+        }
+        .patient-list-item .patient-info .name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .patient-list-item .patient-info .details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .patient-list-item .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: inline-block;
+        }
+        .status-indicator.stable { background: var(--status-stable); }
+        .status-indicator.observation { background: var(--status-observation); }
+        .status-indicator.priority { background: var(--status-priority); }
+        .status-indicator.critical { background: var(--status-critical); }
+
+        /* ===== ESTILOS SINAIS VITAIS ===== */
+        .vital-signs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        .vital-sign-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+        }
+        .vital-sign-item .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+        .vital-sign-item .label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .vital-sign-item .unit {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== ESTILOS MEDICAÇÃO ===== */
+        .medication-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .medication-item .med-info {
+            flex: 1;
+        }
+        .medication-item .med-info .med-name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .medication-item .med-info .med-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .medication-item .med-status {
+            font-size: 0.7rem;
+        }
+        .medication-item .med-status.administered { color: var(--success-color); }
+        .medication-item .med-status.pending { color: var(--warning-color); }
+        .medication-item .med-status.refused { color: var(--danger-color); }
+        .medication-item .med-status.delayed { color: #ff9f43; }
+
+        /* ===== ESTILOS PROCEDIMENTOS ===== */
+        .procedure-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .procedure-item .proc-info {
+            flex: 1;
+        }
+        .procedure-item .proc-info .proc-name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .procedure-item .proc-info .proc-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== ESTILOS EVOLUÇÃO ===== */
+        .evolucao-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--info-color);
+        }
+        .evolucao-item .evolucao-date {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        .evolucao-item .evolucao-text {
+            margin-top: 5px;
+            color: var(--text-color);
+        }
+
+        /* ===== ESTILOS SOLICITAÇÕES ===== */
+        .solicitacao-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+        }
+        .solicitacao-item .sol-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .solicitacao-item .sol-header .sol-type {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .solicitacao-item .sol-header .sol-status {
+            font-size: 0.7rem;
+        }
+        .solicitacao-item .sol-details {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* ===== BOTÕES ===== */
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+            color: #fff;
+        }
+
+        .vita-med {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .dropdown-menu {
+            z-index: 99999 !important;
+        }
+        .dropdown {
+            z-index: 9998 !important;
+        }
+        .dropdown-menu.show {
+            display: block !important;
+        }
+
+        /* ===== ESTILOS ADMISSÃO ===== */
+        .admissao-step {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid var(--glass-border);
+        }
+        .admissao-step .step-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: #fff;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.8rem;
+        }
+        .admissao-step .step-title {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .admissao-step .step-status {
+            float: right;
+            font-size: 0.7rem;
+        }
+        .admissao-step .step-status.done { color: var(--success-color); }
+        .admissao-step .step-status.pending { color: var(--warning-color); }
+
+        /* ===== ESTILOS TURNOS ===== */
+        .turno-card {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            padding: 15px 20px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 15px;
+        }
+        .turno-card .turno-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .turno-card .turno-header h6 {
+            color: var(--text-color);
+            margin: 0;
+        }
+        .turno-card .turno-info {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* ===== ESTILOS MODAIS ===== */
+        .modal-close-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        .modal-close-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-color);
+        }
+
+        /* ===== ESTILOS FICHA / RECIBO ===== */
+        .ficha-container {
+            background: #fff;
+            color: #1a2634;
+            padding: 30px 25px;
+            border-radius: 12px;
+            max-width: 700px;
+            margin: 0 auto;
+            font-family: 'Times New Roman', Times, serif;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        .ficha-container .header {
+            border-bottom: 2px solid #2b7a4b;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .ficha-container .header .title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #2b7a4b;
+        }
+        .ficha-container .header .subtitle {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .ficha-container .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .ficha-container .info-row .label {
+            font-weight: 600;
+            color: #333;
+        }
+        .ficha-container .info-row .value {
+            color: #222;
+        }
+        .ficha-container .qr-section {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 15px 0;
+        }
+        .ficha-container .qr-section #qrcode {
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: inline-block;
+        }
+        .ficha-container .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #777;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+        .ficha-container .footer .assinatura {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .ficha-container .footer .assinatura .campo {
+            text-align: center;
+        }
+        .ficha-container .footer .assinatura .campo .linha {
+            width: 150px;
+            border-top: 1px solid #333;
+            margin: 5px auto 0 auto;
+        }
+        .ficha-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .ficha-actions .btn {
+            min-width: 140px;
+        }
+
+        /* ===== ESTILOS COMPROVATIVO ===== */
+        .comprovativo-container {
+            background: #fff;
+            color: #1a2634;
+            padding: 30px 25px;
+            border-radius: 12px;
+            max-width: 700px;
+            margin: 0 auto;
+            font-family: 'Times New Roman', Times, serif;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        .comprovativo-container .header {
+            border-bottom: 2px solid #2b7a4b;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .comprovativo-container .header .title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #2b7a4b;
+        }
+        .comprovativo-container .header .subtitle {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .comprovativo-container .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .comprovativo-container .info-row .label {
+            font-weight: 600;
+            color: #333;
+        }
+        .comprovativo-container .info-row .value {
+            color: #222;
+        }
+        .comprovativo-container .qr-section {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 15px 0;
+        }
+        .comprovativo-container .qr-section #qrcode {
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: inline-block;
+        }
+        .comprovativo-container .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #777;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+        .comprovativo-container .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .comprovativo-container .status-badge.agendada {
+            background: #d4edda;
+            color: #155724;
+        }
+        .comprovativo-container .status-badge.realizada {
+            background: #cce5ff;
+            color: #004085;
+        }
+        .comprovativo-container .status-badge.cancelada {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .comprovativo-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .comprovativo-actions .btn {
+            min-width: 140px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- ========== CABEÇALHO ========== -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h2 class="page-title">
+                        <i class="bi bi-heart-pulse text-primary"></i> 
+                        Área do Enfermeiro
+                        <span class="badge bg-primary ms-2 notification-badge">ATIVO</span>
+                    </h2>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        
+                        <!-- DASHBOARD DROPDOWN -->
+                        <div class="dashboard-dropdown dropdown">
+                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-th-large me-1"></i> Dashboard
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="dashboardMenu">
+                                <li><a class="dropdown-item" href="#dashboard-tab" data-tab="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+                                <li><a class="dropdown-item" href="#pacientes-tab" data-tab="pacientes"><i class="fas fa-users"></i> Pacientes</a></li>
+                                <li><a class="dropdown-item" href="#admissao-tab" data-tab="admissao"><i class="fas fa-user-plus"></i> Admissão</a></li>
+                                <li><a class="dropdown-item" href="#medicacao-tab" data-tab="medicacao"><i class="fas fa-pills"></i> Medicação</a></li>
+                                <li><a class="dropdown-item" href="#sinais-tab" data-tab="sinais"><i class="fas fa-heartbeat"></i> Sinais Vitais</a></li>
+                                <li><a class="dropdown-item" href="#procedimentos-tab" data-tab="procedimentos"><i class="fas fa-hand-holding-heart"></i> Procedimentos</a></li>
+                                <li><a class="dropdown-item" href="#evolucao-tab" data-tab="evolucao"><i class="fas fa-notes-medical"></i> Evolução</a></li>
+                                <li><a class="dropdown-item" href="#solicitacoes-tab" data-tab="solicitacoes"><i class="fas fa-file-invoice"></i> Solicitações</a></li>
+                                <li><a class="dropdown-item" href="#turno-tab" data-tab="turno"><i class="fas fa-clock"></i> Turno</a></li>
+                                <li><a class="dropdown-item" href="#alta-tab" data-tab="alta"><i class="fas fa-sign-out-alt"></i> Alta</a></li>
+                                <li><a class="dropdown-item" href="#relatorios-tab" data-tab="relatorios"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" 
+                                       href="front-coci.html" 
+                                       ><i class="fas fa-comment-dots"></i> Comunicação (COCI)</a></li>
+                            </ul>
+                        </div>
+                        
+                        <!-- RELÓGIO -->
+                        <span class="badge" id="currentDateTime">
+                            <i class="bi bi-clock"></i> 
+                            <span id="dateTimeDisplay">Carregando...</span>
+                        </span>
+
+                        <!-- THEME TOGGLE -->
+                        <div class="theme-toggle" id="themeToggle" title="Alterar Tema">
+                            <i class="fas fa-moon" id="themeIcon"></i>
+                        </div>
+
+                        <!-- TIMER CIRCULAR -->
+                        <div class="header-timer-wrapper">
+                            <span class="timer-label" id="timerLabel">Turno</span>
+                            <div class="timer-container" id="timerContainer">
+                                <svg viewBox="0 0 60 60">
+                                    <circle class="timer-bg" cx="30" cy="30" r="27"/>
+                                    <circle class="timer-progress" id="timerProgress" cx="30" cy="30" r="27"/>
+                                </svg>
+                                <span class="timer-text" id="timerText">15:00</span>
+                            </div>
+                        </div>
+                        
+                        <!-- ===== PERFIL ===== -->
+                        <div class="profile-image-card dropdown" id="profileCard">
+                            <div class="avatar-img" id="profileCardAvatar">EF</div>
+                            <div class="info">
+                                <h6 id="profileCardName">Enfª. Fernanda Santos</h6>
+                                <small id="profileCardSpecialty">Enfermagem</small>
+                            </div>
+                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="profileCardMenu">
+                                <li><a class="dropdown-item" href="#" id="profileCardView"><i class="fas fa-user"></i> Ver Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="profileCardEdit"><i class="fas fa-edit"></i> Editar Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="profileCardPassword"><i class="fas fa-key"></i> Alterar Senha</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="logout-per.html" id="profileCardLogout">
+                                        <i class="fas fa-sign-out-alt"></i> Sair
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- PESQUISA RÁPIDA -->
+                        <div class="input-group" style="width: 180px;">
+                            <input type="text" id="quickSearch" class="form-control" placeholder="🔍 Pesquisar...">
+                            <button class="btn btn-outline-primary" type="button">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== PAINEL DE ESTATÍSTICAS ========== -->
+        <div class="row mb-4" id="dashboard-tab">
+            <div class="col-md-2 col-6">
+                <div class="indicator-card fade-in">
+                    <div class="number" id="totalPacientes">0</div>
+                    <div class="label"><i class="bi bi-people"></i> Pacientes</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card success fade-in">
+                    <div class="number" id="pacientesEstaveis">0</div>
+                    <div class="label"><i class="bi bi-check-circle"></i> Estáveis</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card warning fade-in">
+                    <div class="number" id="pacientesObservacao">0</div>
+                    <div class="label"><i class="bi bi-eye"></i> Observação</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card primary fade-in">
+                    <div class="number" id="pacientesPrioritarios">0</div>
+                    <div class="label"><i class="bi bi-exclamation-triangle"></i> Prioritários</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card danger fade-in">
+                    <div class="number" id="pacientesCriticos">0</div>
+                    <div class="label"><i class="bi bi-exclamation-octagon"></i> Críticos</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card info fade-in">
+                    <div class="number" id="medicamentosPendentes">0</div>
+                    <div class="label"><i class="bi bi-clock"></i> Med. Pendentes</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TABS ========== -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item"><button class="nav-link active" id="pacientes-tab" data-bs-toggle="tab" data-bs-target="#pacientes" type="button"><i class="fas fa-users"></i> Pacientes</button></li>
+            <li class="nav-item"><button class="nav-link" id="admissao-tab" data-bs-toggle="tab" data-bs-target="#admissao" type="button"><i class="fas fa-user-plus"></i> Admissão</button></li>
+            <li class="nav-item"><button class="nav-link" id="medicacao-tab" data-bs-toggle="tab" data-bs-target="#medicacao" type="button"><i class="fas fa-pills"></i> Medicação</button></li>
+            <li class="nav-item"><button class="nav-link" id="sinais-tab" data-bs-toggle="tab" data-bs-target="#sinais" type="button"><i class="fas fa-heartbeat"></i> Sinais Vitais</button></li>
+            <li class="nav-item"><button class="nav-link" id="procedimentos-tab" data-bs-toggle="tab" data-bs-target="#procedimentos" type="button"><i class="fas fa-hand-holding-heart"></i> Procedimentos</button></li>
+            <li class="nav-item"><button class="nav-link" id="evolucao-tab" data-bs-toggle="tab" data-bs-target="#evolucao" type="button"><i class="fas fa-notes-medical"></i> Evolução</button></li>
+            <li class="nav-item"><button class="nav-link" id="solicitacoes-tab" data-bs-toggle="tab" data-bs-target="#solicitacoes" type="button"><i class="fas fa-file-invoice"></i> Solicitações</button></li>
+            <li class="nav-item"><button class="nav-link" id="turno-tab" data-bs-toggle="tab" data-bs-target="#turno" type="button"><i class="fas fa-clock"></i> Turno</button></li>
+            <li class="nav-item"><button class="nav-link" id="alta-tab" data-bs-toggle="tab" data-bs-target="#alta" type="button"><i class="fas fa-sign-out-alt"></i> Alta</button></li>
+            <li class="nav-item"><button class="nav-link" id="relatorios-tab" data-bs-toggle="tab" data-bs-target="#relatorios" type="button"><i class="bi bi-file-earmark-bar-graph"></i> Relatórios</button></li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- ===== ABA PACIENTES ===== -->
+            <div class="tab-pane fade show active" id="pacientes" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="search-section">
+                            <h6><i class="bi bi-search"></i> Lista de Pacientes</h6>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <input type="text" id="searchPatient" class="form-control" placeholder="Nome, processo...">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="filterEnfermaria">
+                                        <option value="">Todas as Enfermarias</option>
+                                        <option value="Enfermaria Geral - Ala A">Enfermaria Geral - Ala A</option>
+                                        <option value="Enfermaria Geral - Ala B">Enfermaria Geral - Ala B</option>
+                                        <option value="Enfermaria Pediátrica">Enfermaria Pediátrica</option>
+                                        <option value="UCI">UCI</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="filterStatus">
+                                        <option value="">Todos os Estados</option>
+                                        <option value="Estável">🟢 Estável</option>
+                                        <option value="Em observação">🟡 Em observação</option>
+                                        <option value="Prioritário">🟠 Prioritário</option>
+                                        <option value="Crítico">🔴 Crítico</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary w-100" id="btnFilterPatients"><i class="bi bi-funnel"></i> Filtrar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="patientList">
+                            <!-- Lista de pacientes via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA ADMISSÃO ===== -->
+            <div class="tab-pane fade" id="admissao" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-user-plus me-2"></i> Admissão do Paciente</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Nome do Paciente</label>
+                                <input type="text" class="form-control" id="admissaoNome" placeholder="Digite o nome completo">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Processo</label>
+                                <input type="text" class="form-control" id="admissaoProcesso" placeholder="Nº do processo">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Enfermaria</label>
+                                <input type="text" class="form-control" id="admissaoEnfermariaInput" placeholder="Digite a enfermaria" list="enfermariaList">
+                                <datalist id="enfermariaList">
+                                    <option value="Enfermaria Geral - Ala A">
+                                    <option value="Enfermaria Geral - Ala B">
+                                    <option value="Enfermaria Pediátrica">
+                                    <option value="UCI">
+                                </datalist>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Cama</label>
+                                <input type="text" class="form-control" id="admissaoCama" placeholder="Digite o número da cama">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Andar</label>
+                                <input type="text" class="form-control" id="admissaoAndarInput" placeholder="Digite o andar" list="andarList">
+                                <datalist id="andarList">
+                                    <option value="1º Andar">
+                                    <option value="2º Andar">
+                                    <option value="3º Andar">
+                                    <option value="4º Andar">
+                                    <option value="5º Andar">
+                                    <option value="6º Andar">
+                                    <option value="7º Andar">
+                                    <option value="8º Andar">
+                                    <option value="9º Andar">
+                                </datalist>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Alergias</label>
+                                <input type="text" class="form-control" id="admissaoAlergias" placeholder="Ex: Penicilina">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Doenças</label>
+                                <div class="d-flex gap-2">
+                                    <input type="text" class="form-control" id="admissaoDoencaInput" placeholder="Digite a doença" style="flex:1;">
+                                    <button class="btn btn-outline-primary" id="btnAdicionarDoenca"><i class="fas fa-plus"></i></button>
+                                </div>
+                                <div id="listaDoencas" class="mt-2 d-flex flex-wrap gap-1"></div>
+                                <div class="mt-2">
+                                    <label class="form-label">Selecione doenças comuns</label>
+                                    <select class="form-select" id="admissaoDoencaSelect">
+                                        <option value="">-- Selecione --</option>
+                                        <option value="Hipertensão">Hipertensão</option>
+                                        <option value="Diabetes">Diabetes</option>
+                                        <option value="Asma">Asma</option>
+                                        <option value="Insuficiência Cardíaca">Insuficiência Cardíaca</option>
+                                        <option value="DPOC">DPOC</option>
+                                        <option value="Artrite">Artrite</option>
+                                        <option value="Depressão">Depressão</option>
+                                        <option value="Doença Renal">Doença Renal</option>
+                                        <option value="Hepatite">Hepatite</option>
+                                        <option value="Anemia">Anemia</option>
+                                    </select>
+                                    <button class="btn btn-sm btn-success mt-1" id="btnAddDoencaSelect"><i class="fas fa-check"></i> Adicionar selecionada</button>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Responsável (opcional)</label>
+                                <input type="text" class="form-control" id="admissaoResponsavel" placeholder="Nome do responsável">
+                            </div>
+                            <button class="btn btn-primary" id="btnAdmitirPaciente"><i class="fas fa-check me-2"></i> Admitir Paciente</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-list-check me-2"></i> Checklist de Admissão</h6>
+                            <div id="admissaoChecklist">
+                                <div class="admissao-step">
+                                    <span class="step-number">1</span>
+                                    <span class="step-title">Identificação do Paciente</span>
+                                    <span class="step-status done">✓ Concluído</span>
+                                </div>
+                                <div class="admissao-step">
+                                    <span class="step-number">2</span>
+                                    <span class="step-title">Sinais Vitais Iniciais</span>
+                                    <span class="step-status pending">⏳ Pendente</span>
+                                </div>
+                                <div class="admissao-step">
+                                    <span class="step-number">3</span>
+                                    <span class="step-title">Preparação da Cama</span>
+                                    <span class="step-status pending">⏳ Pendente</span>
+                                </div>
+                                <div class="admissao-step">
+                                    <span class="step-number">4</span>
+                                    <span class="step-title">Confirmação de Alergias</span>
+                                    <span class="step-status pending">⏳ Pendente</span>
+                                </div>
+                                <div class="admissao-step">
+                                    <span class="step-number">5</span>
+                                    <span class="step-title">Pulseira de Identificação</span>
+                                    <span class="step-status pending">⏳ Pendente</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA MEDICAÇÃO ===== -->
+            <div class="tab-pane fade" id="medicacao" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-pills me-2"></i> Administrar Medicação</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Paciente</label>
+                                <input type="text" class="form-control" id="medPaciente" placeholder="Digite o nome do paciente" list="pacientesList">
+                                <datalist id="pacientesList"></datalist>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Medicamento</label>
+                                <input type="text" class="form-control" id="medNome" placeholder="Nome do medicamento" list="medicamentosList">
+                                <datalist id="medicamentosList">
+                                    <option value="Amoxicilina 500mg">
+                                    <option value="Paracetamol 500mg">
+                                    <option value="Ibuprofeno 400mg">
+                                    <option value="Omeprazol 20mg">
+                                    <option value="Losartana 50mg">
+                                    <option value="Metformina 850mg">
+                                </datalist>
+                            </div>
+                            <div class="row">
+                                <div class="col-4"><label class="form-label">Dose</label><input type="text" class="form-control" id="medDose" placeholder="500mg"></div>
+                                <div class="col-4"><label class="form-label">Via</label>
+                                    <input type="text" class="form-control" id="medVia" placeholder="Oral, IV..." list="viaList">
+                                    <datalist id="viaList">
+                                        <option value="Oral">
+                                        <option value="Intravenosa">
+                                        <option value="Intramuscular">
+                                    </datalist>
+                                </div>
+                                <div class="col-4"><label class="form-label">Horário</label><input type="time" class="form-control" id="medHorario"></div>
+                            </div>
+                            <div class="mt-2">
+                                <button class="btn btn-success" id="btnRegistarMedicacao"><i class="fas fa-check me-2"></i> Registrar Administração</button>
+                                <button class="btn btn-warning" id="btnMedRecusada"><i class="fas fa-times me-2"></i> Recusada</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-list me-2"></i> Medicações Pendentes</h6>
+                            <div id="medicacoesPendentes">
+                                <div class="text-muted text-center p-3">Nenhuma medicação pendente</div>
+                            </div>
+                            <hr>
+                            <h6 class="card-title"><i class="fas fa-history me-2"></i> Histórico de Administração</h6>
+                            <div id="historicoMedicacoes">
+                                <div class="text-muted text-center p-3">Nenhuma medicação administrada</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA SINAIS VITAIS ===== -->
+            <div class="tab-pane fade" id="sinais" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-heartbeat me-2"></i> Registar Sinais Vitais</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Paciente</label>
+                                <input type="text" class="form-control" id="sinaisPaciente" placeholder="Digite o nome do paciente" list="pacientesList2">
+                                <datalist id="pacientesList2"></datalist>
+                            </div>
+                            <div class="row">
+                                <div class="col-6"><label class="form-label">Temperatura</label><input type="text" class="form-control" id="sinalTemp" placeholder="°C"></div>
+                                <div class="col-6"><label class="form-label">Pressão Arterial</label><input type="text" class="form-control" id="sinalPA" placeholder="120/80"></div>
+                                <div class="col-6"><label class="form-label">Frequência Cardíaca</label><input type="text" class="form-control" id="sinalFC" placeholder="bpm"></div>
+                                <div class="col-6"><label class="form-label">Frequência Respiratória</label><input type="text" class="form-control" id="sinalFR" placeholder="rpm"></div>
+                                <div class="col-6"><label class="form-label">Saturação O₂</label><input type="text" class="form-control" id="sinalSat" placeholder="%"></div>
+                                <div class="col-6"><label class="form-label">Glicemia</label><input type="text" class="form-control" id="sinalGlicemia" placeholder="mg/dL"></div>
+                                <div class="col-6"><label class="form-label">Dor (0-10)</label><input type="number" class="form-control" id="sinalDor" placeholder="0" min="0" max="10"></div>
+                            </div>
+                            <button class="btn btn-primary mt-2" id="btnRegistarSinais"><i class="fas fa-save me-2"></i> Registar Sinais</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-chart-line me-2"></i> Últimos Sinais Vitais</h6>
+                            <div id="ultimosSinais">
+                                <div class="text-muted text-center p-3">Nenhum sinal registado</div>
+                            </div>
+                            <hr>
+                            <h6 class="card-title"><i class="fas fa-exclamation-triangle me-2"></i> Alertas</h6>
+                            <div id="alertasSinais">
+                                <div class="text-muted text-center p-3">Nenhum alerta</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA PROCEDIMENTOS ===== -->
+            <div class="tab-pane fade" id="procedimentos" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-hand-holding-heart me-2"></i> Registar Procedimento</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Paciente</label>
+                                <input type="text" class="form-control" id="procPaciente" placeholder="Digite o nome do paciente" list="pacientesList3">
+                                <datalist id="pacientesList3"></datalist>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tipo de Procedimento</label>
+                                <input type="text" class="form-control" id="procTipo" placeholder="Digite o tipo" list="procTipoList">
+                                <datalist id="procTipoList">
+                                    <option value="Curativo">
+                                    <option value="Administração de Soro">
+                                    <option value="Cateterização">
+                                    <option value="Colheita de Amostras">
+                                    <option value="Oxigenoterapia">
+                                    <option value="Aspiração">
+                                    <option value="Mudança de Posição">
+                                    <option value="Higiene do Paciente">
+                                </datalist>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Observações</label>
+                                <textarea class="form-control" id="procObs" rows="3" placeholder="Detalhes do procedimento..."></textarea>
+                            </div>
+                            <button class="btn btn-primary" id="btnRegistarProcedimento"><i class="fas fa-save me-2"></i> Registar Procedimento</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-list me-2"></i> Procedimentos Realizados</h6>
+                            <div id="listaProcedimentos">
+                                <div class="text-muted text-center p-3">Nenhum procedimento registado</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA EVOLUÇÃO ===== -->
+            <div class="tab-pane fade" id="evolucao" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-notes-medical me-2"></i> Nova Evolução</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Paciente</label>
+                                <input type="text" class="form-control" id="evolPaciente" placeholder="Digite o nome do paciente" list="pacientesList4">
+                                <datalist id="pacientesList4"></datalist>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Estado Clínico</label>
+                                <input type="text" class="form-control" id="evolEstado" placeholder="Ex: Estável" list="estadoList">
+                                <datalist id="estadoList">
+                                    <option value="Estável">
+                                    <option value="Em observação">
+                                    <option value="Prioritário">
+                                    <option value="Crítico">
+                                </datalist>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Evolução</label>
+                                <textarea class="form-control" id="evolTexto" rows="4" placeholder="Descreva a evolução do paciente..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Intercorrências</label>
+                                <textarea class="form-control" id="evolIntercorrencias" rows="2" placeholder="Registe intercorrências..."></textarea>
+                            </div>
+                            <button class="btn btn-primary" id="btnSalvarEvolucao"><i class="fas fa-save me-2"></i> Salvar Evolução</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-history me-2"></i> Histórico de Evoluções</h6>
+                            <div id="listaEvolucoes">
+                                <div class="text-muted text-center p-3">Nenhuma evolução registada</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA SOLICITAÇÕES ===== -->
+            <div class="tab-pane fade" id="solicitacoes" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-file-invoice me-2"></i> Nova Solicitação</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Tipo</label>
+                                <input type="text" class="form-control" id="solTipo" placeholder="Digite o tipo" list="solTipoList">
+                                <datalist id="solTipoList">
+                                    <option value="Medicamentos">
+                                    <option value="Exames">
+                                    <option value="Transporte Interno">
+                                    <option value="Material Clínico">
+                                    <option value="Limpeza">
+                                    <option value="Manutenção">
+                                </datalist>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Prioridade</label>
+                                <input type="text" class="form-control" id="solPrioridade" placeholder="Normal, Urgente..." list="prioridadeList">
+                                <datalist id="prioridadeList">
+                                    <option value="Normal">
+                                    <option value="Urgente">
+                                    <option value="Emergência">
+                                </datalist>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Descrição</label>
+                                <textarea class="form-control" id="solDescricao" rows="3" placeholder="Descreva a solicitação..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Paciente (opcional)</label>
+                                <input type="text" class="form-control" id="solPaciente" placeholder="Digite o nome do paciente" list="pacientesList5">
+                                <datalist id="pacientesList5"></datalist>
+                            </div>
+                            <button class="btn btn-primary" id="btnEnviarSolicitacao"><i class="fas fa-paper-plane me-2"></i> Enviar Solicitação</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-list me-2"></i> Solicitações Ativas</h6>
+                            <div id="listaSolicitacoes">
+                                <div class="text-muted text-center p-3">Nenhuma solicitação ativa</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA TURNO ===== -->
+            <div class="tab-pane fade" id="turno" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-clock me-2"></i> Gestão do Turno</h6>
+                            <div class="turno-card">
+                                <div class="turno-header">
+                                    <h6>Turno Atual</h6>
+                                    <span class="badge bg-success">Em Andamento</span>
+                                </div>
+                                <div class="turno-info">
+                                    <div><strong>Enfermeiro:</strong> <span id="turnoEnfermeiro">Enfª. Fernanda Santos</span></div>
+                                    <div><strong>Início:</strong> <span id="turnoInicio">07:00</span></div>
+                                    <div><strong>Duração:</strong> <span id="turnoDuracao">8 horas</span></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Passagem de Turno</label>
+                                <textarea class="form-control" id="turnoPassagem" rows="4" placeholder="Registe as informações para a passagem de turno..."></textarea>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-success" id="btnIniciarTurno"><i class="fas fa-play me-2"></i> Iniciar Turno</button>
+                                <button class="btn btn-warning" id="btnEncerrarTurno"><i class="fas fa-stop me-2"></i> Encerrar Turno</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-tasks me-2"></i> Resumo do Turno</h6>
+                            <div id="resumoTurno">
+                                <div class="text-muted text-center p-3">Inicie o turno para ver o resumo</div>
+                            </div>
+                            <hr>
+                            <h6 class="card-title"><i class="fas fa-list me-2"></i> Tarefas Pendentes</h6>
+                            <div id="tarefasTurno">
+                                <div class="text-muted text-center p-3">Nenhuma tarefa pendente</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA ALTA ===== -->
+            <div class="tab-pane fade" id="alta" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-sign-out-alt me-2"></i> Preparação para Alta</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Paciente</label>
+                                <input type="text" class="form-control" id="altaPaciente" placeholder="Digite o nome do paciente" list="pacientesList6">
+                                <datalist id="pacientesList6"></datalist>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Data da Alta</label>
+                                <input type="date" class="form-control" id="altaData">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Medicação para Casa</label>
+                                <textarea class="form-control" id="altaMedicacao" rows="2" placeholder="Medicação prescrita..."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Orientações</label>
+                                <textarea class="form-control" id="altaOrientacoes" rows="2" placeholder="Orientações para o paciente..."></textarea>
+                            </div>
+                            <button class="btn btn-success" id="btnPrepararAlta"><i class="fas fa-check me-2"></i> Preparar Alta</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-clipboard-check me-2"></i> Checklist de Alta</h6>
+                            <div id="altaChecklist">
+                                <div class="admissao-step">
+                                    <span class="step-number">1</span>
+                                    <span class="step-title">Confirmação de Alta Médica</span>
+                                    <span class="step-status pending">⏳ Pendente</span>
+                                </div>
+                                <div class="admissao-step">
+                                    <span class="step-number">2</span>
+                                    <span class="step-title">Orientações ao Paciente</span>
+                                    <span class="step-status pending">⏳ Pendente</span>
+                                </div>
+                                <div class="admissao-step">
+                                    <span class="step-number">3</span>
+                                    <span class="step-title">Entrega de Documentos</span>
+                                    <span class="step-status pending">⏳ Pendente</span>
+                                </div>
+                                <div class="admissao-step">
+                                    <span class="step-number">4</span>
+                                    <span class="step-title">Confirmação de Medicação</span>
+                                    <span class="step-status pending">⏳ Pendente</span>
+                                </div>
+                                <div class="admissao-step">
+                                    <span class="step-number">5</span>
+                                    <span class="step-title">Registo de Saída</span>
+                                    <span class="step-status pending">⏳ Pendente</span>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <button class="btn btn-primary" id="btnRegistarAlta"><i class="fas fa-check-double me-2"></i> Confirmar Alta</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA RELATÓRIOS ===== -->
+            <div class="tab-pane fade" id="relatorios" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioPacientes">
+                            <div class="card-body text-center">
+                                <i class="fas fa-users text-primary fs-1"></i>
+                                <h5 class="card-title mt-3">Pacientes Assistidos</h5>
+                                <p class="card-text">Relatório de pacientes por período</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioProcedimentos">
+                            <div class="card-body text-center">
+                                <i class="fas fa-hand-holding-heart text-success fs-1"></i>
+                                <h5 class="card-title mt-3">Procedimentos Realizados</h5>
+                                <p class="card-text">Relatório de procedimentos por período</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioMedicacoes">
+                            <div class="card-body text-center">
+                                <i class="fas fa-pills text-info fs-1"></i>
+                                <h5 class="card-title mt-3">Medicações Administradas</h5>
+                                <p class="card-text">Relatório de medicações por período</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAIS ========== -->
+    <!-- Modal de Perfil -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-md me-2"></i> Perfil do Enfermeiro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <div class="profile-avatar-lg">EF</div>
+                        <h4 id="profileDoctorName">Enfª. Fernanda Santos</h4>
+                        <span class="badge bg-primary">Registro: 67890</span>
+                        <span class="badge bg-success">Ativo</span>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="profile-detail"><span class="label">Nome Completo</span><span class="value">Fernanda Santos Oliveira</span></div>
+                            <div class="profile-detail"><span class="label">Cargo</span><span class="value">Enfermeira Chefe</span></div>
+                            <div class="profile-detail"><span class="label">Registro</span><span class="value">67890</span></div>
+                            <div class="profile-detail"><span class="label">Email</span><span class="value">fernanda.santos@vitalinka.ao</span></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="profile-detail"><span class="label">Telefone</span><span class="value">+244 923 456 788</span></div>
+                            <div class="profile-detail"><span class="label">Setor</span><span class="value">Enfermaria Geral</span></div>
+                            <div class="profile-detail"><span class="label">Data de Admissão</span><span class="value">15/03/2021</span></div>
+                            <div class="profile-detail"><span class="label">Último Acesso</span><span class="value">15/08/2026 07:00</span></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h6>Permissões</h6>
+                    <div class="profile-permissions">
+                        <span class="badge">👩‍⚕️ Admissão</span>
+                        <span class="badge">💊 Medicação</span>
+                        <span class="badge">🩺 Sinais Vitais</span>
+                        <span class="badge">🤲 Procedimentos</span>
+                        <span class="badge">📋 Evolução</span>
+                        <span class="badge">📨 Comunicação</span>
+                        <span class="badge">📑 Documentação</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="profileEditBtn"><i class="fas fa-edit me-1"></i> Editar Perfil</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Perfil -->
+    <div class="modal fade" id="profileEditModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-edit me-2"></i> Editar Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="profileEditForm" class="edit-profile-form">
+                        <div class="text-center mb-4">
+                            <div class="profile-edit-avatar" id="avatarUpload">
+                                <span id="avatarInitials">EF</span>
+                                <div class="avatar-overlay">
+                                    <i class="fas fa-camera"></i> Alterar
+                                </div>
+                            </div>
+                            <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
+                            <small class="text-muted">Clique na imagem para alterar a foto</small>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nome Completo</label>
+                                    <input type="text" class="form-control" id="editFullName" value="Fernanda Santos Oliveira" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cargo</label>
+                                    <select class="form-select" id="editCargo">
+                                        <option value="Enfermeira Chefe" selected>Enfermeira Chefe</option>
+                                        <option value="Enfermeira">Enfermeira</option>
+                                        <option value="Técnica de Enfermagem">Técnica de Enfermagem</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Registro</label>
+                                    <input type="text" class="form-control" id="editRegistro" value="67890" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="editEmail" value="fernanda.santos@vitalinka.ao" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Telefone</label>
+                                    <input type="text" class="form-control" id="editPhone" value="+244 923 456 788" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Setor</label>
+                                    <select class="form-select" id="editSetor">
+                                        <option value="Enfermaria Geral" selected>Enfermaria Geral</option>
+                                        <option value="UCI">UCI</option>
+                                        <option value="Pediatria">Pediatria</option>
+                                        <option value="Urgência">Urgência</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Data de Admissão</label>
+                                    <input type="date" class="form-control" id="editAdmissionDate" value="2021-03-15">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select" id="editStatus">
+                                        <option value="Ativo" selected>Ativo</option>
+                                        <option value="Inativo">Inativo</option>
+                                        <option value="Férias">Férias</option>
+                                        <option value="Licença">Licença</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>Preferências</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Idioma</label>
+                                    <select class="form-select" id="editLanguage">
+                                        <option value="pt" selected>Português</option>
+                                        <option value="en">Inglês</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Tema</label>
+                                    <select class="form-select" id="editTheme">
+                                        <option value="dark" selected>Escuro</option>
+                                        <option value="light">Claro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveProfile"><i class="fas fa-save me-1"></i> Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Sessão -->
+    <div class="modal fade" id="sessionModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-clock me-2" style="color:#ffc107;"></i> Sessão a expirar</h5>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="fas fa-exclamation-triangle" style="font-size:3rem; color:#ffc107; margin-bottom:15px;"></i>
+                    <h4>Tem a certeza que pretende terminar a sessão?</h4>
+                    <p class="text-muted" style="color:var(--text-muted) !important;">A sua sessão irá expirar em <strong id="sessionCountdown">2:00</strong> minutos.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-success" id="sessionContinueBtn"><i class="fas fa-check me-2"></i> Não, continuar</button>
+                    <button type="button" class="btn btn-danger" id="sessionEndBtn"><i class="fas fa-sign-out-alt me-2"></i> Sim, terminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Visualizar Paciente -->
+    <div class="modal fade" id="viewPatientModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user me-2"></i> Detalhes do Paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="viewPatientBody">
+                    <!-- Preenchido via JS -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="btnEditarPaciente"><i class="fas fa-edit me-1"></i> Editar</button>
+                    <button type="button" class="btn btn-danger" id="btnEliminarPaciente"><i class="fas fa-trash me-1"></i> Eliminar Paciente</button>
+                    <button type="button" class="btn btn-success" id="btnGerarFichaPaciente"><i class="fas fa-file-alt me-1"></i> Gerar Ficha</button>
+                    <button type="button" class="btn btn-info" id="btnGerarComprovativo"><i class="fas fa-file-invoice me-1"></i> Comprovativo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Paciente -->
+    <div class="modal fade" id="editPatientModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-edit me-2"></i> Editar Paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPatientForm">
+                        <input type="hidden" id="editPatientId">
+                        <div class="mb-3">
+                            <label class="form-label">Nome do Paciente</label>
+                            <input type="text" class="form-control" id="editNome" placeholder="Digite o nome completo">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Processo</label>
+                            <input type="text" class="form-control" id="editProcesso" placeholder="Nº do processo">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Idade</label>
+                            <input type="text" class="form-control" id="editIdade" placeholder="Ex: 35 anos">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sexo</label>
+                            <input type="text" class="form-control" id="editSexo" placeholder="Masculino/Feminino">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Enfermaria</label>
+                            <input type="text" class="form-control" id="editEnfermaria" placeholder="Digite a enfermaria">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Cama</label>
+                            <input type="text" class="form-control" id="editCama" placeholder="Nº da cama">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Andar</label>
+                            <input type="text" class="form-control" id="editAndar" placeholder="Ex: 2º Andar">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <input type="text" class="form-control" id="editStatus" placeholder="Estável, Crítico..." list="editStatusList">
+                            <datalist id="editStatusList">
+                                <option value="Estável">
+                                <option value="Em observação">
+                                <option value="Prioritário">
+                                <option value="Crítico">
+                            </datalist>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Alergias</label>
+                            <input type="text" class="form-control" id="editAlergias" placeholder="Ex: Penicilina">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Doenças (separadas por vírgula)</label>
+                            <input type="text" class="form-control" id="editDoencas" placeholder="Ex: Hipertensão, Diabetes">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Responsável</label>
+                            <input type="text" class="form-control" id="editResponsavel" placeholder="Nome do responsável">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSalvarEdicao"><i class="fas fa-save me-1"></i> Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Confirmar Eliminação -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle text-danger me-2"></i> Confirmar Eliminação</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="fas fa-user-slash" style="font-size:3rem; color:#dc3545; margin-bottom:15px;"></i>
+                    <h4>Tem certeza que deseja eliminar este paciente?</h4>
+                    <p class="text-muted" style="color:var(--text-muted) !important;">Esta ação não pode ser desfeita.</p>
+                    <p><strong id="deletePatientName"></strong></p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmDelete"><i class="fas fa-trash me-1"></i> Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL FICHA / RECIBO ===== -->
+    <div class="modal fade" id="fichaModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" style="background: transparent; border: none; box-shadow: none;">
+                <div class="modal-body" style="padding: 0;">
+                    <div class="ficha-container" id="fichaContainer">
+                        <!-- Preenchido via JS -->
+                    </div>
+                    <div class="ficha-actions">
+                        <button class="btn btn-primary" id="btnImprimirFicha"><i class="fas fa-print me-2"></i> Imprimir</button>
+                        <button class="btn btn-success" id="btnDownloadPDF"><i class="fas fa-file-pdf me-2"></i> Descarregar PDF</button>
+                        <button class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i> Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL COMPROVATIVO ===== -->
+    <div class="modal fade" id="comprovativoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content" style="background: transparent; border: none; box-shadow: none;">
+                <div class="modal-body" style="padding: 0;">
+                    <div class="comprovativo-container" id="comprovativoContainer">
+                        <!-- Preenchido via JS -->
+                    </div>
+                    <div class="comprovativo-actions">
+                        <button class="btn btn-primary" id="btnImprimirComprovativo"><i class="fas fa-print me-2"></i> Imprimir</button>
+                        <button class="btn btn-success" id="btnDownloadPDFComprovativo"><i class="fas fa-file-pdf me-2"></i> Descarregar PDF</button>
+                        <button class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i> Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CHATBOT VITA ========== -->
+    <div class="chatbot-container">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <span class="chatbot-name"><i class="fas fa-robot"></i> VITA</span>
+                <button class="chatbot-close" id="chatbotClose"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chatbot-body" id="chatbotBody">
+                <div class="message bot">
+                    <i class="fas fa-robot me-1"></i> Olá! Sou a <strong>VITA</strong>, sua assistente virtual.<br>
+                    Como posso ajudar? Pergunte sobre pacientes, medicação, sinais vitais ou procedimentos.
+                </div>
+            </div>
+            <a href="ia-enf.html">
+                <button class="ml-5" 
+                        style="margin-left: 20px;
+                               margin-bottom: 20px; 
+                               border-radius: 50px;
+                               color: green;
+                               background-color: #0b3b3b">
+                    <i class="fas fa-headset" 
+                   style="color: rgba(204, 185, 204, 0.39)">
+                </i> Vita AI </button>
+            </a>
+            <div class="chatbot-footer">
+                <input type="text" id="chatbotInput" placeholder="Digite sua pergunta...">
+                <button id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <button class="chatbot-toggle" id="chatbotToggle">
+            <img class="vita-med" src="images/chat-bot.png" alt="VITA">
+            <span class="badge-notification">1</span>
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // ================================================================
+            // 1. THEME TOGGLE
+            // ================================================================
+            let currentTheme = 'dark';
+            const themeToggle = $('#themeToggle');
+            const themeIcon = $('#themeIcon');
+
+            function setTheme(theme) {
+                currentTheme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                if (theme === 'light') {
+                    themeIcon.removeClass('fa-moon').addClass('fa-sun');
+                } else {
+                    themeIcon.removeClass('fa-sun').addClass('fa-moon');
+                }
+                localStorage.setItem('vitalinka-theme', theme);
+            }
+
+            const savedTheme = localStorage.getItem('vitalinka-theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            }
+
+            themeToggle.click(function() {
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+            });
+
+            // ================================================================
+            // 2. DASHBOARD DROPDOWN
+            // ================================================================
+            $('#dashboardMenu .dropdown-item[data-tab]').click(function(e) {
+                e.preventDefault();
+                const tabId = $(this).data('tab');
+                const tabButton = $(`#${tabId}-tab`);
+                if (tabButton.length) {
+                    const tab = new bootstrap.Tab(tabButton[0]);
+                    tab.show();
+                }
+                $(this).closest('.dropdown').find('.dropdown-toggle').dropdown('toggle');
+            });
+
+            // ================================================================
+            // 3. PERFIL
+            // ================================================================
+            const profileModal = new bootstrap.Modal(document.getElementById('profileModal'));
+            const profileEditModal = new bootstrap.Modal(document.getElementById('profileEditModal'));
+
+            $('#profileCardView').click(function(e) {
+                e.preventDefault();
+                profileModal.show();
+            });
+
+            $('#profileEditBtn').click(function() {
+                profileModal.hide();
+                loadProfileDataToEdit();
+                profileEditModal.show();
+            });
+
+            $('#profileCardEdit').click(function(e) {
+                e.preventDefault();
+                loadProfileDataToEdit();
+                profileEditModal.show();
+            });
+
+            $('#profileCardLogout').click(function(e) {
+                e.preventDefault();
+                if (confirm('Tem certeza que deseja sair?')) {
+                    clearInterval(timerInterval);
+                    window.location.href = "logout-per.html";
+                }
+            });
+
+            $('#profileCardPassword').click(function(e) {
+                e.preventDefault();
+                alert('🔐 Redirecionando para a página de alteração de senha...');
+            });
+
+            // ================================================================
+            // 4. PERFIL - DADOS
+            // ================================================================
+            let profileData = {
+                fullName: 'Fernanda Santos Oliveira',
+                cargo: 'Enfermeira Chefe',
+                registro: '67890',
+                email: 'fernanda.santos@vitalinka.ao',
+                phone: '+244 923 456 788',
+                setor: 'Enfermaria Geral',
+                admissionDate: '2021-03-15',
+                status: 'Ativo',
+                language: 'pt',
+                theme: 'dark'
+            };
+
+            function loadProfileDataToEdit() {
+                $('#editFullName').val(profileData.fullName);
+                $('#editCargo').val(profileData.cargo);
+                $('#editRegistro').val(profileData.registro);
+                $('#editEmail').val(profileData.email);
+                $('#editPhone').val(profileData.phone);
+                $('#editSetor').val(profileData.setor);
+                $('#editAdmissionDate').val(profileData.admissionDate);
+                $('#editStatus').val(profileData.status);
+                $('#editLanguage').val(profileData.language);
+                $('#editTheme').val(profileData.theme);
+                
+                const initials = profileData.fullName.split(' ').map(n => n[0]).join('');
+                $('#avatarInitials').text(initials);
+                $('#avatarUpload').css('background-image', 'none');
+                $('#avatarInitials').show();
+            }
+
+            function saveProfileData() {
+                profileData.fullName = $('#editFullName').val() || profileData.fullName;
+                profileData.cargo = $('#editCargo').val() || profileData.cargo;
+                profileData.registro = $('#editRegistro').val() || profileData.registro;
+                profileData.email = $('#editEmail').val() || profileData.email;
+                profileData.phone = $('#editPhone').val() || profileData.phone;
+                profileData.setor = $('#editSetor').val() || profileData.setor;
+                profileData.admissionDate = $('#editAdmissionDate').val() || profileData.admissionDate;
+                profileData.status = $('#editStatus').val() || profileData.status;
+                profileData.language = $('#editLanguage').val() || profileData.language;
+                profileData.theme = $('#editTheme').val() || profileData.theme;
+                
+                updateProfileDisplay();
+                profileEditModal.hide();
+                
+                alert('✅ Perfil atualizado com sucesso!');
+            }
+
+            function updateProfileDisplay() {
+                const initials = profileData.fullName.split(' ').map(n => n[0]).join('');
+                $('.profile-avatar-lg').text(initials);
+                $('#profileDoctorName').text(profileData.fullName);
+                
+                $('#profileCardAvatar').text(initials);
+                $('#profileCardName').text(profileData.fullName);
+                $('#profileCardSpecialty').text('Enfermagem');
+                
+                if (profileData.theme !== currentTheme) {
+                    setTheme(profileData.theme);
+                }
+            }
+
+            $('#btnSaveProfile').click(saveProfileData);
+
+            $('#avatarUpload').click(function() { $('#avatarFileInput').click(); });
+            $('#avatarFileInput').change(function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        $('#avatarUpload').css({
+                            'background-image': `url(${event.target.result})`,
+                            'background-size': 'cover',
+                            'background-position': 'center'
+                        });
+                        $('#avatarInitials').hide();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // ================================================================
+            // 5. DADOS DE EXEMPLO - PACIENTES
+            // ================================================================
+            let patients = [
+                { id: 1, nome: 'Maria Silva', processo: 'P-2026-0158', idade: '28 anos', sexo: 'Feminino', enfermaria: 'Enfermaria Geral - Ala A', cama: 'Cama 01', andar: '2º Andar', status: 'Estável', alergias: 'Nenhuma', doencas: [], responsavel: 'João Silva' },
+                { id: 2, nome: 'João Pedro', processo: 'P-2026-0159', idade: '35 anos', sexo: 'Masculino', enfermaria: 'UCI', cama: 'Cama 03', andar: '4º Andar', status: 'Crítico', alergias: 'Penicilina', doencas: ['Hipertensão', 'Diabetes'], responsavel: 'Ana Pedro' },
+                { id: 3, nome: 'Ana Oliveira', processo: 'P-2026-0160', idade: '42 anos', sexo: 'Feminino', enfermaria: 'Enfermaria Pediátrica', cama: 'Cama 02', andar: '1º Andar', status: 'Em observação', alergias: 'Nenhuma', doencas: ['Asma'], responsavel: 'Carlos Oliveira' },
+                { id: 4, nome: 'Carlos Santos', processo: 'P-2026-0161', idade: '55 anos', sexo: 'Masculino', enfermaria: 'Enfermaria Geral - Ala B', cama: 'Cama 04', andar: '5º Andar', status: 'Prioritário', alergias: 'Aspirina', doencas: ['Insuficiência Cardíaca', 'DPOC'], responsavel: 'Mariana Santos' },
+                { id: 5, nome: 'Mariana Costa', processo: 'P-2026-0162', idade: '31 anos', sexo: 'Feminino', enfermaria: 'Enfermaria Geral - Ala A', cama: 'Cama 05', andar: '3º Andar', status: 'Estável', alergias: 'Nenhuma', doencas: [], responsavel: 'Pedro Costa' }
+            ];
+
+            // ================================================================
+            // 6. DADOS DE EXEMPLO - MEDICAÇÕES
+            // ================================================================
+            let medicacoes = [
+                { id: 1, paciente: 'Maria Silva', medicamento: 'Amoxicilina 500mg', dose: '500mg', via: 'Oral', horario: '08:00', status: 'pendente' },
+                { id: 2, paciente: 'João Pedro', medicamento: 'Paracetamol 500mg', dose: '500mg', via: 'Oral', horario: '10:00', status: 'pendente' },
+                { id: 3, paciente: 'Ana Oliveira', medicamento: 'Omeprazol 20mg', dose: '20mg', via: 'Oral', horario: '07:00', status: 'administrada' },
+                { id: 4, paciente: 'Carlos Santos', medicamento: 'Losartana 50mg', dose: '50mg', via: 'Oral', horario: '09:00', status: 'pendente' }
+            ];
+
+            let historicoMedicacoes = [];
+
+            // ================================================================
+            // 7. DADOS DE EXEMPLO - SINAIS VITAIS
+            // ================================================================
+            let sinaisVitais = [];
+
+            // ================================================================
+            // 8. DADOS DE EXEMPLO - PROCEDIMENTOS
+            // ================================================================
+            let procedimentos = [];
+
+            // ================================================================
+            // 9. DADOS DE EXEMPLO - EVOLUÇÕES
+            // ================================================================
+            let evolucoes = [
+                { id: 1, paciente: 'João Pedro', data: '15/08/2026 08:30', estado: 'Crítico', texto: 'Paciente em UCI, com estabilização hemodinâmica. Sinais vitais monitorizados.', intercorrencias: 'Nenhuma' },
+                { id: 2, paciente: 'Ana Oliveira', data: '15/08/2026 07:45', estado: 'Em observação', texto: 'Paciente em observação na enfermaria pediátrica. Febre controlada.', intercorrencias: 'Febre persistente' }
+            ];
+
+            // ================================================================
+            // 10. DADOS DE EXEMPLO - SOLICITAÇÕES
+            // ================================================================
+            let solicitacoes = [];
+
+            // ================================================================
+            // 11. FUNÇÕES PRINCIPAIS
+            // ================================================================
+            function updateDateTime() {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('pt-BR');
+                const timeStr = now.toLocaleTimeString('pt-BR');
+                $('#dateTimeDisplay').text(`${dateStr} ${timeStr}`);
+            }
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            function getStatusClass(status) {
+                const map = {
+                    'Estável': 'stable',
+                    'Em observação': 'observation',
+                    'Prioritário': 'priority',
+                    'Crítico': 'critical'
+                };
+                return map[status] || 'stable';
+            }
+
+            function getStatusEmoji(status) {
+                const map = {
+                    'Estável': '🟢',
+                    'Em observação': '🟡',
+                    'Prioritário': '🟠',
+                    'Crítico': '🔴'
+                };
+                return map[status] || '🟢';
+            }
+
+            function updateStats() {
+                const total = patients.length;
+                const estaveis = patients.filter(p => p.status === 'Estável').length;
+                const observacao = patients.filter(p => p.status === 'Em observação').length;
+                const prioritarios = patients.filter(p => p.status === 'Prioritário').length;
+                const criticos = patients.filter(p => p.status === 'Crítico').length;
+                const pendentes = medicacoes.filter(m => m.status === 'pendente').length;
+
+                $('#totalPacientes').text(total);
+                $('#pacientesEstaveis').text(estaveis);
+                $('#pacientesObservacao').text(observacao);
+                $('#pacientesPrioritarios').text(prioritarios);
+                $('#pacientesCriticos').text(criticos);
+                $('#medicamentosPendentes').text(pendentes);
+            }
+            updateStats();
+
+            function updatePatientDatalists() {
+                const names = patients.map(p => p.nome);
+                const datalists = ['#pacientesList', '#pacientesList2', '#pacientesList3', '#pacientesList4', '#pacientesList5', '#pacientesList6'];
+                datalists.forEach(id => {
+                    const $dl = $(id);
+                    $dl.empty();
+                    names.forEach(name => {
+                        $dl.append(`<option value="${name}">`);
+                    });
+                });
+            }
+
+            function renderPatients(filter = '') {
+                const container = $('#patientList');
+                container.empty();
+
+                const enfermaria = $('#filterEnfermaria').val();
+                const status = $('#filterStatus').val();
+                const search = $('#searchPatient').val().toLowerCase();
+
+                let filtered = patients;
+                if (enfermaria) filtered = filtered.filter(p => p.enfermaria === enfermaria);
+                if (status) filtered = filtered.filter(p => p.status === status);
+                if (search) filtered = filtered.filter(p => p.nome.toLowerCase().includes(search) || p.processo.toLowerCase().includes(search));
+
+                if (filtered.length === 0) {
+                    container.append('<div class="text-muted text-center p-4">Nenhum paciente encontrado.</div>');
+                    return;
+                }
+
+                filtered.forEach(p => {
+                    const statusClass = getStatusClass(p.status);
+                    const emoji = getStatusEmoji(p.status);
+                    container.append(`
+                        <div class="patient-list-item" data-id="${p.id}">
+                            <div class="patient-info">
+                                <div>
+                                    <span class="status-indicator ${statusClass}"></span>
+                                    <span class="name">${p.nome}</span>
+                                    <span class="badge bg-secondary ms-2">${p.enfermaria}</span>
+                                </div>
+                                <div class="details">
+                                    ${p.processo} • ${p.idade} • Cama: ${p.cama} • Andar: ${p.andar} • ${emoji} ${p.status}
+                                    ${p.alergias !== 'Nenhuma' ? `<span class="badge bg-danger ms-2">⚠️ ${p.alergias}</span>` : ''}
+                                    ${p.doencas && p.doencas.length > 0 ? `<span class="badge bg-warning ms-2">${p.doencas.join(', ')}</span>` : ''}
+                                    ${p.responsavel ? `<span class="badge bg-info ms-2">👤 ${p.responsavel}</span>` : ''}
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-info view-patient" data-id="${p.id}"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-sm btn-outline-warning edit-patient" data-id="${p.id}"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-outline-danger delete-patient" data-id="${p.id}"><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-sm btn-outline-success gerar-ficha" data-id="${p.id}"><i class="fas fa-file-alt"></i></button>
+                                <button class="btn btn-sm btn-outline-info gerar-comprovativo" data-id="${p.id}"><i class="fas fa-file-invoice"></i></button>
+                            </div>
+                        </div>
+                    `);
+                });
+
+                updatePatientDatalists();
+            }
+
+            // ================================================================
+            // 12. FUNÇÕES MEDICAÇÃO, SINAIS, ETC
+            // ================================================================
+            function renderMedicacoes() {
+                const container = $('#medicacoesPendentes');
+                container.empty();
+                const pendentes = medicacoes.filter(m => m.status === 'pendente');
+                if (pendentes.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma medicação pendente</div>');
+                    return;
+                }
+                pendentes.forEach(m => {
+                    container.append(`
+                        <div class="medication-item">
+                            <div class="med-info">
+                                <div class="med-name">${m.medicamento}</div>
+                                <div class="med-details">${m.paciente} • ${m.dose} • ${m.via} • ${m.horario}</div>
+                            </div>
+                            <span class="med-status pending">⏳ Pendente</span>
+                        </div>
+                    `);
+                });
+
+                const histContainer = $('#historicoMedicacoes');
+                histContainer.empty();
+                if (historicoMedicacoes.length === 0) {
+                    histContainer.append('<div class="text-muted text-center p-3">Nenhuma medicação administrada</div>');
+                    return;
+                }
+                historicoMedicacoes.forEach(m => {
+                    histContainer.append(`
+                        <div class="medication-item">
+                            <div class="med-info">
+                                <div class="med-name">${m.medicamento}</div>
+                                <div class="med-details">${m.paciente} • ${m.dose} • ${m.via} • ${m.horario}</div>
+                            </div>
+                            <span class="med-status administered">✓ ${m.status}</span>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderSinaisVitais() {
+                const container = $('#ultimosSinais');
+                container.empty();
+                if (sinaisVitais.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhum sinal registado</div>');
+                    return;
+                }
+                const ultimos = sinaisVitais.slice(-5).reverse();
+                ultimos.forEach(s => {
+                    container.append(`
+                        <div class="vital-signs-grid mb-2">
+                            <div class="vital-sign-item">
+                                <div class="value">${s.temp || '--'}</div>
+                                <div class="label">Temperatura <span class="unit">°C</span></div>
+                            </div>
+                            <div class="vital-sign-item">
+                                <div class="value">${s.pa || '--'}</div>
+                                <div class="label">PA <span class="unit">mmHg</span></div>
+                            </div>
+                            <div class="vital-sign-item">
+                                <div class="value">${s.fc || '--'}</div>
+                                <div class="label">FC <span class="unit">bpm</span></div>
+                            </div>
+                            <div class="vital-sign-item">
+                                <div class="value">${s.sat || '--'}</div>
+                                <div class="label">SatO₂ <span class="unit">%</span></div>
+                            </div>
+                        </div>
+                        <div class="text-muted small">${s.paciente} • ${s.data}</div>
+                        <hr>
+                    `);
+                });
+            }
+
+            function renderProcedimentos() {
+                const container = $('#listaProcedimentos');
+                container.empty();
+                if (procedimentos.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhum procedimento registado</div>');
+                    return;
+                }
+                procedimentos.slice().reverse().forEach(p => {
+                    container.append(`
+                        <div class="procedure-item">
+                            <div class="proc-info">
+                                <div class="proc-name">${p.tipo}</div>
+                                <div class="proc-details">${p.paciente} • ${p.data} • ${p.obs || 'Sem observações'}</div>
+                            </div>
+                            <span class="badge bg-success">✓ Realizado</span>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderEvolucoes() {
+                const container = $('#listaEvolucoes');
+                container.empty();
+                if (evolucoes.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma evolução registada</div>');
+                    return;
+                }
+                evolucoes.slice().reverse().forEach(e => {
+                    const emoji = getStatusEmoji(e.estado);
+                    container.append(`
+                        <div class="evolucao-item">
+                            <div class="evolucao-date">${e.data} • ${emoji} ${e.estado}</div>
+                            <div class="evolucao-text"><strong>${e.paciente}</strong> - ${e.texto}</div>
+                            ${e.intercorrencias ? `<div class="text-muted small">⚠️ Intercorrências: ${e.intercorrencias}</div>` : ''}
+                        </div>
+                    `);
+                });
+            }
+
+            function renderSolicitacoes() {
+                const container = $('#listaSolicitacoes');
+                container.empty();
+                if (solicitacoes.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma solicitação ativa</div>');
+                    return;
+                }
+                solicitacoes.slice().reverse().forEach(s => {
+                    const priorityClass = s.prioridade === 'Emergência' ? 'danger' : s.prioridade === 'Urgente' ? 'warning' : 'info';
+                    container.append(`
+                        <div class="solicitacao-item">
+                            <div class="sol-header">
+                                <span class="sol-type">${s.tipo}</span>
+                                <span class="badge bg-${priorityClass}">${s.prioridade}</span>
+                            </div>
+                            <div class="sol-details">${s.descricao}</div>
+                            <div class="sol-details small">${s.paciente ? `Paciente: ${s.paciente}` : 'Sem paciente associado'} • ${s.data}</div>
+                        </div>
+                    `);
+                });
+            }
+
+            let turnoAtivo = false;
+            let turnoInicio = null;
+
+            function renderTurno() {
+                const container = $('#resumoTurno');
+                const tarefas = $('#tarefasTurno');
+                
+                if (turnoAtivo) {
+                    const totalPacientes = patients.length;
+                    const pendentes = medicacoes.filter(m => m.status === 'pendente').length;
+                    container.html(`
+                        <div class="turno-card">
+                            <div><strong>Pacientes assistidos:</strong> ${totalPacientes}</div>
+                            <div><strong>Medicações pendentes:</strong> ${pendentes}</div>
+                            <div><strong>Procedimentos realizados:</strong> ${procedimentos.length}</div>
+                            <div><strong>Evoluções registadas:</strong> ${evolucoes.length}</div>
+                        </div>
+                    `);
+                    
+                    tarefas.empty();
+                    const tarefasList = [
+                        ...medicacoes.filter(m => m.status === 'pendente').map(m => `💊 Administrar ${m.medicamento} para ${m.paciente} (${m.horario})`),
+                        ...patients.filter(p => p.status === 'Crítico' || p.status === 'Prioritário').map(p => `🩺 Verificar ${p.nome} - ${p.status}`)
+                    ];
+                    if (tarefasList.length === 0) {
+                        tarefas.append('<div class="text-muted text-center p-3">Nenhuma tarefa pendente</div>');
+                    } else {
+                        tarefasList.forEach(t => {
+                            tarefas.append(`<div class="procedure-item"><span>${t}</span></div>`);
+                        });
+                    }
+                } else {
+                    container.html('<div class="text-muted text-center p-3">Inicie o turno para ver o resumo</div>');
+                    tarefas.html('<div class="text-muted text-center p-3">Nenhuma tarefa pendente</div>');
+                }
+            }
+
+            // ================================================================
+            // 13. VARIÁVEIS DE ESTADO
+            // ================================================================
+            let currentViewPatientId = null;
+            let currentEditPatientId = null;
+            let doencasPaciente = [];
+            let fichaModal = new bootstrap.Modal(document.getElementById('fichaModal'));
+            let comprovativoModal = new bootstrap.Modal(document.getElementById('comprovativoModal'));
+
+            // ================================================================
+            // 14. EVENTOS - PACIENTES
+            // ================================================================
+            $('#btnFilterPatients').click(function() {
+                renderPatients();
+            });
+
+            $('#searchPatient').on('input', function() {
+                renderPatients();
+            });
+
+            $('#filterEnfermaria, #filterStatus').change(function() {
+                renderPatients();
+            });
+
+            // Visualizar paciente
+            const viewPatientModal = new bootstrap.Modal(document.getElementById('viewPatientModal'));
+            const editPatientModal = new bootstrap.Modal(document.getElementById('editPatientModal'));
+            const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+
+            $(document).on('click', '.view-patient', function() {
+                const id = $(this).data('id');
+                const patient = patients.find(p => p.id === id);
+                if (patient) {
+                    currentViewPatientId = id;
+                    const emoji = getStatusEmoji(patient.status);
+                    const doencasStr = patient.doencas && patient.doencas.length > 0 ? patient.doencas.join(', ') : 'Nenhuma';
+                    $('#viewPatientBody').html(`
+                        <div class="text-center mb-3">
+                            <div class="patient-avatar" style="margin: 0 auto 15px auto;">${patient.nome.charAt(0)}</div>
+                            <h4>${patient.nome}</h4>
+                            <span class="badge bg-primary">${patient.processo}</span>
+                            <span class="badge bg-${patient.status === 'Crítico' ? 'danger' : patient.status === 'Prioritário' ? 'warning' : patient.status === 'Em observação' ? 'info' : 'success'}">${emoji} ${patient.status}</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-6"><strong>Idade:</strong> ${patient.idade}</div>
+                            <div class="col-6"><strong>Sexo:</strong> ${patient.sexo}</div>
+                            <div class="col-6"><strong>Enfermaria:</strong> ${patient.enfermaria}</div>
+                            <div class="col-6"><strong>Cama:</strong> ${patient.cama}</div>
+                            <div class="col-6"><strong>Andar:</strong> ${patient.andar}</div>
+                            <div class="col-6"><strong>Alergias:</strong> ${patient.alergias}</div>
+                            <div class="col-6"><strong>Responsável:</strong> ${patient.responsavel || 'Não informado'}</div>
+                            <div class="col-12"><strong>Doenças:</strong> ${doencasStr}</div>
+                        </div>
+                    `);
+                    viewPatientModal.show();
+                }
+            });
+
+            // Editar paciente
+            $(document).on('click', '.edit-patient', function() {
+                const id = $(this).data('id');
+                const patient = patients.find(p => p.id === id);
+                if (patient) {
+                    currentEditPatientId = id;
+                    $('#editPatientId').val(id);
+                    $('#editNome').val(patient.nome);
+                    $('#editProcesso').val(patient.processo);
+                    $('#editIdade').val(patient.idade);
+                    $('#editSexo').val(patient.sexo);
+                    $('#editEnfermaria').val(patient.enfermaria);
+                    $('#editCama').val(patient.cama);
+                    $('#editAndar').val(patient.andar);
+                    $('#editStatus').val(patient.status);
+                    $('#editAlergias').val(patient.alergias);
+                    $('#editDoencas').val(patient.doencas ? patient.doencas.join(', ') : '');
+                    $('#editResponsavel').val(patient.responsavel || '');
+                    editPatientModal.show();
+                }
+            });
+
+            // Botão editar no modal de visualização
+            $('#btnEditarPaciente').click(function() {
+                if (currentViewPatientId) {
+                    viewPatientModal.hide();
+                    const patient = patients.find(p => p.id === currentViewPatientId);
+                    if (patient) {
+                        currentEditPatientId = currentViewPatientId;
+                        $('#editPatientId').val(currentViewPatientId);
+                        $('#editNome').val(patient.nome);
+                        $('#editProcesso').val(patient.processo);
+                        $('#editIdade').val(patient.idade);
+                        $('#editSexo').val(patient.sexo);
+                        $('#editEnfermaria').val(patient.enfermaria);
+                        $('#editCama').val(patient.cama);
+                        $('#editAndar').val(patient.andar);
+                        $('#editStatus').val(patient.status);
+                        $('#editAlergias').val(patient.alergias);
+                        $('#editDoencas').val(patient.doencas ? patient.doencas.join(', ') : '');
+                        $('#editResponsavel').val(patient.responsavel || '');
+                        editPatientModal.show();
+                    }
+                }
+            });
+
+            // Salvar edição
+            $('#btnSalvarEdicao').click(function() {
+                const id = parseInt($('#editPatientId').val());
+                const patient = patients.find(p => p.id === id);
+                if (!patient) {
+                    alert('Paciente não encontrado.');
+                    return;
+                }
+
+                const nome = $('#editNome').val().trim();
+                const processo = $('#editProcesso').val().trim();
+                const idade = $('#editIdade').val().trim();
+                const sexo = $('#editSexo').val().trim();
+                const enfermaria = $('#editEnfermaria').val().trim();
+                const cama = $('#editCama').val().trim();
+                const andar = $('#editAndar').val().trim();
+                const status = $('#editStatus').val().trim();
+                const alergias = $('#editAlergias').val().trim() || 'Nenhuma';
+                const doencasStr = $('#editDoencas').val().trim();
+                const doencas = doencasStr ? doencasStr.split(',').map(d => d.trim()).filter(d => d) : [];
+                const responsavel = $('#editResponsavel').val().trim();
+
+                if (!nome || !processo) {
+                    alert('Nome e processo são obrigatórios.');
+                    return;
+                }
+
+                patient.nome = nome;
+                patient.processo = processo;
+                patient.idade = idade || '-- anos';
+                patient.sexo = sexo || 'Não informado';
+                patient.enfermaria = enfermaria || 'Não informada';
+                patient.cama = cama || 'Não informada';
+                patient.andar = andar || 'Não informado';
+                patient.status = status || 'Estável';
+                patient.alergias = alergias;
+                patient.doencas = doencas;
+                patient.responsavel = responsavel || '';
+
+                editPatientModal.hide();
+                renderPatients();
+                updateStats();
+                updatePatientDatalists();
+                renderTurno();
+                alert('✅ Paciente atualizado com sucesso!');
+            });
+
+            // Eliminar paciente
+            let deletePatientId = null;
+
+            $(document).on('click', '.delete-patient', function() {
+                const id = $(this).data('id');
+                const patient = patients.find(p => p.id === id);
+                if (patient) {
+                    deletePatientId = id;
+                    $('#deletePatientName').text(patient.nome);
+                    confirmDeleteModal.show();
+                }
+            });
+
+            $('#btnEliminarPaciente').click(function() {
+                if (currentViewPatientId) {
+                    deletePatientId = currentViewPatientId;
+                    const patient = patients.find(p => p.id === deletePatientId);
+                    if (patient) {
+                        $('#deletePatientName').text(patient.nome);
+                        viewPatientModal.hide();
+                        confirmDeleteModal.show();
+                    }
+                }
+            });
+
+            $('#btnConfirmDelete').click(function() {
+                if (deletePatientId !== null) {
+                    const index = patients.findIndex(p => p.id === deletePatientId);
+                    if (index !== -1) {
+                        patients.splice(index, 1);
+                        renderPatients();
+                        updateStats();
+                        updatePatientDatalists();
+                        renderTurno();
+                        confirmDeleteModal.hide();
+                        alert('✅ Paciente eliminado com sucesso!');
+                        deletePatientId = null;
+                        currentViewPatientId = null;
+                    }
+                }
+            });
+
+            // ================================================================
+            // 15. GERAR FICHA / RECIBO COM QR CODE
+            // ================================================================
+            function gerarFichaPaciente(patient) {
+                const container = $('#fichaContainer');
+                const now = new Date();
+                const dataEmissao = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR');
+                const qrData = `Paciente: ${patient.nome}\nProcesso: ${patient.processo}\nEnfermaria: ${patient.enfermaria}\nCama: ${patient.cama}\nData: ${dataEmissao}`;
+
+                container.html(`
+                    <div class="header">
+                        <div>
+                            <div class="title">VITALINKA</div>
+                            <div class="subtitle">Ficha de Admissão / Recibo</div>
+                        </div>
+                        <div>
+                            <span style="font-size:0.8rem; color:#555;">Nº: ${patient.processo}</span>
+                        </div>
+                    </div>
+                    <div class="info-row"><span class="label">Paciente:</span><span class="value">${patient.nome}</span></div>
+                    <div class="info-row"><span class="label">Processo:</span><span class="value">${patient.processo}</span></div>
+                    <div class="info-row"><span class="label">Idade:</span><span class="value">${patient.idade}</span></div>
+                    <div class="info-row"><span class="label">Sexo:</span><span class="value">${patient.sexo}</span></div>
+                    <div class="info-row"><span class="label">Enfermaria:</span><span class="value">${patient.enfermaria}</span></div>
+                    <div class="info-row"><span class="label">Cama:</span><span class="value">${patient.cama}</span></div>
+                    <div class="info-row"><span class="label">Andar:</span><span class="value">${patient.andar}</span></div>
+                    <div class="info-row"><span class="label">Estado:</span><span class="value">${getStatusEmoji(patient.status)} ${patient.status}</span></div>
+                    <div class="info-row"><span class="label">Alergias:</span><span class="value">${patient.alergias}</span></div>
+                    <div class="info-row"><span class="label">Doenças:</span><span class="value">${patient.doencas && patient.doencas.length > 0 ? patient.doencas.join(', ') : 'Nenhuma'}</span></div>
+                    <div class="info-row"><span class="label">Responsável:</span><span class="value">${patient.responsavel || 'Não informado'}</span></div>
+                    <div class="info-row"><span class="label">Data de Emissão:</span><span class="value">${dataEmissao}</span></div>
+                    <div class="qr-section">
+                        <div id="qrcode"></div>
+                    </div>
+                    <div class="footer">
+                        <div>Documento comprovativo de admissão - VITALINKA</div>
+                        <div class="assinatura">
+                            <div class="campo">
+                                <div>________________________</div>
+                                <div style="font-size:0.7rem; color:#555;">Assinatura do Paciente</div>
+                            </div>
+                            <div class="campo">
+                                <div>________________________</div>
+                                <div style="font-size:0.7rem; color:#555;">Assinatura do Responsável</div>
+                            </div>
+                            <div class="campo">
+                                <div>________________________</div>
+                                <div style="font-size:0.7rem; color:#555;">Assinatura do Enfermeiro</div>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px; font-size:0.65rem; color:#999;">Este documento é um comprovativo oficial de admissão. O QR Code contém os dados do paciente.</div>
+                    </div>
+                `);
+
+                // Gerar QR Code
+                const qrContainer = document.getElementById('qrcode');
+                if (qrContainer) {
+                    qrContainer.innerHTML = '';
+                    new QRCode(qrContainer, {
+                        text: qrData,
+                        width: 150,
+                        height: 150,
+                        colorDark: '#2b7a4b',
+                        colorLight: '#ffffff',
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                }
+                fichaModal.show();
+            }
+
+            // ================================================================
+            // 16. GERAR COMPROVATIVO (estilo imagem)
+            // ================================================================
+            function gerarComprovativo(patient) {
+                const container = $('#comprovativoContainer');
+                const now = new Date();
+                const dataEmissao = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR');
+                const protocolo = 'C' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + String(patient.id).padStart(4,'0');
+                const qrData = `Protocolo: ${protocolo}\nPaciente: ${patient.nome}\nProcesso: ${patient.processo}\nData: ${dataEmissao}`;
+
+                container.html(`
+                    <div class="header">
+                        <div>
+                            <div class="title">VITALINKA</div>
+                            <div class="subtitle">Comprovativo de Admissão</div>
+                        </div>
+                        <div>
+                            <span style="font-size:0.8rem; color:#555;">Protocolo: ${protocolo}</span>
+                        </div>
+                    </div>
+                    <div class="info-row"><span class="label">Protocolo</span><span class="value">${protocolo}</span></div>
+                    <div class="info-row"><span class="label">Paciente</span><span class="value">${patient.nome}</span></div>
+                    <div class="info-row"><span class="label">ID Paciente</span><span class="value">${patient.processo}</span></div>
+                    <div class="info-row"><span class="label">Enfermaria</span><span class="value">${patient.enfermaria}</span></div>
+                    <div class="info-row"><span class="label">Cama</span><span class="value">${patient.cama}</span></div>
+                    <div class="info-row"><span class="label">Andar</span><span class="value">${patient.andar}</span></div>
+                    <div class="info-row"><span class="label">Estado</span><span class="value">${patient.status}</span></div>
+                    <div class="info-row"><span class="label">Data Emissão</span><span class="value">${dataEmissao}</span></div>
+                    <div class="info-row"><span class="label">Status</span><span class="value"><span class="status-badge agendada">☑ Agendada</span></span></div>
+                    <div class="qr-section">
+                        <div id="qrcodeComprovativo"></div>
+                    </div>
+                    <div class="footer">
+                        <div>Este comprovativo é válido como confirmação de admissão.<br>Apresente este documento no momento da admissão.</div>
+                        <div style="margin-top:10px; font-size:0.7rem; color:#999;">VITALINKA - Sistema de Gestão Hospitalar</div>
+                        <div style="margin-top:10px; font-size:0.65rem; color:#aaa;">
+                            <span>☑ Empresário</span> &nbsp;|&nbsp; <span>☑ Cliente</span> &nbsp;|&nbsp; <span>☑ Fechar</span>
+                        </div>
+                    </div>
+                `);
+
+                // Gerar QR Code
+                const qrContainer = document.getElementById('qrcodeComprovativo');
+                if (qrContainer) {
+                    qrContainer.innerHTML = '';
+                    new QRCode(qrContainer, {
+                        text: qrData,
+                        width: 150,
+                        height: 150,
+                        colorDark: '#2b7a4b',
+                        colorLight: '#ffffff',
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                }
+                comprovativoModal.show();
+            }
+
+            // ================================================================
+            // 17. EVENTOS COMPROVATIVO
+            // ================================================================
+            $('#btnGerarComprovativo').click(function() {
+                if (currentViewPatientId) {
+                    const patient = patients.find(p => p.id === currentViewPatientId);
+                    if (patient) {
+                        gerarComprovativo(patient);
+                    }
+                }
+            });
+
+            $(document).on('click', '.gerar-comprovativo', function() {
+                const id = $(this).data('id');
+                const patient = patients.find(p => p.id === id);
+                if (patient) {
+                    gerarComprovativo(patient);
+                }
+            });
+
+            // ================================================================
+            // 18. IMPRIMIR E PDF DA FICHA
+            // ================================================================
+            $('#btnImprimirFicha').click(function() {
+                const conteudo = document.getElementById('fichaContainer');
+                if (!conteudo) return;
+                const win = window.open('', '_blank');
+                win.document.write(`
+                    <html><head><title>Ficha VITALINKA</title>
+                    <style>
+                        body { font-family: 'Times New Roman', Times, serif; padding: 20px; }
+                        .ficha-container { max-width: 700px; margin: 0 auto; }
+                        .ficha-container .header { border-bottom: 2px solid #2b7a4b; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+                        .ficha-container .header .title { font-size: 1.6rem; font-weight: bold; color: #2b7a4b; }
+                        .ficha-container .header .subtitle { font-size: 0.9rem; color: #555; }
+                        .ficha-container .info-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eee; }
+                        .ficha-container .info-row .label { font-weight: 600; color: #333; }
+                        .ficha-container .info-row .value { color: #222; }
+                        .ficha-container .qr-section { display: flex; justify-content: center; margin: 20px 0 15px 0; }
+                        .ficha-container .qr-section #qrcode { background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 8px; display: inline-block; }
+                        .ficha-container .footer { margin-top: 20px; text-align: center; font-size: 0.8rem; color: #777; border-top: 1px solid #ddd; padding-top: 15px; }
+                        .ficha-container .footer .assinatura { margin-top: 10px; display: flex; justify-content: space-around; }
+                        .ficha-container .footer .assinatura .campo { text-align: center; }
+                        .ficha-container .footer .assinatura .campo .linha { width: 150px; border-top: 1px solid #333; margin: 5px auto 0 auto; }
+                    </style>
+                    </head><body>
+                    ${conteudo.outerHTML}
+                    </body></html>
+                `);
+                win.document.close();
+                win.print();
+            });
+
+            $('#btnDownloadPDF').click(function() {
+                const element = document.getElementById('fichaContainer');
+                if (!element) return;
+                const opt = {
+                    margin:        [10, 10, 10, 10],
+                    filename:      `ficha_${Date.now()}.pdf`,
+                    image:         { type: 'jpeg', quality: 0.98 },
+                    html2canvas:   { scale: 2, letterRendering: true },
+                    jsPDF:         { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+                html2pdf().set(opt).from(element).save();
+            });
+
+            // ================================================================
+            // 19. IMPRIMIR E PDF DO COMPROVATIVO
+            // ================================================================
+            $('#btnImprimirComprovativo').click(function() {
+                const conteudo = document.getElementById('comprovativoContainer');
+                if (!conteudo) return;
+                const win = window.open('', '_blank');
+                win.document.write(`
+                    <html><head><title>Comprovativo VITALINKA</title>
+                    <style>
+                        body { font-family: 'Times New Roman', Times, serif; padding: 20px; }
+                        .comprovativo-container { max-width: 700px; margin: 0 auto; }
+                        .comprovativo-container .header { border-bottom: 2px solid #2b7a4b; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+                        .comprovativo-container .header .title { font-size: 1.6rem; font-weight: bold; color: #2b7a4b; }
+                        .comprovativo-container .header .subtitle { font-size: 0.9rem; color: #555; }
+                        .comprovativo-container .info-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eee; }
+                        .comprovativo-container .info-row .label { font-weight: 600; color: #333; }
+                        .comprovativo-container .info-row .value { color: #222; }
+                        .comprovativo-container .qr-section { display: flex; justify-content: center; margin: 20px 0 15px 0; }
+                        .comprovativo-container .qr-section #qrcodeComprovativo { background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 8px; display: inline-block; }
+                        .comprovativo-container .footer { margin-top: 20px; text-align: center; font-size: 0.8rem; color: #777; border-top: 1px solid #ddd; padding-top: 15px; }
+                        .comprovativo-container .status-badge.agendada { background: #d4edda; color: #155724; padding: 4px 12px; border-radius: 20px; font-weight: bold; }
+                    </style>
+                    </head><body>
+                    ${conteudo.outerHTML}
+                    </body></html>
+                `);
+                win.document.close();
+                win.print();
+            });
+
+            $('#btnDownloadPDFComprovativo').click(function() {
+                const element = document.getElementById('comprovativoContainer');
+                if (!element) return;
+                const opt = {
+                    margin:        [10, 10, 10, 10],
+                    filename:      `comprovativo_${Date.now()}.pdf`,
+                    image:         { type: 'jpeg', quality: 0.98 },
+                    html2canvas:   { scale: 2, letterRendering: true },
+                    jsPDF:         { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+                html2pdf().set(opt).from(element).save();
+            });
+
+            // ================================================================
+            // 20. EVENTOS - ADMISSÃO
+            // ================================================================
+            $('#btnAdicionarDoenca').click(function() {
+                const doenca = $('#admissaoDoencaInput').val().trim();
+                if (doenca && !doencasPaciente.includes(doenca)) {
+                    doencasPaciente.push(doenca);
+                    atualizarListaDoencas();
+                    $('#admissaoDoencaInput').val('');
+                }
+            });
+
+            $('#admissaoDoencaInput').keypress(function(e) {
+                if (e.which === 13) $('#btnAdicionarDoenca').click();
+            });
+
+            $('#btnAddDoencaSelect').click(function() {
+                const doenca = $('#admissaoDoencaSelect').val();
+                if (doenca && !doencasPaciente.includes(doenca)) {
+                    doencasPaciente.push(doenca);
+                    atualizarListaDoencas();
+                    $('#admissaoDoencaSelect').val('');
+                }
+            });
+
+            function atualizarListaDoencas() {
+                const container = $('#listaDoencas');
+                container.empty();
+                doencasPaciente.forEach((d, index) => {
+                    container.append(`
+                        <span class="badge bg-primary d-inline-flex align-items-center gap-1 p-2">
+                            ${d}
+                            <span class="badge bg-danger rounded-circle" style="cursor:pointer; font-size:0.6rem;" data-index="${index}">×</span>
+                        </span>
+                    `);
+                });
+                container.find('.badge .badge-danger').click(function() {
+                    const idx = $(this).data('index');
+                    doencasPaciente.splice(idx, 1);
+                    atualizarListaDoencas();
+                });
+            }
+
+            $('#btnAdmitirPaciente').click(function() {
+                const nome = $('#admissaoNome').val().trim();
+                const processo = $('#admissaoProcesso').val().trim();
+                const enfermaria = $('#admissaoEnfermariaInput').val().trim() || 'Não informada';
+                const cama = $('#admissaoCama').val().trim() || 'Não informada';
+                const andar = $('#admissaoAndarInput').val().trim() || 'Não informado';
+                const alergias = $('#admissaoAlergias').val().trim() || 'Nenhuma';
+                const doencas = [...doencasPaciente];
+                const responsavel = $('#admissaoResponsavel').val().trim() || '';
+
+                if (!nome || !processo) {
+                    alert('Preencha o nome e o processo do paciente.');
+                    return;
+                }
+
+                const newPatient = {
+                    id: patients.length + 1,
+                    nome,
+                    processo,
+                    idade: '-- anos',
+                    sexo: 'Não informado',
+                    enfermaria,
+                    cama,
+                    andar,
+                    status: 'Estável',
+                    alergias,
+                    doencas,
+                    responsavel
+                };
+
+                patients.push(newPatient);
+                renderPatients();
+                updateStats();
+                updatePatientDatalists();
+                renderTurno();
+
+                $('#admissaoChecklist .step-status').removeClass('pending').addClass('done').text('✓ Concluído');
+
+                $('#admissaoNome, #admissaoProcesso, #admissaoAlergias, #admissaoCama, #admissaoEnfermariaInput, #admissaoAndarInput, #admissaoResponsavel').val('');
+                doencasPaciente = [];
+                atualizarListaDoencas();
+                $('#admissaoDoencaInput').val('');
+                $('#admissaoDoencaSelect').val('');
+                alert(`✅ Paciente ${nome} admitido com sucesso!`);
+            });
+
+            // ================================================================
+            // 21. EVENTOS - MEDICAÇÃO
+            // ================================================================
+            $('#btnRegistarMedicacao').click(function() {
+                const paciente = $('#medPaciente').val().trim();
+                const medicamento = $('#medNome').val().trim();
+                const dose = $('#medDose').val().trim();
+                const via = $('#medVia').val().trim() || 'Oral';
+                const horario = $('#medHorario').val();
+
+                if (!paciente || !medicamento || !dose || !horario) {
+                    alert('Preencha todos os campos.');
+                    return;
+                }
+
+                const existing = medicacoes.find(m => m.paciente === paciente && m.medicamento === medicamento && m.status === 'pendente');
+                if (existing) {
+                    existing.status = 'administrada';
+                    historicoMedicacoes.push({
+                        paciente,
+                        medicamento,
+                        dose,
+                        via,
+                        horario,
+                        status: 'administrada',
+                        data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                    });
+                } else {
+                    historicoMedicacoes.push({
+                        paciente,
+                        medicamento,
+                        dose,
+                        via,
+                        horario,
+                        status: 'administrada',
+                        data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                    });
+                }
+
+                renderMedicacoes();
+                updateStats();
+                renderTurno();
+
+                $('#medNome, #medDose, #medHorario, #medVia').val('');
+                alert(`✅ Medicação administrada com sucesso!`);
+            });
+
+            $('#btnMedRecusada').click(function() {
+                const paciente = $('#medPaciente').val().trim();
+                const medicamento = $('#medNome').val().trim();
+
+                if (!paciente || !medicamento) {
+                    alert('Selecione o paciente e o medicamento.');
+                    return;
+                }
+
+                const existing = medicacoes.find(m => m.paciente === paciente && m.medicamento === medicamento && m.status === 'pendente');
+                if (existing) {
+                    existing.status = 'recusada';
+                    historicoMedicacoes.push({
+                        paciente,
+                        medicamento: existing.medicamento,
+                        dose: existing.dose,
+                        via: existing.via,
+                        horario: existing.horario,
+                        status: 'recusada',
+                        data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                    });
+                    renderMedicacoes();
+                    updateStats();
+                    alert(`⚠️ Medicação recusada registada.`);
+                } else {
+                    alert('Medicação não encontrada.');
+                }
+            });
+
+            // ================================================================
+            // 22. EVENTOS - SINAIS VITAIS
+            // ================================================================
+            $('#btnRegistarSinais').click(function() {
+                const paciente = $('#sinaisPaciente').val().trim();
+                const temp = $('#sinalTemp').val();
+                const pa = $('#sinalPA').val();
+                const fc = $('#sinalFC').val();
+                const fr = $('#sinalFR').val();
+                const sat = $('#sinalSat').val();
+                const glicemia = $('#sinalGlicemia').val();
+                const dor = $('#sinalDor').val();
+
+                if (!paciente) {
+                    alert('Selecione um paciente.');
+                    return;
+                }
+
+                const sinais = {
+                    paciente,
+                    temp: temp || '--',
+                    pa: pa || '--',
+                    fc: fc || '--',
+                    fr: fr || '--',
+                    sat: sat || '--',
+                    glicemia: glicemia || '--',
+                    dor: dor || '0',
+                    data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                };
+
+                sinaisVitais.push(sinais);
+                renderSinaisVitais();
+
+                const alerts = [];
+                if (temp && parseFloat(temp) > 38) alerts.push(`⚠️ Temperatura elevada (${temp}°C)`);
+                if (pa) {
+                    const parts = pa.split('/');
+                    if (parts.length === 2 && (parseInt(parts[0]) > 140 || parseInt(parts[1]) > 90)) {
+                        alerts.push(`⚠️ Pressão arterial elevada (${pa})`);
+                    }
+                }
+                if (fc && parseInt(fc) > 100) alerts.push(`⚠️ Frequência cardíaca elevada (${fc} bpm)`);
+                if (sat && parseInt(sat) < 90) alerts.push(`⚠️ Saturação baixa (${sat}%)`);
+
+                const alertContainer = $('#alertasSinais');
+                if (alerts.length > 0) {
+                    alertContainer.html(alerts.map(a => `<div class="text-warning">${a}</div>`).join(''));
+                } else {
+                    alertContainer.html('<div class="text-success">✅ Todos os sinais dentro dos parâmetros normais</div>');
+                }
+
+                $('#sinalTemp, #sinalPA, #sinalFC, #sinalFR, #sinalSat, #sinalGlicemia, #sinalDor').val('');
+                alert(`✅ Sinais vitais registados para ${paciente}`);
+            });
+
+            // ================================================================
+            // 23. EVENTOS - PROCEDIMENTOS
+            // ================================================================
+            $('#btnRegistarProcedimento').click(function() {
+                const paciente = $('#procPaciente').val().trim();
+                const tipo = $('#procTipo').val().trim();
+                const obs = $('#procObs').val();
+
+                if (!paciente || !tipo) {
+                    alert('Selecione o paciente e o tipo de procedimento.');
+                    return;
+                }
+
+                procedimentos.push({
+                    paciente,
+                    tipo,
+                    obs: obs || 'Sem observações',
+                    data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                });
+
+                renderProcedimentos();
+                $('#procObs').val('');
+                alert(`✅ Procedimento registado com sucesso!`);
+            });
+
+            // ================================================================
+            // 24. EVENTOS - EVOLUÇÃO
+            // ================================================================
+            $('#btnSalvarEvolucao').click(function() {
+                const paciente = $('#evolPaciente').val().trim();
+                const estado = $('#evolEstado').val().trim() || 'Estável';
+                const texto = $('#evolTexto').val();
+                const intercorrencias = $('#evolIntercorrencias').val();
+
+                if (!paciente || !texto) {
+                    alert('Preencha o paciente e a evolução.');
+                    return;
+                }
+
+                evolucoes.push({
+                    paciente,
+                    estado,
+                    texto,
+                    intercorrencias: intercorrencias || 'Nenhuma',
+                    data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                });
+
+                const patient = patients.find(p => p.nome === paciente);
+                if (patient) {
+                    patient.status = estado;
+                    renderPatients();
+                    updateStats();
+                }
+
+                renderEvolucoes();
+                renderTurno();
+                $('#evolTexto, #evolIntercorrencias').val('');
+                alert(`✅ Evolução registada com sucesso!`);
+            });
+
+            // ================================================================
+            // 25. EVENTOS - SOLICITAÇÕES
+            // ================================================================
+            $('#btnEnviarSolicitacao').click(function() {
+                const tipo = $('#solTipo').val().trim() || 'Geral';
+                const prioridade = $('#solPrioridade').val().trim() || 'Normal';
+                const descricao = $('#solDescricao').val();
+                const paciente = $('#solPaciente').val().trim();
+
+                if (!descricao) {
+                    alert('Descreva a solicitação.');
+                    return;
+                }
+
+                solicitacoes.push({
+                    tipo,
+                    prioridade,
+                    descricao,
+                    paciente: paciente || 'Nenhum',
+                    data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                });
+
+                renderSolicitacoes();
+                $('#solDescricao').val('');
+                alert(`✅ Solicitação enviada com sucesso!`);
+            });
+
+            // ================================================================
+            // 26. EVENTOS - TURNO
+            // ================================================================
+            $('#btnIniciarTurno').click(function() {
+                if (turnoAtivo) {
+                    alert('Turno já está em andamento.');
+                    return;
+                }
+                turnoAtivo = true;
+                turnoInicio = new Date();
+                $('#turnoInicio').text(turnoInicio.toLocaleTimeString('pt-BR'));
+                $('#btnIniciarTurno').prop('disabled', true);
+                $('#btnEncerrarTurno').prop('disabled', false);
+                renderTurno();
+                alert('✅ Turno iniciado com sucesso!');
+            });
+
+            $('#btnEncerrarTurno').click(function() {
+                if (!turnoAtivo) {
+                    alert('Nenhum turno ativo.');
+                    return;
+                }
+                const passagem = $('#turnoPassagem').val();
+                if (!passagem) {
+                    if (!confirm('A passagem de turno está vazia. Deseja continuar?')) return;
+                }
+                turnoAtivo = false;
+                $('#btnIniciarTurno').prop('disabled', false);
+                $('#btnEncerrarTurno').prop('disabled', true);
+                $('#turnoPassagem').val('');
+                renderTurno();
+                alert(`✅ Turno encerrado com sucesso!\n\n📋 Passagem de turno:\n${passagem || 'Nenhuma informação registada'}`);
+            });
+
+            // ================================================================
+            // 27. EVENTOS - ALTA
+            // ================================================================
+            $('#btnPrepararAlta').click(function() {
+                const paciente = $('#altaPaciente').val().trim();
+                const data = $('#altaData').val();
+                const medicacao = $('#altaMedicacao').val();
+                const orientacoes = $('#altaOrientacoes').val();
+
+                if (!paciente) {
+                    alert('Selecione um paciente.');
+                    return;
+                }
+
+                $('#altaChecklist .step-status').each(function() {
+                    $(this).removeClass('pending').addClass('done').text('✓ Concluído');
+                });
+
+                alert(`✅ Preparação para alta de ${paciente} concluída!\n\n📅 Data: ${data || 'Não definida'}\n💊 Medicação: ${medicacao || 'N/A'}\n📝 Orientações: ${orientacoes || 'N/A'}`);
+            });
+
+            $('#btnRegistarAlta').click(function() {
+                const paciente = $('#altaPaciente').val().trim();
+                if (!paciente) {
+                    alert('Selecione um paciente.');
+                    return;
+                }
+
+                const patient = patients.find(p => p.nome === paciente);
+                if (patient) {
+                    const index = patients.indexOf(patient);
+                    patients.splice(index, 1);
+                    renderPatients();
+                    updateStats();
+                    updatePatientDatalists();
+                    renderTurno();
+                    $('#altaPaciente').val('');
+                    $('#altaData, #altaMedicacao, #altaOrientacoes').val('');
+                    alert(`✅ Alta de ${paciente} registada com sucesso!`);
+                }
+            });
+
+            // ================================================================
+            // 28. EVENTOS - RELATÓRIOS
+            // ================================================================
+            $('.report-card').click(function() {
+                const type = $(this).attr('id').replace('relatorio', '').toLowerCase();
+                const titles = {
+                    pacientes: 'Relatório de Pacientes Assistidos',
+                    procedimentos: 'Relatório de Procedimentos',
+                    medicacoes: 'Relatório de Medicações'
+                };
+                alert(`📊 ${titles[type] || 'Relatório'}\n\nTotal de pacientes: ${patients.length}\nTotal de procedimentos: ${procedimentos.length}\nTotal de medicações: ${historicoMedicacoes.length}`);
+            });
+
+            // ================================================================
+            // 29. TIMER DE SESSÃO
+            // ================================================================
+            let totalSeconds = 900;
+            let timerInterval = null;
+            let sessionModalShown = false;
+            let sessionModal = new bootstrap.Modal(document.getElementById('sessionModal'), { backdrop: 'static', keyboard: false });
+
+            const timerProgress = document.getElementById('timerProgress');
+            const timerText = document.getElementById('timerText');
+            const timerContainer = document.getElementById('timerContainer');
+            const circumference = 2 * Math.PI * 27;
+
+            function updateTimer() {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                timerText.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+
+                const progress = totalSeconds / 900;
+                const offset = circumference * (1 - progress);
+                timerProgress.style.strokeDashoffset = offset;
+
+                timerContainer.classList.remove('timer-warning', 'timer-danger');
+                if (totalSeconds <= 120) timerContainer.classList.add('timer-danger');
+                else if (totalSeconds <= 300) timerContainer.classList.add('timer-warning');
+
+                if (totalSeconds === 120 && !sessionModalShown) {
+                    sessionModalShown = true;
+                    $('#sessionCountdown').text('2:00');
+                    sessionModal.show();
+                    const modalInterval = setInterval(() => {
+                        const remaining = totalSeconds;
+                        const mins = Math.floor(remaining / 60);
+                        const secs = remaining % 60;
+                        $('#sessionCountdown').text(`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`);
+                        if (remaining <= 0) clearInterval(modalInterval);
+                    }, 1000);
+                }
+
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    window.location.href = "408.html";
+                }
+            }
+
+            function startTimer() {
+                if (timerInterval) clearInterval(timerInterval);
+                totalSeconds = 900;
+                sessionModalShown = false;
+                timerProgress.style.strokeDasharray = circumference;
+                timerProgress.style.strokeDashoffset = circumference;
+                updateTimer();
+                timerInterval = setInterval(() => {
+                    totalSeconds--;
+                    updateTimer();
+                }, 1000);
+            }
+
+            $('#sessionContinueBtn').click(function() {
+                sessionModal.hide();
+                sessionModalShown = false;
+                startTimer();
+            });
+
+            $('#sessionEndBtn').click(function() {
+                sessionModal.hide();
+                clearInterval(timerInterval);
+                window.location.href = "index.html";
+            });
+
+            startTimer();
+
+            // ================================================================
+            // 30. CHATBOT VITA
+            // ================================================================
+            const chatbotToggle = $('#chatbotToggle');
+            const chatbotWindow = $('#chatbotWindow');
+            const chatbotClose = $('#chatbotClose');
+            const chatbotInput = $('#chatbotInput');
+            const chatbotSend = $('#chatbotSend');
+            const chatbotBody = $('#chatbotBody');
+
+            chatbotToggle.click(function() {
+                chatbotWindow.toggleClass('open');
+                $('.badge-notification').fadeOut();
+            });
+
+            chatbotClose.click(function() {
+                chatbotWindow.removeClass('open');
+            });
+
+            function addMessage(text, isUser = false) {
+                const msg = $('<div class="message ' + (isUser ? 'user' : 'bot') + '">' + text + '</div>');
+                chatbotBody.append(msg);
+                chatbotBody.scrollTop(chatbotBody[0].scrollHeight);
+            }
+
+            function processChatbotQuery(query) {
+                const q = query.toLowerCase();
+                let response = '';
+
+                if (q.includes('paciente') || q.includes('internado')) {
+                    const total = patients.length;
+                    const criticos = patients.filter(p => p.status === 'Crítico').length;
+                    response = `🩺 Atualmente temos <strong>${total} pacientes</strong> sob cuidados. Destes, <strong>${criticos} estão em estado crítico</strong>.`;
+                } else if (q.includes('medicamento') || q.includes('medicação') || q.includes('farmácia')) {
+                    const pendentes = medicacoes.filter(m => m.status === 'pendente').length;
+                    response = `💊 Existem <strong>${pendentes} medicações pendentes</strong> para administrar.`;
+                } else if (q.includes('sinais') || q.includes('vital')) {
+                    const ultimos = sinaisVitais.slice(-3);
+                    if (ultimos.length === 0) {
+                        response = '📊 Nenhum sinal vital registado ainda.';
+                    } else {
+                        response = `📊 Últimos sinais vitais registados:\n${ultimos.map(s => `${s.paciente}: ${s.temp}°C, ${s.pa} mmHg`).join('\n')}`;
+                    }
+                } else if (q.includes('procedimento') || q.includes('curativo')) {
+                    const total = procedimentos.length;
+                    response = `🤲 Foram realizados <strong>${total} procedimentos</strong> até agora.`;
+                } else if (q.includes('turno') || q.includes('passagem')) {
+                    if (turnoAtivo) {
+                        response = `🕐 Turno em andamento desde ${turnoInicio ? turnoInicio.toLocaleTimeString('pt-BR') : 'desconhecido'}.`;
+                    } else {
+                        response = '🕐 Nenhum turno ativo no momento.';
+                    }
+                } else if (q.includes('alta')) {
+                    response = '🏥 Os pacientes recebem alta após a confirmação médica e conclusão do checklist.';
+                } else if (q.includes('ajuda') || q.includes('ajudar')) {
+                    response = '💡 Posso ajudar com informações sobre: pacientes, medicação, sinais vitais, procedimentos, turno, altas e relatórios.';
+                } else {
+                    response = '🤔 Pode reformular a pergunta? Sou a <strong>VITA</strong> e posso ajudar com pacientes, medicação, sinais vitais, procedimentos, turno, altas e relatórios.';
+                }
+
+                addMessage(response, false);
+            }
+
+            chatbotSend.click(function() {
+                const query = chatbotInput.val().trim();
+                if (!query) return;
+                addMessage(query, true);
+                chatbotInput.val('');
+                setTimeout(() => processChatbotQuery(query), 500);
+            });
+
+            chatbotInput.keypress(function(e) {
+                if (e.which === 13) chatbotSend.click();
+            });
+
+            setTimeout(() => {
+                addMessage('💡 Estou aqui para ajudar! Pergunte sobre pacientes, medicação, sinais vitais, procedimentos, turno, altas e relatórios.', false);
+            }, 2000);
+
+            // ================================================================
+            // 31. INICIALIZAÇÃO
+            // ================================================================
+            renderPatients();
+            renderMedicacoes();
+            renderSinaisVitais();
+            renderProcedimentos();
+            renderEvolucoes();
+            renderSolicitacoes();
+            renderTurno();
+
+            console.log('✅ VITALINKA - Área do Enfermeiro carregada com sucesso!');
+            console.log('🕐 Timer de sessão: 15 minutos');
+            console.log('🤖 Assistente VITA ativo');
+            console.log('🎨 Tema: ' + currentTheme);
+            console.log('👩‍⚕️ Perfil do Enfermeiro disponível');
+            console.log('📋 Todas as funcionalidades de enfermagem implementadas!');
+            console.log('  - ✅ Dashboard com indicadores');
+            console.log('  - ✅ Lista de pacientes com filtros');
+            console.log('  - ✅ Admissão com todos os campos INPUT');
+            console.log('  - ✅ Doenças com input e select');
+            console.log('  - ✅ Administração de medicação');
+            console.log('  - ✅ Registro de sinais vitais com alertas');
+            console.log('  - ✅ Procedimentos de enfermagem');
+            console.log('  - ✅ Evolução clínica');
+            console.log('  - ✅ Solicitações internas');
+            console.log('  - ✅ Gestão de turno');
+            console.log('  - ✅ Preparação para alta');
+            console.log('  - ✅ Relatórios');
+            console.log('  - ✅ Chatbot VITA com comandos');
+            console.log('  - ✅ Modais para visualizar, editar e eliminar pacientes');
+            console.log('  - ✅ Geração de Ficha/Recibo com QR Code');
+            console.log('  - ✅ Geração de Comprovativo estilo imagem');
+            console.log('  - ✅ Impressão e Download PDF da Ficha e Comprovativo');
+            console.log('  - ✅ Campo Responsável no cadastro e edição');
+        });
+    </script>
+</body>
+</html>

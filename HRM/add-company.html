@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VITALINKA | O futuro da gestão hospitalar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ===== ESTILO GERAL ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        body {
+            background-image: url('images/group.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 0;
+            transition: all 0.3s ease;
+        }
+
+        /* ===== TEMA CLARO ===== */
+        body.light-theme::before {
+            background: rgba(255, 255, 255, 0.92);
+        }
+
+        body.light-theme .page-title,
+        body.light-theme .page-title .badge,
+        body.light-theme .glass-card h5,
+        body.light-theme .glass-card p,
+        body.light-theme .glass-card .text-muted,
+        body.light-theme .banner-message,
+        body.light-theme .nav-tabs .nav-link,
+        body.light-theme .modal-content,
+        body.light-theme .modal .form-label,
+        body.light-theme .feature-card h6,
+        body.light-theme .feature-card p,
+        body.light-theme .benefit-item span,
+        body.light-theme .stat-number,
+        body.light-theme .stat-label,
+        body.light-theme .footer-link,
+        body.light-theme .newsletter-text,
+        body.light-theme .assistant-card h5,
+        body.light-theme .assistant-card p,
+        body.light-theme .assistant-card .chat-input,
+        body.light-theme .assistant-card .chat-input::placeholder,
+        body.light-theme .banner-content h1,
+        body.light-theme .banner-content .banner-message,
+        body.light-theme .timer-container .timer-item .timer-number,
+        body.light-theme .timer-container .timer-item .timer-label,
+        body.light-theme .newsletter-card h4,
+        body.light-theme .newsletter-card .newsletter-text,
+        body.light-theme #currentDateTime,
+        body.light-theme .dropdown-menu,
+        body.light-theme .dropdown-item,
+        body.light-theme .modal .modal-title,
+        body.light-theme .modal p,
+        body.light-theme .form-check-label,
+        body.light-theme .form-check-label strong {
+            color: #1a1a2e !important;
+        }
+
+        body.light-theme .page-title .badge.bg-success {
+            background: rgba(43, 122, 75, 0.85) !important;
+            color: #fff !important;
+        }
+
+        body.light-theme .nav-tabs .nav-link {
+            color: #1a1a2e !important;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        body.light-theme .nav-tabs .nav-link.active {
+            background: rgba(255, 255, 255, 0.8);
+            color: #0d6efd !important;
+        }
+
+        body.light-theme .tab-content,
+        body.light-theme .glass-card,
+        body.light-theme .banner-content,
+        body.light-theme .feature-card,
+        body.light-theme .benefit-card,
+        body.light-theme .assistant-card,
+        body.light-theme .newsletter-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .banner-content h1 .highlight {
+            color: #2b7a4b;
+        }
+
+        body.light-theme .feature-card .feature-icon {
+            color: #2b7a4b;
+        }
+
+        body.light-theme .benefit-card .benefit-body .benefit-icon {
+            color: #2b7a4b;
+        }
+
+        body.light-theme .theme-toggle-btn {
+            background: rgba(0, 0, 0, 0.08);
+            border-color: rgba(0, 0, 0, 0.15);
+            color: #1a1a2e;
+        }
+
+        body.light-theme .theme-toggle-btn:hover {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        body.light-theme #currentDateTime {
+            background: rgba(255, 255, 255, 0.8);
+            color: #1a1a2e;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .dropdown-menu {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(15px);
+        }
+
+        body.light-theme .dropdown-item {
+            color: #1a1a2e !important;
+        }
+
+        body.light-theme .dropdown-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a2e;
+        }
+
+        body.light-theme .modal .form-control {
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a2e;
+            border-color: rgba(0, 0, 0, 0.15);
+        }
+
+        body.light-theme .modal .form-control::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        body.light-theme .btn-outline-primary.dropdown-toggle {
+            color: #1a1a2e !important;
+            border-color: rgba(0, 0, 0, 0.2) !important;
+        }
+
+        body.light-theme .btn-outline-primary.dropdown-toggle:hover {
+            background: rgba(43, 122, 75, 0.1) !important;
+        }
+
+        body.light-theme .assistant-card {
+            background: linear-gradient(135deg, rgba(43, 122, 75, 0.85) 0%, rgba(76, 159, 112, 0.85) 100%);
+        }
+
+        body.light-theme .assistant-card h5,
+        body.light-theme .assistant-card p,
+        body.light-theme .assistant-card .chat-input,
+        body.light-theme .assistant-card .chat-input::placeholder,
+        body.light-theme #assistantMessage {
+            color: #fff !important;
+        }
+
+        body.light-theme .assistant-card .chat-input {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #fff !important;
+        }
+
+        body.light-theme .assistant-card .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+
+        body.light-theme .timer-container .timer-item {
+            background: rgba(0, 0, 0, 0.06);
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-theme .timer-container .timer-item .timer-number {
+            color: #2b7a4b !important;
+        }
+
+        body.light-theme .timer-container .timer-item .timer-label {
+            color: rgba(0, 0, 0, 0.5) !important;
+        }
+
+        body.light-theme .newsletter-card .input-group .form-control {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(0, 0, 0, 0.15);
+            color: #1a1a2e;
+        }
+
+        body.light-theme .newsletter-card .input-group .form-control::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        body.light-theme .newsletter-card .input-group .btn {
+            background: linear-gradient(135deg, #2b7a4b, #4c9f70);
+            color: #fff;
+        }
+
+        body.light-theme .form-control {
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a2e;
+            border-color: rgba(0, 0, 0, 0.15);
+        }
+
+        body.light-theme .form-control::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        body.light-theme .form-control:focus {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a2e;
+        }
+
+        body.light-theme .form-label {
+            color: rgba(0, 0, 0, 0.7) !important;
+        }
+
+        body.light-theme .btn-submit {
+            background: linear-gradient(135deg, #2b7a4b, #4c9f70);
+            color: #fff;
+        }
+
+        body.light-theme .btn-submit:hover {
+            box-shadow: 0 8px 30px rgba(43, 122, 75, 0.3);
+        }
+
+        body.light-theme .stat-item .stat-number {
+            color: #2b7a4b;
+        }
+
+        body.light-theme .stat-item .stat-label {
+            color: rgba(0, 0, 0, 0.5) !important;
+        }
+
+        body.light-theme .footer-link {
+            color: rgba(0, 0, 0, 0.4) !important;
+        }
+
+        body.light-theme .footer-link:hover {
+            color: #2b7a4b !important;
+        }
+
+        body.light-theme .success-message h3 {
+            color: #1a1a2e !important;
+        }
+
+        body.light-theme .success-message p {
+            color: rgba(0, 0, 0, 0.6) !important;
+        }
+
+        body.light-theme .modal .btn-close {
+            filter: invert(0);
+        }
+
+        body.light-theme .newsletter-success {
+            color: #2b7a4b;
+        }
+
+        body.light-theme .banner-content .btn-outline-light {
+            border-color: rgba(0, 0, 0, 0.2);
+            color: #1a1a2e;
+        }
+
+        body.light-theme .banner-content .btn-outline-light:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: #1a1a2e;
+        }
+
+        body.light-theme .banner-content .btn-success {
+            background: rgba(43, 122, 75, 0.85);
+            color: #fff;
+        }
+
+        body.light-theme .banner-content .btn-success:hover {
+            background: #2b7a4b;
+        }
+
+        body.light-theme .feature-card:hover {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        body.light-theme .benefit-card:hover {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        body.light-theme .glass-card:hover {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        body.light-theme .glass-card hr {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme #features h3,
+        body.light-theme .row h3 {
+            color: #1a1a2e !important;
+        }
+
+        .container-fluid {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== GLASSMORPHISM ===== */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .glass-card h5 {
+            color: #fff;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .glass-card p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* ===== BANNER ===== */
+        .banner-content {
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .banner-content h1 {
+            color: #fff;
+            font-size: 2.8rem;
+            font-weight: 800;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .banner-content h1 .highlight {
+            color: #4c9f70;
+        }
+
+        .banner-content .banner-message {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .banner-content .btn-group .btn {
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 5px;
+            transition: all 0.3s ease;
+            padding: 10px 24px;
+            font-weight: 600;
+        }
+
+        .banner-content .btn-group .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .banner-content .btn-success {
+            background: rgba(43, 122, 75, 0.8);
+        }
+
+        .banner-content .btn-success:hover {
+            background: #2b7a4b;
+        }
+
+        .banner-content .btn-outline-light {
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+        }
+
+        .banner-content .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== PAGE TITLE ===== */
+        .page-title {
+            color: #fff;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .page-title .badge {
+            background: rgba(43, 122, 75, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: rotate(30deg);
+        }
+
+        /* ===== FEATURE CARDS ===== */
+        .feature-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            transition: all 0.4s ease;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .feature-card .feature-icon {
+            font-size: 2.8rem;
+            color: #4c9f70;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .feature-card h6 {
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+            margin-bottom: 0;
+        }
+
+        /* ===== BENEFIT CARDS COM IMAGEM ===== */
+        .benefit-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .benefit-card .benefit-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s ease;
+        }
+
+        .benefit-card:hover .benefit-image {
+            transform: scale(1.02);
+        }
+
+        .benefit-card .benefit-body {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .benefit-card .benefit-body .benefit-icon {
+            font-size: 1.5rem;
+            color: #4c9f70;
+            flex-shrink: 0;
+        }
+
+        .benefit-card .benefit-body .benefit-text {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.9rem;
+        }
+
+        /* ===== NEWSLETTER CARD ===== */
+        .newsletter-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            text-align: center;
+            transition: all 0.3s ease; /* Imagem de fundo mantida original */
+            background-image: url('images/newslletter.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color: #1a2a32;
+        }
+
+        .newsletter-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .newsletter-card .newsletter-icon {
+            font-size: 3rem;
+            color: #4c9f70;
+            margin-bottom: 12px;
+        }
+
+        .newsletter-card h4 {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .newsletter-card .newsletter-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            max-width: 500px;
+            margin: 0 auto 20px;
+        }
+
+        .newsletter-card .input-group {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .newsletter-card .input-group .form-control {
+            border-radius: 30px 0 0 30px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        .newsletter-card .input-group .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .newsletter-card .input-group .btn {
+            border-radius: 0 30px 30px 0;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #2b7a4b, #4c9f70);
+            color: #fff;
+            border: none;
+            font-weight: 600;
+        }
+
+        .newsletter-card .input-group .btn:hover {
+            opacity: 0.85;
+        }
+
+        /* ===== STATS ===== */
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #4c9f70;
+        }
+
+        .stat-item .stat-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== FORM ===== */
+        .form-control {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #fff;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(76, 159, 112, 0.4);
+            box-shadow: 0 0 0 4px rgba(76, 159, 112, 0.06);
+            color: #fff;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .form-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #2b7a4b, #4c9f70);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(76, 159, 112, 0.3);
+        }
+
+        /* ===== ASSISTANT ===== */
+        .assistant-card {
+            background: rgba(43, 122, 75, 0.20);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .assistant-card h5 {
+            color: #fff;
+        }
+
+        .assistant-card p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .assistant-card .chat-input {
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 10px 16px;
+            color: #fff;
+            width: 75%;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .assistant-card .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .assistant-card .chat-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(76, 159, 112, 0.4);
+        }
+
+        #assistantMessage {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* ===== TIMER ===== */
+        .timer-container {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 16px 0;
+        }
+
+        .timer-container .timer-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            min-width: 70px;
+        }
+
+        .timer-container .timer-item .timer-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #4c9f70;
+            display: block;
+        }
+
+        .timer-container .timer-item .timer-label {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== HEADER ACTIONS ===== */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        #currentDateTime {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+        }
+
+        /* ===== DROPDOWN ===== */
+        .dropdown-menu {
+            background: rgba(0, 0, 0, 0.85) !important;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+        }
+
+        .dropdown-item {
+            color: #fff !important;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(43, 122, 75, 0.3) !important;
+            color: #fff !important;
+        }
+
+        .btn-outline-primary.dropdown-toggle {
+            color: #fff !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .btn-outline-primary.dropdown-toggle:hover {
+            background: rgba(43, 122, 75, 0.2) !important;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer-link {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: #4c9f70;
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .banner-content h1 {
+                font-size: 1.8rem;
+            }
+            .banner-content {
+                padding: 24px;
+            }
+            .header-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .page-title {
+                font-size: 1.2rem;
+            }
+            .timer-container .timer-item {
+                min-width: 55px;
+                padding: 6px 12px;
+            }
+            .timer-container .timer-item .timer-number {
+                font-size: 1.5rem;
+            }
+            .stat-item .stat-number {
+                font-size: 1.6rem;
+            }
+            .feature-card .feature-icon {
+                font-size: 2rem;
+            }
+            .benefit-card .benefit-image {
+                height: 120px;
+            }
+            .newsletter-card {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .banner-content h1 {
+                font-size: 1.4rem;
+            }
+            .banner-content .banner-message {
+                font-size: 0.95rem;
+            }
+            .timer-container {
+                gap: 8px;
+            }
+            .timer-container .timer-item {
+                min-width: 45px;
+                padding: 4px 8px;
+            }
+            .timer-container .timer-item .timer-number {
+                font-size: 1.2rem;
+            }
+            .timer-container .timer-item .timer-label {
+                font-size: 0.5rem;
+            }
+            .feature-card {
+                padding: 14px;
+            }
+            .benefit-card .benefit-image {
+                height: 100px;
+            }
+        }
+
+        /* ===== ANIMAÇÕES ===== */
+        .fade-in {
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-point {
+            width: 120px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        /* ===== SUCCESS MESSAGE ===== */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .success-message .success-icon {
+            font-size: 3.5rem;
+            color: #4c9f70;
+            margin-bottom: 16px;
+        }
+
+        .success-message h3 {
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .success-message p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-control.error {
+            border-color: rgba(220, 53, 69, 0.5);
+            box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.06);
+        }
+
+        /* ===== NEWSLETTER SUCCESS ===== */
+        .newsletter-success {
+            display: none;
+            color: #4c9f70;
+            margin-top: 12px;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-content {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .modal .modal-title {
+            color: #fff;
+        }
+
+        .modal .btn-close {
+            filter: invert(1);
+        }
+
+        .modal .form-control {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        .modal .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .modal .form-control:focus {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        .modal .form-label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .modal .form-check-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .modal .form-check-label strong {
+            color: #fff;
+        }
+
+        .modal p {
+            color: rgba(255, 255, 255, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid py-4">
+
+        <!-- ===== HEADER ===== -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap header-actions">
+                    <h2 class="page-title">
+                        <a href="index.html">
+                            <img src="images/vitalinka-rbg.png" class="logo-point" alt="VITALINKA">
+                        </a>
+                        <span class="badge bg-success ms-2" data-i18n="coming-soon">EM BREVE</span>
+                    </h2>
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <!-- Theme Toggle -->
+                        <button class="theme-toggle-btn" id="themeToggle" title="Alternar Tema">
+                            <i class="bi bi-moon-stars" id="themeIcon"></i>
+                        </button>
+
+                        <!-- Timer -->
+                        <div class="timer-container" id="timerContainer" style="gap:8px; margin:0;">
+                            <div class="timer-item" style="min-width:50px; padding:4px 10px; background:rgba(255,255,255,0.06);">
+                                <span class="timer-number" id="timerDays" style="font-size:1.2rem;">00</span>
+                                <span class="timer-label" style="font-size:0.5rem;" data-i18n="days">Dias</span>
+                            </div>
+                            <div class="timer-item" style="min-width:50px; padding:4px 10px; background:rgba(255,255,255,0.06);">
+                                <span class="timer-number" id="timerHours" style="font-size:1.2rem;">00</span>
+                                <span class="timer-label" style="font-size:0.5rem;" data-i18n="hours">Horas</span>
+                            </div>
+                            <div class="timer-item" style="min-width:50px; padding:4px 10px; background:rgba(255,255,255,0.06);">
+                                <span class="timer-number" id="timerMinutes" style="font-size:1.2rem;">00</span>
+                                <span class="timer-label" style="font-size:0.5rem;" data-i18n="minutes">Min</span>
+                            </div>
+                            <div class="timer-item" style="min-width:50px; padding:4px 10px; background:rgba(255,255,255,0.06);">
+                                <span class="timer-number" id="timerSeconds" style="font-size:1.2rem;">00</span>
+                                <span class="timer-label" style="font-size:0.5rem;" data-i18n="seconds">Seg</span>
+                            </div>
+                        </div>
+
+                        <!-- Language Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="color:#fff; border-color:rgba(255,255,255,0.15); padding:6px 14px; border-radius:30px; font-size:0.85rem;">
+                                <i class="bi bi-globe"></i> <span data-i18n="language">Idioma</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" data-lang="pt"><span class="flag">🇦🇴</span> Português</a></li>
+                                <li><a class="dropdown-item" href="#" data-lang="en"><span class="flag">🇬🇧</span> English</a></li>
+                                <li><a class="dropdown-item" href="#" data-lang="fr"><span class="flag">🇫🇷</span> Français</a></li>
+                                <li><a class="dropdown-item" href="#" data-lang="es"><span class="flag">🇪🇸</span> Español</a></li>
+                            </ul>
+                        </div>
+
+                        <span class="badge" id="currentDateTime">
+                            <i class="bi bi-clock"></i> <span id="dateTimeDisplay">Carregando...</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== BANNER ===== -->
+        <div class="banner-content fade-in">
+            <div class="row align-items-center">
+                <div class="col-lg-7 text-center text-lg-start">
+                    <h1 data-i18n="banner-title">O futuro da <span class="highlight">gestão hospitalar</span> está a chegar</h1>
+                    <p class="banner-message" data-i18n="banner-desc">
+                        O VITALINKA é uma plataforma inteligente que transforma a gestão hospitalar,
+                        integrando pacientes, profissionais e processos numa única solução segura e colaborativa.
+                    </p>
+                    <div class="btn-group flex-wrap justify-content-center justify-content-lg-start mt-3">
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#waitlistModal">
+                            <i class="bi bi-envelope"></i> <span data-i18n="waitlist-btn">Lista de Espera</span>
+                        </button>
+                        <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#demoModal">
+                            <i class="bi bi-calendar-check"></i> <span data-i18n="demo-btn">Solicitar Demonstração</span>
+                        </button>
+                        <button class="btn btn-outline-light" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">
+                            <i class="bi bi-chevron-down"></i> <span data-i18n="learn-more">Saber Mais</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block">
+                    <div class="glass-card text-center" style="border-color:rgba(76,159,112,0.3);">
+                        <div class="stat-item">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label" data-i18n="stats-professionals">Profissionais inscritos</div>
+                        </div>
+                        <hr style="border-color:rgba(255,255,255,0.1);">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <div class="stat-number">15</div>
+                                    <div class="stat-label" data-i18n="stats-hospitals">Hospitais parceiros</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-item">
+                                    <div class="stat-number">100%</div>
+                                    <div class="stat-label" data-i18n="stats-security">Segurança de dados</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FEATURES ===== -->
+        <div id="features" class="row mb-4">
+            <div class="col-12">
+                <h3 class="text-center mb-4" style="color:#fff; font-weight:700;">
+                    <i class="bi bi-stars text-success"></i> <span data-i18n="features-title">Principais Funcionalidades</span>
+                </h3>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="feature-card">
+                    <span class="feature-icon"><i class="bi bi-people"></i></span>
+                    <h6 data-i18n="feature-patients">Gestão de Pacientes</h6>
+                    <p data-i18n="feature-patients-desc">Registo completo e histórico clínico</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="feature-card">
+                    <span class="feature-icon"><i class="bi bi-file-medical"></i></span>
+                    <h6 data-i18n="feature-records">Prontuário Eletrónico</h6>
+                    <p data-i18n="feature-records-desc">Dados clínicos centralizados</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="feature-card">
+                    <span class="feature-icon"><i class="bi bi-calendar-check"></i></span>
+                    <h6 data-i18n="feature-scheduling">Agendamento Inteligente</h6>
+                    <p data-i18n="feature-scheduling-desc">Consultas e exames optimizados</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="feature-card">
+                    <span class="feature-icon"><i class="bi bi-hospital"></i></span>
+                    <h6 data-i18n="feature-inpatient">Gestão de Internamentos</h6>
+                    <p data-i18n="feature-inpatient-desc">Leitos e evolução clínica</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="feature-card">
+                    <span class="feature-icon"><i class="bi bi-flask"></i></span>
+                    <h6 data-i18n="feature-lab">Laboratório</h6>
+                    <p data-i18n="feature-lab-desc">Exames e resultados integrados</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="feature-card">
+                    <span class="feature-icon"><i class="bi bi-capsule"></i></span>
+                    <h6 data-i18n="feature-pharmacy">Farmácia</h6>
+                    <p data-i18n="feature-pharmacy-desc">Gestão de stock e prescrições</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="feature-card">
+                    <span class="feature-icon"><i class="bi bi-robot"></i></span>
+                    <h6 data-i18n="feature-ai">Inteligência Artificial</h6>
+                    <p data-i18n="feature-ai-desc">Assistente VITA 24/7</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="feature-card">
+                    <span class="feature-icon"><i class="bi bi-shield-check"></i></span>
+                    <h6 data-i18n="feature-security">Segurança Avançada</h6>
+                    <p data-i18n="feature-security-desc">Dados protegidos e auditáveis</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== BENEFITS COM IMAGENS ===== -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h3 class="text-center mb-4" style="color:#fff; font-weight:700;">
+                    <i class="bi bi-check-circle-fill text-success"></i> <span data-i18n="benefits-title">Benefícios</span>
+                </h3>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="benefit-card">
+                    <img src="images/tempo.png" alt="Atendimento Rápido" class="benefit-image" onerror="this.src='https://via.placeholder.com/400x160/2b7a4b/fff?text=Atendimento+Rápido'">
+                    <div class="benefit-body">
+                        <span class="benefit-icon"><i class="bi bi-clock"></i></span>
+                        <span class="benefit-text" data-i18n="benefit-speed">Redução do tempo de atendimento</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="benefit-card">
+                    <img src="images/comunicacao.png" alt="Comunicação Integrada" class="benefit-image" onerror="this.src='https://via.placeholder.com/400x160/2b7a4b/fff?text=Comunicação+Integrada'">
+                    <div class="benefit-body">
+                        <span class="benefit-icon"><i class="bi bi-chat-dots"></i></span>
+                        <span class="benefit-text" data-i18n="benefit-communication">Comunicação integrada (COCI)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="benefit-card">
+                    <img src="images/seguranca.png" alt="Segurança da Informação" class="benefit-image" onerror="this.src='https://via.placeholder.com/400x160/2b7a4b/fff?text=Segurança+da+Informação'">
+                    <div class="benefit-body">
+                        <span class="benefit-icon"><i class="bi bi-shield-lock"></i></span>
+                        <span class="benefit-text" data-i18n="benefit-security">Maior segurança da informação</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="benefit-card">
+                    <img src="images/papel.png" alt="Eliminação do Papel" class="benefit-image" onerror="this.src='https://via.placeholder.com/400x160/2b7a4b/fff?text=Eliminação+do+Papel'">
+                    <div class="benefit-body">
+                        <span class="benefit-icon"><i class="bi bi-file-earmark-pdf"></i></span>
+                        <span class="benefit-text" data-i18n="benefit-paperless">Eliminação do papel</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="benefit-card">
+                    <img src="images/monitoramento.png" alt="Monitorização em Tempo Real" class="benefit-image" onerror="this.src='https://via.placeholder.com/400x160/2b7a4b/fff?text=Monitorização+em+Tempo+Real'">
+                    <div class="benefit-body">
+                        <span class="benefit-icon"><i class="bi bi-graph-up"></i></span>
+                        <span class="benefit-text" data-i18n="benefit-realtime">Monitorização em tempo real</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="benefit-card">
+                    <img src="images/decisao.png" alt="Apoio à Decisão Clínica" class="benefit-image" onerror="this.src='https://via.placeholder.com/400x160/2b7a4b/fff?text=Apoio+à+Decisão+Clínica'">
+                    <div class="benefit-body">
+                        <span class="benefit-icon"><i class="bi bi-brain"></i></span>
+                        <span class="benefit-text" data-i18n="benefit-decision">Apoio à decisão clínica</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== NEWSLETTER ===== -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="newsletter-card">
+                    <div class="newsletter-icon">
+                        <i class="bi bi-envelope-paper"></i>
+                    </div>
+                    <h4 data-i18n="newsletter-title">📬 Receba Novidades do VITALINKA</h4>
+                    <p class="newsletter-text" data-i18n="newsletter-desc">
+                        Inscreva-se na nossa newsletter para receber atualizações, convites para testes beta e novidades sobre o lançamento.
+                    </p>
+                    <div class="input-group">
+                        <input type="email" id="newsletterEmail" class="form-control" placeholder="seu@email.com" data-i18n-placeholder="newsletter-placeholder">
+                        <button class="btn" id="newsletterBtn" data-i18n="newsletter-btn">Inscrever</button>
+                    </div>
+                    <div class="newsletter-success" id="newsletterSuccess">
+                        <i class="bi bi-check-circle-fill"></i> <span data-i18n="newsletter-success">Inscrição realizada com sucesso!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ASSISTANT ===== -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="assistant-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-robot" style="font-size:2.5rem; margin-right:15px; color:#4c9f70;"></i>
+                                <div>
+                                    <h5><i class="bi bi-stars"></i> <span data-i18n="assistant-title">Conheça a VITA</span></h5>
+                                    <p data-i18n="assistant-desc">Assistente inteligente que ajuda médicos, enfermeiros e gestores com tarefas diárias, pesquisa de informações e apoio à decisão clínica.</p>
+                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                        <button class="btn btn-sm btn-outline-light" onclick="askAssistant('Quais são as funcionalidades?')">📋 <span data-i18n="assistant-features">Funcionalidades</span></button>
+                                        <button class="btn btn-sm btn-outline-light" onclick="askAssistant('Como funciona a segurança?')">🔒 <span data-i18n="assistant-security">Segurança</span></button>
+                                        <button class="btn btn-sm btn-outline-light" onclick="askAssistant('Quem pode utilizar?')">👥 <span data-i18n="assistant-users">Utilizadores</span></button>
+                                        <button class="btn btn-sm btn-outline-light" onclick="askAssistant('Como aceder?')">🚀 <span data-i18n="assistant-access">Acesso</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="chatInput" class="chat-input" placeholder="Faça uma pergunta..." data-i18n-placeholder="assistant-placeholder">
+                                <button class="btn btn-success" onclick="sendChat()" style="border-radius:0 10px 10px 0; padding:10px 16px;">
+                                    <i class="bi bi-send"></i>
+                                </button>
+                            </div>
+                            <div id="assistantMessage" class="mt-2 text-center" style="color:rgba(255,255,255,0.6); font-size:0.8rem;">
+                                <i class="bi bi-robot"></i> <span data-i18n="assistant-prompt">Pergunte sobre o VITALINKA</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="mt-4 text-center" style="border-top:1px solid rgba(255,255,255,0.06); padding-top:20px;">
+            <p style="color:rgba(255,255,255,0.4); font-size:0.8rem;">
+                © 2026 <span data-i18n="footer-title">VITALINKA - Sistema de Gestão Hospitalar</span>
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="#" class="footer-link"><i class="bi bi-envelope"></i> vitalinka@hospital.ao</a>
+                <a href="#" class="footer-link"><i class="bi bi-instagram"></i> Instagram</a>
+                <a href="#" class="footer-link"><i class="bi bi-facebook"></i> Facebook</a>
+                <a href="privacy.html" class="footer-link" data-i18n="footer-privacy">Política de Privacidade</a>
+                <a href="term.html" class="footer-link" data-i18n="footer-terms">Termos de Utilização</a>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MODAL: LISTA DE ESPERA -->
+    <!-- ============================================================ -->
+    <div class="modal fade" id="waitlistModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-envelope text-success"></i> <span data-i18n="waitlist-title">Lista de Espera</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter:invert(1);"></button>
+                </div>
+                <div class="modal-body">
+                    <p style="color:rgba(255,255,255,0.6);" data-i18n="waitlist-desc">Inscreva-se para receber novidades, atualizações e convites para testes beta.</p>
+                    <form id="waitlistForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-i18n="label-name">Nome completo</label>
+                                <input type="text" id="wlName" class="form-control" placeholder="Ex: Dr. João Silva" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-i18n="label-institution">Instituição</label>
+                                <input type="text" id="wlInstitution" class="form-control" placeholder="Hospital Regional de Malanje" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-i18n="label-role">Cargo</label>
+                                <input type="text" id="wlRole" class="form-control" placeholder="Médico, Enfermeiro, etc." required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-i18n="label-email">E-mail</label>
+                                <input type="email" id="wlEmail" class="form-control" placeholder="seu@email.com" required>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="wlBeta" checked>
+                                    <label class="form-check-label" style="color:rgba(255,255,255,0.6);">
+                                        <strong style="color:#fff;" data-i18n="beta-label">Programa Beta</strong> <span data-i18n="beta-desc">— Pretendo participar nos testes</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn-submit" data-i18n="waitlist-submit">Quero Receber Novidades</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="success-message" id="wlSuccess">
+                        <div class="success-icon"><i class="bi bi-check-circle-fill"></i></div>
+                        <h3 data-i18n="waitlist-success-title">Bem-vindo(a) à comunidade!</h3>
+                        <p data-i18n="waitlist-success-desc">O seu registo foi efetuado com sucesso. Receberá atualizações em breve.</p>
+                        <button class="btn-submit" style="max-width:200px; margin:16px auto 0;" onclick="resetWaitlist()" data-i18n="waitlist-back">Voltar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MODAL: DEMONSTRAÇÃO -->
+    <!-- ============================================================ -->
+    <div class="modal fade" id="demoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-calendar-check text-warning"></i> <span data-i18n="demo-title">Solicitar Demonstração</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter:invert(1);"></button>
+                </div>
+                <div class="modal-body">
+                    <p style="color:rgba(255,255,255,0.6);" data-i18n="demo-desc">Agende uma demonstração personalizada do VITALINKA para a sua instituição.</p>
+                    <form id="demoForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-i18n="label-name">Nome completo</label>
+                                <input type="text" id="demoName" class="form-control" placeholder="Dr. João Silva" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-i18n="label-institution">Instituição</label>
+                                <input type="text" id="demoInstitution" class="form-control" placeholder="Hospital Regional de Malanje" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-i18n="label-role">Cargo</label>
+                                <input type="text" id="demoRole" class="form-control" placeholder="Diretor Clínico" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-i18n="label-staff">Nº de colaboradores</label>
+                                <input type="number" id="demoStaff" class="form-control" placeholder="250">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-i18n="label-email">E-mail</label>
+                                <input type="email" id="demoEmail" class="form-control" placeholder="seu@email.com" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" data-i18n="label-date">Data pretendida</label>
+                                <input type="date" id="demoDate" class="form-control">
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn-submit" data-i18n="demo-submit">Agendar Demonstração</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="success-message" id="demoSuccess">
+                        <div class="success-icon"><i class="bi bi-check-circle-fill"></i></div>
+                        <h3 data-i18n="demo-success-title">Demonstração agendada!</h3>
+                        <p data-i18n="demo-success-desc">Entraremos em contacto em breve para confirmar os detalhes.</p>
+                        <button class="btn-submit" style="max-width:200px; margin:16px auto 0;" onclick="resetDemo()" data-i18n="demo-back">Voltar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            // ================================================================
+            // 1. TEMA
+            // ================================================================
+            let isDarkTheme = true;
+
+            function toggleTheme() {
+                isDarkTheme = !isDarkTheme;
+                if (isDarkTheme) {
+                    $('body').removeClass('light-theme');
+                    $('#themeIcon').removeClass('bi-sun-fill').addClass('bi-moon-stars');
+                } else {
+                    $('body').addClass('light-theme');
+                    $('#themeIcon').removeClass('bi-moon-stars').addClass('bi-sun-fill');
+                }
+                localStorage.setItem('vitalinka-theme-info', isDarkTheme ? 'dark' : 'light');
+            }
+
+            const savedTheme = localStorage.getItem('vitalinka-theme-info');
+            if (savedTheme === 'light') {
+                isDarkTheme = false;
+                $('body').addClass('light-theme');
+                $('#themeIcon').removeClass('bi-moon-stars').addClass('bi-sun-fill');
+            }
+
+            $('#themeToggle').click(toggleTheme);
+
+            // ================================================================
+            // 2. DATA E HORA
+            // ================================================================
+            function updateDateTime() {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('pt-BR');
+                const timeStr = now.toLocaleTimeString('pt-BR');
+                $('#dateTimeDisplay').text(`${dateStr} ${timeStr}`);
+            }
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            // ================================================================
+            // 3. TIMER REGRESSIVO (30 dias)
+            // ================================================================
+            const targetDate = new Date();
+            targetDate.setDate(targetDate.getDate() + 30);
+
+            function updateTimer() {
+                const now = new Date();
+                const diff = targetDate - now;
+                if (diff <= 0) {
+                    document.getElementById('timerDays').textContent = '00';
+                    document.getElementById('timerHours').textContent = '00';
+                    document.getElementById('timerMinutes').textContent = '00';
+                    document.getElementById('timerSeconds').textContent = '00';
+                    return;
+                }
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                document.getElementById('timerDays').textContent = String(days).padStart(2, '0');
+                document.getElementById('timerHours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('timerMinutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('timerSeconds').textContent = String(seconds).padStart(2, '0');
+            }
+            updateTimer();
+            setInterval(updateTimer, 1000);
+
+            // ================================================================
+            // 4. ASSISTENTE VITA
+            // ================================================================
+            window.askAssistant = function(question) {
+                $('#chatInput').val(question);
+                sendChat();
+            };
+
+            window.sendChat = function() {
+                const input = $('#chatInput');
+                const question = input.val().trim();
+                if (!question) return;
+
+                const message = $('#assistantMessage');
+                const lang = currentLang || 'pt';
+                const msgs = {
+                    'pt': {
+                        processing: 'Processando...',
+                        features: '📋 O VITALINKA oferece: Gestão de Pacientes, Prontuário Eletrónico, Agendamento Inteligente, Internamentos, Laboratório, Farmácia, IA VITA e COCI.',
+                        security: '🔒 Utilizamos encriptação de dados, controlo de acessos baseado em perfis, logs de auditoria e conformidade com a Lei de Protecção de Dados.',
+                        users: '👥 Médicos, Enfermeiros, Rececionistas, Farmacêuticos, Técnicos de Laboratório, Gestores, Financeiros, Direção e Pacientes.',
+                        access: '🚀 O acesso é feito através de login com validação de chave institucional. Cada profissional tem um perfil com permissões específicas.',
+                        fallback: 'Desculpe, não entendi. Pergunte sobre funcionalidades, segurança, utilizadores ou acesso.'
+                    },
+                    'en': {
+                        processing: 'Processing...',
+                        features: '📋 VITALINKA offers: Patient Management, Electronic Health Records, Intelligent Scheduling, Inpatient Management, Laboratory, Pharmacy, AI VITA and COCI.',
+                        security: '🔒 We use data encryption, role-based access control, audit logs and compliance with Data Protection Law.',
+                        users: '👥 Doctors, Nurses, Receptionists, Pharmacists, Laboratory Technicians, Managers, Financiers, Directors and Patients.',
+                        access: '🚀 Access is via login with institutional key validation. Each professional has a profile with specific permissions.',
+                        fallback: 'Sorry, I didn\'t understand. Ask about features, security, users or access.'
+                    },
+                    'fr': {
+                        processing: 'Traitement en cours...',
+                        features: '📋 VITALINKA propose : Gestion des Patients, Dossiers Médicaux Électroniques, Planification Intelligente, Hospitalisation, Laboratoire, Pharmacie, IA VITA et COCI.',
+                        security: '🔒 Nous utilisons le chiffrement des données, le contrôle d\'accès basé sur les rôles, les journaux d\'audit et la conformité à la loi sur la protection des données.',
+                        users: '👥 Médecins, Infirmiers, Réceptionnistes, Pharmaciens, Techniciens de Laboratoire, Gestionnaires, Financiers, Directeurs et Patients.',
+                        access: '🚀 L\'accès se fait via une connexion avec validation de la clé institutionnelle. Chaque professionnel a un profil avec des autorisations spécifiques.',
+                        fallback: 'Désolé, je n\'ai pas compris. Demandez des fonctionnalités, la sécurité, les utilisateurs ou l\'accès.'
+                    },
+                    'es': {
+                        processing: 'Procesando...',
+                        features: '📋 VITALINKA ofrece: Gestión de Pacientes, Historias Clínicas Electrónicas, Agendamiento Inteligente, Hospitalización, Laboratorio, Farmacia, IA VITA y COCI.',
+                        security: '🔒 Utilizamos cifrado de datos, control de acceso basado en roles, registros de auditoría y cumplimiento de la Ley de Protección de Datos.',
+                        users: '👥 Médicos, Enfermeros, Recepcionistas, Farmacéuticos, Técnicos de Laboratorio, Gerentes, Financieros, Directores y Pacientes.',
+                        access: '🚀 El acceso es mediante inicio de sesión con validación de clave institucional. Cada profesional tiene un perfil con permisos específicos.',
+                        fallback: 'Lo siento, no entendí. Pregunte sobre funcionalidades, seguridad, usuarios o acceso.'
+                    }
+                };
+
+                const t = msgs[lang] || msgs['pt'];
+                message.html(`🧐 <strong>Você:</strong> "${question}"<br><br><i class="bi bi-robot"></i> ${t.processing}`);
+
+                setTimeout(() => {
+                    let response = t.fallback;
+                    const q = question.toLowerCase();
+                    if (q.includes('funcionalidade') || q.includes('features') || q.includes('fonctionnalités')) response = t.features;
+                    else if (q.includes('segurança') || q.includes('security') || q.includes('sécurité')) response = t.security;
+                    else if (q.includes('utilizador') || q.includes('user') || q.includes('utilisateur') || q.includes('usuario')) response = t.users;
+                    else if (q.includes('acesso') || q.includes('access') || q.includes('accès') || q.includes('acceso')) response = t.access;
+                    message.html(`🧐 <strong>Você:</strong> "${question}"<br><br><i class="bi bi-robot"></i> ${response}`);
+                }, 1000);
+
+                input.val('');
+            };
+
+            $('#chatInput').keypress(function(e) {
+                if (e.which === 13) sendChat();
+            });
+
+            // ================================================================
+            // 5. SISTEMA DE IDIOMA (FULLY FUNCTIONAL)
+            // ================================================================
+            const translations = {
+                'pt': {
+                    'language': 'Idioma',
+                    'coming-soon': 'EM BREVE',
+                    'days': 'Dias',
+                    'hours': 'Horas',
+                    'minutes': 'Min',
+                    'seconds': 'Seg',
+                    'banner-title': 'O futuro da <span class="highlight">gestão hospitalar</span> está a chegar',
+                    'banner-desc': 'O VITALINKA é uma plataforma inteligente que transforma a gestão hospitalar, integrando pacientes, profissionais e processos numa única solução segura e colaborativa.',
+                    'waitlist-btn': 'Lista de Espera',
+                    'demo-btn': 'Solicitar Demonstração',
+                    'learn-more': 'Saber Mais',
+                    'stats-professionals': 'Profissionais inscritos',
+                    'stats-hospitals': 'Hospitais parceiros',
+                    'stats-security': 'Segurança de dados',
+                    'features-title': 'Principais Funcionalidades',
+                    'feature-patients': 'Gestão de Pacientes',
+                    'feature-patients-desc': 'Registo completo e histórico clínico',
+                    'feature-records': 'Prontuário Eletrónico',
+                    'feature-records-desc': 'Dados clínicos centralizados',
+                    'feature-scheduling': 'Agendamento Inteligente',
+                    'feature-scheduling-desc': 'Consultas e exames optimizados',
+                    'feature-inpatient': 'Gestão de Internamentos',
+                    'feature-inpatient-desc': 'Leitos e evolução clínica',
+                    'feature-lab': 'Laboratório',
+                    'feature-lab-desc': 'Exames e resultados integrados',
+                    'feature-pharmacy': 'Farmácia',
+                    'feature-pharmacy-desc': 'Gestão de stock e prescrições',
+                    'feature-ai': 'Inteligência Artificial',
+                    'feature-ai-desc': 'Assistente VITA 24/7',
+                    'feature-security': 'Segurança Avançada',
+                    'feature-security-desc': 'Dados protegidos e auditáveis',
+                    'benefits-title': 'Benefícios',
+                    'benefit-speed': 'Redução do tempo de atendimento',
+                    'benefit-communication': 'Comunicação integrada (COCI)',
+                    'benefit-security': 'Maior segurança da informação',
+                    'benefit-paperless': 'Eliminação do papel',
+                    'benefit-realtime': 'Monitorização em tempo real',
+                    'benefit-decision': 'Apoio à decisão clínica',
+                    'newsletter-title': '📬 Receba Novidades do VITALINKA',
+                    'newsletter-desc': 'Inscreva-se na nossa newsletter para receber atualizações, convites para testes beta e novidades sobre o lançamento.',
+                    'newsletter-placeholder': 'seu@email.com',
+                    'newsletter-btn': 'Inscrever',
+                    'newsletter-success': 'Inscrição realizada com sucesso!',
+                    'assistant-title': 'Conheça a VITA',
+                    'assistant-desc': 'Assistente inteligente que ajuda médicos, enfermeiros e gestores com tarefas diárias, pesquisa de informações e apoio à decisão clínica.',
+                    'assistant-features': 'Funcionalidades',
+                    'assistant-security': 'Segurança',
+                    'assistant-users': 'Utilizadores',
+                    'assistant-access': 'Acesso',
+                    'assistant-placeholder': 'Faça uma pergunta...',
+                    'assistant-prompt': 'Pergunte sobre o VITALINKA',
+                    'footer-title': 'VITALINKA - Sistema de Gestão Hospitalar',
+                    'footer-privacy': 'Política de Privacidade',
+                    'footer-terms': 'Termos de Utilização',
+                    'waitlist-title': 'Lista de Espera',
+                    'waitlist-desc': 'Inscreva-se para receber novidades, atualizações e convites para testes beta.',
+                    'waitlist-submit': 'Quero Receber Novidades',
+                    'waitlist-success-title': 'Bem-vindo(a) à comunidade!',
+                    'waitlist-success-desc': 'O seu registo foi efetuado com sucesso. Receberá atualizações em breve.',
+                    'waitlist-back': 'Voltar',
+                    'demo-title': 'Solicitar Demonstração',
+                    'demo-desc': 'Agende uma demonstração personalizada do VITALINKA para a sua instituição.',
+                    'demo-submit': 'Agendar Demonstração',
+                    'demo-success-title': 'Demonstração agendada!',
+                    'demo-success-desc': 'Entraremos em contacto em breve para confirmar os detalhes.',
+                    'demo-back': 'Voltar',
+                    'label-name': 'Nome completo',
+                    'label-institution': 'Instituição',
+                    'label-role': 'Cargo',
+                    'label-email': 'E-mail',
+                    'label-staff': 'Nº de colaboradores',
+                    'label-date': 'Data pretendida',
+                    'beta-label': 'Programa Beta',
+                    'beta-desc': '— Pretendo participar nos testes'
+                },
+                'en': {
+                    'language': 'Language',
+                    'coming-soon': 'COMING SOON',
+                    'days': 'Days',
+                    'hours': 'Hours',
+                    'minutes': 'Min',
+                    'seconds': 'Sec',
+                    'banner-title': 'The future of <span class="highlight">hospital management</span> is coming',
+                    'banner-desc': 'VITALINKA is an intelligent platform that transforms hospital management, integrating patients, professionals and processes into a single secure and collaborative solution.',
+                    'waitlist-btn': 'Waitlist',
+                    'demo-btn': 'Request Demo',
+                    'learn-more': 'Learn More',
+                    'stats-professionals': 'Professionals enrolled',
+                    'stats-hospitals': 'Partner hospitals',
+                    'stats-security': 'Data security',
+                    'features-title': 'Key Features',
+                    'feature-patients': 'Patient Management',
+                    'feature-patients-desc': 'Complete registration and clinical history',
+                    'feature-records': 'Electronic Health Records',
+                    'feature-records-desc': 'Centralized clinical data',
+                    'feature-scheduling': 'Intelligent Scheduling',
+                    'feature-scheduling-desc': 'Optimized appointments and exams',
+                    'feature-inpatient': 'Inpatient Management',
+                    'feature-inpatient-desc': 'Beds and clinical evolution',
+                    'feature-lab': 'Laboratory',
+                    'feature-lab-desc': 'Integrated exams and results',
+                    'feature-pharmacy': 'Pharmacy',
+                    'feature-pharmacy-desc': 'Stock and prescription management',
+                    'feature-ai': 'Artificial Intelligence',
+                    'feature-ai-desc': 'VITA Assistant 24/7',
+                    'feature-security': 'Advanced Security',
+                    'feature-security-desc': 'Protected and auditable data',
+                    'benefits-title': 'Benefits',
+                    'benefit-speed': 'Reduced waiting time',
+                    'benefit-communication': 'Integrated communication (COCI)',
+                    'benefit-security': 'Enhanced information security',
+                    'benefit-paperless': 'Paperless',
+                    'benefit-realtime': 'Real-time monitoring',
+                    'benefit-decision': 'Clinical decision support',
+                    'newsletter-title': '📬 Get VITALINKA News',
+                    'newsletter-desc': 'Subscribe to our newsletter to receive updates, beta invitations and launch news.',
+                    'newsletter-placeholder': 'your@email.com',
+                    'newsletter-btn': 'Subscribe',
+                    'newsletter-success': 'Subscription successful!',
+                    'assistant-title': 'Meet VITA',
+                    'assistant-desc': 'Intelligent assistant that helps doctors, nurses and managers with daily tasks, information research and clinical decision support.',
+                    'assistant-features': 'Features',
+                    'assistant-security': 'Security',
+                    'assistant-users': 'Users',
+                    'assistant-access': 'Access',
+                    'assistant-placeholder': 'Ask a question...',
+                    'assistant-prompt': 'Ask about VITALINKA',
+                    'footer-title': 'VITALINKA - Hospital Management System',
+                    'footer-privacy': 'Privacy Policy',
+                    'footer-terms': 'Terms of Use',
+                    'waitlist-title': 'Waitlist',
+                    'waitlist-desc': 'Sign up to receive news, updates and beta invitations.',
+                    'waitlist-submit': 'I Want News',
+                    'waitlist-success-title': 'Welcome to the community!',
+                    'waitlist-success-desc': 'Your registration was successful. You will receive updates soon.',
+                    'waitlist-back': 'Back',
+                    'demo-title': 'Request Demo',
+                    'demo-desc': 'Schedule a personalized VITALINKA demonstration for your institution.',
+                    'demo-submit': 'Schedule Demo',
+                    'demo-success-title': 'Demo scheduled!',
+                    'demo-success-desc': 'We will contact you soon to confirm the details.',
+                    'demo-back': 'Back',
+                    'label-name': 'Full name',
+                    'label-institution': 'Institution',
+                    'label-role': 'Role',
+                    'label-email': 'Email',
+                    'label-staff': 'Number of staff',
+                    'label-date': 'Preferred date',
+                    'beta-label': 'Beta Program',
+                    'beta-desc': '— I want to participate in testing'
+                },
+                'fr': {
+                    'language': 'Langue',
+                    'coming-soon': 'BIENTÔT',
+                    'days': 'Jours',
+                    'hours': 'Heures',
+                    'minutes': 'Min',
+                    'seconds': 'Sec',
+                    'banner-title': 'L\'avenir de la <span class="highlight">gestion hospitalière</span> arrive',
+                    'banner-desc': 'VITALINKA est une plateforme intelligente qui transforme la gestion hospitalière, intégrant patients, professionnels et processus dans une solution unique, sécurisée et collaborative.',
+                    'waitlist-btn': 'Liste d\'attente',
+                    'demo-btn': 'Demander une démo',
+                    'learn-more': 'En savoir plus',
+                    'stats-professionals': 'Professionnels inscrits',
+                    'stats-hospitals': 'Hôpitaux partenaires',
+                    'stats-security': 'Sécurité des données',
+                    'features-title': 'Fonctionnalités principales',
+                    'feature-patients': 'Gestion des patients',
+                    'feature-patients-desc': 'Enregistrement complet et historique clinique',
+                    'feature-records': 'Dossiers médicaux électroniques',
+                    'feature-records-desc': 'Données cliniques centralisées',
+                    'feature-scheduling': 'Planification intelligente',
+                    'feature-scheduling-desc': 'Rendez-vous et examens optimisés',
+                    'feature-inpatient': 'Gestion des hospitalisations',
+                    'feature-inpatient-desc': 'Lits et évolution clinique',
+                    'feature-lab': 'Laboratoire',
+                    'feature-lab-desc': 'Examens et résultats intégrés',
+                    'feature-pharmacy': 'Pharmacie',
+                    'feature-pharmacy-desc': 'Gestion des stocks et prescriptions',
+                    'feature-ai': 'Intelligence Artificielle',
+                    'feature-ai-desc': 'Assistant VITA 24/7',
+                    'feature-security': 'Sécurité avancée',
+                    'feature-security-desc': 'Données protégées et auditables',
+                    'benefits-title': 'Avantages',
+                    'benefit-speed': 'Réduction des délais d\'attente',
+                    'benefit-communication': 'Communication intégrée (COCI)',
+                    'benefit-security': 'Sécurité renforcée des informations',
+                    'benefit-paperless': 'Zéro papier',
+                    'benefit-realtime': 'Suivi en temps réel',
+                    'benefit-decision': 'Aide à la décision clinique',
+                    'newsletter-title': '📬 Recevez les actualités de VITALINKA',
+                    'newsletter-desc': 'Abonnez-vous à notre newsletter pour recevoir des mises à jour, des invitations bêta et des actualités sur le lancement.',
+                    'newsletter-placeholder': 'votre@email.com',
+                    'newsletter-btn': 'S\'abonner',
+                    'newsletter-success': 'Inscription réussie !',
+                    'assistant-title': 'Découvrez VITA',
+                    'assistant-desc': 'Assistant intelligent qui aide les médecins, infirmiers et gestionnaires dans leurs tâches quotidiennes, la recherche d\'informations et l\'aide à la décision clinique.',
+                    'assistant-features': 'Fonctionnalités',
+                    'assistant-security': 'Sécurité',
+                    'assistant-users': 'Utilisateurs',
+                    'assistant-access': 'Accès',
+                    'assistant-placeholder': 'Posez une question...',
+                    'assistant-prompt': 'Posez une question sur VITALINKA',
+                    'footer-title': 'VITALINKA - Système de Gestion Hospitalière',
+                    'footer-privacy': 'Politique de Confidentialité',
+                    'footer-terms': 'Conditions d\'Utilisation',
+                    'waitlist-title': 'Liste d\'attente',
+                    'waitlist-desc': 'Inscrivez-vous pour recevoir des nouvelles, des mises à jour et des invitations bêta.',
+                    'waitlist-submit': 'Je veux recevoir des nouvelles',
+                    'waitlist-success-title': 'Bienvenue dans la communauté !',
+                    'waitlist-success-desc': 'Votre inscription a été effectuée avec succès. Vous recevrez bientôt des mises à jour.',
+                    'waitlist-back': 'Retour',
+                    'demo-title': 'Demander une démo',
+                    'demo-desc': 'Planifiez une démonstration personnalisée de VITALINKA pour votre institution.',
+                    'demo-submit': 'Planifier la démo',
+                    'demo-success-title': 'Démo planifiée !',
+                    'demo-success-desc': 'Nous vous contacterons bientôt pour confirmer les détails.',
+                    'demo-back': 'Retour',
+                    'label-name': 'Nom complet',
+                    'label-institution': 'Institution',
+                    'label-role': 'Fonction',
+                    'label-email': 'E-mail',
+                    'label-staff': 'Nombre de collaborateurs',
+                    'label-date': 'Date souhaitée',
+                    'beta-label': 'Programme Bêta',
+                    'beta-desc': '— Je souhaite participer aux tests'
+                },
+                'es': {
+                    'language': 'Idioma',
+                    'coming-soon': 'PRÓXIMAMENTE',
+                    'days': 'Días',
+                    'hours': 'Horas',
+                    'minutes': 'Min',
+                    'seconds': 'Seg',
+                    'banner-title': 'El futuro de la <span class="highlight">gestión hospitalaria</span> está llegando',
+                    'banner-desc': 'VITALINKA es una plataforma inteligente que transforma la gestión hospitalaria, integrando pacientes, profesionales y procesos en una única solución segura y colaborativa.',
+                    'waitlist-btn': 'Lista de Espera',
+                    'demo-btn': 'Solicitar Demostración',
+                    'learn-more': 'Saber Más',
+                    'stats-professionals': 'Profesionales inscritos',
+                    'stats-hospitals': 'Hospitales socios',
+                    'stats-security': 'Seguridad de datos',
+                    'features-title': 'Principales Funcionalidades',
+                    'feature-patients': 'Gestión de Pacientes',
+                    'feature-patients-desc': 'Registro completo e historial clínico',
+                    'feature-records': 'Historia Clínica Electrónica',
+                    'feature-records-desc': 'Datos clínicos centralizados',
+                    'feature-scheduling': 'Agendamiento Inteligente',
+                    'feature-scheduling-desc': 'Consultas y exámenes optimizados',
+                    'feature-inpatient': 'Gestión de Hospitalización',
+                    'feature-inpatient-desc': 'Camas y evolución clínica',
+                    'feature-lab': 'Laboratorio',
+                    'feature-lab-desc': 'Exámenes y resultados integrados',
+                    'feature-pharmacy': 'Farmacia',
+                    'feature-pharmacy-desc': 'Gestión de stock y prescripciones',
+                    'feature-ai': 'Inteligencia Artificial',
+                    'feature-ai-desc': 'Asistente VITA 24/7',
+                    'feature-security': 'Seguridad Avanzada',
+                    'feature-security-desc': 'Datos protegidos y auditables',
+                    'benefits-title': 'Beneficios',
+                    'benefit-speed': 'Reducción del tiempo de atención',
+                    'benefit-communication': 'Comunicación integrada (COCI)',
+                    'benefit-security': 'Mayor seguridad de la información',
+                    'benefit-paperless': 'Eliminación del papel',
+                    'benefit-realtime': 'Monitorización en tiempo real',
+                    'benefit-decision': 'Apoyo a la decisión clínica',
+                    'newsletter-title': '📬 Reciba Novedades de VITALINKA',
+                    'newsletter-desc': 'Suscríbase a nuestro boletín para recibir actualizaciones, invitaciones beta y novedades sobre el lanzamiento.',
+                    'newsletter-placeholder': 'su@email.com',
+                    'newsletter-btn': 'Suscribirse',
+                    'newsletter-success': '¡Inscripción realizada con éxito!',
+                    'assistant-title': 'Conozca a VITA',
+                    'assistant-desc': 'Asistente inteligente que ayuda a médicos, enfermeros y gestores con tareas diarias, investigación de información y apoyo a la decisión clínica.',
+                    'assistant-features': 'Funcionalidades',
+                    'assistant-security': 'Seguridad',
+                    'assistant-users': 'Usuarios',
+                    'assistant-access': 'Acceso',
+                    'assistant-placeholder': 'Haga una pregunta...',
+                    'assistant-prompt': 'Pregunte sobre VITALINKA',
+                    'footer-title': 'VITALINKA - Sistema de Gestión Hospitalaria',
+                    'footer-privacy': 'Política de Privacidad',
+                    'footer-terms': 'Términos de Uso',
+                    'waitlist-title': 'Lista de Espera',
+                    'waitlist-desc': 'Regístrese para recibir novedades, actualizaciones e invitaciones beta.',
+                    'waitlist-submit': 'Quiero Recibir Novedades',
+                    'waitlist-success-title': '¡Bienvenido a la comunidad!',
+                    'waitlist-success-desc': 'Su registro se realizó con éxito. Recibirá actualizaciones pronto.',
+                    'waitlist-back': 'Volver',
+                    'demo-title': 'Solicitar Demostración',
+                    'demo-desc': 'Agende una demostración personalizada de VITALINKA para su institución.',
+                    'demo-submit': 'Agendar Demostración',
+                    'demo-success-title': '¡Demostración agendada!',
+                    'demo-success-desc': 'Pronto nos pondremos en contacto para confirmar los detalles.',
+                    'demo-back': 'Volver',
+                    'label-name': 'Nombre completo',
+                    'label-institution': 'Institución',
+                    'label-role': 'Cargo',
+                    'label-email': 'Correo',
+                    'label-staff': 'Nº de colaboradores',
+                    'label-date': 'Fecha deseada',
+                    'beta-label': 'Programa Beta',
+                    'beta-desc': '— Deseo participar en las pruebas'
+                }
+            };
+
+            let currentLang = localStorage.getItem('vitalinka-lang') || 'pt';
+
+            function applyTranslation(lang) {
+                const t = translations[lang] || translations['pt'];
+                // Traduzir elementos com data-i18n
+                $('[data-i18n]').each(function() {
+                    const key = $(this).data('i18n');
+                    if (t[key] !== undefined) {
+                        if ($(this).is('input')) {
+                            // Para inputs, usar placeholder
+                            const placeholderKey = $(this).data('i18n-placeholder');
+                            if (placeholderKey && t[placeholderKey]) {
+                                $(this).attr('placeholder', t[placeholderKey]);
+                            }
+                            return;
+                        }
+                        // Para elementos com HTML, preservar tags
+                        if ($(this).html().includes('<')) {
+                            // Verificar se o texto atual contém a tradução antiga
+                            const currentText = $(this).text().trim();
+                            // Se for um elemento com HTML (como o banner com <span>), substituir o texto mantendo as tags
+                            const html = $(this).html();
+                            // Verificar se há um texto para substituir
+                            if (currentText) {
+                                // Tentar substituir apenas o texto, mantendo as tags
+                                const newHtml = html.replace(currentText, t[key]);
+                                $(this).html(newHtml);
+                            }
+                        } else {
+                            $(this).text(t[key]);
+                        }
+                    }
+                });
+
+                // Traduzir placeholders específicos
+                $('[data-i18n-placeholder]').each(function() {
+                    const key = $(this).data('i18n-placeholder');
+                    if (t[key]) {
+                        $(this).attr('placeholder', t[key]);
+                    }
+                });
+
+                // Traduzir FAQ answers com data-i18n
+                $('.faq-answer[data-i18n]').each(function() {
+                    const key = $(this).data('i18n');
+                    if (t[key]) {
+                        $(this).text(t[key]);
+                    }
+                });
+
+                localStorage.setItem('vitalinka-lang', lang);
+                currentLang = lang;
+                $('.dropdown-toggle span').text(t.language || 'Idioma');
+            }
+
+            applyTranslation(currentLang);
+
+            // Evento de mudança de idioma
+            $('.dropdown-item[data-lang]').click(function(e) {
+                e.preventDefault();
+                const lang = $(this).data('lang');
+                applyTranslation(lang);
+
+                // Notificação visual
+                const msgs = {
+                    'pt': 'Idioma alterado para Português',
+                    'en': 'Language changed to English',
+                    'fr': 'Langue changée en Français',
+                    'es': 'Idioma cambiado a Español'
+                };
+                const notify = $(`
+                    <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+                        <div class="toast show align-items-center text-white bg-success border-0" role="alert">
+                            <div class="d-flex">
+                                <div class="toast-body"><i class="bi bi-check-circle-fill me-2"></i> ${msgs[lang] || 'Idioma alterado!'}</div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                $('body').append(notify);
+                setTimeout(() => { notify.fadeOut(500, function() { $(this).remove(); }); }, 3000);
+            });
+
+            // ================================================================
+            // 6. FORMULÁRIO DE LISTA DE ESPERA
+            // ================================================================
+            $('#waitlistForm').submit(function(e) {
+                e.preventDefault();
+                let valid = true;
+                $(this).find('.form-control').each(function() {
+                    if (!$(this).val().trim()) {
+                        $(this).addClass('error');
+                        valid = false;
+                    } else {
+                        $(this).removeClass('error');
+                    }
+                });
+                if (!valid) return;
+
+                $(this).hide();
+                $('#wlSuccess').show();
+            });
+
+            window.resetWaitlist = function() {
+                $('#waitlistForm').show();
+                $('#wlSuccess').hide();
+                $('#waitlistForm .form-control').val('').removeClass('error');
+            };
+
+            // ================================================================
+            // 7. FORMULÁRIO DE DEMONSTRAÇÃO
+            // ================================================================
+            $('#demoForm').submit(function(e) {
+                e.preventDefault();
+                let valid = true;
+                $(this).find('.form-control').each(function() {
+                    if (!$(this).val().trim()) {
+                        $(this).addClass('error');
+                        valid = false;
+                    } else {
+                        $(this).removeClass('error');
+                    }
+                });
+                if (!valid) return;
+
+                $(this).hide();
+                $('#demoSuccess').show();
+            });
+
+            window.resetDemo = function() {
+                $('#demoForm').show();
+                $('#demoSuccess').hide();
+                $('#demoForm .form-control').val('').removeClass('error');
+            };
+
+            // ================================================================
+            // 8. NEWSLETTER
+            // ================================================================
+            $('#newsletterBtn').click(function() {
+                const email = $('#newsletterEmail').val().trim();
+                if (!email || !email.includes('@')) {
+                    $('#newsletterEmail').addClass('error');
+                    return;
+                }
+                $('#newsletterEmail').removeClass('error');
+                $('#newsletterSuccess').show();
+                $('#newsletterEmail').val('');
+                setTimeout(() => {
+                    $('#newsletterSuccess').fadeOut(1000);
+                }, 5000);
+            });
+
+            // ================================================================
+            // 9. REMOVER ERRO AO DIGITAR
+            // ================================================================
+            $(document).on('input', '.form-control', function() {
+                $(this).removeClass('error');
+            });
+
+            console.log('✅ VITALINKA - Landing Page de Divulgação carregada!');
+            console.log('🚀 Contagem regressiva: 30 dias para o lançamento!');
+            console.log('🌍 Sistema de idiomas perfeitamente funcional com 4 idiomas!');
+        });
+    </script>
+</body>
+</html>

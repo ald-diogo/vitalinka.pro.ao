@@ -1,0 +1,2595 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VITALINKA | Área do Farmacêutico</title>
+    <!-- Bootstrap 5 + Bootstrap Icons + Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ===== VARIÁVEIS DE TEMA ===== */
+        :root {
+            --bg-image: url('images/dash-farm.png');
+            --bg-overlay: rgba(0, 0, 0, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.10);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-color: #f0f4f8;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --table-bg: rgba(255, 255, 255, 0.06);
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --input-border: rgba(255, 255, 255, 0.12);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --primary-glow: rgba(13, 110, 253, 0.25);
+            --success-color: #75f0a0;
+            --warning-color: #ffd75a;
+            --danger-color: #ff7a8a;
+            --info-color: #6ee7ff;
+            --chatbot-bg: rgba(20, 30, 28, 0.95);
+            --dropdown-bg: rgba(20, 30, 28, 0.95);
+            --modal-bg: rgba(20, 30, 28, 0.95);
+            --bg-pattern-opacity: 0.6;
+            --primary-color: #2b7a4b;
+            --primary-gradient: linear-gradient(135deg, #2b7a4b, #4c9f70);
+            --status-pending: #ffd75a;
+            --status-validated: #75f0a0;
+            --status-prepared: #6ee7ff;
+            --status-dispensed: #6ea8fe;
+            --status-critical: #ff7a8a;
+        }
+
+        /* Tema Claro */
+        [data-theme="light"] {
+            --bg-image: url('images/dash-farm.png');
+            --bg-overlay: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --text-color: #1a2634;
+            --text-muted: rgba(0, 0, 0, 0.6);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --table-bg: rgba(255, 255, 255, 0.6);
+            --input-bg: rgba(255, 255, 255, 0.75);
+            --input-border: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --primary-glow: rgba(13, 110, 253, 0.15);
+            --success-color: #198754;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #0dcaf0;
+            --chatbot-bg: rgba(255, 255, 255, 0.95);
+            --dropdown-bg: rgba(255, 255, 255, 0.95);
+            --modal-bg: rgba(255, 255, 255, 0.95);
+            --bg-pattern-opacity: 0.3;
+        }
+
+        /* ===== ESTILOS GERAIS ===== */
+        * { font-family: 'Times New Roman', Times, serif; }
+        
+        body {
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            position: relative;
+            background-color: #1a2634;
+            transition: background-color 0.3s ease;
+        }
+
+        [data-theme="light"] body {
+            background-color: #e8ecef;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-overlay);
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+
+        .container-fluid { position: relative; z-index: 1; }
+
+        /* ===== GLASSMORPHISM ===== */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        /* ===== TABS ===== */
+        .nav-tabs .nav-link {
+            font-size: 14px;
+            color: var(--text-color);
+            border: none;
+            padding: 10px 16px;
+            margin-right: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+        .nav-tabs .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        .nav-tabs .nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            color: var(--text-color);
+            border-bottom: 3px solid #0d6efd;
+            font-weight: bold;
+            box-shadow: 0 -2px 20px var(--primary-glow);
+        }
+        .tab-content {
+            padding: 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 0 8px 8px 8px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+
+        /* ===== INDICATOR CARDS ===== */
+        .indicator-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 15px 10px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        .indicator-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .indicator-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            text-shadow: 0 2px 10px var(--shadow-color);
+        }
+        .indicator-card .label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .indicator-card.success .number { color: var(--success-color); }
+        .indicator-card.warning .number { color: var(--warning-color); }
+        .indicator-card.danger .number { color: var(--danger-color); }
+        .indicator-card.info .number { color: var(--info-color); }
+        .indicator-card.primary .number { color: #6ea8fe; }
+
+        /* ===== CARDS ===== */
+        .info-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .info-card .card-title {
+            color: var(--text-color);
+            border-bottom: 2px solid var(--glass-border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .info-card .info-label {
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .info-card .info-value { color: var(--text-color); }
+
+        /* ===== STATUS BADGE ===== */
+        .status-badge.pending { background: rgba(255, 193, 7, 0.7); color: #000; }
+        .status-badge.validated { background: rgba(25, 135, 84, 0.7); color: #fff; }
+        .status-badge.prepared { background: rgba(13, 202, 240, 0.7); color: #000; }
+        .status-badge.dispensed { background: rgba(13, 110, 253, 0.7); color: #fff; }
+        .status-badge.critical { background: rgba(220, 53, 69, 0.7); color: #fff; }
+
+        /* ===== HISTORY TABLE ===== */
+        .history-table {
+            background: var(--table-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+        .history-table th {
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 2px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .history-table td { color: var(--text-color); }
+        .history-table .table-hover tbody tr:hover { background: rgba(255, 255, 255, 0.05); }
+
+        /* ===== PAGE TITLE ===== */
+        .page-title {
+            color: var(--text-color);
+            text-shadow: 0 2px 20px var(--shadow-color);
+        }
+        .page-title .badge {
+            background: rgba(13, 110, 253, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== SEARCH SECTION ===== */
+        .search-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        .search-section h6 { color: var(--text-color); }
+        .search-section .form-control,
+        .search-section .form-select {
+            border-radius: 8px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+        }
+        .search-section .form-control::placeholder { color: var(--text-muted); }
+        .search-section .form-control:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .search-section .btn-outline-secondary { color: var(--text-muted); border-color: var(--glass-border); }
+        .search-section .btn-outline-secondary:hover { background: var(--glass-bg); color: var(--text-color); }
+        .search-section .btn-outline-primary { color: var(--text-color); border-color: var(--glass-border); }
+        .search-section .btn-outline-primary:hover { background: rgba(13, 110, 253, 0.3); }
+
+        /* ===== REPORT CARDS ===== */
+        .report-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .report-card .card-body { color: var(--text-color); }
+        .report-card .card-title { color: var(--text-color); }
+        .report-card .card-text { color: var(--text-muted); }
+
+        /* ===== MODAL GLASS ===== */
+        .modal-content {
+            background: var(--modal-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .modal-header { border-bottom: 1px solid var(--glass-border); }
+        .modal-footer { border-top: 1px solid var(--glass-border); }
+        .modal .btn-close { 
+            filter: invert(1); 
+            opacity: 0.7;
+        }
+        [data-theme="light"] .modal .btn-close { 
+            filter: invert(0); 
+            opacity: 0.5;
+        }
+        .modal .form-control,
+        .modal .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+        }
+        .modal .form-control:focus,
+        .modal .form-select:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .modal .form-label {
+            color: var(--text-muted);
+        }
+        .modal .form-check-label {
+            color: var(--text-color);
+        }
+        .modal .btn-secondary {
+            background: var(--input-bg);
+            border-color: var(--glass-border);
+            color: var(--text-color);
+        }
+        .modal .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .modal .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* ===== DATETIME ===== */
+        #currentDateTime {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        /* ============================================================ */
+        /* ===== TIMER, DASHBOARD DROPDOWN, CHATBOT ===== */
+        /* ============================================================ */
+
+        .timer-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: inline-block;
+        }
+        .timer-container svg {
+            transform: rotate(-90deg);
+            width: 60px;
+            height: 60px;
+        }
+        .timer-container .timer-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 4;
+        }
+        [data-theme="light"] .timer-container .timer-bg {
+            stroke: rgba(0, 0, 0, 0.12);
+        }
+        .timer-container .timer-progress {
+            fill: none;
+            stroke: #4c9f70;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 169.646;
+            stroke-dashoffset: 169.646;
+            transition: stroke-dashoffset 1s linear;
+        }
+        .timer-container .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-shadow: 0 1px 5px var(--shadow-color);
+        }
+        .timer-warning .timer-progress { stroke: #ffc107; }
+        .timer-danger .timer-progress { stroke: #dc3545; }
+
+        /* --- DASHBOARD DROPDOWN --- */
+        .dashboard-dropdown .dropdown-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+        }
+        .dashboard-dropdown .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .dashboard-dropdown .dropdown-menu {
+            background: var(--dropdown-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 220px;
+            z-index: 9999 !important;
+        }
+        .dashboard-dropdown .dropdown-item {
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        .dashboard-dropdown .dropdown-item:hover {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+        }
+        .dashboard-dropdown .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            color: #4c9f70;
+        }
+        .dashboard-dropdown .dropdown-divider {
+            border-color: var(--glass-border);
+        }
+
+        /* --- CHATBOT VITA --- */
+        .chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+        }
+        .chatbot-toggle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 30px rgba(43, 122, 75, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 40px rgba(43, 122, 75, 0.5);
+        }
+        .chatbot-toggle .badge-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #dc3545;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            max-height: 480px;
+            background: var(--chatbot-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            box-shadow: 0 20px 60px var(--shadow-color);
+            display: none;
+            overflow: hidden;
+            flex-direction: column;
+            z-index: 9999;
+        }
+        .chatbot-window.open { display: flex; }
+        .chatbot-header {
+            padding: 15px 20px;
+            background: rgba(43, 122, 75, 0.2);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chatbot-header .chatbot-name {
+            color: var(--text-color);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .chatbot-header .chatbot-name i {
+            color: #4c9f70;
+            margin-right: 8px;
+        }
+        .chatbot-header .chatbot-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .chatbot-header .chatbot-close:hover { color: var(--text-color); }
+        .chatbot-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            max-height: 320px;
+        }
+        .chatbot-body .message {
+            margin-bottom: 12px;
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            animation: fadeInMsg 0.3s ease;
+        }
+        .chatbot-body .message.bot {
+            background: rgba(76, 159, 112, 0.15);
+            color: var(--text-color);
+            border-bottom-left-radius: 4px;
+            margin-right: auto;
+        }
+        .chatbot-body .message.user {
+            background: rgba(13, 110, 253, 0.2);
+            color: var(--text-color);
+            border-bottom-right-radius: 4px;
+            margin-left: auto;
+        }
+        @keyframes fadeInMsg {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chatbot-footer {
+            padding: 12px 15px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 8px;
+        }
+        .chatbot-footer input {
+            flex: 1;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: var(--input-bg);
+            color: var(--text-color);
+            outline: none;
+            font-size: 0.9rem;
+        }
+        .chatbot-footer input::placeholder { color: var(--text-muted); }
+        .chatbot-footer input:focus { border-color: #4c9f70; }
+        .chatbot-footer button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: var(--primary-gradient);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chatbot-footer button:hover { opacity: 0.85; transform: scale(0.97); }
+
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .indicator-card .number { font-size: 1.5rem; }
+            .tab-content { padding: 15px; }
+            .page-title { font-size: 1.5rem; }
+            .chatbot-window {
+                width: 300px;
+                right: -10px;
+                bottom: 75px;
+            }
+            .timer-container { width: 45px; height: 45px; }
+            .timer-container svg { width: 45px; height: 45px; }
+            .timer-container .timer-text { font-size: 0.6rem; }
+            .header-timer-wrapper .timer-label { display: none; }
+        }
+        @media (max-width: 400px) {
+            .chatbot-window { width: 280px; right: -5px; }
+        }
+
+        .header-timer-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-timer-wrapper .timer-label {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* ===== ESTILOS PERFIL ===== */
+        .profile-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .profile-detail .label {
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .profile-detail .value {
+            color: var(--text-color);
+        }
+        .profile-avatar-lg {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 3px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: var(--text-color);
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+        }
+        .profile-permissions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .profile-permissions .badge {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* ===== PERFIL CARD ===== */
+        .profile-image-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            position: relative;
+            z-index: 9998;
+        }
+        .profile-image-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.12);
+        }
+        .profile-image-card .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            flex-shrink: 0;
+        }
+        .profile-image-card .info h6 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.85rem;
+        }
+        .profile-image-card .info small {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+        .profile-image-card .dropdown-toggle {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 0 0 0 8px;
+            font-size: 0.8rem;
+        }
+        .profile-image-card .dropdown-toggle:hover {
+            color: var(--text-color);
+        }
+        .profile-image-card .dropdown-menu {
+            background: var(--dropdown-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 200px;
+            z-index: 99999 !important;
+        }
+        .profile-image-card .dropdown-item {
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        .profile-image-card .dropdown-item:hover {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+        }
+        .profile-image-card .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            color: #4c9f70;
+        }
+        .profile-image-card .dropdown-item.text-danger i { color: #dc3545; }
+        .profile-image-card .dropdown-item.text-danger:hover {
+            background: rgba(220, 53, 69, 0.15);
+        }
+        .profile-image-card .dropdown-divider {
+            border-color: var(--glass-border);
+        }
+
+        .profile-edit-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 3px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--text-color);
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-size: cover;
+            background-position: center;
+        }
+        .profile-edit-avatar:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+        .profile-edit-avatar .avatar-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 4px;
+            border-radius: 0 0 50% 50%;
+            text-align: center;
+        }
+        .profile-edit-avatar .avatar-overlay i {
+            font-size: 0.8rem;
+        }
+        .edit-profile-form .form-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .edit-profile-form .form-control,
+        .edit-profile-form .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+            border-radius: 8px;
+        }
+        .edit-profile-form .form-control:focus,
+        .edit-profile-form .form-select:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .edit-profile-form .form-control::placeholder {
+            color: var(--text-muted);
+        }
+        .edit-profile-form .form-text {
+            color: var(--text-muted);
+        }
+        .permission-checkbox {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .permission-checkbox .form-check {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 8px 15px;
+            margin: 0;
+            transition: all 0.2s ease;
+        }
+        .permission-checkbox .form-check:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .permission-checkbox .form-check-input {
+            margin-right: 8px;
+        }
+        .permission-checkbox .form-check-label {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        /* ===== ESTILOS PRESCRIÇÕES ===== */
+        .prescricao-item {
+            background: var(--glass-bg);
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .prescricao-item:hover {
+            transform: translateX(5px);
+            background: rgba(255,255,255,0.05);
+        }
+        .prescricao-item .presc-info {
+            flex: 1;
+        }
+        .prescricao-item .presc-info .name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .prescricao-item .presc-info .details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== ESTILOS STOCK ===== */
+        .stock-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .stock-item .stock-info {
+            flex: 1;
+        }
+        .stock-item .stock-info .med-name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .stock-item .stock-info .med-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .stock-item .stock-qtd {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .stock-item .stock-qtd.critical { color: var(--danger-color); }
+        .stock-item .stock-qtd.warning { color: var(--warning-color); }
+        .stock-item .stock-qtd.ok { color: var(--success-color); }
+
+        /* ===== ESTILOS VALIDAÇÃO ===== */
+        .validacao-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+        }
+        .validacao-item .val-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .validacao-item .val-header h6 {
+            color: var(--text-color);
+            margin: 0;
+        }
+        .validacao-item .val-details {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* ===== ESTILOS DISPENSA ===== */
+        .dispensa-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+        .dispensa-item .disp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dispensa-item .disp-header .disp-name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* ===== ESTILOS ALERTAS ===== */
+        .alerta-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 6px;
+            border-left: 4px solid var(--primary-color);
+        }
+        .alerta-item .alerta-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .alerta-item .alerta-text {
+            color: var(--text-color);
+        }
+        .alerta-item.critical { border-left-color: var(--danger-color); }
+        .alerta-item.warning { border-left-color: var(--warning-color); }
+        .alerta-item.info { border-left-color: var(--info-color); }
+
+        /* ===== BOTÕES ===== */
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+            color: #fff;
+        }
+
+        .vita-med {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .dropdown-menu {
+            z-index: 99999 !important;
+        }
+        .dropdown {
+            z-index: 9998 !important;
+        }
+        .dropdown-menu.show {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- ========== CABEÇALHO ========== -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h2 class="page-title">
+                        <i class="fas fa-prescription-bottle text-primary"></i> 
+                        Área do Farmacêutico
+                        <span class="badge bg-primary ms-2 notification-badge">ATIVO</span>
+                    </h2>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        
+                        <!-- DASHBOARD DROPDOWN -->
+                        <div class="dashboard-dropdown dropdown">
+                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-th-large me-1"></i> Dashboard
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="dashboardMenu">
+                                <li><a class="dropdown-item" href="#dashboard-tab" data-tab="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+                                <li><a class="dropdown-item" href="#prescricoes-tab" data-tab="prescricoes"><i class="fas fa-file-prescription"></i> Prescrições</a></li>
+                                <li><a class="dropdown-item" href="#validacao-tab" data-tab="validacao"><i class="fas fa-check-double"></i> Validação</a></li>
+                                <li><a class="dropdown-item" href="#stock-tab" data-tab="stock"><i class="fas fa-boxes"></i> Stock</a></li>
+                                <li><a class="dropdown-item" href="#preparacao-tab" data-tab="preparacao"><i class="fas fa-flask"></i> Preparação</a></li>
+                                <li><a class="dropdown-item" href="#dispensa-tab" data-tab="dispensa"><i class="fas fa-hand-holding"></i> Dispensa</a></li>
+                                <li><a class="dropdown-item" href="#especiais-tab" data-tab="especiais"><i class="fas fa-shield-alt"></i> Especiais</a></li>
+                                <li><a class="dropdown-item" href="#alertas-tab" data-tab="alertas"><i class="fas fa-bell"></i> Alertas</a></li>
+                                <li><a class="dropdown-item" href="#relatorios-tab" data-tab="relatorios"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" 
+                                       href="front-coci.html" 
+                                       ><i class="fas fa-comment-dots"></i> Comunicação (COCI)</a></li>
+                            </ul>
+                        </div>
+                        
+                        <!-- RELÓGIO -->
+                        <span class="badge" id="currentDateTime">
+                            <i class="bi bi-clock"></i> 
+                            <span id="dateTimeDisplay">Carregando...</span>
+                        </span>
+
+                        <!-- THEME TOGGLE -->
+                        <div class="theme-toggle" id="themeToggle" title="Alterar Tema">
+                            <i class="fas fa-moon" id="themeIcon"></i>
+                        </div>
+
+                        <!-- TIMER CIRCULAR -->
+                        <div class="header-timer-wrapper">
+                            <span class="timer-label" id="timerLabel">Turno</span>
+                            <div class="timer-container" id="timerContainer">
+                                <svg viewBox="0 0 60 60">
+                                    <circle class="timer-bg" cx="30" cy="30" r="27"/>
+                                    <circle class="timer-progress" id="timerProgress" cx="30" cy="30" r="27"/>
+                                </svg>
+                                <span class="timer-text" id="timerText">15:00</span>
+                            </div>
+                        </div>
+                        
+                        <!-- ===== PERFIL ===== -->
+                        <div class="profile-image-card dropdown" id="profileCard">
+                            <div class="avatar-img" id="profileCardAvatar">CF</div>
+                            <div class="info">
+                                <h6 id="profileCardName">Dr. Carlos Ferreira</h6>
+                                <small id="profileCardSpecialty">Farmácia</small>
+                            </div>
+                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="profileCardMenu">
+                                <li><a class="dropdown-item" href="#" id="profileCardView"><i class="fas fa-user"></i> Ver Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="profileCardEdit"><i class="fas fa-edit"></i> Editar Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="profileCardPassword"><i class="fas fa-key"></i> Alterar Senha</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="logout-per.html" id="profileCardLogout">
+                                        <i class="fas fa-sign-out-alt"></i> Sair
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- PESQUISA RÁPIDA -->
+                        <div class="input-group" style="width: 180px;">
+                            <input type="text" id="quickSearch" class="form-control" placeholder="🔍 Pesquisar...">
+                            <button class="btn btn-outline-primary" type="button">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== PAINEL DE ESTATÍSTICAS ========== -->
+        <div class="row mb-4" id="dashboard-tab">
+            <div class="col-md-2 col-6">
+                <div class="indicator-card fade-in">
+                    <div class="number" id="totalPrescricoes">0</div>
+                    <div class="label"><i class="fas fa-file-prescription"></i> Prescrições</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card warning fade-in">
+                    <div class="number" id="pendentesValidacao">0</div>
+                    <div class="label"><i class="fas fa-clock"></i> Pendentes</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card success fade-in">
+                    <div class="number" id="validadasHoje">0</div>
+                    <div class="label"><i class="fas fa-check"></i> Validadas</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card info fade-in">
+                    <div class="number" id="preparadasHoje">0</div>
+                    <div class="label"><i class="fas fa-flask"></i> Preparadas</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card primary fade-in">
+                    <div class="number" id="dispensadasHoje">0</div>
+                    <div class="label"><i class="fas fa-hand-holding"></i> Dispensadas</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card danger fade-in">
+                    <div class="number" id="stockCritico">0</div>
+                    <div class="label"><i class="fas fa-exclamation-triangle"></i> Stock Crítico</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TABS ========== -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item"><button class="nav-link active" id="prescricoes-tab" data-bs-toggle="tab" data-bs-target="#prescricoes" type="button"><i class="fas fa-file-prescription"></i> Prescrições</button></li>
+            <li class="nav-item"><button class="nav-link" id="validacao-tab" data-bs-toggle="tab" data-bs-target="#validacao" type="button"><i class="fas fa-check-double"></i> Validação</button></li>
+            <li class="nav-item"><button class="nav-link" id="stock-tab" data-bs-toggle="tab" data-bs-target="#stock" type="button"><i class="fas fa-boxes"></i> Stock</button></li>
+            <li class="nav-item"><button class="nav-link" id="preparacao-tab" data-bs-toggle="tab" data-bs-target="#preparacao" type="button"><i class="fas fa-flask"></i> Preparação</button></li>
+            <li class="nav-item"><button class="nav-link" id="dispensa-tab" data-bs-toggle="tab" data-bs-target="#dispensa" type="button"><i class="fas fa-hand-holding"></i> Dispensa</button></li>
+            <li class="nav-item"><button class="nav-link" id="especiais-tab" data-bs-toggle="tab" data-bs-target="#especiais" type="button"><i class="fas fa-shield-alt"></i> Especiais</button></li>
+            <li class="nav-item"><button class="nav-link" id="alertas-tab" data-bs-toggle="tab" data-bs-target="#alertas" type="button"><i class="fas fa-bell"></i> Alertas</button></li>
+            <li class="nav-item"><button class="nav-link" id="relatorios-tab" data-bs-toggle="tab" data-bs-target="#relatorios" type="button"><i class="fas fa-chart-bar"></i> Relatórios</button></li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- ===== ABA PRESCRIÇÕES ===== -->
+            <div class="tab-pane fade show active" id="prescricoes" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="search-section">
+                            <h6><i class="fas fa-file-prescription me-2"></i> Prescrições Recebidas</h6>
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="filterPrescStatus">
+                                        <option value="">Todos</option>
+                                        <option value="Pendente">🟡 Pendente</option>
+                                        <option value="Validada">🟢 Validada</option>
+                                        <option value="Preparada">🔵 Preparada</option>
+                                        <option value="Dispensada">🟣 Dispensada</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-select" id="filterPrescPrioridade">
+                                        <option value="">Todas</option>
+                                        <option value="Normal">Normal</option>
+                                        <option value="Urgente">Urgente</option>
+                                        <option value="Emergência">Emergência</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" id="searchPresc" class="form-control" placeholder="Paciente ou medicamento">
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-primary" id="btnFiltrarPresc"><i class="fas fa-filter me-2"></i> Filtrar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="listaPrescricoes">
+                            <!-- Prescrições via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA VALIDAÇÃO ===== -->
+            <div class="tab-pane fade" id="validacao" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-check-double me-2"></i> Validar Prescrição</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Prescrição</label>
+                                <select class="form-select" id="validPrescricao">
+                                    <option value="">-- Selecione --</option>
+                                </select>
+                            </div>
+                            <div id="validDetalhes" class="mb-3">
+                                <div class="text-muted">Selecione uma prescrição para validar</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Verificações</label>
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="valDose" checked><label class="form-check-label" for="valDose">Dose correta</label></div>
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="valVia" checked><label class="form-check-label" for="valVia">Via adequada</label></div>
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="valAlergia" checked><label class="form-check-label" for="valAlergia">Sem alergias</label></div>
+                                <div class="form-check"><input class="form-check-input" type="checkbox" id="valInteracao" checked><label class="form-check-label" for="valInteracao">Sem interações</label></div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Observações</label>
+                                <textarea class="form-control" id="validObs" rows="2" placeholder="Observações da validação"></textarea>
+                            </div>
+                            <button class="btn btn-success" id="btnValidar"><i class="fas fa-check me-2"></i> Validar</button>
+                            <button class="btn btn-danger" id="btnRejeitar"><i class="fas fa-times me-2"></i> Rejeitar</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-list me-2"></i> Prescrições para Validar</h6>
+                            <div id="validLista">
+                                <div class="text-muted text-center p-3">Nenhuma prescrição pendente</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA STOCK ===== -->
+            <div class="tab-pane fade" id="stock" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-boxes me-2"></i> Gestão de Stock</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Medicamento</label>
+                                <input type="text" class="form-control" id="stockMedicamento" placeholder="Nome do medicamento" list="stockList">
+                                <datalist id="stockList">
+                                    <option value="Amoxicilina 500mg">
+                                    <option value="Paracetamol 500mg">
+                                    <option value="Ibuprofeno 400mg">
+                                    <option value="Omeprazol 20mg">
+                                    <option value="Losartana 50mg">
+                                    <option value="Metformina 850mg">
+                                    <option value="Ceftriaxona 1g">
+                                    <option value="Diazepam 10mg">
+                                </datalist>
+                            </div>
+                            <div class="row">
+                                <div class="col-6"><label class="form-label">Quantidade</label><input type="number" class="form-control" id="stockQtd" placeholder="0"></div>
+                                <div class="col-6"><label class="form-label">Lote</label><input type="text" class="form-control" id="stockLote" placeholder="Lote"></div>
+                                <div class="col-6"><label class="form-label">Validade</label><input type="date" class="form-control" id="stockValidade"></div>
+                                <div class="col-6"><label class="form-label">Localização</label><input type="text" class="form-control" id="stockLocal" placeholder="Prateleira"></div>
+                            </div>
+                            <div class="mt-2">
+                                <button class="btn btn-success" id="btnAdicionarStock"><i class="fas fa-plus me-2"></i> Adicionar</button>
+                                <button class="btn btn-warning" id="btnRemoverStock"><i class="fas fa-minus me-2"></i> Remover</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-list me-2"></i> Inventário Atual</h6>
+                            <div id="inventarioLista">
+                                <div class="text-muted text-center p-3">Nenhum medicamento em stock</div>
+                            </div>
+                            <hr>
+                            <h6 class="card-title"><i class="fas fa-exclamation-triangle me-2"></i> Stock Crítico</h6>
+                            <div id="stockCriticoLista">
+                                <div class="text-muted text-center p-3">Nenhum medicamento em stock crítico</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA PREPARAÇÃO ===== -->
+            <div class="tab-pane fade" id="preparacao" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-flask me-2"></i> Preparar Medicação</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Prescrição</label>
+                                <select class="form-select" id="prepPrescricao">
+                                    <option value="">-- Selecione --</option>
+                                </select>
+                            </div>
+                            <div id="prepDetalhes" class="mb-3">
+                                <div class="text-muted">Selecione uma prescrição validada</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Observações da Preparação</label>
+                                <textarea class="form-control" id="prepObs" rows="2" placeholder="Observações"></textarea>
+                            </div>
+                            <button class="btn btn-primary" id="btnPreparar"><i class="fas fa-flask me-2"></i> Marcar como Preparada</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-list me-2"></i> Medicações a Preparar</h6>
+                            <div id="prepLista">
+                                <div class="text-muted text-center p-3">Nenhuma medicação para preparar</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA DISPENSA ===== -->
+            <div class="tab-pane fade" id="dispensa" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-hand-holding me-2"></i> Dispensar Medicação</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Prescrição</label>
+                                <select class="form-select" id="dispPrescricao">
+                                    <option value="">-- Selecione --</option>
+                                </select>
+                            </div>
+                            <div id="dispDetalhes" class="mb-3">
+                                <div class="text-muted">Selecione uma prescrição preparada</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Responsável pela Receção</label>
+                                <select class="form-select" id="dispResponsavel">
+                                    <option value="Enfermagem">Enfermagem</option>
+                                    <option value="Paciente">Paciente</option>
+                                    <option value="Familiar">Familiar</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-success" id="btnDispensar"><i class="fas fa-check me-2"></i> Confirmar Dispensa</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-list me-2"></i> Prontas para Dispensar</h6>
+                            <div id="dispLista">
+                                <div class="text-muted text-center p-3">Nenhuma medicação pronta para dispensar</div>
+                            </div>
+                            <hr>
+                            <h6 class="card-title"><i class="fas fa-history me-2"></i> Últimas Dispensas</h6>
+                            <div id="dispHistorico">
+                                <div class="text-muted text-center p-3">Nenhuma dispensa registada</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA ESPECIAIS ===== -->
+            <div class="tab-pane fade" id="especiais" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-shield-alt me-2"></i> Medicamentos Especiais</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Medicamento</label>
+                                <select class="form-select" id="espMedicamento">
+                                    <option value="Diazepam 10mg">Diazepam 10mg</option>
+                                    <option value="Morfina 10mg">Morfina 10mg</option>
+                                    <option value="Fentanil 100mcg">Fentanil 100mcg</option>
+                                    <option value="Cetamina 50mg">Cetamina 50mg</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Quantidade</label>
+                                <input type="number" class="form-control" id="espQtd" value="1" min="1">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Justificação</label>
+                                <textarea class="form-control" id="espJustificacao" rows="2" placeholder="Justifique a utilização"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Autorização</label>
+                                <input type="text" class="form-control" id="espAutorizacao" placeholder="Nome do médico autorizador">
+                            </div>
+                            <button class="btn btn-warning" id="btnAutorizarDispensa"><i class="fas fa-check me-2"></i> Autorizar Dispensa</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-list me-2"></i> Movimentações Especiais</h6>
+                            <div id="espLista">
+                                <div class="text-muted text-center p-3">Nenhuma movimentação registada</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA ALERTAS ===== -->
+            <div class="tab-pane fade" id="alertas" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-bell me-2"></i> Alertas da Farmácia</h6>
+                            <div id="listaAlertas">
+                                <div class="text-muted text-center p-3">Nenhum alerta</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA RELATÓRIOS ===== -->
+            <div class="tab-pane fade" id="relatorios" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioDispensas">
+                            <div class="card-body text-center">
+                                <i class="fas fa-hand-holding text-primary fs-1"></i>
+                                <h5 class="card-title mt-3">Dispensas</h5>
+                                <p class="card-text">Relatório de medicamentos dispensados</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioConsumo">
+                            <div class="card-body text-center">
+                                <i class="fas fa-chart-line text-success fs-1"></i>
+                                <h5 class="card-title mt-3">Consumo</h5>
+                                <p class="card-text">Relatório de consumo por período</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioEstoque">
+                            <div class="card-body text-center">
+                                <i class="fas fa-boxes text-info fs-1"></i>
+                                <h5 class="card-title mt-3">Estoque</h5>
+                                <p class="card-text">Relatório de inventário atual</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAIS ========== -->
+    <!-- Modal de Perfil -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user me-2"></i> Perfil do Farmacêutico</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <div class="profile-avatar-lg">CF</div>
+                        <h4 id="profileDoctorName">Dr. Carlos Ferreira</h4>
+                        <span class="badge bg-primary">ID: 78901</span>
+                        <span class="badge bg-success">Ativo</span>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="profile-detail"><span class="label">Nome Completo</span><span class="value">Carlos Ferreira Silva</span></div>
+                            <div class="profile-detail"><span class="label">Cargo</span><span class="value">Farmacêutico Chefe</span></div>
+                            <div class="profile-detail"><span class="label">ID Funcionário</span><span class="value">78901</span></div>
+                            <div class="profile-detail"><span class="label">Email</span><span class="value">carlos.ferreira@vitalinka.ao</span></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="profile-detail"><span class="label">Telefone</span><span class="value">+244 923 456 786</span></div>
+                            <div class="profile-detail"><span class="label">Setor</span><span class="value">Farmácia</span></div>
+                            <div class="profile-detail"><span class="label">Data de Admissão</span><span class="value">20/06/2021</span></div>
+                            <div class="profile-detail"><span class="label">Último Acesso</span><span class="value">15/08/2026 07:30</span></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h6>Permissões</h6>
+                    <div class="profile-permissions">
+                        <span class="badge">📋 Validação</span>
+                        <span class="badge">📦 Stock</span>
+                        <span class="badge">🔬 Preparação</span>
+                        <span class="badge">🤲 Dispensa</span>
+                        <span class="badge">🛡️ Especiais</span>
+                        <span class="badge">📊 Relatórios</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="profileEditBtn"><i class="fas fa-edit me-1"></i> Editar Perfil</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Perfil -->
+    <div class="modal fade" id="profileEditModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-edit me-2"></i> Editar Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="profileEditForm" class="edit-profile-form">
+                        <div class="text-center mb-4">
+                            <div class="profile-edit-avatar" id="avatarUpload">
+                                <span id="avatarInitials">CF</span>
+                                <div class="avatar-overlay">
+                                    <i class="fas fa-camera"></i> Alterar
+                                </div>
+                            </div>
+                            <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
+                            <small class="text-muted">Clique na imagem para alterar a foto</small>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nome Completo</label>
+                                    <input type="text" class="form-control" id="editFullName" value="Carlos Ferreira Silva" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cargo</label>
+                                    <select class="form-select" id="editCargo">
+                                        <option value="Farmacêutico Chefe" selected>Farmacêutico Chefe</option>
+                                        <option value="Farmacêutico">Farmacêutico</option>
+                                        <option value="Técnico de Farmácia">Técnico de Farmácia</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">ID Funcionário</label>
+                                    <input type="text" class="form-control" id="editID" value="78901" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="editEmail" value="carlos.ferreira@vitalinka.ao" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Telefone</label>
+                                    <input type="text" class="form-control" id="editPhone" value="+244 923 456 786" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Setor</label>
+                                    <select class="form-select" id="editSetor">
+                                        <option value="Farmácia" selected>Farmácia</option>
+                                        <option value="Administração">Administração</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Data de Admissão</label>
+                                    <input type="date" class="form-control" id="editAdmissionDate" value="2021-06-20">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select" id="editStatus">
+                                        <option value="Ativo" selected>Ativo</option>
+                                        <option value="Inativo">Inativo</option>
+                                        <option value="Férias">Férias</option>
+                                        <option value="Licença">Licença</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>Preferências</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Idioma</label>
+                                    <select class="form-select" id="editLanguage">
+                                        <option value="pt" selected>Português</option>
+                                        <option value="en">Inglês</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Tema</label>
+                                    <select class="form-select" id="editTheme">
+                                        <option value="dark" selected>Escuro</option>
+                                        <option value="light">Claro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveProfile"><i class="fas fa-save me-1"></i> Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Sessão -->
+    <div class="modal fade" id="sessionModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-clock me-2" style="color:#ffc107;"></i> Sessão a expirar</h5>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="fas fa-exclamation-triangle" style="font-size:3rem; color:#ffc107; margin-bottom:15px;"></i>
+                    <h4>Tem a certeza que pretende terminar a sessão?</h4>
+                    <p class="text-muted" style="color:var(--text-muted) !important;">A sua sessão irá expirar em <strong id="sessionCountdown">2:00</strong> minutos.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-success" id="sessionContinueBtn"><i class="fas fa-check me-2"></i> Não, continuar</button>
+                    <button type="button" class="btn btn-danger" id="sessionEndBtn"><i class="fas fa-sign-out-alt me-2"></i> Sim, terminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CHATBOT VITA ========== -->
+    <div class="chatbot-container">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <span class="chatbot-name"><i class="fas fa-robot"></i> VITA</span>
+                <button class="chatbot-close" id="chatbotClose"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chatbot-body" id="chatbotBody">
+                <div class="message bot">
+                    <i class="fas fa-robot me-1"></i> Olá! Sou a <strong>VITA</strong>, sua assistente virtual.<br>
+                    Como posso ajudar? Pergunte sobre prescrições, stock, validação ou dispensa.
+                </div>
+            </div>
+             <a href="ia-farm.html">
+                <button class="ml-5" 
+                        style="margin-left: 20px;
+                               margin-bottom: 20px; 
+                               border-radius: 50px;
+                               color: green;
+                               background-color: #0b3b3b">
+                    <i class="fas fa-headset" 
+                   style="color: rgba(204, 185, 204, 0.39)">
+                </i> Vita AI </button>
+            </a>
+            <div class="chatbot-footer">
+                <input type="text" id="chatbotInput" placeholder="Digite sua pergunta...">
+                <button id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <button class="chatbot-toggle" id="chatbotToggle">
+            <img class="vita-med" src="images/chat-bot.png" alt="VITA">
+            <span class="badge-notification">1</span>
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // ================================================================
+            // 1. THEME TOGGLE
+            // ================================================================
+            let currentTheme = 'dark';
+            const themeToggle = $('#themeToggle');
+            const themeIcon = $('#themeIcon');
+
+            function setTheme(theme) {
+                currentTheme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                if (theme === 'light') {
+                    themeIcon.removeClass('fa-moon').addClass('fa-sun');
+                } else {
+                    themeIcon.removeClass('fa-sun').addClass('fa-moon');
+                }
+                localStorage.setItem('vitalinka-theme', theme);
+            }
+
+            const savedTheme = localStorage.getItem('vitalinka-theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            }
+
+            themeToggle.click(function() {
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+            });
+
+            // ================================================================
+            // 2. DASHBOARD DROPDOWN
+            // ================================================================
+            $('#dashboardMenu .dropdown-item[data-tab]').click(function(e) {
+                e.preventDefault();
+                const tabId = $(this).data('tab');
+                const tabButton = $(`#${tabId}-tab`);
+                if (tabButton.length) {
+                    const tab = new bootstrap.Tab(tabButton[0]);
+                    tab.show();
+                }
+                $(this).closest('.dropdown').find('.dropdown-toggle').dropdown('toggle');
+            });
+
+            // ================================================================
+            // 3. PERFIL
+            // ================================================================
+            const profileModal = new bootstrap.Modal(document.getElementById('profileModal'));
+            const profileEditModal = new bootstrap.Modal(document.getElementById('profileEditModal'));
+
+            $('#profileCardView').click(function(e) {
+                e.preventDefault();
+                profileModal.show();
+            });
+
+            $('#profileEditBtn').click(function() {
+                profileModal.hide();
+                loadProfileDataToEdit();
+                profileEditModal.show();
+            });
+
+            $('#profileCardEdit').click(function(e) {
+                e.preventDefault();
+                loadProfileDataToEdit();
+                profileEditModal.show();
+            });
+
+            $('#profileCardLogout').click(function(e) {
+                e.preventDefault();
+                if (confirm('Tem certeza que deseja sair?')) {
+                    clearInterval(timerInterval);
+                    window.location.href = "logout-per.html";
+                }
+            });
+
+            $('#profileCardPassword').click(function(e) {
+                e.preventDefault();
+                alert('🔐 Redirecionando para a página de alteração de senha...');
+            });
+
+            // ================================================================
+            // 4. PERFIL - DADOS
+            // ================================================================
+            let profileData = {
+                fullName: 'Carlos Ferreira Silva',
+                cargo: 'Farmacêutico Chefe',
+                id: '78901',
+                email: 'carlos.ferreira@vitalinka.ao',
+                phone: '+244 923 456 786',
+                setor: 'Farmácia',
+                admissionDate: '2021-06-20',
+                status: 'Ativo',
+                language: 'pt',
+                theme: 'dark'
+            };
+
+            function loadProfileDataToEdit() {
+                $('#editFullName').val(profileData.fullName);
+                $('#editCargo').val(profileData.cargo);
+                $('#editID').val(profileData.id);
+                $('#editEmail').val(profileData.email);
+                $('#editPhone').val(profileData.phone);
+                $('#editSetor').val(profileData.setor);
+                $('#editAdmissionDate').val(profileData.admissionDate);
+                $('#editStatus').val(profileData.status);
+                $('#editLanguage').val(profileData.language);
+                $('#editTheme').val(profileData.theme);
+                
+                const initials = profileData.fullName.split(' ').map(n => n[0]).join('');
+                $('#avatarInitials').text(initials);
+                $('#avatarUpload').css('background-image', 'none');
+                $('#avatarInitials').show();
+            }
+
+            function saveProfileData() {
+                profileData.fullName = $('#editFullName').val() || profileData.fullName;
+                profileData.cargo = $('#editCargo').val() || profileData.cargo;
+                profileData.id = $('#editID').val() || profileData.id;
+                profileData.email = $('#editEmail').val() || profileData.email;
+                profileData.phone = $('#editPhone').val() || profileData.phone;
+                profileData.setor = $('#editSetor').val() || profileData.setor;
+                profileData.admissionDate = $('#editAdmissionDate').val() || profileData.admissionDate;
+                profileData.status = $('#editStatus').val() || profileData.status;
+                profileData.language = $('#editLanguage').val() || profileData.language;
+                profileData.theme = $('#editTheme').val() || profileData.theme;
+                
+                updateProfileDisplay();
+                profileEditModal.hide();
+                
+                alert('✅ Perfil atualizado com sucesso!');
+            }
+
+            function updateProfileDisplay() {
+                const initials = profileData.fullName.split(' ').map(n => n[0]).join('');
+                $('.profile-avatar-lg').text(initials);
+                $('#profileDoctorName').text(profileData.fullName);
+                
+                $('#profileCardAvatar').text(initials);
+                $('#profileCardName').text(profileData.fullName);
+                $('#profileCardSpecialty').text('Farmácia');
+                
+                if (profileData.theme !== currentTheme) {
+                    setTheme(profileData.theme);
+                }
+            }
+
+            $('#btnSaveProfile').click(saveProfileData);
+
+            $('#avatarUpload').click(function() { $('#avatarFileInput').click(); });
+            $('#avatarFileInput').change(function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        $('#avatarUpload').css({
+                            'background-image': `url(${event.target.result})`,
+                            'background-size': 'cover',
+                            'background-position': 'center'
+                        });
+                        $('#avatarInitials').hide();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // ================================================================
+            // 5. DADOS DE EXEMPLO
+            // ================================================================
+            
+            // Pacientes (para prescrições)
+            let patients = [
+                { id: 1, nome: 'Maria Silva', processo: 'P-2026-0158' },
+                { id: 2, nome: 'João Pedro', processo: 'P-2026-0159' },
+                { id: 3, nome: 'Ana Oliveira', processo: 'P-2026-0160' }
+            ];
+
+            // Prescrições
+            let prescricoes = [
+                { id: 1, paciente: 'Maria Silva', processo: 'P-2026-0158', medico: 'Dra. Ana Manuel', medicamento: 'Amoxicilina 500mg', dose: '500mg', via: 'Oral', frequencia: '8/8h', duracao: '7 dias', status: 'Pendente', prioridade: 'Normal', data: '15/08/2026 09:30' },
+                { id: 2, paciente: 'João Pedro', processo: 'P-2026-0159', medico: 'Dr. Carlos Santos', medicamento: 'Losartana 50mg', dose: '50mg', via: 'Oral', frequencia: '24/24h', duracao: '30 dias', status: 'Validada', prioridade: 'Normal', data: '15/08/2026 10:00' },
+                { id: 3, paciente: 'Ana Oliveira', processo: 'P-2026-0160', medico: 'Dra. Maria Santos', medicamento: 'Omeprazol 20mg', dose: '20mg', via: 'Oral', frequencia: '12/12h', duracao: '14 dias', status: 'Pendente', prioridade: 'Urgente', data: '15/08/2026 10:30' },
+                { id: 4, paciente: 'Carlos Santos', processo: 'P-2026-0161', medico: 'Dr. João Silva', medicamento: 'Ceftriaxona 1g', dose: '1g', via: 'Intravenosa', frequencia: '12/12h', duracao: '5 dias', status: 'Validada', prioridade: 'Emergência', data: '15/08/2026 11:00' }
+            ];
+
+            let prescricaoCounter = 5;
+
+            // Stock
+            let stock = [
+                { id: 1, medicamento: 'Amoxicilina 500mg', quantidade: 150, lote: 'L-001', validade: '2027-12-31', local: 'Prateleira A1' },
+                { id: 2, medicamento: 'Paracetamol 500mg', quantidade: 200, lote: 'L-002', validade: '2027-11-30', local: 'Prateleira A2' },
+                { id: 3, medicamento: 'Ibuprofeno 400mg', quantidade: 80, lote: 'L-003', validade: '2027-10-15', local: 'Prateleira B1' },
+                { id: 4, medicamento: 'Omeprazol 20mg', quantidade: 120, lote: 'L-004', validade: '2027-09-20', local: 'Prateleira B2' },
+                { id: 5, medicamento: 'Losartana 50mg', quantidade: 10, lote: 'L-005', validade: '2027-08-10', local: 'Prateleira C1' },
+                { id: 6, medicamento: 'Ceftriaxona 1g', quantidade: 5, lote: 'L-006', validade: '2027-07-05', local: 'Prateleira C2' }
+            ];
+
+            let stockCounter = 7;
+
+            // Validações
+            let validacoes = [];
+
+            // Preparações
+            let preparacoes = [];
+
+            // Dispensas
+            let dispensas = [];
+
+            // Especiais
+            let especiais = [];
+
+            // Alertas
+            let alertas = [
+                { id: 1, texto: '⚠️ Stock crítico: Ceftriaxona 1g (5 unidades restantes)', tipo: 'critical', hora: '09:30' },
+                { id: 2, texto: '⚠️ Losartana 50mg com stock baixo (10 unidades)', tipo: 'warning', hora: '09:15' },
+                { id: 3, texto: '📦 Novo lote de Amoxicilina recebido (150 unidades)', tipo: 'info', hora: '09:00' }
+            ];
+
+            // ================================================================
+            // 6. FUNÇÕES PRINCIPAIS
+            // ================================================================
+            function updateDateTime() {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('pt-BR');
+                const timeStr = now.toLocaleTimeString('pt-BR');
+                $('#dateTimeDisplay').text(`${dateStr} ${timeStr}`);
+            }
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            function getStatusClass(status) {
+                const map = {
+                    'Pendente': 'pending',
+                    'Validada': 'validated',
+                    'Preparada': 'prepared',
+                    'Dispensada': 'dispensed'
+                };
+                return map[status] || 'pending';
+            }
+
+            function getStatusEmoji(status) {
+                const map = {
+                    'Pendente': '🟡',
+                    'Validada': '🟢',
+                    'Preparada': '🔵',
+                    'Dispensada': '🟣'
+                };
+                return map[status] || '🟡';
+            }
+
+            function updateStats() {
+                const total = prescricoes.length;
+                const pendentes = prescricoes.filter(p => p.status === 'Pendente').length;
+                const validadas = prescricoes.filter(p => p.status === 'Validada').length;
+                const preparadas = prescricoes.filter(p => p.status === 'Preparada').length;
+                const dispensadas = prescricoes.filter(p => p.status === 'Dispensada').length;
+                const critico = stock.filter(s => s.quantidade <= 10).length;
+
+                $('#totalPrescricoes').text(total);
+                $('#pendentesValidacao').text(pendentes);
+                $('#validadasHoje').text(validadas);
+                $('#preparadasHoje').text(preparadas);
+                $('#dispensadasHoje').text(dispensadas);
+                $('#stockCritico').text(critico);
+            }
+            updateStats();
+
+            function renderPrescricoes() {
+                const container = $('#listaPrescricoes');
+                container.empty();
+
+                const status = $('#filterPrescStatus').val();
+                const prioridade = $('#filterPrescPrioridade').val();
+                const search = $('#searchPresc').val().toLowerCase();
+
+                let filtered = prescricoes;
+                if (status) filtered = filtered.filter(p => p.status === status);
+                if (prioridade) filtered = filtered.filter(p => p.prioridade === prioridade);
+                if (search) filtered = filtered.filter(p => p.paciente.toLowerCase().includes(search) || p.medicamento.toLowerCase().includes(search));
+
+                if (filtered.length === 0) {
+                    container.append('<div class="text-muted text-center p-4">Nenhuma prescrição encontrada.</div>');
+                    return;
+                }
+
+                filtered.forEach(p => {
+                    const statusClass = getStatusClass(p.status);
+                    const emoji = getStatusEmoji(p.status);
+                    const priorityBadge = p.prioridade === 'Emergência' ? 'danger' : p.prioridade === 'Urgente' ? 'warning' : 'info';
+                    container.append(`
+                        <div class="prescricao-item" data-id="${p.id}">
+                            <div class="presc-info">
+                                <div>
+                                    <span class="status-indicator ${statusClass}"></span>
+                                    <span class="name">${p.paciente}</span>
+                                    <span class="badge bg-secondary ms-2">${p.processo}</span>
+                                    <span class="badge bg-${priorityBadge} ms-2">${p.prioridade}</span>
+                                </div>
+                                <div class="details">
+                                    ${p.medicamento} • ${p.dose} • ${p.via} • ${p.frequencia} • ${p.duracao}
+                                    <br><small>Médico: ${p.medico} • ${emoji} ${p.status} • ${p.data}</small>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary validar-presc" data-id="${p.id}"><i class="fas fa-check-double"></i> Validar</button>
+                                <button class="btn btn-sm btn-outline-info preparar-presc" data-id="${p.id}"><i class="fas fa-flask"></i> Preparar</button>
+                                <button class="btn btn-sm btn-outline-success dispensar-presc" data-id="${p.id}"><i class="fas fa-hand-holding"></i> Dispensar</button>
+                            </div>
+                        </div>
+                    `);
+                });
+
+                // Atualizar selects de validação, preparação e dispensa
+                updatePrescSelects();
+            }
+
+            function updatePrescSelects() {
+                const selects = ['#validPrescricao', '#prepPrescricao', '#dispPrescricao'];
+                selects.forEach(sel => {
+                    const $sel = $(sel);
+                    const current = $sel.val();
+                    $sel.empty().append('<option value="">-- Selecione --</option>');
+                    
+                    let filtered = prescricoes;
+                    if (sel === '#validPrescricao') filtered = prescricoes.filter(p => p.status === 'Pendente');
+                    else if (sel === '#prepPrescricao') filtered = prescricoes.filter(p => p.status === 'Validada');
+                    else if (sel === '#dispPrescricao') filtered = prescricoes.filter(p => p.status === 'Preparada');
+                    
+                    filtered.forEach(p => {
+                        $sel.append(`<option value="${p.id}">${p.paciente} - ${p.medicamento} (${p.status})</option>`);
+                    });
+                    if (current && $sel.find(`option[value="${current}"]`).length) {
+                        $sel.val(current);
+                    }
+                });
+            }
+
+            function renderValidacoes() {
+                const container = $('#validLista');
+                container.empty();
+                const pendentes = prescricoes.filter(p => p.status === 'Pendente');
+                if (pendentes.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma prescrição pendente</div>');
+                    return;
+                }
+                pendentes.forEach(p => {
+                    container.append(`
+                        <div class="validacao-item">
+                            <div class="val-header">
+                                <h6>${p.paciente}</h6>
+                                <span class="badge bg-warning">Pendente</span>
+                            </div>
+                            <div class="val-details">
+                                ${p.medicamento} • ${p.dose} • ${p.via} • Prioridade: ${p.prioridade}
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderPreparacoes() {
+                const container = $('#prepLista');
+                container.empty();
+                const validados = prescricoes.filter(p => p.status === 'Validada');
+                if (validados.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma medicação para preparar</div>');
+                    return;
+                }
+                validados.forEach(p => {
+                    container.append(`
+                        <div class="validacao-item">
+                            <div class="val-header">
+                                <h6>${p.paciente}</h6>
+                                <span class="badge bg-success">Validada</span>
+                            </div>
+                            <div class="val-details">
+                                ${p.medicamento} • ${p.dose} • ${p.via}
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderDispensas() {
+                const container = $('#dispLista');
+                container.empty();
+                const preparados = prescricoes.filter(p => p.status === 'Preparada');
+                if (preparados.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma medicação pronta para dispensar</div>');
+                    return;
+                }
+                preparados.forEach(p => {
+                    container.append(`
+                        <div class="dispensa-item">
+                            <div class="disp-header">
+                                <span class="disp-name">${p.paciente}</span>
+                                <span class="badge bg-info">Preparada</span>
+                            </div>
+                            <div class="text-muted small">${p.medicamento} • ${p.dose} • ${p.via}</div>
+                        </div>
+                    `);
+                });
+
+                // Histórico de dispensas
+                const histContainer = $('#dispHistorico');
+                histContainer.empty();
+                if (dispensas.length === 0) {
+                    histContainer.append('<div class="text-muted text-center p-3">Nenhuma dispensa registada</div>');
+                    return;
+                }
+                dispensas.slice(-5).reverse().forEach(d => {
+                    histContainer.append(`
+                        <div class="dispensa-item">
+                            <div class="disp-header">
+                                <span class="disp-name">${d.paciente}</span>
+                                <span class="badge bg-success">Dispensado</span>
+                            </div>
+                            <div class="text-muted small">${d.medicamento} • Responsável: ${d.responsavel} • ${d.data}</div>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderStock() {
+                const container = $('#inventarioLista');
+                container.empty();
+                if (stock.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhum medicamento em stock</div>');
+                    return;
+                }
+                stock.forEach(s => {
+                    const qtdClass = s.quantidade <= 10 ? 'critical' : s.quantidade <= 20 ? 'warning' : 'ok';
+                    container.append(`
+                        <div class="stock-item">
+                            <div class="stock-info">
+                                <div class="med-name">${s.medicamento}</div>
+                                <div class="med-details">Lote: ${s.lote} • Validade: ${formatDate(s.validade)} • ${s.local}</div>
+                            </div>
+                            <div class="stock-qtd ${qtdClass}">${s.quantidade} und.</div>
+                        </div>
+                    `);
+                });
+
+                // Stock crítico
+                const critContainer = $('#stockCriticoLista');
+                critContainer.empty();
+                const critico = stock.filter(s => s.quantidade <= 10);
+                if (critico.length === 0) {
+                    critContainer.append('<div class="text-muted text-center p-3">Nenhum medicamento em stock crítico</div>');
+                    return;
+                }
+                critico.forEach(s => {
+                    critContainer.append(`
+                        <div class="stock-item">
+                            <div class="stock-info">
+                                <div class="med-name">${s.medicamento}</div>
+                                <div class="med-details">Lote: ${s.lote} • ${s.local}</div>
+                            </div>
+                            <div class="stock-qtd critical">${s.quantidade} und.</div>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderAlertas() {
+                const container = $('#listaAlertas');
+                container.empty();
+                if (alertas.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhum alerta</div>');
+                    return;
+                }
+                alertas.slice().reverse().forEach(a => {
+                    container.append(`
+                        <div class="alerta-item ${a.tipo}">
+                            <div class="alerta-time">${a.hora}</div>
+                            <div class="alerta-text">${a.texto}</div>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderEspeciais() {
+                const container = $('#espLista');
+                container.empty();
+                if (especiais.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma movimentação registada</div>');
+                    return;
+                }
+                especiais.slice().reverse().forEach(e => {
+                    container.append(`
+                        <div class="dispensa-item">
+                            <div class="disp-header">
+                                <span class="disp-name">${e.medicamento}</span>
+                                <span class="badge bg-warning">Autorizado</span>
+                            </div>
+                            <div class="text-muted small">Qtd: ${e.qtd} • Autorização: ${e.autorizacao} • ${e.data}</div>
+                            <div class="text-muted small">Justificação: ${e.justificacao}</div>
+                        </div>
+                    `);
+                });
+            }
+
+            function formatDate(dateStr) {
+                if (!dateStr) return '--/--/----';
+                const parts = dateStr.split('-');
+                return parts[2] + '/' + parts[1] + '/' + parts[0];
+            }
+
+            // ================================================================
+            // 7. EVENTOS - PRESCRIÇÕES
+            // ================================================================
+            $('#btnFiltrarPresc').click(renderPrescricoes);
+            $('#searchPresc').on('input', renderPrescricoes);
+            $('#filterPrescStatus, #filterPrescPrioridade').change(renderPrescricoes);
+
+            // ================================================================
+            // 8. EVENTOS - VALIDAÇÃO
+            // ================================================================
+            $('#validPrescricao').change(function() {
+                const id = $(this).val();
+                const presc = prescricoes.find(p => p.id == id);
+                if (presc) {
+                    $('#validDetalhes').html(`
+                        <div class="validacao-item">
+                            <div><strong>Paciente:</strong> ${presc.paciente}</div>
+                            <div><strong>Medicamento:</strong> ${presc.medicamento}</div>
+                            <div><strong>Dose:</strong> ${presc.dose}</div>
+                            <div><strong>Via:</strong> ${presc.via}</div>
+                            <div><strong>Frequência:</strong> ${presc.frequencia}</div>
+                            <div><strong>Duração:</strong> ${presc.duracao}</div>
+                            <div><strong>Médico:</strong> ${presc.medico}</div>
+                            <div><strong>Prioridade:</strong> ${presc.prioridade}</div>
+                        </div>
+                    `);
+                } else {
+                    $('#validDetalhes').html('<div class="text-muted">Selecione uma prescrição para validar</div>');
+                }
+            });
+
+            $('#btnValidar').click(function() {
+                const id = $('#validPrescricao').val();
+                if (!id) { alert('Selecione uma prescrição.'); return; }
+                const presc = prescricoes.find(p => p.id == id);
+                if (presc) {
+                    presc.status = 'Validada';
+                    const obs = $('#validObs').val();
+                    alert(`✅ Prescrição de ${presc.paciente} validada com sucesso!\n\nObservações: ${obs || 'N/A'}`);
+                    $('#validObs').val('');
+                    renderPrescricoes();
+                    renderValidacoes();
+                    updateStats();
+                    updatePrescSelects();
+                    $('#validPrescricao').val('');
+                    $('#validDetalhes').html('<div class="text-muted">Selecione uma prescrição para validar</div>');
+                }
+            });
+
+            $('#btnRejeitar').click(function() {
+                const id = $('#validPrescricao').val();
+                if (!id) { alert('Selecione uma prescrição.'); return; }
+                const presc = prescricoes.find(p => p.id == id);
+                if (presc) {
+                    const motivo = prompt('Motivo da rejeição:');
+                    if (motivo !== null) {
+                        presc.status = 'Rejeitada';
+                        alert(`❌ Prescrição de ${presc.paciente} rejeitada.\n\nMotivo: ${motivo}`);
+                        renderPrescricoes();
+                        renderValidacoes();
+                        updateStats();
+                        updatePrescSelects();
+                        $('#validPrescricao').val('');
+                        $('#validDetalhes').html('<div class="text-muted">Selecione uma prescrição para validar</div>');
+                    }
+                }
+            });
+
+            // ================================================================
+            // 9. EVENTOS - STOCK
+            // ================================================================
+            $('#btnAdicionarStock').click(function() {
+                const medicamento = $('#stockMedicamento').val().trim();
+                const quantidade = parseInt($('#stockQtd').val());
+                const lote = $('#stockLote').val().trim();
+                const validade = $('#stockValidade').val();
+                const local = $('#stockLocal').val().trim();
+
+                if (!medicamento || !quantidade || !lote || !validade) {
+                    alert('Preencha todos os campos.');
+                    return;
+                }
+
+                // Verificar se já existe
+                const existing = stock.find(s => s.medicamento === medicamento && s.lote === lote);
+                if (existing) {
+                    existing.quantidade += quantidade;
+                } else {
+                    stock.push({
+                        id: stockCounter++,
+                        medicamento,
+                        quantidade,
+                        lote,
+                        validade,
+                        local: local || 'Prateleira'
+                    });
+                }
+
+                renderStock();
+                updateStats();
+                $('#stockMedicamento, #stockLote, #stockLocal').val('');
+                $('#stockQtd').val('');
+                $('#stockValidade').val('');
+                alert(`✅ ${quantidade} unidades de ${medicamento} adicionadas ao stock.`);
+            });
+
+            $('#btnRemoverStock').click(function() {
+                const medicamento = $('#stockMedicamento').val().trim();
+                const quantidade = parseInt($('#stockQtd').val());
+
+                if (!medicamento || !quantidade) {
+                    alert('Preencha o medicamento e a quantidade.');
+                    return;
+                }
+
+                const existing = stock.find(s => s.medicamento === medicamento);
+                if (existing) {
+                    if (existing.quantidade < quantidade) {
+                        alert(`Stock insuficiente. Disponível: ${existing.quantidade}`);
+                        return;
+                    }
+                    existing.quantidade -= quantidade;
+                    if (existing.quantidade === 0) {
+                        stock = stock.filter(s => s.id !== existing.id);
+                    }
+                    renderStock();
+                    updateStats();
+                    alert(`✅ ${quantidade} unidades de ${medicamento} removidas.`);
+                } else {
+                    alert('Medicamento não encontrado no stock.');
+                }
+            });
+
+            // ================================================================
+            // 10. EVENTOS - PREPARAÇÃO
+            // ================================================================
+            $('#prepPrescricao').change(function() {
+                const id = $(this).val();
+                const presc = prescricoes.find(p => p.id == id);
+                if (presc) {
+                    $('#prepDetalhes').html(`
+                        <div class="validacao-item">
+                            <div><strong>Paciente:</strong> ${presc.paciente}</div>
+                            <div><strong>Medicamento:</strong> ${presc.medicamento}</div>
+                            <div><strong>Dose:</strong> ${presc.dose}</div>
+                            <div><strong>Via:</strong> ${presc.via}</div>
+                            <div><strong>Frequência:</strong> ${presc.frequencia}</div>
+                        </div>
+                    `);
+                } else {
+                    $('#prepDetalhes').html('<div class="text-muted">Selecione uma prescrição validada</div>');
+                }
+            });
+
+            $('#btnPreparar').click(function() {
+                const id = $('#prepPrescricao').val();
+                if (!id) { alert('Selecione uma prescrição.'); return; }
+                const presc = prescricoes.find(p => p.id == id);
+                if (presc) {
+                    presc.status = 'Preparada';
+                    const obs = $('#prepObs').val();
+                    alert(`✅ Medicação de ${presc.paciente} preparada com sucesso!\n\nObservações: ${obs || 'N/A'}`);
+                    $('#prepObs').val('');
+                    renderPrescricoes();
+                    renderPreparacoes();
+                    updateStats();
+                    updatePrescSelects();
+                    $('#prepPrescricao').val('');
+                    $('#prepDetalhes').html('<div class="text-muted">Selecione uma prescrição validada</div>');
+                }
+            });
+
+            // ================================================================
+            // 11. EVENTOS - DISPENSA
+            // ================================================================
+            $('#dispPrescricao').change(function() {
+                const id = $(this).val();
+                const presc = prescricoes.find(p => p.id == id);
+                if (presc) {
+                    $('#dispDetalhes').html(`
+                        <div class="validacao-item">
+                            <div><strong>Paciente:</strong> ${presc.paciente}</div>
+                            <div><strong>Medicamento:</strong> ${presc.medicamento}</div>
+                            <div><strong>Dose:</strong> ${presc.dose}</div>
+                            <div><strong>Via:</strong> ${presc.via}</div>
+                            <div><strong>Frequência:</strong> ${presc.frequencia}</div>
+                            <div><strong>Duração:</strong> ${presc.duracao}</div>
+                        </div>
+                    `);
+                } else {
+                    $('#dispDetalhes').html('<div class="text-muted">Selecione uma prescrição preparada</div>');
+                }
+            });
+
+            $('#btnDispensar').click(function() {
+                const id = $('#dispPrescricao').val();
+                if (!id) { alert('Selecione uma prescrição.'); return; }
+                const presc = prescricoes.find(p => p.id == id);
+                if (presc) {
+                    const responsavel = $('#dispResponsavel').val();
+                    presc.status = 'Dispensada';
+                    dispensas.push({
+                        paciente: presc.paciente,
+                        medicamento: presc.medicamento,
+                        responsavel: responsavel,
+                        data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                    });
+                    
+                    // Remover do stock
+                    const stockItem = stock.find(s => s.medicamento === presc.medicamento);
+                    if (stockItem) {
+                        stockItem.quantidade -= 1;
+                        if (stockItem.quantidade < 0) stockItem.quantidade = 0;
+                        renderStock();
+                    }
+
+                    alert(`✅ Medicação de ${presc.paciente} dispensada com sucesso!\n\nResponsável: ${responsavel}`);
+                    renderPrescricoes();
+                    renderDispensas();
+                    updateStats();
+                    updatePrescSelects();
+                    $('#dispPrescricao').val('');
+                    $('#dispDetalhes').html('<div class="text-muted">Selecione uma prescrição preparada</div>');
+                }
+            });
+
+            // ================================================================
+            // 12. EVENTOS - ESPECIAIS
+            // ================================================================
+            $('#btnAutorizarDispensa').click(function() {
+                const medicamento = $('#espMedicamento').val();
+                const qtd = parseInt($('#espQtd').val()) || 1;
+                const justificacao = $('#espJustificacao').val().trim();
+                const autorizacao = $('#espAutorizacao').val().trim();
+
+                if (!justificacao || !autorizacao) {
+                    alert('Preencha a justificação e o médico autorizador.');
+                    return;
+                }
+
+                especiais.push({
+                    medicamento,
+                    qtd,
+                    justificacao,
+                    autorizacao,
+                    data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                });
+
+                renderEspeciais();
+                $('#espJustificacao, #espAutorizacao').val('');
+                $('#espQtd').val('1');
+                alert(`✅ Dispensa de ${medicamento} autorizada com sucesso!`);
+            });
+
+            // ================================================================
+            // 13. EVENTOS - RELATÓRIOS
+            // ================================================================
+            $('.report-card').click(function() {
+                const type = $(this).attr('id').replace('relatorio', '').toLowerCase();
+                const titles = {
+                    dispensas: 'Relatório de Dispensas',
+                    consumo: 'Relatório de Consumo',
+                    estoque: 'Relatório de Estoque'
+                };
+                alert(`📊 ${titles[type] || 'Relatório'}\n\nTotal de prescrições: ${prescricoes.length}\nTotal de dispensas: ${dispensas.length}\nItens em stock: ${stock.length}`);
+            });
+
+            // ================================================================
+            // 14. TIMER DE SESSÃO
+            // ================================================================
+            let totalSeconds = 900;
+            let timerInterval = null;
+            let sessionModalShown = false;
+            let sessionModal = new bootstrap.Modal(document.getElementById('sessionModal'), { backdrop: 'static', keyboard: false });
+
+            const timerProgress = document.getElementById('timerProgress');
+            const timerText = document.getElementById('timerText');
+            const timerContainer = document.getElementById('timerContainer');
+            const circumference = 2 * Math.PI * 27;
+
+            function updateTimer() {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                timerText.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+
+                const progress = totalSeconds / 900;
+                const offset = circumference * (1 - progress);
+                timerProgress.style.strokeDashoffset = offset;
+
+                timerContainer.classList.remove('timer-warning', 'timer-danger');
+                if (totalSeconds <= 120) timerContainer.classList.add('timer-danger');
+                else if (totalSeconds <= 300) timerContainer.classList.add('timer-warning');
+
+                if (totalSeconds === 120 && !sessionModalShown) {
+                    sessionModalShown = true;
+                    $('#sessionCountdown').text('2:00');
+                    sessionModal.show();
+                    const modalInterval = setInterval(() => {
+                        const remaining = totalSeconds;
+                        const mins = Math.floor(remaining / 60);
+                        const secs = remaining % 60;
+                        $('#sessionCountdown').text(`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`);
+                        if (remaining <= 0) clearInterval(modalInterval);
+                    }, 1000);
+                }
+
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    window.location.href = "408.html";
+                }
+            }
+
+            function startTimer() {
+                if (timerInterval) clearInterval(timerInterval);
+                totalSeconds = 900;
+                sessionModalShown = false;
+                timerProgress.style.strokeDasharray = circumference;
+                timerProgress.style.strokeDashoffset = circumference;
+                updateTimer();
+                timerInterval = setInterval(() => {
+                    totalSeconds--;
+                    updateTimer();
+                }, 1000);
+            }
+
+            $('#sessionContinueBtn').click(function() {
+                sessionModal.hide();
+                sessionModalShown = false;
+                startTimer();
+            });
+
+            $('#sessionEndBtn').click(function() {
+                sessionModal.hide();
+                clearInterval(timerInterval);
+                window.location.href = "index.html";
+            });
+
+            startTimer();
+
+            // ================================================================
+            // 15. CHATBOT VITA
+            // ================================================================
+            const chatbotToggle = $('#chatbotToggle');
+            const chatbotWindow = $('#chatbotWindow');
+            const chatbotClose = $('#chatbotClose');
+            const chatbotInput = $('#chatbotInput');
+            const chatbotSend = $('#chatbotSend');
+            const chatbotBody = $('#chatbotBody');
+
+            chatbotToggle.click(function() {
+                chatbotWindow.toggleClass('open');
+                $('.badge-notification').fadeOut();
+            });
+
+            chatbotClose.click(function() {
+                chatbotWindow.removeClass('open');
+            });
+
+            function addMessage(text, isUser = false) {
+                const msg = $('<div class="message ' + (isUser ? 'user' : 'bot') + '">' + text + '</div>');
+                chatbotBody.append(msg);
+                chatbotBody.scrollTop(chatbotBody[0].scrollHeight);
+            }
+
+            function processChatbotQuery(query) {
+                const q = query.toLowerCase();
+                let response = '';
+
+                if (q.includes('prescrição') || q.includes('prescricao')) {
+                    const total = prescricoes.length;
+                    const pendentes = prescricoes.filter(p => p.status === 'Pendente').length;
+                    response = `📋 Temos <strong>${total} prescrições</strong> no sistema. <strong>${pendentes}</strong> estão pendentes de validação.`;
+                } else if (q.includes('stock') || q.includes('estoque')) {
+                    const total = stock.reduce((sum, s) => sum + s.quantidade, 0);
+                    const critico = stock.filter(s => s.quantidade <= 10).length;
+                    response = `📦 Stock total: <strong>${total} unidades</strong>. ${critico} medicamentos em stock crítico.`;
+                } else if (q.includes('validar') || q.includes('validação')) {
+                    const pendentes = prescricoes.filter(p => p.status === 'Pendente').length;
+                    response = `🔍 <strong>${pendentes} prescrições</strong> aguardam validação.`;
+                } else if (q.includes('dispensa') || q.includes('dispensar')) {
+                    const total = dispensas.length;
+                    response = `🤲 <strong>${total} dispensas</strong> realizadas hoje.`;
+                } else if (q.includes('alerta') || q.includes('critico')) {
+                    const critico = stock.filter(s => s.quantidade <= 10);
+                    if (critico.length === 0) {
+                        response = '✅ Nenhum alerta crítico no momento.';
+                    } else {
+                        response = `⚠️ <strong>${critico.length} alertas críticos</strong> de stock baixo.`;
+                    }
+                } else if (q.includes('ajuda') || q.includes('ajudar')) {
+                    response = '💡 Posso ajudar com: prescrições, stock, validação, dispensa, alertas e relatórios.';
+                } else {
+                    response = '🤔 Pode reformular a pergunta? Sou a <strong>VITA</strong> e posso ajudar com prescrições, stock, validação, dispensa, alertas e relatórios.';
+                }
+
+                addMessage(response, false);
+            }
+
+            chatbotSend.click(function() {
+                const query = chatbotInput.val().trim();
+                if (!query) return;
+                addMessage(query, true);
+                chatbotInput.val('');
+                setTimeout(() => processChatbotQuery(query), 500);
+            });
+
+            chatbotInput.keypress(function(e) {
+                if (e.which === 13) chatbotSend.click();
+            });
+
+            setTimeout(() => {
+                addMessage('💡 Estou aqui para ajudar! Pergunte sobre prescrições, stock, validação, dispensa, alertas e relatórios.', false);
+            }, 2000);
+
+            // ================================================================
+            // 16. INICIALIZAÇÃO
+            // ================================================================
+            renderPrescricoes();
+            renderValidacoes();
+            renderPreparacoes();
+            renderDispensas();
+            renderStock();
+            renderAlertas();
+            renderEspeciais();
+            updateStats();
+
+            console.log('✅ VITALINKA - Área do Farmacêutico carregada com sucesso!');
+            console.log('🕐 Timer de sessão: 15 minutos');
+            console.log('🤖 Assistente VITA ativo');
+            console.log('🎨 Tema: ' + currentTheme);
+            console.log('👨‍⚕️ Perfil do Farmacêutico disponível');
+            console.log('📋 Todas as funcionalidades da farmácia implementadas!');
+            console.log('  - ✅ Dashboard com indicadores');
+            console.log('  - ✅ Prescrições com filtros');
+            console.log('  - ✅ Validação farmacêutica');
+            console.log('  - ✅ Gestão de stock');
+            console.log('  - ✅ Preparação de medicação');
+            console.log('  - ✅ Dispensa e histórico');
+            console.log('  - ✅ Medicamentos especiais');
+            console.log('  - ✅ Alertas inteligentes');
+            console.log('  - ✅ Relatórios');
+            console.log('  - ✅ Chatbot VITA com comandos');
+        });
+    </script>
+</body>
+</html>

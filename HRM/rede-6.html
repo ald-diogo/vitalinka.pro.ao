@@ -1,0 +1,3795 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Perfil</title>
+            <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- QRCode JS Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+ <!-- Bootstrap 5 + Icons + Google Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <style>
+            *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family: 'Times New Roman', Times, serif;
+        }
+            
+            /* ==========================================================
+ETAPA 56
+========================================================== */
+
+.voice-recorder{
+
+    position:absolute;
+
+    left:15px;
+
+    right:15px;
+
+    bottom:18px;
+
+    height:70px;
+
+    background:#ffffff;
+
+    border-radius:40px;
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:0 18px;
+
+    box-shadow:0 4px 15px rgba(0,0,0,.25);
+
+    z-index:99999;
+
+}
+
+.recording-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+}
+
+.recording-animation{
+
+    color:#ff1744;
+
+    font-size:26px;
+
+    animation:micPulse .9s infinite;
+
+}
+
+.record-voice-button{
+
+    width:58px;
+
+    height:58px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#25d366;
+
+    color:#fff;
+
+    font-size:22px;
+
+}
+
+@keyframes micPulse{
+
+    0%{
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        transform:scale(1.25);
+
+    }
+
+    100%{
+
+        transform:scale(1);
+
+    }
+
+}
+
+.voice-recorder button{
+
+    border:none;
+
+    background:none;
+
+    font-size:22px;
+
+}
+
+body.dark .voice-recorder{
+
+    background:#202c33;
+
+    color:#fff;
+
+}
+
+            /* ==========================================================
+ETAPA 57
+========================================================== */
+
+.call-screen{
+
+    position:fixed;
+
+    inset:0;
+
+    background:#111b21;
+
+    display:none;
+
+    z-index:999999;
+
+}
+
+.call-screen video{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+#localVideo{
+
+    position:absolute;
+
+    width:180px;
+
+    height:260px;
+
+    right:20px;
+
+    top:90px;
+
+    border-radius:15px;
+
+    border:2px solid #ffffff;
+
+    z-index:5;
+
+}
+
+.call-top{
+
+    position:absolute;
+
+    top:20px;
+
+    left:20px;
+
+    color:#ffffff;
+
+    z-index:10;
+
+}
+
+.call-controls{
+
+    position:absolute;
+
+    bottom:30px;
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:20px;
+
+    z-index:10;
+
+}
+
+.call-controls button{
+
+    width:65px;
+
+    height:65px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#2a3942;
+
+    color:#ffffff;
+
+    font-size:22px;
+
+}
+
+.call-controls button.active{
+
+    background:#25d366;
+
+}
+
+.end-call{
+
+    background:#d93025 !important;
+
+}
+
+            /* ==========================================================
+ETAPA 58
+========================================================== */
+
+.screen-share-toolbar{
+
+    position:absolute;
+
+    top:90px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    display:flex;
+
+    gap:12px;
+
+    background:#202c33;
+
+    padding:12px;
+
+    border-radius:40px;
+
+    z-index:99999;
+
+}
+
+.screen-share-toolbar button{
+
+    width:52px;
+
+    height:52px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#2a3942;
+
+    color:#ffffff;
+
+    font-size:18px;
+
+    transition:.20s;
+
+}
+
+.screen-share-toolbar button:hover{
+
+    transform:scale(1.10);
+
+}
+
+.screen-share-toolbar button.active{
+
+    background:#25d366;
+
+}
+
+#recordCall.active{
+
+    background:#ff3b30;
+
+    animation:recordBlink .8s infinite;
+
+}
+
+@keyframes recordBlink{
+
+    50%{
+
+        opacity:.4;
+
+    }
+
+}
+
+body.dark .screen-share-toolbar{
+
+    background:#111b21;
+
+}
+
+            /* ==========================================================
+ETAPA 59
+========================================================== */
+
+.connection-status{
+
+    position:absolute;
+
+    top:15px;
+
+    right:15px;
+
+    padding:8px 14px;
+
+    border-radius:20px;
+
+    color:#fff;
+
+    font-size:13px;
+
+    z-index:9999;
+
+}
+
+.connection-status.online{
+
+    background:#25d366;
+
+}
+
+.connection-status.offline{
+
+    background:#e53935;
+
+}
+
+.typing-indicator{
+
+    display:none;
+
+    align-items:center;
+
+    gap:5px;
+
+    padding:10px 15px;
+
+    color:#667781;
+
+    font-size:13px;
+
+}
+
+.typing-indicator span{
+
+    width:7px;
+
+    height:7px;
+
+    border-radius:50%;
+
+    background:#25d366;
+
+    animation:typing .9s infinite;
+
+}
+
+.typing-indicator span:nth-child(2){
+
+    animation-delay:.2s;
+
+}
+
+.typing-indicator span:nth-child(3){
+
+    animation-delay:.4s;
+
+}
+
+@keyframes typing{
+
+    50%{
+
+        transform:translateY(-5px);
+
+    }
+
+}
+
+.message-status{
+
+    margin-left:8px;
+
+    font-size:12px;
+
+    color:#53bdeb;
+
+}
+
+.toast-container{
+
+    position:fixed;
+
+    top:80px;
+
+    right:20px;
+
+    z-index:999999;
+
+}
+
+.toast-message{
+
+    background:#202c33;
+
+    color:#fff;
+
+    padding:12px 18px;
+
+    margin-bottom:10px;
+
+    border-radius:10px;
+
+    animation:toastIn .3s;
+
+}
+
+@keyframes toastIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateX(40px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateX(0);
+
+    }
+
+}
+
+            /* ==========================================================
+ETAPA 60
+========================================================== */
+
+.encryption-banner{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:12px;
+
+    background:#fff8d6;
+
+    color:#7d5b00;
+
+    font-size:13px;
+
+    border-bottom:1px solid #ead89c;
+
+}
+
+.encryption-banner i{
+
+    color:#25d366;
+
+    font-size:18px;
+
+}
+
+.encryption-banner button{
+
+    margin-left:auto;
+
+    border:none;
+
+    background:#25d366;
+
+    color:#fff;
+
+    padding:6px 14px;
+
+    border-radius:18px;
+
+}
+
+#securityFingerprint{
+
+    font-family:monospace;
+
+    font-size:15px;
+
+    word-break:break-all;
+
+    padding:15px;
+
+    background:#f5f5f5;
+
+    border-radius:8px;
+
+}
+
+body.dark .encryption-banner{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+
+body.dark #securityFingerprint{
+
+    background:#111b21;
+
+    color:#ffffff;
+
+}
+
+            /* ==========================================================
+ETAPA 61
+========================================================== */
+
+.flag-word{
+
+    display:inline-block;
+
+    margin:4px;
+
+    padding:6px 10px;
+
+    background:#ffebee;
+
+    color:#c62828;
+
+    border-radius:18px;
+
+    font-size:13px;
+
+}
+
+.message-warning{
+
+    border-left:4px solid #ff9800;
+
+}
+
+.safe-message{
+
+    animation:safeFlash .35s;
+
+}
+
+@keyframes safeFlash{
+
+    0%{
+
+        background:#d9ffd9;
+
+    }
+
+    100%{
+
+        background:transparent;
+
+    }
+
+}
+
+.content-score{
+
+    font-size:12px;
+
+    color:#777;
+
+}
+
+body.dark .flag-word{
+
+    background:#4b1c1c;
+
+    color:#ffd2d2;
+
+}
+
+            /* ==========================================================
+ETAPA 62
+========================================================== */
+
+.auth-container{
+
+    width:380px;
+
+    margin:60px auto;
+
+    padding:30px;
+
+    background:#ffffff;
+
+    border-radius:15px;
+
+    box-shadow:0 5px 18px rgba(0,0,0,.20);
+
+}
+
+.auth-logo{
+
+    text-align:center;
+
+    margin-bottom:25px;
+
+}
+
+.auth-logo i{
+
+    font-size:70px;
+
+    color:#25d366;
+
+}
+
+.auth-container input{
+
+    width:100%;
+
+    margin-bottom:15px;
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+}
+
+.auth-container button{
+
+    width:100%;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#25d366;
+
+    color:#ffffff;
+
+    font-weight:bold;
+
+}
+
+.auth-links{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-top:15px;
+
+}
+
+.auth-links a{
+
+    text-decoration:none;
+
+    font-size:13px;
+
+}
+
+body.dark .auth-container{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+
+body.dark .auth-container input{
+
+    background:#2a3942;
+
+    color:#ffffff;
+
+    border:none;
+
+}
+
+            /* ==========================================================
+ETAPA 63
+========================================================== */
+
+.server-status{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px 15px;
+
+    background:#ffffff;
+
+    border-bottom:1px solid #ececec;
+
+}
+
+.server-indicator{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    font-weight:bold;
+
+}
+
+.server-indicator.online{
+
+    color:#25d366;
+
+}
+
+.server-indicator.offline{
+
+    color:#f44336;
+
+}
+
+.sync-info{
+
+    font-size:12px;
+
+    color:#777;
+
+}
+
+.sync-queue{
+
+    display:none;
+
+    padding:10px;
+
+    background:#fff8e1;
+
+    border-bottom:1px solid #ffe082;
+
+}
+
+.queue-item{
+
+    padding:6px 0;
+
+    font-size:13px;
+
+}
+
+.connection-banner{
+
+    position:fixed;
+
+    bottom:90px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#25d366;
+
+    color:#ffffff;
+
+    padding:10px 18px;
+
+    border-radius:25px;
+
+    display:none;
+
+    z-index:999999;
+
+}
+
+body.dark .server-status{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+
+body.dark .sync-queue{
+
+    background:#2a3942;
+
+    color:#ffffff;
+
+}
+
+            /* ==========================================================
+ETAPA 64
+========================================================== */
+
+.linked-devices-panel{
+
+    background:#ffffff;
+
+    border-radius:12px;
+
+    padding:15px;
+
+    margin:15px;
+
+}
+
+.devices-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:15px;
+
+}
+
+.device-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px;
+
+    border-bottom:1px solid #ececec;
+
+}
+
+.device-info{
+
+    display:flex;
+
+    gap:12px;
+
+    align-items:center;
+
+}
+
+.device-icon{
+
+    font-size:22px;
+
+    color:#25d366;
+
+}
+
+.device-status{
+
+    font-size:12px;
+
+    color:#25d366;
+
+}
+
+.device-last{
+
+    font-size:11px;
+
+    color:#777;
+
+}
+
+.disconnect-device{
+
+    border:none;
+
+    background:#ff5252;
+
+    color:#fff;
+
+    border-radius:8px;
+
+    padding:6px 10px;
+
+}
+
+.current-device{
+
+    border-left:4px solid #25d366;
+
+}
+
+body.dark .linked-devices-panel{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+
+body.dark .device-item{
+
+    border-color:#2f3b43;
+
+}
+            
+            /* ==========================================================
+ETAPA 65
+========================================================== */
+
+.admin-panel{
+
+    margin:20px;
+
+    padding:20px;
+
+    background:#ffffff;
+
+    border-radius:15px;
+
+}
+
+.admin-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+.admin-badge{
+
+    background:#25d366;
+
+    color:#ffffff;
+
+    padding:6px 15px;
+
+    border-radius:20px;
+
+}
+
+.admin-stats{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:15px;
+
+    margin-bottom:20px;
+
+}
+
+.admin-card{
+
+    text-align:center;
+
+    padding:20px;
+
+    background:#f7f7f7;
+
+    border-radius:12px;
+
+}
+
+.admin-card i{
+
+    font-size:28px;
+
+    color:#25d366;
+
+    margin-bottom:10px;
+
+}
+
+.user-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px;
+
+    border-bottom:1px solid #ececec;
+
+}
+
+.user-actions button{
+
+    margin-left:6px;
+
+}
+
+body.dark .admin-panel{
+
+    background:#202c33;
+
+    color:#ffffff;
+
+}
+
+body.dark .admin-card{
+
+    background:#2a3942;
+
+}
+
+
+        </style>
+    </head>
+    <body>
+        <!-- ==========================================================
+ETAPA 56
+Gravador de Voz Profissional
+Adicionar antes do </body>
+========================================================== -->
+
+<div id="voiceRecorder" class="voice-recorder">
+
+    <button id="cancelRecording">
+
+        <i class="fa-solid fa-trash"></i>
+
+    </button>
+
+    <div class="recording-info">
+
+        <div id="recordingAnimation"
+             class="recording-animation">
+
+            <i class="fa-solid fa-microphone"></i>
+
+        </div>
+
+        <span id="recordingTime">
+
+            00:00
+
+        </span>
+
+        <small id="recordingStatus">
+
+            A gravar...
+
+        </small>
+
+    </div>
+
+    <button id="pauseRecording">
+
+        <i class="fa-solid fa-pause"></i>
+
+    </button>
+
+    <button id="sendRecording">
+
+        <i class="fa-solid fa-paper-plane"></i>
+
+    </button>
+
+</div>
+
+<button id="recordVoiceButton"
+
+        class="record-voice-button">
+
+    <i class="fa-solid fa-microphone"></i>
+
+</button>
+
+ <!-- ==========================================================
+ETAPA 57
+Sistema Profissional de Chamadas
+========================================================== -->
+
+<div id="callScreen" class="call-screen">
+
+    <video id="localVideo"
+           autoplay
+           muted
+           playsinline>
+
+    </video>
+
+    <video id="remoteVideo"
+           autoplay
+           playsinline>
+
+    </video>
+
+    <div class="call-top">
+
+        <h5 id="callName">
+
+            A chamar...
+
+        </h5>
+
+        <span id="callTimer">
+
+            00:00
+
+        </span>
+
+    </div>
+
+    <div class="call-controls">
+
+        <button id="toggleMic">
+
+            <i class="fa-solid fa-microphone"></i>
+
+        </button>
+
+        <button id="toggleCamera">
+
+            <i class="fa-solid fa-video"></i>
+
+        </button>
+
+        <button id="switchCamera">
+
+            <i class="fa-solid fa-camera-rotate"></i>
+
+        </button>
+
+        <button id="endCall"
+                class="end-call">
+
+            <i class="fa-solid fa-phone-slash"></i>
+
+        </button>
+
+    </div>
+
+</div>
+        
+        <!-- ==========================================================
+ETAPA 58
+Partilha de Ecrã (Screen Sharing)
+Picture-in-Picture
+Gravação da Chamada
+Melhorias Integradas
+Adicionar antes do </body>
+========================================================== -->
+
+<div id="screenShareToolbar"
+
+     class="screen-share-toolbar">
+
+    <button id="startScreenShare">
+
+        <i class="fa-solid fa-display"></i>
+
+    </button>
+
+    <button id="stopScreenShare">
+
+        <i class="fa-solid fa-display-slash"></i>
+
+    </button>
+
+    <button id="pictureMode">
+
+        <i class="fa-solid fa-clone"></i>
+
+    </button>
+
+    <button id="recordCall">
+
+        <i class="fa-solid fa-circle"></i>
+
+    </button>
+
+    <button id="snapshotVideo">
+
+        <i class="fa-solid fa-camera"></i>
+
+    </button>
+
+</div>
+
+<a id="downloadRecording"
+
+   hidden>
+
+</a>
+
+<canvas id="snapshotCanvas"
+
+        hidden>
+
+</canvas>
+
+        <!-- ==========================================================
+ETAPA 59
+Sistema de Notificações em Tempo Real
+Confirmações de Entrega
+Estado Online
+Indicador de Escrita
+========================================================== -->
+
+<audio id="notificationSound" preload="auto">
+
+    <source src="assets/audio/message.mp3"
+            type="audio/mpeg">
+
+</audio>
+
+<div id="typingIndicator"
+
+     class="typing-indicator">
+
+    <span></span>
+
+    <span></span>
+
+    <span></span>
+
+    <small>
+
+        A escrever...
+
+    </small>
+
+</div>
+
+<div id="connectionStatus"
+
+     class="connection-status offline">
+
+    <i class="fa-solid fa-circle"></i>
+
+    <span>
+
+        Offline
+
+    </span>
+
+</div>
+
+<div id="toastContainer"
+
+     class="toast-container">
+
+</div>
+<!-- ==========================================================
+ETAPA 60
+Criptografia de Ponta a Ponta (E2EE)
+========================================================== -->
+
+<div id="encryptionBanner"
+
+     class="encryption-banner">
+
+    <i class="fa-solid fa-lock"></i>
+
+    <span>
+
+        As mensagens e chamadas estão protegidas
+        por criptografia de ponta a ponta.
+
+    </span>
+
+    <button id="verifyKeys">
+
+        Verificar
+
+    </button>
+
+</div>
+
+<div id="securityModal"
+
+     class="modal fade"
+
+     tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5>
+
+                    Segurança da Conversa
+
+                </h5>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div id="securityFingerprint">
+
+                </div>
+
+                <hr>
+
+                <div id="keyStatus">
+
+                    Chaves não geradas.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+   <!-- ==========================================================
+ETAPA 61
+Sistema Inteligente de Moderação de Conteúdo
+Adicionar antes do </body>
+========================================================== -->
+
+<div id="contentWarningModal"
+     class="modal fade"
+     tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5>
+
+                    Conteúdo Detetado
+
+                </h5>
+
+            </div>
+
+            <div class="modal-body">
+
+                <i class="fa-solid fa-triangle-exclamation text-warning fa-2x"></i>
+
+                <p class="mt-3">
+
+                    A mensagem contém palavras ou expressões que violam as regras da conversa.
+
+                </p>
+
+                <div id="blockedWordsList">
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    id="editMessage"
+
+                    class="btn btn-secondary">
+
+                    Editar
+
+                </button>
+
+                <button
+                    id="cancelMessage"
+
+                    class="btn btn-danger">
+
+                    Cancelar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+     
+        <!-- ==========================================================
+ETAPA 62
+Sistema Profissional de Autenticação
+(Login, Registo, Recuperação e Verificação)
+========================================================== -->
+
+<div id="authContainer" class="auth-container">
+
+    <div class="auth-logo">
+
+        <i class="fa-brands fa-whatsapp"></i>
+
+        <h2>COCI</h2>
+
+    </div>
+
+    <form id="loginForm">
+
+        <input
+            type="email"
+            id="loginEmail"
+            placeholder="E-mail">
+
+        <input
+            type="password"
+            id="loginPassword"
+            placeholder="Palavra-passe">
+
+        <button type="submit">
+
+            Entrar
+
+        </button>
+
+    </form>
+
+    <div class="auth-links">
+
+        <a href="#" id="openRegister">
+
+            Criar conta
+
+        </a>
+
+        <a href="#" id="forgotPassword">
+
+            Esqueci a palavra-passe
+
+        </a>
+
+    </div>
+
+</div>
+
+<!-- Modal Código OTP -->
+
+<div class="modal fade"
+
+     id="otpModal"
+
+     tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5>
+
+                    Verificação
+
+                </h5>
+
+            </div>
+
+            <div class="modal-body">
+
+                <input
+
+                id="otpCode"
+
+                class="form-control"
+
+                maxlength="6"
+
+                placeholder="Código de 6 dígitos">
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+
+                id="confirmOTP"
+
+                class="btn btn-success">
+
+                    Confirmar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+        <!-- ==========================================================
+ETAPA 63
+Sincronização com Backend
+Painel de Estado do Servidor
+Fila Offline
+========================================================== -->
+
+<div id="serverStatus" class="server-status">
+
+    <div class="server-indicator online">
+
+        <i class="fa-solid fa-server"></i>
+
+        <span id="serverText">
+
+            Servidor Online
+
+        </span>
+
+    </div>
+
+    <div class="sync-info">
+
+        <small>
+
+            Última sincronização:
+
+        </small>
+
+        <span id="lastSync">
+
+            Agora
+
+        </span>
+
+    </div>
+
+</div>
+
+<div id="syncQueue"
+
+     class="sync-queue">
+
+    <div class="queue-header">
+
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+
+        <span>
+
+            Fila de Sincronização
+
+        </span>
+
+    </div>
+
+    <div id="queueMessages">
+
+    </div>
+
+</div>
+
+<div id="connectionBanner"
+
+     class="connection-banner">
+
+    <i class="fa-solid fa-wifi"></i>
+
+    <span>
+
+        Ligação restabelecida.
+
+    </span>
+
+</div>
+        
+        <!-- ==========================================================
+ETAPA 64
+Sincronização Multi-dispositivo
+Gestão de Sessões
+Dispositivos Ligados
+========================================================== -->
+
+<div id="linkedDevicesPanel"
+
+     class="linked-devices-panel">
+
+    <div class="devices-header">
+
+        <h5>
+
+            Dispositivos Ligados
+
+        </h5>
+
+        <button id="refreshDevices">
+
+            <i class="fa-solid fa-rotate"></i>
+
+        </button>
+
+    </div>
+
+    <div id="devicesList">
+
+    </div>
+
+    <button id="linkNewDevice"
+
+            class="btn btn-success w-100 mt-3">
+
+        <i class="fa-solid fa-qrcode"></i>
+
+        Ligar Novo Dispositivo
+
+    </button>
+
+</div>
+
+<!-- Modal QR Code -->
+
+<div class="modal fade"
+
+     id="qrDeviceModal"
+
+     tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5>
+
+                    Ligar Dispositivo
+
+                </h5>
+
+            </div>
+
+            <div class="modal-body text-center">
+
+                <canvas id="deviceQRCode">
+
+                </canvas>
+
+                <p class="mt-3">
+
+                    Digitalize este QR Code para iniciar sessão.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==========================================================
+ETAPA 65
+Painel de Administração
+Gestão de Utilizadores
+Denúncias
+Auditoria
+========================================================== -->
+
+<div id="adminPanel" class="admin-panel">
+
+    <div class="admin-header">
+
+        <h4>
+
+            Painel de Administração
+
+        </h4>
+
+        <span class="admin-badge">
+
+            ADMIN
+
+        </span>
+
+    </div>
+
+    <div class="admin-stats">
+
+        <div class="admin-card">
+
+            <i class="fa-solid fa-users"></i>
+
+            <h5 id="totalUsers">
+
+                0
+
+            </h5>
+
+            <small>
+
+                Utilizadores
+
+            </small>
+
+        </div>
+
+        <div class="admin-card">
+
+            <i class="fa-solid fa-flag"></i>
+
+            <h5 id="totalReports">
+
+                0
+
+            </h5>
+
+            <small>
+
+                Denúncias
+
+            </small>
+
+        </div>
+
+        <div class="admin-card">
+
+            <i class="fa-solid fa-user-lock"></i>
+
+            <h5 id="blockedUsers">
+
+                0
+
+            </h5>
+
+            <small>
+
+                Bloqueados
+
+            </small>
+
+        </div>
+
+    </div>
+
+    <div id="usersTable">
+
+    </div>
+
+</div>
+
+       
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script>
+            /* ==========================================================
+ETAPA 56
+========================================================== */
+
+let mediaRecorder;
+
+let audioChunks=[];
+
+let gravando=false;
+
+let pausado=false;
+
+let cronometro;
+
+let segundos=0;
+
+/* Iniciar */
+
+recordVoiceButton.onclick=
+
+async function(){
+
+    if(gravando) return;
+
+    const stream=
+
+    await navigator.mediaDevices
+
+    .getUserMedia({
+
+        audio:true
+
+    });
+
+    mediaRecorder=
+
+    new MediaRecorder(stream);
+
+    audioChunks=[];
+
+    mediaRecorder.start();
+
+    gravando=true;
+
+    voiceRecorder.style.display="flex";
+
+    iniciarTempo();
+
+    mediaRecorder.ondataavailable=
+
+    e=>{
+
+        audioChunks.push(e.data);
+
+    };
+
+    mediaRecorder.onstop=function(){
+
+        let blob=
+
+        new Blob(audioChunks,{
+
+            type:"audio/webm"
+
+        });
+
+        let url=
+
+        URL.createObjectURL(blob);
+
+        criarMensagemAudio(url);
+
+        terminar();
+
+    };
+
+};
+
+/* Cronómetro */
+
+function iniciarTempo(){
+
+    segundos=0;
+
+    recordingTime.innerHTML="00:00";
+
+    cronometro=
+
+    setInterval(()=>{
+
+        segundos++;
+
+        let m=
+
+        String(
+
+        Math.floor(segundos/60))
+
+        .padStart(2,"0");
+
+        let s=
+
+        String(segundos%60)
+
+        .padStart(2,"0");
+
+        recordingTime.innerHTML=
+
+        m+":"+s;
+
+    },1000);
+
+}
+
+/* Pausar */
+
+pauseRecording.onclick=function(){
+
+    if(!gravando) return;
+
+    if(!pausado){
+
+        mediaRecorder.pause();
+
+        pausado=true;
+
+        recordingStatus.innerHTML=
+
+        "Pausado";
+
+        this.innerHTML=
+
+        '<i class="fa-solid fa-play"></i>';
+
+    }else{
+
+        mediaRecorder.resume();
+
+        pausado=false;
+
+        recordingStatus.innerHTML=
+
+        "A gravar...";
+
+        this.innerHTML=
+
+        '<i class="fa-solid fa-pause"></i>';
+
+    }
+
+};
+
+/* Enviar */
+
+sendRecording.onclick=function(){
+
+    if(gravando){
+
+        mediaRecorder.stop();
+
+    }
+
+};
+
+/* Cancelar */
+
+cancelRecording.onclick=function(){
+
+    if(!gravando) return;
+
+    mediaRecorder.stop();
+
+    audioChunks=[];
+
+    terminar();
+
+};
+
+/* Finalizar */
+
+function terminar(){
+
+    clearInterval(cronometro);
+
+    gravando=false;
+
+    pausado=false;
+
+    recordingStatus.innerHTML=
+
+    "A gravar...";
+
+    pauseRecording.innerHTML=
+
+    '<i class="fa-solid fa-pause"></i>';
+
+    voiceRecorder.style.display="none";
+
+}
+
+/* Cancelar ao deslizar */
+
+let inicioX=0;
+
+voiceRecorder.addEventListener(
+
+"touchstart",
+
+e=>{
+
+    inicioX=
+
+    e.touches[0].clientX;
+
+});
+
+voiceRecorder.addEventListener(
+
+"touchmove",
+
+e=>{
+
+    if(
+
+    inicioX-
+
+    e.touches[0].clientX>
+
+    120
+
+    ){
+
+        cancelRecording.click();
+
+    }
+
+});
+
+            /* ==========================================================
+ETAPA 57
+========================================================== */
+
+let localStream;
+
+let chamadaSegundos=0;
+
+let chamadaCronometro;
+
+/* Iniciar chamada */
+
+async function iniciarChamadaVideo(){
+
+    callScreen.style.display="block";
+
+    localStream=
+
+    await navigator.mediaDevices
+
+    .getUserMedia({
+
+        video:true,
+
+        audio:true
+
+    });
+
+    localVideo.srcObject=
+
+    localStream;
+
+    iniciarTemporizador();
+
+}
+
+/* Temporizador */
+
+function iniciarTemporizador(){
+
+    chamadaSegundos=0;
+
+    chamadaCronometro=
+
+    setInterval(()=>{
+
+        chamadaSegundos++;
+
+        let m=
+
+        String(Math.floor(
+
+        chamadaSegundos/60))
+
+        .padStart(2,"0");
+
+        let s=
+
+        String(
+
+        chamadaSegundos%60)
+
+        .padStart(2,"0");
+
+        callTimer.innerHTML=
+
+        m+":"+s;
+
+    },1000);
+
+}
+
+/* Microfone */
+
+toggleMic.onclick=function(){
+
+    let faixa=
+
+    localStream
+
+    .getAudioTracks()[0];
+
+    faixa.enabled=
+
+    !faixa.enabled;
+
+    this.classList.toggle("active");
+
+};
+
+/* Câmara */
+
+toggleCamera.onclick=function(){
+
+    let faixa=
+
+    localStream
+
+    .getVideoTracks()[0];
+
+    faixa.enabled=
+
+    !faixa.enabled;
+
+    this.classList.toggle("active");
+
+};
+
+/* Terminar */
+
+endCall.onclick=function(){
+
+    clearInterval(
+
+    chamadaCronometro);
+
+    localStream
+
+    .getTracks()
+
+    .forEach(t=>t.stop());
+
+    callScreen.style.display="none";
+
+};
+
+            /* ==========================================================
+ETAPA 58
+========================================================== */
+
+let screenStream;
+
+let recorder;
+
+let gravacao=[];
+
+/* Partilhar ecrã */
+
+startScreenShare.onclick=
+
+async function(){
+
+    screenStream=
+
+    await navigator.mediaDevices
+
+    .getDisplayMedia({
+
+        video:true,
+
+        audio:true
+
+    });
+
+    remoteVideo.srcObject=
+
+    screenStream;
+
+    this.classList.add("active");
+
+};
+
+/* Parar */
+
+stopScreenShare.onclick=
+
+function(){
+
+    if(!screenStream)
+
+    return;
+
+    screenStream
+
+    .getTracks()
+
+    .forEach(
+
+    t=>t.stop());
+
+    remoteVideo.srcObject=null;
+
+    startScreenShare
+
+    .classList.remove("active");
+
+};
+
+/* Picture in Picture */
+
+pictureMode.onclick=
+
+async function(){
+
+    if(
+
+    document.pictureInPictureEnabled){
+
+        await remoteVideo
+
+        .requestPictureInPicture();
+
+    }
+
+};
+
+/* Gravar chamada */
+
+recordCall.onclick=
+
+function(){
+
+    if(
+
+    !screenStream)
+
+    return;
+
+    if(!recorder){
+
+        gravacao=[];
+
+        recorder=
+
+        new MediaRecorder(
+
+        screenStream);
+
+        recorder.start();
+
+        this.classList.add(
+
+        "active");
+
+        recorder.ondataavailable=
+
+        e=>{
+
+            gravacao.push(
+
+            e.data);
+
+        };
+
+        recorder.onstop=
+
+        salvarVideo;
+
+    }else{
+
+        recorder.stop();
+
+        recorder=null;
+
+        this.classList.remove(
+
+        "active");
+
+    }
+
+};
+
+/* Guardar vídeo */
+
+function salvarVideo(){
+
+    let blob=
+
+    new Blob(
+
+    gravacao,
+
+    {
+
+        type:"video/webm"
+
+    });
+
+    let url=
+
+    URL.createObjectURL(
+
+    blob);
+
+    downloadRecording.href=
+
+    url;
+
+    downloadRecording.download=
+
+    "chamada.webm";
+
+    downloadRecording.click();
+
+}
+
+/* Captura */
+
+snapshotVideo.onclick=
+
+function(){
+
+    let canvas=
+
+    snapshotCanvas;
+
+    let ctx=
+
+    canvas.getContext("2d");
+
+    canvas.width=
+
+    remoteVideo.videoWidth;
+
+    canvas.height=
+
+    remoteVideo.videoHeight;
+
+    ctx.drawImage(
+
+    remoteVideo,
+
+    0,
+
+    0);
+
+    let imagem=
+
+    canvas.toDataURL(
+
+    "image/png");
+
+    let a=
+
+    document.createElement(
+
+    "a");
+
+    a.href=imagem;
+
+    a.download=
+
+    "captura.png";
+
+    a.click();
+
+};
+
+            /* ==========================================================
+ETAPA 59
+========================================================== */
+
+let socket=null;
+
+/* Ligar */
+
+function ligarServidor(){
+
+    connectionStatus
+
+    .className=
+
+    "connection-status online";
+
+    connectionStatus.innerHTML=
+
+    '<i class="fa-solid fa-circle"></i> Online';
+
+    mostrarToast(
+
+    "Ligado ao servidor");
+
+}
+
+/* Desligar */
+
+function desligarServidor(){
+
+    connectionStatus
+
+    .className=
+
+    "connection-status offline";
+
+    connectionStatus.innerHTML=
+
+    '<i class="fa-solid fa-circle"></i> Offline';
+
+}
+
+/* Reconectar */
+
+function reconectar(){
+
+    setTimeout(
+
+    ligarServidor,
+
+    3000
+
+    );
+
+}
+
+/* Som */
+
+function tocarSom(){
+
+    notificationSound.play();
+
+}
+
+/* Toast */
+
+function mostrarToast(txt){
+
+    let div=
+
+    document.createElement("div");
+
+    div.className=
+
+    "toast-message";
+
+    div.innerHTML=txt;
+
+    toastContainer
+
+    .appendChild(div);
+
+    setTimeout(()=>{
+
+        div.remove();
+
+    },3500);
+
+}
+
+/* Escrevendo */
+
+function mostrarDigitando(){
+
+    typingIndicator
+
+    .style.display="flex";
+
+}
+
+function esconderDigitando(){
+
+    typingIndicator
+
+    .style.display="none";
+
+}
+
+/* Receber */
+
+function receberMensagem(
+
+texto){
+
+    tocarSom();
+
+    mostrarToast(
+
+    "Nova mensagem");
+
+    esconderDigitando();
+
+}
+
+/* Estado */
+
+function atualizarEstado(
+
+msg,
+
+estado){
+
+    let icone=
+
+    msg.querySelector(
+
+    ".message-status");
+
+    if(!icone){
+
+        icone=
+
+        document
+
+        .createElement("span");
+
+        icone.className=
+
+        "message-status";
+
+        msg.appendChild(
+
+        icone);
+
+    }
+
+    switch(estado){
+
+        case"enviado":
+
+        icone.innerHTML=
+
+        '<i class="fa-solid fa-check"></i>';
+
+        break;
+
+        case"entregue":
+
+        icone.innerHTML=
+
+        '<i class="fa-solid fa-check-double"></i>';
+
+        break;
+
+        case"lido":
+
+        icone.innerHTML=
+
+        '<i class="fa-solid fa-check-double"></i>';
+
+        icone.style.color=
+
+        "#53bdeb";
+
+        break;
+
+    }
+
+}
+
+/* Simulação */
+
+ligarServidor();
+
+setTimeout(
+
+mostrarDigitando,
+
+4000
+
+);
+
+setTimeout(()=>{
+
+    receberMensagem(
+
+    "Olá!");
+
+},7000
+
+);
+
+/* Internet */
+
+window.addEventListener(
+
+"offline",
+
+desligarServidor
+
+);
+
+window.addEventListener(
+
+"online",
+
+ligarServidor
+
+);
+            
+            /* ==========================================================
+ETAPA 60
+========================================================== */
+
+let chaveAES;
+
+let fingerprint="";
+
+/* Gerar chave */
+
+async function gerarChave(){
+
+    chaveAES=
+
+    await crypto.subtle.generateKey(
+
+    {
+
+        name:"AES-GCM",
+
+        length:256
+
+    },
+
+    true,
+
+    [
+
+        "encrypt",
+
+        "decrypt"
+
+    ]);
+
+    gerarFingerprint();
+
+}
+
+/* Fingerprint */
+
+async function gerarFingerprint(){
+
+    let chave=
+
+    await crypto.subtle.exportKey(
+
+    "raw",
+
+    chaveAES);
+
+    let hash=
+
+    await crypto.subtle.digest(
+
+    "SHA-256",
+
+    chave);
+
+    let bytes=
+
+    Array.from(
+
+    new Uint8Array(hash));
+
+    fingerprint=
+
+    bytes
+
+    .map(b=>
+
+    b.toString(16)
+
+    .padStart(2,"0"))
+
+    .join("");
+
+    securityFingerprint.innerHTML=
+
+    fingerprint;
+
+    keyStatus.innerHTML=
+
+    "Chave gerada com sucesso.";
+
+}
+
+/* Encriptar */
+
+async function encriptar(texto){
+
+    const iv=
+
+    crypto.getRandomValues(
+
+    new Uint8Array(12));
+
+    const dados=
+
+    new TextEncoder()
+
+    .encode(texto);
+
+    const cifrado=
+
+    await crypto.subtle.encrypt(
+
+    {
+
+        name:"AES-GCM",
+
+        iv
+
+    },
+
+    chaveAES,
+
+    dados);
+
+    return{
+
+        iv,
+
+        dados:cifrado
+
+    };
+
+}
+
+/* Desencriptar */
+
+async function desencriptar(
+
+obj){
+
+    const plano=
+
+    await crypto.subtle.decrypt(
+
+    {
+
+        name:"AES-GCM",
+
+        iv:obj.iv
+
+    },
+
+    chaveAES,
+
+    obj.dados);
+
+    return new TextDecoder()
+
+    .decode(plano);
+
+}
+
+/* Teste */
+
+async function testeSeguranca(){
+
+    let msg=
+
+    "Mensagem protegida";
+
+    let segura=
+
+    await encriptar(msg);
+
+    let texto=
+
+    await desencriptar(segura);
+
+    console.log(texto);
+
+}
+
+/* Verificação */
+
+verifyKeys.onclick=function(){
+
+    new bootstrap.Modal(
+
+    securityModal)
+
+    .show();
+
+};
+
+/* Rotação de chaves */
+
+async function rotacionarChave(){
+
+    await gerarChave();
+
+    console.log(
+
+    "Nova chave criada.");
+
+}
+
+/* Inicialização */
+
+gerarChave();
+
+testeSeguranca();
+
+setInterval(
+
+rotacionarChave,
+
+86400000
+
+);
+
+/* ==========================================================
+ETAPA 61
+========================================================== */
+
+/* Lista negra */
+
+const palavrasBloqueadas=[
+
+"palavra1",
+
+"palavra2",
+
+"insulto",
+
+"ofensa"
+
+];
+
+/* Lista branca */
+
+const palavrasPermitidas=[
+
+"assistente",
+
+"admin"
+
+];
+
+/* Histórico */
+
+let historicoModeracao=[];
+
+/* Normalização */
+
+function normalizarTexto(texto){
+
+    return texto
+
+    .toLowerCase()
+
+    .normalize("NFD")
+
+    .replace(/[\u0300-\u036f]/g,"")
+
+    .replace(/0/g,"o")
+
+    .replace(/1/g,"i")
+
+    .replace(/3/g,"e")
+
+    .replace(/4/g,"a")
+
+    .replace(/5/g,"s")
+
+    .replace(/7/g,"t");
+
+}
+
+/* Verificação */
+
+function analisarMensagem(texto){
+
+    let normal=
+
+    normalizarTexto(texto);
+
+    let encontradas=[];
+
+    palavrasBloqueadas.forEach(p=>{
+
+        if(
+
+        normal.includes(p)
+
+        &&
+
+        !palavrasPermitidas.includes(p)
+
+        ){
+
+            encontradas.push(p);
+
+        }
+
+    });
+
+    return encontradas;
+
+}
+
+/* Interceptar envio */
+
+function validarMensagem(texto){
+
+    let lista=
+
+    analisarMensagem(texto);
+
+    if(lista.length){
+
+        blockedWordsList.innerHTML="";
+
+        lista.forEach(item=>{
+
+            blockedWordsList.innerHTML+=`
+
+            <span class="flag-word">
+
+                ${item}
+
+            </span>
+
+            `;
+
+        });
+
+        historicoModeracao.push({
+
+            data:new Date(),
+
+            mensagem:texto,
+
+            palavras:lista
+
+        });
+
+        new bootstrap.Modal(
+
+        contentWarningModal)
+
+        .show();
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+/* Exemplo */
+
+const botaoEnviar=
+
+document.getElementById(
+
+"sendButton");
+
+botaoEnviar?.addEventListener(
+
+"click",
+
+function(e){
+
+    let texto=
+
+    messageInput.value;
+
+    if(
+
+    !validarMensagem(
+
+    texto)
+
+    ){
+
+        e.preventDefault();
+
+    }
+
+});
+
+/* Estatísticas */
+
+function totalBloqueios(){
+
+    return historicoModeracao.length;
+
+}
+
+editMessage.onclick=function(){
+
+    bootstrap.Modal
+
+    .getInstance(
+
+    contentWarningModal)
+
+    .hide();
+
+};
+
+cancelMessage.onclick=function(){
+
+    messageInput.value="";
+
+    bootstrap.Modal
+
+    .getInstance(
+
+    contentWarningModal)
+
+    .hide();
+
+};
+            
+            /* ==========================================================
+ETAPA 62
+========================================================== */
+
+const utilizadores=[];
+
+/* Registar */
+
+function registarUtilizador(
+
+nome,
+
+email,
+
+password){
+
+    utilizadores.push({
+
+        id:crypto.randomUUID(),
+
+        nome,
+
+        email,
+
+        password,
+
+        verificado:false,
+
+        criadoEm:new Date()
+
+    });
+
+}
+
+/* Login */
+
+function autenticar(
+
+email,
+
+password){
+
+    return utilizadores.find(
+
+    u=>
+
+    u.email===email &&
+
+    u.password===password
+
+    );
+
+}
+
+/* OTP */
+
+function gerarOTP(){
+
+    return Math.floor(
+
+    100000+
+
+    Math.random()*900000
+
+    ).toString();
+
+}
+
+let codigoOTP=
+
+gerarOTP();
+
+/* Entrar */
+
+loginForm.onsubmit=
+
+function(e){
+
+    e.preventDefault();
+
+    let user=
+
+    autenticar(
+
+    loginEmail.value,
+
+    loginPassword.value
+
+    );
+
+    if(!user){
+
+        alert(
+
+        "Credenciais inválidas.");
+
+        return;
+
+    }
+
+    codigoOTP=
+
+    gerarOTP();
+
+    console.log(
+
+    "OTP:",
+
+    codigoOTP);
+
+    new bootstrap.Modal(
+
+    otpModal)
+
+    .show();
+
+};
+
+/* Confirmar */
+
+confirmOTP.onclick=
+
+function(){
+
+    if(
+
+    otpCode.value===
+
+    codigoOTP){
+
+        alert(
+
+        "Sessão iniciada.");
+
+        bootstrap.Modal
+
+        .getInstance(
+
+        otpModal)
+
+        .hide();
+
+    }else{
+
+        alert(
+
+        "Código inválido.");
+
+    }
+
+};
+
+/* Recuperação */
+
+forgotPassword.onclick=
+
+function(){
+
+    alert(
+
+    "Fluxo preparado para recuperação por e-mail ou SMS.");
+
+};
+
+/* Criar conta */
+
+openRegister.onclick=
+
+function(){
+
+    alert(
+
+    "Abrir formulário de registo.");
+
+};
+
+/* Sessão */
+
+function terminarSessao(){
+
+    localStorage.removeItem(
+
+    "sessao");
+
+}
+
+/* Exemplo */
+
+registarUtilizador(
+
+"Administrador",
+
+"admin@email.com",
+
+"123456"
+
+);
+
+/* ==========================================================
+ETAPA 63
+========================================================== */
+
+let servidorOnline=true;
+
+let filaMensagens=[];
+
+/* Estado */
+
+function atualizarServidor(){
+
+    serverText.innerHTML=
+
+    servidorOnline
+
+    ?"Servidor Online"
+
+    :"Servidor Offline";
+
+    document
+
+    .querySelector(
+
+    ".server-indicator")
+
+    .className=
+
+    "server-indicator "+
+
+    (servidorOnline
+
+    ?"online"
+
+    :"offline");
+
+}
+
+/* Enviar */
+
+function enviarServidor(
+
+mensagem){
+
+    if(!servidorOnline){
+
+        filaMensagens.push(
+
+        mensagem);
+
+        atualizarFila();
+
+        return;
+
+    }
+
+    console.log(
+
+    "Enviado:",
+
+    mensagem);
+
+    atualizarSincronizacao();
+
+}
+
+/* Fila */
+
+function atualizarFila(){
+
+    syncQueue.style.display=
+
+    filaMensagens.length
+
+    ?"block"
+
+    :"none";
+
+    queueMessages.innerHTML="";
+
+    filaMensagens.forEach(msg=>{
+
+        queueMessages.innerHTML+=`
+
+        <div class="queue-item">
+
+            ${msg}
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+/* Sincronizar */
+
+function sincronizarFila(){
+
+    if(!servidorOnline)
+
+    return;
+
+    while(
+
+    filaMensagens.length){
+
+        console.log(
+
+        "Sincronizado:",
+
+        filaMensagens.shift()
+
+        );
+
+    }
+
+    atualizarFila();
+
+    atualizarSincronizacao();
+
+    mostrarBanner();
+
+}
+
+/* Hora */
+
+function atualizarSincronizacao(){
+
+    lastSync.innerHTML=
+
+    new Date()
+
+    .toLocaleTimeString();
+
+}
+
+/* Banner */
+
+function mostrarBanner(){
+
+    connectionBanner
+
+    .style.display="block";
+
+    setTimeout(()=>{
+
+        connectionBanner
+
+        .style.display="none";
+
+    },3000);
+
+}
+
+/* Eventos */
+
+window.addEventListener(
+
+"offline",
+
+()=>{
+
+    servidorOnline=false;
+
+    atualizarServidor();
+
+});
+
+window.addEventListener(
+
+"online",
+
+()=>{
+
+    servidorOnline=true;
+
+    atualizarServidor();
+
+    sincronizarFila();
+
+});
+
+/* Simulação */
+
+atualizarServidor();
+
+enviarServidor(
+
+"Mensagem de teste");
+
+            /* ==========================================================
+ETAPA 64
+========================================================== */
+
+let dispositivos=[
+
+{
+
+id:1,
+
+nome:"Chrome - Windows",
+
+ativo:true,
+
+atual:true,
+
+ultimoAcesso:"Agora"
+
+},
+
+{
+
+id:2,
+
+nome:"Android",
+
+ativo:true,
+
+atual:false,
+
+ultimoAcesso:"Há 5 minutos"
+
+}
+
+];
+
+/* Atualizar lista */
+
+function carregarDispositivos(){
+
+devicesList.innerHTML="";
+
+dispositivos.forEach(d=>{
+
+devicesList.innerHTML+=`
+
+<div class="device-item
+
+${d.atual?"current-device":""}">
+
+<div class="device-info">
+
+<i class="fa-solid fa-laptop device-icon"></i>
+
+<div>
+
+<strong>${d.nome}</strong>
+
+<br>
+
+<span class="device-status">
+
+${d.ativo?"Ligado":"Desligado"}
+
+</span>
+
+<br>
+
+<span class="device-last">
+
+${d.ultimoAcesso}
+
+</span>
+
+</div>
+
+</div>
+
+<button
+
+class="disconnect-device"
+
+onclick="desligarDispositivo(${d.id})">
+
+Sair
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+/* Remover sessão */
+
+function desligarDispositivo(id){
+
+dispositivos=
+
+dispositivos.filter(
+
+d=>d.id!==id
+
+);
+
+carregarDispositivos();
+
+}
+
+/* QR */
+
+linkNewDevice.onclick=function(){
+
+new bootstrap.Modal(
+
+qrDeviceModal
+
+).show();
+
+desenharQR();
+
+};
+
+/* QR Simulado */
+
+function desenharQR(){
+
+const canvas=
+
+document.getElementById(
+
+"deviceQRCode"
+
+);
+
+const ctx=
+
+canvas.getContext("2d");
+
+canvas.width=220;
+
+canvas.height=220;
+
+ctx.fillStyle="#ffffff";
+
+ctx.fillRect(0,0,220,220);
+
+ctx.fillStyle="#000000";
+
+for(let i=0;i<220;i+=10){
+
+for(let j=0;j<220;j+=10){
+
+if(Math.random()>.5){
+
+ctx.fillRect(i,j,8,8);
+
+}
+
+}
+
+}
+
+}
+
+/* Atualizar */
+
+refreshDevices.onclick=
+
+carregarDispositivos;
+
+/* Inicializar */
+
+carregarDispositivos();
+            
+             /* ==========================================================
+ETAPA 65
+========================================================== */
+
+const utilizadoresAdmin=[
+
+{
+
+id:1,
+
+nome:"António",
+
+estado:"Ativo",
+
+denuncias:0
+
+},
+
+{
+
+id:2,
+
+nome:"Maria",
+
+estado:"Ativo",
+
+denuncias:2
+
+},
+
+{
+
+id:3,
+
+nome:"João",
+
+estado:"Bloqueado",
+
+denuncias:5
+
+}
+
+];
+
+/* Atualizar painel */
+
+function carregarPainelAdmin(){
+
+totalUsers.innerHTML=
+
+utilizadoresAdmin.length;
+
+totalReports.innerHTML=
+
+utilizadoresAdmin
+
+.reduce(
+
+(a,b)=>
+
+a+b.denuncias,
+
+0);
+
+blockedUsers.innerHTML=
+
+utilizadoresAdmin
+
+.filter(
+
+u=>u.estado==="Bloqueado"
+
+).length;
+
+usersTable.innerHTML="";
+
+utilizadoresAdmin.forEach(u=>{
+
+usersTable.innerHTML+=`
+
+<div class="user-row">
+
+<div>
+
+<strong>${u.nome}</strong>
+
+<br>
+
+<small>
+
+Estado:
+
+${u.estado}
+
+</small>
+
+</div>
+
+<div class="user-actions">
+
+<button
+
+class="btn btn-warning btn-sm"
+
+onclick="suspender(${u.id})">
+
+Suspender
+
+</button>
+
+<button
+
+class="btn btn-danger btn-sm"
+
+onclick="bloquear(${u.id})">
+
+Bloquear
+
+</button>
+
+<button
+
+class="btn btn-info btn-sm"
+
+onclick="verAuditoria(${u.id})">
+
+Logs
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+/* Suspender */
+
+function suspender(id){
+
+let u=
+
+utilizadoresAdmin.find(
+
+x=>x.id===id);
+
+u.estado="Suspenso";
+
+carregarPainelAdmin();
+
+}
+
+/* Bloquear */
+
+function bloquear(id){
+
+let u=
+
+utilizadoresAdmin.find(
+
+x=>x.id===id);
+
+u.estado="Bloqueado";
+
+carregarPainelAdmin();
+
+}
+
+/* Auditoria */
+
+function verAuditoria(id){
+
+console.log(
+
+"Mostrar histórico do utilizador:",
+
+id
+
+);
+
+}
+
+/* Inicializar */
+
+carregarPainelAdmin();
+
+
+        </script>
+    </body>
+</html>

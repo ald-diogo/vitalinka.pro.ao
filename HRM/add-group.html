@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COCI - Grupos e Localização</title>
+    
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <!-- Leaflet CSS para mapas -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+    /* ==========================================================
+    ESTILOS GERAIS
+    ========================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+        }
+    
+   body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5;
+   
+    margin: 0;
+    padding: 0;
+}
+    
+    /* ==========================================================
+    ETAPA 61 - CSS CRIAR GRUPOS + LOCALIZAÇÃO
+    ========================================================== */
+    
+    /* --- Botões de Ação --- */
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+        padding: 12px 16px;
+        background: #f0f2f5;
+        border-bottom: 1px solid #ddd;
+        flex-wrap: wrap;
+    }
+    
+    .action-buttons .btn {
+        border-radius: 50px;
+        padding: 8px 20px;
+        font-size: 14px;
+    }
+    
+    body.dark .action-buttons {
+        background: #202c33;
+        border-color: #2a3942;
+    }
+    
+    /* --- Modal Criar Grupo --- */
+    .grupo-modal {
+        border-radius: 16px;
+        overflow: hidden;
+        border: none;
+    }
+    
+    .grupo-modal-header {
+        background: linear-gradient(135deg, #008069, #00a884);
+        color: #ffffff;
+        border: none;
+        padding: 18px 24px;
+    }
+    
+    .grupo-modal-body {
+        padding: 24px;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    
+    .grupo-modal-body::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .grupo-modal-body::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+    }
+    
+    .grupo-field {
+        margin-bottom: 18px;
+    }
+    
+    .grupo-label {
+        display: block;
+        font-weight: 600;
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 6px;
+    }
+    
+    .grupo-label i {
+        color: #008069;
+        margin-right: 6px;
+    }
+    
+    .grupo-contactos {
+        max-height: 180px;
+        overflow-y: auto;
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 8px 12px;
+        border: 1px solid #e0e0e0;
+    }
+    
+    .grupo-contactos .form-check {
+        padding: 6px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .grupo-contactos .form-check:last-child {
+        border-bottom: none;
+    }
+    
+    .grupo-contactos .form-check-input:checked {
+        background-color: #008069;
+        border-color: #008069;
+    }
+    
+    .grupo-preview {
+        margin-top: 8px;
+    }
+    
+    .grupo-modal-footer {
+        background: #f8f9fa;
+        border: none;
+        padding: 12px 24px;
+    }
+    
+    /* --- Lista de Grupos --- */
+    .grupos-container {
+        padding: 16px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .grupos-titulo {
+        font-size: 16px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .lista-grupos {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .grupo-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 16px;
+        background: #f0f2f5;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.25s;
+        border: 1px solid transparent;
+    }
+    
+    .grupo-card:hover {
+        background: #e4e6e8;
+        border-color: #008069;
+        transform: translateX(4px);
+    }
+    
+    .grupo-card .grupo-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #008069, #25d366);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 20px;
+        flex-shrink: 0;
+        overflow: hidden;
+    }
+    
+    .grupo-card .grupo-avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    
+    .grupo-card .grupo-info {
+        flex: 1;
+    }
+    
+    .grupo-card .grupo-info h6 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 600;
+    }
+    
+    .grupo-card .grupo-info small {
+        color: #667781;
+        font-size: 12px;
+    }
+    
+    .grupo-card .grupo-info .grupo-membros {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px;
+        margin-top: 4px;
+    }
+    
+    .grupo-card .grupo-info .grupo-membros .membro-avatar {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        object-fit: cover;
+    }
+    
+    .grupo-empty {
+        text-align: center;
+        padding: 30px 20px;
+        color: #667781;
+    }
+    
+    .grupo-empty i {
+        font-size: 40px;
+        color: #ccc;
+        display: block;
+        margin-bottom: 10px;
+    }
+    
+    .grupo-empty p {
+        margin: 0;
+        font-weight: 500;
+    }
+    
+    .grupo-empty small {
+        color: #999;
+    }
+    
+    /* --- Modal Localização --- */
+    .local-modal {
+        border-radius: 16px;
+        overflow: hidden;
+        border: none;
+    }
+    
+    .local-modal-header {
+        background: linear-gradient(135deg, #1a73e8, #0d47a1);
+        color: #ffffff;
+        border: none;
+        padding: 18px 24px;
+    }
+    
+    .local-mapa {
+        height: 320px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+        background: #e8eaed;
+    }
+    
+    .local-status {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .local-status-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        font-size: 13px;
+        color: #333;
+    }
+    
+    .local-status-item i {
+        color: #008069;
+        font-size: 16px;
+    }
+    
+    .local-endereco {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 16px;
+        background: #e8f5e9;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        font-size: 14px;
+        color: #1b5e20;
+    }
+    
+    .local-endereco i {
+        color: #2e7d32;
+        font-size: 18px;
+    }
+    
+    .local-preview-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 18px;
+        background: #dcf8c6;
+        border-radius: 12px;
+        border-left: 4px solid #25d366;
+    }
+    
+    .local-preview-card i {
+        font-size: 28px;
+        color: #25d366;
+    }
+    
+    .local-preview-card strong {
+        font-size: 14px;
+        display: block;
+    }
+    
+    .local-link {
+        font-size: 13px;
+        color: #1a73e8;
+        word-break: break-all;
+        margin: 0;
+    }
+    
+    .local-preview-card .local-link a {
+        color: #1a73e8;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .local-preview-card .local-link a:hover {
+        text-decoration: underline;
+    }
+    
+    .local-modal-footer {
+        background: #f8f9fa;
+        border: none;
+        padding: 12px 24px;
+    }
+    
+    /* --- Área de Chat (simulação) --- */
+    .chat-area {
+        padding: 16px;
+        background: #fff;
+        min-height: 200px;
+        border-bottom: 1px solid #ddd;
+        background: #f0f2f5;
+    background-image: url('images/add-group.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    }
+    
+    .chat-area .message {
+        max-width: 70%;
+        padding: 8px 12px;
+        border-radius: 12px;
+        margin-bottom: 8px;
+        font-size: 14px;
+        position: relative;
+    }
+    
+    .chat-area .message.received {
+        background: #f0f2f5;
+        align-self: flex-start;
+        margin-right: auto;
+    }
+    
+    .chat-area .message.sent {
+        background: #dcf8c6;
+        align-self: flex-end;
+        margin-left: auto;
+    }
+    
+    .chat-area .message .message-time {
+        font-size: 11px;
+        color: #667781;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        justify-content: flex-end;
+    }
+    
+    .chat-area .message .message-text {
+        word-wrap: break-word;
+    }
+    
+    .chat-area .date-divider {
+        text-align: center;
+        font-size: 12px;
+        color: #667781;
+        padding: 8px 0;
+    }
+    
+    .chat-area .date-divider span {
+        background: #f0f2f5;
+        padding: 4px 12px;
+        border-radius: 8px;
+    }
+    
+    /* --- Dark Mode --- */
+    body.dark .grupo-modal-body {
+        background: #1a1a1a;
+    }
+    
+    body.dark .grupo-label {
+        color: #ddd;
+    }
+    
+    body.dark .grupo-contactos {
+        background: #232323;
+        border-color: #333;
+    }
+    
+    body.dark .grupo-contactos .form-check {
+        border-color: #333;
+    }
+    
+    body.dark .grupo-modal-footer {
+        background: #1a1a1a;
+    }
+    
+    body.dark .grupo-card {
+        background: #2a3942;
+        color: #fff;
+    }
+    
+    body.dark .grupo-card:hover {
+        background: #3a4a52;
+    }
+    
+    body.dark .grupo-card .grupo-info small {
+        color: #a0b0b8;
+    }
+    
+    body.dark .grupo-empty {
+        color: #a0b0b8;
+    }
+    
+    body.dark .grupo-empty i {
+        color: #555;
+    }
+    
+    body.dark .local-status-item {
+        background: #232323;
+        color: #ddd;
+    }
+    
+    body.dark .local-endereco {
+        background: #1a2a1a;
+        color: #8bc34a;
+    }
+    
+    body.dark .local-preview-card {
+        background: #005c4b;
+    }
+    
+    body.dark .local-preview-card .local-link a {
+        color: #4fc3f7;
+    }
+    
+    body.dark .local-modal-footer {
+        background: #1a1a1a;
+    }
+    
+    body.dark .grupos-container {
+        border-color: #2a3942;
+    }
+    
+    body.dark .chat-area {
+        background: #1a1a1a;
+    }
+    
+    body.dark .chat-area .message.received {
+        background: #2a3942;
+        color: #fff;
+    }
+    
+    body.dark .chat-area .message.sent {
+        background: #005c4b;
+        color: #fff;
+    }
+    
+    body.dark .chat-area .message .message-time {
+        color: #a0b0b8;
+    }
+    
+    body.dark .chat-area .date-divider span {
+        background: #2a3942;
+        color: #a0b0b8;
+    }
+    
+    /* --- Responsivo --- */
+    @media (max-width: 576px) {
+        .local-status {
+            grid-template-columns: 1fr;
+        }
+        
+        .local-mapa {
+            height: 240px;
+        }
+        
+        .action-buttons .btn {
+            font-size: 13px;
+            padding: 6px 14px;
+        }
+        
+        .grupo-card {
+            padding: 10px 12px;
+        }
+        
+        .grupo-card .grupo-avatar {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+        }
+        
+        .chat-area .message {
+            max-width: 85%;
+        }
+    }
+    
+    /* --- Leaflet Map Fix --- */
+    .leaflet-container {
+        border-radius: 12px;
+        height: 100%;
+        width: 100%;
+    }
+    
+    .custom-marker {
+        background: none;
+        border: none;
+    }
+    
+    .localizacao-msg {
+        max-width: 85% !important;
+        padding: 12px 16px !important;
+    }
+    
+    .localizacao-msg .message-text {
+        color: #111 !important;
+    }
+    
+    body.dark .localizacao-msg .message-text {
+        color: #fff !important;
+    }
+    
+    body.dark .localizacao-msg .message-text a {
+        color: #4fc3f7 !important;
+    }
+    </style>
+</head>
+<body>
+    <!-- ==========================================================
+    ETAPA 61 - CRIAR GRUPOS + LOCALIZAÇÃO + GOOGLE MAPS
+    ========================================================== -->
+
+    <!-- Botões de Ação -->
+    <div class="action-buttons">
+        <button id="btnCriarGrupo" class="btn btn-success">
+            <i class="fa-solid fa-users"></i> Novo Grupo
+        </button>
+        <button id="btnPartilharLocal" class="btn btn-outline-success">
+            <i class="fa-solid fa-location-dot"></i> Partilhar Localização
+        </button>
+    </div>
+
+    <!-- ==========================================================
+    MODAL CRIAR GRUPO
+    ========================================================== -->
+    <div class="modal fade" id="modalCriarGrupo" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content grupo-modal">
+                <div class="modal-header grupo-modal-header">
+                    <h5 class="modal-title">
+                        <i class="fa-solid fa-users me-2"></i>Criar Novo Grupo
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body grupo-modal-body">
+                    <!-- Nome do Grupo -->
+                    <div class="grupo-field">
+                        <label class="grupo-label">
+                            <i class="fa-solid fa-tag"></i> Nome do Grupo
+                        </label>
+                        <input type="text" id="nomeGrupo" class="form-control" placeholder="Ex: Equipa de Enfermagem">
+                    </div>
+
+                    <!-- Descrição -->
+                    <div class="grupo-field">
+                        <label class="grupo-label">
+                            <i class="fa-solid fa-align-left"></i> Descrição (opcional)
+                        </label>
+                        <textarea id="descricaoGrupo" class="form-control" rows="2" placeholder="Descrição do grupo..."></textarea>
+                    </div>
+
+                    <!-- Imagem do Grupo -->
+                    <div class="grupo-field">
+                        <label class="grupo-label">
+                            <i class="fa-solid fa-image"></i> Foto do Grupo (opcional)
+                        </label>
+                        <input type="file" id="fotoGrupo" class="form-control" accept="image/*">
+                        <div id="previewFotoGrupo" class="grupo-preview" style="display:none;">
+                            <img id="previewGrupoImg" src="#" alt="Preview" style="max-width:100px;border-radius:50%;margin-top:8px;">
+                        </div>
+                    </div>
+
+                    <!-- Participantes -->
+                    <div class="grupo-field">
+                        <label class="grupo-label">
+                            <i class="fa-solid fa-user-plus"></i> Selecionar Participantes
+                            <span class="badge bg-success ms-2" id="contadorSelecionados">0 selecionados</span>
+                        </label>
+                        <div id="listaContactos" class="grupo-contactos"></div>
+                    </div>
+                </div>
+                <div class="modal-footer grupo-modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="confirmarCriarGrupo" class="btn btn-success">
+                        <i class="fa-solid fa-check"></i> Criar Grupo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+    MODAL LOCALIZAÇÃO
+    ========================================================== -->
+    <div class="modal fade" id="modalLocalizacao" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content local-modal">
+                <div class="modal-header local-modal-header">
+                    <h5 class="modal-title">
+                        <i class="fa-solid fa-location-dot me-2"></i>Partilhar Localização
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body local-modal-body">
+                    <!-- Mapa -->
+                    <div id="mapaLocalizacao" class="local-mapa"></div>
+
+                    <!-- Status e Coordenadas -->
+                    <div class="local-status">
+                        <div class="local-status-item">
+                            <i class="fa-solid fa-satellite"></i>
+                            <span id="localStatusText">A obter localização...</span>
+                        </div>
+                        <div class="local-status-item">
+                            <i class="fa-solid fa-map-pin"></i>
+                            <span id="coordsTexto">Aguardando GPS...</span>
+                        </div>
+                    </div>
+
+                    <!-- Endereço (reverse geocoding) -->
+                    <div class="local-endereco" id="enderecoContainer">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span id="enderecoTexto">A obter endereço...</span>
+                    </div>
+
+                    <!-- Pré-visualização do Link Google Maps -->
+                    <div class="local-preview" id="localPreview" style="display:none;">
+                        <div class="local-preview-card">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                            <div>
+                                <strong>Localização partilhada</strong>
+                                <p id="linkGoogleMaps" class="local-link">Carregando...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer local-modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="enviarLocalizacao" class="btn btn-success" disabled>
+                        <i class="fa-solid fa-paper-plane"></i> Enviar Localização
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+    ÁREA DE CHAT (SIMULAÇÃO)
+    ========================================================== -->
+    <div class="chat-area" id="chatArea">
+        <div id="messages" style="display:flex;flex-direction:column;gap:4px;">
+            <div class="date-divider"><span>HOJE</span></div>
+            <div class="message received">
+                <div class="message-text">👋 Bem-vindo ao COCI!</div>
+                <div class="message-time">10:30</div>
+            </div>
+            <div class="message received">
+                <div class="message-text">Crie grupos e partilhe localizações com a sua equipa.</div>
+                <div class="message-time">10:31</div>
+            </div>
+            <div class="message sent">
+                <div class="message-text">Ótimo! Vou testar. 🚀</div>
+                <div class="message-time">10:32 <i class="fa-solid fa-check-double"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+    LISTA DE GRUPOS
+    ========================================================== -->
+    <div class="grupos-container">
+        <h5 class="grupos-titulo">
+            <i class="fa-solid fa-users"></i> Meus Grupos
+            <span id="totalGrupos" class="badge bg-secondary">0</span>
+        </h5>
+        <div id="listaGrupos" class="lista-grupos">
+            <div class="grupo-empty">
+                <i class="fa-regular fa-people-group"></i>
+                <p>Nenhum grupo criado ainda</p>
+                <small>Clique em "Novo Grupo" para começar</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================
+    SCRIPTS
+    ========================================================== -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+    /* ==========================================================
+    ETAPA 61 - CRIAÇÃO DE GRUPOS + LOCALIZAÇÃO + GOOGLE MAPS
+    ========================================================== */
+
+    // ===========================================================
+    // 1. DADOS
+    // ===========================================================
+
+    // Contactos predefinidos (vêm do sistema)
+    const contactosDisponiveis = [
+        { id: 1, nome: "Ana Silva", avatar: "https://i.pravatar.cc/50?img=5" },
+        { id: 2, nome: "João Pereira", avatar: "https://i.pravatar.cc/50?img=12" },
+        { id: 3, nome: "Maria Costa", avatar: "https://i.pravatar.cc/50?img=20" },
+        { id: 4, nome: "Carlos Mendes", avatar: "https://i.pravatar.cc/50?img=25" },
+        { id: 5, nome: "Sofia Almeida", avatar: "https://i.pravatar.cc/50?img=30" },
+        { id: 6, nome: "Dr. Miguel Santos", avatar: "https://i.pravatar.cc/50?img=35" },
+        { id: 7, nome: "Enf. Rita Oliveira", avatar: "https://i.pravatar.cc/50?img=40" },
+        { id: 8, nome: "Pedro Ferreira", avatar: "https://i.pravatar.cc/50?img=45" }
+    ];
+
+    // Armazenar grupos no localStorage
+    let grupos = JSON.parse(localStorage.getItem('coci_grupos') || '[]');
+
+    // ===========================================================
+    // 2. FUNÇÕES DOS GRUPOS
+    // ===========================================================
+
+    // Carregar contactos no modal
+    function carregarContactos() {
+        const container = document.getElementById('listaContactos');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        contactosDisponiveis.forEach(c => {
+            container.innerHTML += `
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="${c.id}" id="contato_${c.id}">
+                    <label class="form-check-label d-flex align-items-center gap-2" for="contato_${c.id}">
+                        <img src="${c.avatar}" style="width:28px;height:28px;border-radius:50%;">
+                        ${c.nome}
+                    </label>
+                </div>
+            `;
+        });
+        
+        // Atualizar contador
+        atualizarContadorSelecionados();
+    }
+
+    // Atualizar contador de selecionados
+    function atualizarContadorSelecionados() {
+        const checkboxes = document.querySelectorAll('#listaContactos input:checked');
+        const contador = document.getElementById('contadorSelecionados');
+        if (contador) {
+            contador.textContent = `${checkboxes.length} selecionado${checkboxes.length !== 1 ? 's' : ''}`;
+        }
+    }
+
+    // Renderizar lista de grupos
+    function renderizarGrupos() {
+        const container = document.getElementById('listaGrupos');
+        if (!container) return;
+        
+        const total = document.getElementById('totalGrupos');
+        if (total) total.textContent = grupos.length;
+        
+        if (grupos.length === 0) {
+            container.innerHTML = `
+                <div class="grupo-empty">
+                    <i class="fa-regular fa-people-group"></i>
+                    <p>Nenhum grupo criado ainda</p>
+                    <small>Clique em "Novo Grupo" para começar</small>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = '';
+        grupos.forEach((g, index) => {
+            const avatarHTML = g.foto ? 
+                `<img src="${g.foto}" alt="${g.nome}">` : 
+                `<i class="fa-solid fa-users"></i>`;
+            
+            const membrosAvatares = g.participantes.slice(0, 4).map(p => 
+                `<img src="${p.avatar || 'https://i.pravatar.cc/30'}" class="membro-avatar" title="${p.nome}">`
+            ).join('');
+            
+            const maisMembros = g.participantes.length > 4 ? 
+                `<span class="membro-avatar" style="background:#ccc;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;color:#333;width:22px;height:22px;border-radius:50%;border:2px solid #fff;">+${g.participantes.length - 4}</span>` : '';
+            
+            container.innerHTML += `
+                <div class="grupo-card" data-index="${index}">
+                    <div class="grupo-avatar">
+                        ${avatarHTML}
+                    </div>
+                    <div class="grupo-info">
+                        <h6>${g.nome}</h6>
+                        <small>${g.participantes.length} participantes</small>
+                        <div class="grupo-membros">
+                            ${membrosAvatares}
+                            ${maisMembros}
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:6px;">
+                        <button class="btn btn-sm btn-outline-success" onclick="abrirGrupo(${index})">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="eliminarGrupo(${index})">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // Abrir grupo (simular chat)
+    function abrirGrupo(index) {
+        const grupo = grupos[index];
+        if (!grupo) return;
+        
+        const messages = document.getElementById('messages');
+        
+        if (messages) {
+            // Adicionar mensagem de entrada no grupo
+            const entrada = document.createElement('div');
+            entrada.className = 'message received';
+            entrada.innerHTML = `
+                <div class="message-text">📢 <strong>${grupo.nome}</strong> - ${grupo.descricao || 'Grupo COCI'}</div>
+                <div class="message-time">${new Date().toLocaleTimeString('pt-PT', {hour:'2-digit',minute:'2-digit'})}</div>
+            `;
+            messages.appendChild(entrada);
+            
+            const participantes = document.createElement('div');
+            participantes.className = 'message received';
+            participantes.innerHTML = `
+                <div class="message-text">👥 ${grupo.participantes.map(p => p.nome).join(', ')}</div>
+                <div class="message-time">${new Date().toLocaleTimeString('pt-PT', {hour:'2-digit',minute:'2-digit'})}</div>
+            `;
+            messages.appendChild(participantes);
+            
+            messages.scrollTop = messages.scrollHeight;
+            
+            // Feedback visual
+            const toast = document.createElement('div');
+            toast.className = 'alert alert-info alert-dismissible fade show';
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.right = '20px';
+            toast.style.zIndex = '9999';
+            toast.innerHTML = `
+                <i class="fa-solid fa-users"></i> A entrar no grupo <strong>${grupo.nome}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    }
+
+    // Eliminar grupo
+    function eliminarGrupo(index) {
+        if (!confirm(`Deseja eliminar o grupo "${grupos[index].nome}"?`)) return;
+        grupos.splice(index, 1);
+        localStorage.setItem('coci_grupos', JSON.stringify(grupos));
+        renderizarGrupos();
+    }
+
+    // ===========================================================
+    // 3. EVENTOS DOS GRUPOS
+    // ===========================================================
+
+    // Abrir modal de criar grupo
+    document.getElementById('btnCriarGrupo')?.addEventListener('click', function() {
+        carregarContactos();
+        document.getElementById('nomeGrupo').value = '';
+        document.getElementById('descricaoGrupo').value = '';
+        document.getElementById('previewFotoGrupo').style.display = 'none';
+        document.getElementById('fotoGrupo').value = '';
+        new bootstrap.Modal(document.getElementById('modalCriarGrupo')).show();
+    });
+
+    // Atualizar contador ao selecionar contactos
+    document.addEventListener('change', function(e) {
+        if (e.target.closest('#listaContactos input[type="checkbox"]')) {
+            atualizarContadorSelecionados();
+        }
+    });
+
+    // Pré-visualizar foto do grupo
+    document.getElementById('fotoGrupo')?.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            const preview = document.getElementById('previewFotoGrupo');
+            const img = document.getElementById('previewGrupoImg');
+            preview.style.display = 'block';
+            img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // Confirmar criação do grupo
+    document.getElementById('confirmarCriarGrupo')?.addEventListener('click', function() {
+        const nome = document.getElementById('nomeGrupo').value.trim();
+        if (!nome) {
+            alert('Por favor, insira um nome para o grupo.');
+            return;
+        }
+        
+        const checkboxes = document.querySelectorAll('#listaContactos input:checked');
+        if (checkboxes.length === 0) {
+            alert('Selecione pelo menos um participante.');
+            return;
+        }
+        
+        const participantes = Array.from(checkboxes).map(el => {
+            const id = parseInt(el.value);
+            return contactosDisponiveis.find(c => c.id === id);
+        }).filter(Boolean);
+        
+        const fotoInput = document.getElementById('fotoGrupo');
+        let foto = '';
+        if (fotoInput.files && fotoInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                criarGrupo(nome, participantes, e.target.result);
+            };
+            reader.readAsDataURL(fotoInput.files[0]);
+        } else {
+            criarGrupo(nome, participantes, '');
+        }
+    });
+
+    function criarGrupo(nome, participantes, foto) {
+        const novoGrupo = {
+            id: Date.now(),
+            nome: nome,
+            descricao: document.getElementById('descricaoGrupo').value.trim(),
+            foto: foto || '',
+            participantes: participantes,
+            criadoEm: new Date().toISOString(),
+            criador: 'Eu'
+        };
+        
+        grupos.push(novoGrupo);
+        localStorage.setItem('coci_grupos', JSON.stringify(grupos));
+        renderizarGrupos();
+        
+        bootstrap.Modal.getInstance(document.getElementById('modalCriarGrupo')).hide();
+        
+        // Feedback
+        const toast = document.createElement('div');
+        toast.className = 'alert alert-success alert-dismissible fade show';
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.right = '20px';
+        toast.style.zIndex = '9999';
+        toast.innerHTML = `
+            <strong>✅ Grupo criado!</strong> "${nome}" com ${participantes.length} participantes.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+    }
+
+    // ===========================================================
+    // 4. LOCALIZAÇÃO + GOOGLE MAPS
+    // ===========================================================
+
+    let mapa = null;
+    let marcador = null;
+    let localizacaoAtual = null;
+    let mapaInicializado = false;
+
+    // Abrir modal de localização
+    document.getElementById('btnPartilharLocal')?.addEventListener('click', function() {
+        const modal = new bootstrap.Modal(document.getElementById('modalLocalizacao'));
+        modal.show();
+        
+        // Inicializar mapa após o modal abrir
+        setTimeout(() => {
+            iniciarLocalizacao();
+        }, 300);
+    });
+
+    // Iniciar localização
+    function iniciarLocalizacao() {
+        const statusText = document.getElementById('localStatusText');
+        const coordsText = document.getElementById('coordsTexto');
+        const enderecoText = document.getElementById('enderecoTexto');
+        const preview = document.getElementById('localPreview');
+        const enviarBtn = document.getElementById('enviarLocalizacao');
+        
+        statusText.textContent = 'A obter localização...';
+        coordsText.textContent = 'Aguardando GPS...';
+        enderecoText.textContent = 'A obter endereço...';
+        preview.style.display = 'none';
+        enviarBtn.disabled = true;
+        
+        if (!navigator.geolocation) {
+            statusText.textContent = '❌ Geolocalização não suportada';
+            coordsText.textContent = 'Erro: GPS indisponível';
+            return;
+        }
+        
+        navigator.geolocation.getCurrentPosition(
+            async function(pos) {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                localizacaoAtual = { lat, lng };
+                
+                statusText.textContent = '✅ Localização obtida';
+                coordsText.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                enviarBtn.disabled = false;
+                
+                // Inicializar mapa
+                inicializarMapa(lat, lng);
+                
+                // Obter endereço (reverse geocoding)
+                try {
+                    const endereco = await obterEndereco(lat, lng);
+                    enderecoText.textContent = endereco || 'Endereço não encontrado';
+                } catch (e) {
+                    enderecoText.textContent = 'Endereço não disponível';
+                }
+                
+                // Atualizar preview
+                const link = `https://www.google.com/maps?q=${lat},${lng}`;
+                document.getElementById('linkGoogleMaps').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
+                preview.style.display = 'block';
+            },
+            function(erro) {
+                console.error('Erro de geolocalização:', erro);
+                statusText.textContent = '❌ Erro ao obter localização';
+                coordsText.textContent = 'Permita o acesso ao GPS';
+                enderecoText.textContent = 'Não foi possível obter a localização';
+                
+                // Usar localização padrão (Lisboa)
+                const lat = 38.7223;
+                const lng = -9.1393;
+                localizacaoAtual = { lat, lng };
+                coordsText.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)} (fallback)`;
+                inicializarMapa(lat, lng);
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0
+            }
+        );
+    }
+
+    // Inicializar mapa com Leaflet
+    function inicializarMapa(lat, lng) {
+        if (!document.getElementById('mapaLocalizacao')) return;
+        
+        if (mapa) {
+            mapa.remove();
+            mapa = null;
+        }
+        
+        mapa = L.map('mapaLocalizacao').setView([lat, lng], 15);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            maxZoom: 19
+        }).addTo(mapa);
+        
+        // Marcador
+        const icon = L.divIcon({
+            html: '<i class="fa-solid fa-location-dot" style="font-size:30px;color:#ea4335;text-shadow:0 2px 8px rgba(0,0,0,0.3);"></i>',
+            className: 'custom-marker',
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
+        });
+        
+        marcador = L.marker([lat, lng], { icon }).addTo(mapa)
+            .bindPopup('📍 Você está aqui')
+            .openPopup();
+        
+        // Adicionar círculo de precisão
+        L.circle([lat, lng], {
+            radius: 50,
+            color: '#4285f4',
+            fillColor: '#4285f4',
+            fillOpacity: 0.15
+        }).addTo(mapa);
+        
+        mapaInicializado = true;
+    }
+
+    // Obter endereço via OpenStreetMap Nominatim
+    async function obterEndereco(lat, lng) {
+        try {
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&accept-language=pt`
+            );
+            const data = await response.json();
+            return data.display_name || data.address?.road || 'Endereço não encontrado';
+        } catch (e) {
+            console.error('Erro ao obter endereço:', e);
+            return 'Endereço não disponível';
+        }
+    }
+
+    // Enviar localização
+    document.getElementById('enviarLocalizacao')?.addEventListener('click', function() {
+        if (!localizacaoAtual) {
+            alert('Aguardando localização...');
+            return;
+        }
+        
+        const { lat, lng } = localizacaoAtual;
+        const link = `https://www.google.com/maps?q=${lat},${lng}`;
+        const endereco = document.getElementById('enderecoTexto').textContent;
+        
+        // Criar mensagem de localização
+        const messages = document.getElementById('messages');
+        if (messages) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message sent localizacao-msg';
+            msgDiv.innerHTML = `
+                <div class="message-text">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                        <i class="fa-solid fa-location-dot" style="color:#25d366;font-size:24px;"></i>
+                        <strong>Localização partilhada</strong>
+                    </div>
+                    <div style="font-size:13px;color:#667781;margin-bottom:8px;">
+                        <i class="fa-solid fa-map-pin"></i> ${lat.toFixed(6)}, ${lng.toFixed(6)}
+                    </div>
+                    <div style="font-size:13px;color:#555;margin-bottom:10px;">
+                        <i class="fa-solid fa-road"></i> ${endereco || 'Endereço não disponível'}
+                    </div>
+                    <a href="${link}" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#1a73e8;color:#fff;padding:8px 16px;border-radius:50px;text-decoration:none;font-weight:500;font-size:13px;">
+                        <i class="fa-solid fa-map-location-dot"></i> Abrir no Google Maps
+                    </a>
+                    <div style="margin-top:8px;font-size:11px;color:#999;">
+                        <i class="fa-regular fa-clock"></i> ${new Date().toLocaleTimeString('pt-PT', {hour:'2-digit',minute:'2-digit'})}
+                    </div>
+                </div>
+                <div class="message-time">
+                    ${new Date().getHours().toString().padStart(2, "0")}:
+                    ${new Date().getMinutes().toString().padStart(2, "0")}
+                    <i class="fa-solid fa-check-double"></i>
+                    <span style="font-size:9px;color:#53bdeb;margin-left:4px;">🔒</span>
+                </div>
+            `;
+            messages.appendChild(msgDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+        
+        // Fechar modal
+        bootstrap.Modal.getInstance(document.getElementById('modalLocalizacao')).hide();
+        
+        // Feedback
+        const toast = document.createElement('div');
+        toast.className = 'alert alert-success alert-dismissible fade show';
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.right = '20px';
+        toast.style.zIndex = '9999';
+        toast.innerHTML = `
+            <strong>📍 Localização partilhada!</strong>
+            <a href="${link}" target="_blank" style="color:#155724;text-decoration:underline;">Ver no Google Maps</a>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 5000);
+    });
+
+    // ===========================================================
+    // 5. INICIALIZAÇÃO
+    // ===========================================================
+
+    // Renderizar grupos ao carregar
+    document.addEventListener('DOMContentLoaded', function() {
+        renderizarGrupos();
+        console.log('✅ Etapa 61 - Grupos + Localização + Google Maps carregada!');
+        console.log(`📊 ${grupos.length} grupos carregados do localStorage`);
+    });
+
+    // Exportar funções globais
+    window.criarGrupo = criarGrupo;
+    window.renderizarGrupos = renderizarGrupos;
+    window.abrirGrupo = abrirGrupo;
+    window.eliminarGrupo = eliminarGrupo;
+    </script>
+</body>
+</html>

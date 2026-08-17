@@ -1,0 +1,2507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VITALINKA | Área do Financeiro</title>
+    <!-- Bootstrap 5 + Bootstrap Icons + Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ===== VARIÁVEIS DE TEMA ===== */
+        :root {
+            --bg-image: url('images/dash-fin.png');
+            --bg-overlay: rgba(0, 0, 0, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.10);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-color: #f0f4f8;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --table-bg: rgba(255, 255, 255, 0.06);
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --input-border: rgba(255, 255, 255, 0.12);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --primary-glow: rgba(13, 110, 253, 0.25);
+            --success-color: #75f0a0;
+            --warning-color: #ffd75a;
+            --danger-color: #ff7a8a;
+            --info-color: #6ee7ff;
+            --chatbot-bg: rgba(20, 30, 28, 0.95);
+            --dropdown-bg: rgba(20, 30, 28, 0.95);
+            --modal-bg: rgba(20, 30, 28, 0.95);
+            --bg-pattern-opacity: 0.6;
+            --primary-color: #2b7a4b;
+            --primary-gradient: linear-gradient(135deg, #2b7a4b, #4c9f70);
+            --status-paid: #75f0a0;
+            --status-pending: #ffd75a;
+            --status-overdue: #ff7a8a;
+            --status-cancelled: #6c757d;
+        }
+
+        /* Tema Claro */
+        [data-theme="light"] {
+            --bg-image: url('images/dash-fin.png');
+            --bg-overlay: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --text-color: #1a2634;
+            --text-muted: rgba(0, 0, 0, 0.6);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --table-bg: rgba(255, 255, 255, 0.6);
+            --input-bg: rgba(255, 255, 255, 0.75);
+            --input-border: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --primary-glow: rgba(13, 110, 253, 0.15);
+            --success-color: #198754;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #0dcaf0;
+            --chatbot-bg: rgba(255, 255, 255, 0.95);
+            --dropdown-bg: rgba(255, 255, 255, 0.95);
+            --modal-bg: rgba(255, 255, 255, 0.95);
+            --bg-pattern-opacity: 0.3;
+        }
+
+        /* ===== ESTILOS GERAIS ===== */
+        * { font-family: 'Times New Roman', Times, serif; }
+        
+        body {
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            position: relative;
+            background-color: #1a2634;
+            transition: background-color 0.3s ease;
+        }
+
+        [data-theme="light"] body {
+            background-color: #e8ecef;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-overlay);
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+
+        .container-fluid { position: relative; z-index: 1; }
+
+        /* ===== GLASSMORPHISM ===== */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        /* ===== TABS ===== */
+        .nav-tabs .nav-link {
+            font-size: 13px;
+            color: var(--text-color);
+            border: none;
+            padding: 10px 14px;
+            margin-right: 3px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+        .nav-tabs .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        .nav-tabs .nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            color: var(--text-color);
+            border-bottom: 3px solid #0d6efd;
+            font-weight: bold;
+            box-shadow: 0 -2px 20px var(--primary-glow);
+        }
+        .tab-content {
+            padding: 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 0 8px 8px 8px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+
+        /* ===== INDICATOR CARDS ===== */
+        .indicator-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 15px 10px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        .indicator-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .indicator-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            text-shadow: 0 2px 10px var(--shadow-color);
+        }
+        .indicator-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .indicator-card.success .number { color: var(--success-color); }
+        .indicator-card.warning .number { color: var(--warning-color); }
+        .indicator-card.danger .number { color: var(--danger-color); }
+        .indicator-card.info .number { color: var(--info-color); }
+        .indicator-card.primary .number { color: #6ea8fe; }
+
+        /* ===== CARDS ===== */
+        .info-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .info-card .card-title {
+            color: var(--text-color);
+            border-bottom: 2px solid var(--glass-border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .info-card .info-label {
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .info-card .info-value { color: var(--text-color); }
+
+        /* ===== STATUS BADGE ===== */
+        .status-badge.paid { background: rgba(25, 135, 84, 0.7); color: #fff; }
+        .status-badge.pending { background: rgba(255, 193, 7, 0.7); color: #000; }
+        .status-badge.overdue { background: rgba(220, 53, 69, 0.7); color: #fff; }
+        .status-badge.cancelled { background: rgba(108, 117, 125, 0.7); color: #fff; }
+
+        /* ===== PAGE TITLE ===== */
+        .page-title {
+            color: var(--text-color);
+            text-shadow: 0 2px 20px var(--shadow-color);
+        }
+        .page-title .badge {
+            background: rgba(13, 110, 253, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== SEARCH SECTION ===== */
+        .search-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        .search-section h6 { color: var(--text-color); }
+        .search-section .form-control,
+        .search-section .form-select {
+            border-radius: 8px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+        }
+        .search-section .form-control::placeholder { color: var(--text-muted); }
+        .search-section .form-control:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .search-section .btn-outline-secondary { color: var(--text-muted); border-color: var(--glass-border); }
+        .search-section .btn-outline-secondary:hover { background: var(--glass-bg); color: var(--text-color); }
+        .search-section .btn-outline-primary { color: var(--text-color); border-color: var(--glass-border); }
+        .search-section .btn-outline-primary:hover { background: rgba(13, 110, 253, 0.3); }
+
+        /* ===== REPORT CARDS ===== */
+        .report-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .report-card .card-body { color: var(--text-color); }
+        .report-card .card-title { color: var(--text-color); }
+        .report-card .card-text { color: var(--text-muted); }
+
+        /* ===== MODAL GLASS ===== */
+        .modal-content {
+            background: var(--modal-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .modal-header { border-bottom: 1px solid var(--glass-border); }
+        .modal-footer { border-top: 1px solid var(--glass-border); }
+        .modal .btn-close { 
+            filter: invert(1); 
+            opacity: 0.7;
+        }
+        [data-theme="light"] .modal .btn-close { 
+            filter: invert(0); 
+            opacity: 0.5;
+        }
+        .modal .form-control,
+        .modal .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+        }
+        .modal .form-control:focus,
+        .modal .form-select:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .modal .form-label {
+            color: var(--text-muted);
+        }
+        .modal .form-check-label {
+            color: var(--text-color);
+        }
+        .modal .btn-secondary {
+            background: var(--input-bg);
+            border-color: var(--glass-border);
+            color: var(--text-color);
+        }
+        .modal .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .modal .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* ===== DATETIME ===== */
+        #currentDateTime {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        /* ============================================================ */
+        /* ===== TIMER, DASHBOARD DROPDOWN, CHATBOT ===== */
+        /* ============================================================ */
+
+        .timer-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: inline-block;
+        }
+        .timer-container svg {
+            transform: rotate(-90deg);
+            width: 60px;
+            height: 60px;
+        }
+        .timer-container .timer-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 4;
+        }
+        [data-theme="light"] .timer-container .timer-bg {
+            stroke: rgba(0, 0, 0, 0.12);
+        }
+        .timer-container .timer-progress {
+            fill: none;
+            stroke: #4c9f70;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 169.646;
+            stroke-dashoffset: 169.646;
+            transition: stroke-dashoffset 1s linear;
+        }
+        .timer-container .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-shadow: 0 1px 5px var(--shadow-color);
+        }
+        .timer-warning .timer-progress { stroke: #ffc107; }
+        .timer-danger .timer-progress { stroke: #dc3545; }
+
+        /* --- DASHBOARD DROPDOWN --- */
+        .dashboard-dropdown .dropdown-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+        }
+        .dashboard-dropdown .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .dashboard-dropdown .dropdown-menu {
+            background: var(--dropdown-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 220px;
+            z-index: 9999 !important;
+        }
+        .dashboard-dropdown .dropdown-item {
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        .dashboard-dropdown .dropdown-item:hover {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+        }
+        .dashboard-dropdown .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            color: #4c9f70;
+        }
+        .dashboard-dropdown .dropdown-divider {
+            border-color: var(--glass-border);
+        }
+
+        /* --- CHATBOT VITA --- */
+        .chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+        }
+        .chatbot-toggle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 30px rgba(43, 122, 75, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 40px rgba(43, 122, 75, 0.5);
+        }
+        .chatbot-toggle .badge-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #dc3545;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            max-height: 480px;
+            background: var(--chatbot-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            box-shadow: 0 20px 60px var(--shadow-color);
+            display: none;
+            overflow: hidden;
+            flex-direction: column;
+            z-index: 9999;
+        }
+        .chatbot-window.open { display: flex; }
+        .chatbot-header {
+            padding: 15px 20px;
+            background: rgba(43, 122, 75, 0.2);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chatbot-header .chatbot-name {
+            color: var(--text-color);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .chatbot-header .chatbot-name i {
+            color: #4c9f70;
+            margin-right: 8px;
+        }
+        .chatbot-header .chatbot-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .chatbot-header .chatbot-close:hover { color: var(--text-color); }
+        .chatbot-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            max-height: 320px;
+        }
+        .chatbot-body .message {
+            margin-bottom: 12px;
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            animation: fadeInMsg 0.3s ease;
+        }
+        .chatbot-body .message.bot {
+            background: rgba(76, 159, 112, 0.15);
+            color: var(--text-color);
+            border-bottom-left-radius: 4px;
+            margin-right: auto;
+        }
+        .chatbot-body .message.user {
+            background: rgba(13, 110, 253, 0.2);
+            color: var(--text-color);
+            border-bottom-right-radius: 4px;
+            margin-left: auto;
+        }
+        @keyframes fadeInMsg {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chatbot-footer {
+            padding: 12px 15px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 8px;
+        }
+        .chatbot-footer input {
+            flex: 1;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: var(--input-bg);
+            color: var(--text-color);
+            outline: none;
+            font-size: 0.9rem;
+        }
+        .chatbot-footer input::placeholder { color: var(--text-muted); }
+        .chatbot-footer input:focus { border-color: #4c9f70; }
+        .chatbot-footer button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: var(--primary-gradient);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chatbot-footer button:hover { opacity: 0.85; transform: scale(0.97); }
+
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .indicator-card .number { font-size: 1.5rem; }
+            .tab-content { padding: 15px; }
+            .page-title { font-size: 1.5rem; }
+            .chatbot-window {
+                width: 300px;
+                right: -10px;
+                bottom: 75px;
+            }
+            .timer-container { width: 45px; height: 45px; }
+            .timer-container svg { width: 45px; height: 45px; }
+            .timer-container .timer-text { font-size: 0.6rem; }
+            .header-timer-wrapper .timer-label { display: none; }
+        }
+        @media (max-width: 400px) {
+            .chatbot-window { width: 280px; right: -5px; }
+        }
+
+        .header-timer-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-timer-wrapper .timer-label {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* ===== ESTILOS PERFIL ===== */
+        .profile-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .profile-detail .label {
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .profile-detail .value {
+            color: var(--text-color);
+        }
+        .profile-avatar-lg {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 3px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: var(--text-color);
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+        }
+        .profile-permissions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .profile-permissions .badge {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* ===== PERFIL CARD ===== */
+        .profile-image-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            position: relative;
+            z-index: 9998;
+        }
+        .profile-image-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.12);
+        }
+        .profile-image-card .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            flex-shrink: 0;
+        }
+        .profile-image-card .info h6 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.85rem;
+        }
+        .profile-image-card .info small {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+        .profile-image-card .dropdown-toggle {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 0 0 0 8px;
+            font-size: 0.8rem;
+        }
+        .profile-image-card .dropdown-toggle:hover {
+            color: var(--text-color);
+        }
+        .profile-image-card .dropdown-menu {
+            background: var(--dropdown-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 200px;
+            z-index: 99999 !important;
+        }
+        .profile-image-card .dropdown-item {
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        .profile-image-card .dropdown-item:hover {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+        }
+        .profile-image-card .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            color: #4c9f70;
+        }
+        .profile-image-card .dropdown-item.text-danger i { color: #dc3545; }
+        .profile-image-card .dropdown-item.text-danger:hover {
+            background: rgba(220, 53, 69, 0.15);
+        }
+        .profile-image-card .dropdown-divider {
+            border-color: var(--glass-border);
+        }
+
+        .profile-edit-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 3px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--text-color);
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-size: cover;
+            background-position: center;
+        }
+        .profile-edit-avatar:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+        .profile-edit-avatar .avatar-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 4px;
+            border-radius: 0 0 50% 50%;
+            text-align: center;
+        }
+        .profile-edit-avatar .avatar-overlay i {
+            font-size: 0.8rem;
+        }
+        .edit-profile-form .form-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .edit-profile-form .form-control,
+        .edit-profile-form .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+            border-radius: 8px;
+        }
+        .edit-profile-form .form-control:focus,
+        .edit-profile-form .form-select:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .edit-profile-form .form-control::placeholder {
+            color: var(--text-muted);
+        }
+        .edit-profile-form .form-text {
+            color: var(--text-muted);
+        }
+        .permission-checkbox {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .permission-checkbox .form-check {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 8px 15px;
+            margin: 0;
+            transition: all 0.2s ease;
+        }
+        .permission-checkbox .form-check:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .permission-checkbox .form-check-input {
+            margin-right: 8px;
+        }
+        .permission-checkbox .form-check-label {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        /* ===== ESTILOS FATURAS ===== */
+        .fatura-item {
+            background: var(--glass-bg);
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .fatura-item:hover {
+            transform: translateX(5px);
+            background: rgba(255,255,255,0.05);
+        }
+        .fatura-item .fatura-info {
+            flex: 1;
+        }
+        .fatura-item .fatura-info .name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .fatura-item .fatura-info .details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .fatura-item .fatura-valor {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-right: 15px;
+        }
+
+        /* ===== ESTILOS PAGAMENTOS ===== */
+        .pagamento-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .pagamento-item .pag-info {
+            flex: 1;
+        }
+        .pagamento-item .pag-info .pag-nome {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .pagamento-item .pag-info .pag-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== ESTILOS COBRANÇAS ===== */
+        .cobranca-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+        }
+        .cobranca-item .cob-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cobranca-item .cob-header h6 {
+            color: var(--text-color);
+            margin: 0;
+        }
+        .cobranca-item .cob-details {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* ===== ESTILOS DESPESAS ===== */
+        .despesa-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+        .despesa-item .desp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .despesa-item .desp-header .desp-nome {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* ===== ESTILOS CONVÉNIOS ===== */
+        .convenio-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .convenio-item .conv-info {
+            flex: 1;
+        }
+        .convenio-item .conv-info .conv-nome {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .convenio-item .conv-info .conv-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== BOTÕES ===== */
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+            color: #fff;
+        }
+
+        .vita-med {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .dropdown-menu {
+            z-index: 99999 !important;
+        }
+        .dropdown {
+            z-index: 9998 !important;
+        }
+        .dropdown-menu.show {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- ========== CABEÇALHO ========== -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h2 class="page-title">
+                        <i class="fas fa-coins text-primary"></i> 
+                        Área do Financeiro
+                        <span class="badge bg-primary ms-2 notification-badge">ATIVO</span>
+                    </h2>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        
+                        <!-- DASHBOARD DROPDOWN -->
+                        <div class="dashboard-dropdown dropdown">
+                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-th-large me-1"></i> Dashboard
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="dashboardMenu">
+                                <li><a class="dropdown-item" href="#dashboard-tab" data-tab="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+                                <li><a class="dropdown-item" href="#faturamento-tab" data-tab="faturamento"><i class="fas fa-file-invoice"></i> Faturamento</a></li>
+                                <li><a class="dropdown-item" href="#pagamentos-tab" data-tab="pagamentos"><i class="fas fa-hand-holding-usd"></i> Pagamentos</a></li>
+                                <li><a class="dropdown-item" href="#cobrancas-tab" data-tab="cobrancas"><i class="fas fa-exclamation-triangle"></i> Cobranças</a></li>
+                                <li><a class="dropdown-item" href="#despesas-tab" data-tab="despesas"><i class="fas fa-shopping-cart"></i> Despesas</a></li>
+                                <li><a class="dropdown-item" href="#orcamento-tab" data-tab="orcamento"><i class="fas fa-chart-line"></i> Orçamento</a></li>
+                                <li><a class="dropdown-item" href="#convenios-tab" data-tab="convenios"><i class="fas fa-handshake"></i> Convénios</a></li>
+                                <li><a class="dropdown-item" href="#relatorios-tab" data-tab="relatorios"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" 
+                                       href="front-coci.html" 
+                                       ><i class="fas fa-comment-dots"></i> Comunicação (COCI)</a></li>
+                            </ul>
+                        </div>
+                        
+                        <!-- RELÓGIO -->
+                        <span class="badge" id="currentDateTime">
+                            <i class="bi bi-clock"></i> 
+                            <span id="dateTimeDisplay">Carregando...</span>
+                        </span>
+
+                        <!-- THEME TOGGLE -->
+                        <div class="theme-toggle" id="themeToggle" title="Alterar Tema">
+                            <i class="fas fa-moon" id="themeIcon"></i>
+                        </div>
+
+                        <!-- TIMER CIRCULAR -->
+                        <div class="header-timer-wrapper">
+                            <span class="timer-label" id="timerLabel">Turno</span>
+                            <div class="timer-container" id="timerContainer">
+                                <svg viewBox="0 0 60 60">
+                                    <circle class="timer-bg" cx="30" cy="30" r="27"/>
+                                    <circle class="timer-progress" id="timerProgress" cx="30" cy="30" r="27"/>
+                                </svg>
+                                <span class="timer-text" id="timerText">15:00</span>
+                            </div>
+                        </div>
+                        
+                        <!-- ===== PERFIL ===== -->
+                        <div class="profile-image-card dropdown" id="profileCard">
+                            <div class="avatar-img" id="profileCardAvatar">GF</div>
+                            <div class="info">
+                                <h6 id="profileCardName">Gustavo Ferreira</h6>
+                                <small id="profileCardSpecialty">Financeiro</small>
+                            </div>
+                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="profileCardMenu">
+                                <li><a class="dropdown-item" href="#" id="profileCardView"><i class="fas fa-user"></i> Ver Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="profileCardEdit"><i class="fas fa-edit"></i> Editar Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="profileCardPassword"><i class="fas fa-key"></i> Alterar Senha</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="logout-per.html" id="profileCardLogout">
+                                        <i class="fas fa-sign-out-alt"></i> Sair
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- PESQUISA RÁPIDA -->
+                        <div class="input-group" style="width: 180px;">
+                            <input type="text" id="quickSearch" class="form-control" placeholder="🔍 Pesquisar...">
+                            <button class="btn btn-outline-primary" type="button">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== PAINEL DE ESTATÍSTICAS ========== -->
+        <div class="row mb-4" id="dashboard-tab">
+            <div class="col-md-2 col-6">
+                <div class="indicator-card fade-in">
+                    <div class="number" id="totalFaturas">0</div>
+                    <div class="label"><i class="fas fa-file-invoice"></i> Faturas</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card success fade-in">
+                    <div class="number" id="receitasHoje">0</div>
+                    <div class="label"><i class="fas fa-arrow-up"></i> Receitas Hoje</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card danger fade-in">
+                    <div class="number" id="despesasHoje">0</div>
+                    <div class="label"><i class="fas fa-arrow-down"></i> Despesas Hoje</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card warning fade-in">
+                    <div class="number" id="pagamentosPendentes">0</div>
+                    <div class="label"><i class="fas fa-clock"></i> Pendentes</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card danger fade-in">
+                    <div class="number" id="cobrancasAtraso">0</div>
+                    <div class="label"><i class="fas fa-exclamation-circle"></i> Em Atraso</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card info fade-in">
+                    <div class="number" id="saldoDisponivel">0</div>
+                    <div class="label"><i class="fas fa-wallet"></i> Saldo</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TABS ========== -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item"><button class="nav-link active" id="faturamento-tab" data-bs-toggle="tab" data-bs-target="#faturamento" type="button"><i class="fas fa-file-invoice"></i> Faturamento</button></li>
+            <li class="nav-item"><button class="nav-link" id="pagamentos-tab" data-bs-toggle="tab" data-bs-target="#pagamentos" type="button"><i class="fas fa-hand-holding-usd"></i> Pagamentos</button></li>
+            <li class="nav-item"><button class="nav-link" id="cobrancas-tab" data-bs-toggle="tab" data-bs-target="#cobrancas" type="button"><i class="fas fa-exclamation-triangle"></i> Cobranças</button></li>
+            <li class="nav-item"><button class="nav-link" id="despesas-tab" data-bs-toggle="tab" data-bs-target="#despesas" type="button"><i class="fas fa-shopping-cart"></i> Despesas</button></li>
+            <li class="nav-item"><button class="nav-link" id="orcamento-tab" data-bs-toggle="tab" data-bs-target="#orcamento" type="button"><i class="fas fa-chart-line"></i> Orçamento</button></li>
+            <li class="nav-item"><button class="nav-link" id="convenios-tab" data-bs-toggle="tab" data-bs-target="#convenios" type="button"><i class="fas fa-handshake"></i> Convénios</button></li>
+            <li class="nav-item"><button class="nav-link" id="relatorios-tab" data-bs-toggle="tab" data-bs-target="#relatorios" type="button"><i class="fas fa-chart-bar"></i> Relatórios</button></li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- ===== ABA FATURAMENTO ===== -->
+            <div class="tab-pane fade show active" id="faturamento" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="search-section">
+                            <h6><i class="fas fa-file-invoice me-2"></i> Faturas</h6>
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="filterFatStatus">
+                                        <option value="">Todos</option>
+                                        <option value="Pendente">🟡 Pendente</option>
+                                        <option value="Paga">🟢 Paga</option>
+                                        <option value="Vencida">🔴 Vencida</option>
+                                        <option value="Cancelada">⚪ Cancelada</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" id="searchFat" class="form-control" placeholder="Paciente ou Nº fatura">
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-primary" id="btnEmitirFatura"><i class="fas fa-plus me-2"></i> Nova Fatura</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="listaFaturas">
+                            <!-- Faturas via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA PAGAMENTOS ===== -->
+            <div class="tab-pane fade" id="pagamentos" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-hand-holding-usd me-2"></i> Registar Pagamento</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Fatura</label>
+                                <select class="form-select" id="pagFatura">
+                                    <option value="">-- Selecione --</option>
+                                </select>
+                            </div>
+                            <div id="pagDetalhes" class="mb-3">
+                                <div class="text-muted">Selecione uma fatura para pagamento</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Forma de Pagamento</label>
+                                <select class="form-select" id="pagForma">
+                                    <option value="Dinheiro">Dinheiro</option>
+                                    <option value="Cartão Débito">Cartão Débito</option>
+                                    <option value="Cartão Crédito">Cartão Crédito</option>
+                                    <option value="Transferência Bancária">Transferência Bancária</option>
+                                    <option value="Convénio">Convénio</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Valor Pago</label>
+                                <input type="number" class="form-control" id="pagValor" placeholder="0.00">
+                            </div>
+                            <button class="btn btn-success" id="btnRegistarPagamento"><i class="fas fa-check me-2"></i> Registrar Pagamento</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-list me-2"></i> Pagamentos Recentes</h6>
+                            <div id="pagLista">
+                                <div class="text-muted text-center p-3">Nenhum pagamento registado</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA COBRANÇAS ===== -->
+            <div class="tab-pane fade" id="cobrancas" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-exclamation-triangle me-2"></i> Cobranças em Atraso</h6>
+                            <div id="cobrancasLista">
+                                <div class="text-muted text-center p-3">Nenhuma cobrança em atraso</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-bell me-2"></i> Ações de Cobrança</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Paciente</label>
+                                <select class="form-select" id="cobPaciente">
+                                    <option value="">-- Selecione --</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tipo de Ação</label>
+                                <select class="form-select" id="cobAcao">
+                                    <option value="Envio de Aviso">Envio de Aviso</option>
+                                    <option value="Contacto Telefónico">Contacto Telefónico</option>
+                                    <option value="Notificação Formal">Notificação Formal</option>
+                                    <option value="Negociação">Negociação</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Observações</label>
+                                <textarea class="form-control" id="cobObs" rows="2" placeholder="Observações"></textarea>
+                            </div>
+                            <button class="btn btn-primary" id="btnRegistarCobranca"><i class="fas fa-save me-2"></i> Registrar Ação</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA DESPESAS ===== -->
+            <div class="tab-pane fade" id="despesas" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-shopping-cart me-2"></i> Nova Despesa</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Descrição</label>
+                                <input type="text" class="form-control" id="despDescricao" placeholder="Descrição da despesa">
+                            </div>
+                            <div class="row">
+                                <div class="col-6"><label class="form-label">Valor</label><input type="number" class="form-control" id="despValor" placeholder="0.00"></div>
+                                <div class="col-6"><label class="form-label">Categoria</label>
+                                    <select class="form-select" id="despCategoria">
+                                        <option value="Material Clínico">Material Clínico</option>
+                                        <option value="Medicamentos">Medicamentos</option>
+                                        <option value="Equipamentos">Equipamentos</option>
+                                        <option value="Manutenção">Manutenção</option>
+                                        <option value="Salários">Salários</option>
+                                        <option value="Utilidades">Utilidades</option>
+                                        <option value="Outros">Outros</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Data</label>
+                                <input type="date" class="form-control" id="despData">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Observações</label>
+                                <textarea class="form-control" id="despObs" rows="2" placeholder="Observações"></textarea>
+                            </div>
+                            <button class="btn btn-primary" id="btnRegistarDespesa"><i class="fas fa-save me-2"></i> Registrar Despesa</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-list me-2"></i> Despesas Recentes</h6>
+                            <div id="despLista">
+                                <div class="text-muted text-center p-3">Nenhuma despesa registada</div>
+                            </div>
+                            <hr>
+                            <h6 class="card-title"><i class="fas fa-chart-pie me-2"></i> Total por Categoria</h6>
+                            <div id="despCategorias">
+                                <div class="text-muted text-center p-3">Nenhum dado disponível</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA ORÇAMENTO ===== -->
+            <div class="tab-pane fade" id="orcamento" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-chart-line me-2"></i> Gestão Orçamental</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Ano</label>
+                                <select class="form-select" id="orcAno">
+                                    <option value="2026">2026</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Categoria</label>
+                                <select class="form-select" id="orcCategoria">
+                                    <option value="Geral">Geral</option>
+                                    <option value="Clínico">Clínico</option>
+                                    <option value="Administrativo">Administrativo</option>
+                                    <option value="Manutenção">Manutenção</option>
+                                    <option value="RH">Recursos Humanos</option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="col-6"><label class="form-label">Orçamento Previsto</label><input type="number" class="form-control" id="orcPrevisto" placeholder="0.00"></div>
+                                <div class="col-6"><label class="form-label">Orçamento Executado</label><input type="number" class="form-control" id="orcExecutado" placeholder="0.00"></div>
+                            </div>
+                            <button class="btn btn-primary mt-2" id="btnAtualizarOrc"><i class="fas fa-save me-2"></i> Atualizar Orçamento</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-chart-bar me-2"></i> Resumo Orçamental</h6>
+                            <div id="orcResumo">
+                                <div class="text-muted text-center p-3">Nenhum dado disponível</div>
+                            </div>
+                            <hr>
+                            <h6 class="card-title"><i class="fas fa-exclamation-triangle me-2"></i> Alertas Orçamentais</h6>
+                            <div id="orcAlertas">
+                                <div class="text-muted text-center p-3">Nenhum alerta</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA CONVÉNIOS ===== -->
+            <div class="tab-pane fade" id="convenios" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-handshake me-2"></i> Novo Convénio</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Entidade</label>
+                                <input type="text" class="form-control" id="convEntidade" placeholder="Nome da entidade">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tipo de Convénio</label>
+                                <select class="form-select" id="convTipo">
+                                    <option value="Seguradora">Seguradora</option>
+                                    <option value="Empresa">Empresa</option>
+                                    <option value="Governamental">Governamental</option>
+                                    <option value="ONG">ONG</option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="col-6"><label class="form-label">Data Início</label><input type="date" class="form-control" id="convInicio"></div>
+                                <div class="col-6"><label class="form-label">Data Fim</label><input type="date" class="form-control" id="convFim"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Cobertura</label>
+                                <textarea class="form-control" id="convCobertura" rows="2" placeholder="Serviços cobertos"></textarea>
+                            </div>
+                            <button class="btn btn-success" id="btnRegistarConvenio"><i class="fas fa-plus me-2"></i> Registrar Convénio</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-list me-2"></i> Convénios Ativos</h6>
+                            <div id="convLista">
+                                <div class="text-muted text-center p-3">Nenhum convénio registado</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA RELATÓRIOS ===== -->
+            <div class="tab-pane fade" id="relatorios" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioReceitas">
+                            <div class="card-body text-center">
+                                <i class="fas fa-arrow-up text-success fs-1"></i>
+                                <h5 class="card-title mt-3">Receitas</h5>
+                                <p class="card-text">Relatório de receitas por período</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioDespesas">
+                            <div class="card-body text-center">
+                                <i class="fas fa-arrow-down text-danger fs-1"></i>
+                                <h5 class="card-title mt-3">Despesas</h5>
+                                <p class="card-text">Relatório de despesas por período</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioFluxo">
+                            <div class="card-body text-center">
+                                <i class="fas fa-exchange-alt text-info fs-1"></i>
+                                <h5 class="card-title mt-3">Fluxo de Caixa</h5>
+                                <p class="card-text">Relatório de fluxo de caixa</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAIS ========== -->
+    <!-- Modal de Perfil -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user me-2"></i> Perfil do Financeiro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <div class="profile-avatar-lg">GF</div>
+                        <h4 id="profileDoctorName">Gustavo Ferreira</h4>
+                        <span class="badge bg-primary">ID: 90123</span>
+                        <span class="badge bg-success">Ativo</span>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="profile-detail"><span class="label">Nome Completo</span><span class="value">Gustavo Ferreira Santos</span></div>
+                            <div class="profile-detail"><span class="label">Cargo</span><span class="value">Financeiro Chefe</span></div>
+                            <div class="profile-detail"><span class="label">ID Funcionário</span><span class="value">90123</span></div>
+                            <div class="profile-detail"><span class="label">Email</span><span class="value">gustavo.ferreira@vitalinka.ao</span></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="profile-detail"><span class="label">Telefone</span><span class="value">+244 923 456 784</span></div>
+                            <div class="profile-detail"><span class="label">Setor</span><span class="value">Financeiro</span></div>
+                            <div class="profile-detail"><span class="label">Data de Admissão</span><span class="value">05/11/2021</span></div>
+                            <div class="profile-detail"><span class="label">Último Acesso</span><span class="value">15/08/2026 08:30</span></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h6>Permissões</h6>
+                    <div class="profile-permissions">
+                        <span class="badge">📋 Faturação</span>
+                        <span class="badge">💰 Pagamentos</span>
+                        <span class="badge">📊 Cobranças</span>
+                        <span class="badge">📉 Despesas</span>
+                        <span class="badge">📈 Orçamento</span>
+                        <span class="badge">🤝 Convénios</span>
+                        <span class="badge">📁 Relatórios</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="profileEditBtn"><i class="fas fa-edit me-1"></i> Editar Perfil</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Perfil -->
+    <div class="modal fade" id="profileEditModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-edit me-2"></i> Editar Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="profileEditForm" class="edit-profile-form">
+                        <div class="text-center mb-4">
+                            <div class="profile-edit-avatar" id="avatarUpload">
+                                <span id="avatarInitials">GF</span>
+                                <div class="avatar-overlay">
+                                    <i class="fas fa-camera"></i> Alterar
+                                </div>
+                            </div>
+                            <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
+                            <small class="text-muted">Clique na imagem para alterar a foto</small>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nome Completo</label>
+                                    <input type="text" class="form-control" id="editFullName" value="Gustavo Ferreira Santos" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cargo</label>
+                                    <select class="form-select" id="editCargo">
+                                        <option value="Financeiro Chefe" selected>Financeiro Chefe</option>
+                                        <option value="Analista Financeiro">Analista Financeiro</option>
+                                        <option value="Assistente Financeiro">Assistente Financeiro</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">ID Funcionário</label>
+                                    <input type="text" class="form-control" id="editID" value="90123" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="editEmail" value="gustavo.ferreira@vitalinka.ao" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Telefone</label>
+                                    <input type="text" class="form-control" id="editPhone" value="+244 923 456 784" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Setor</label>
+                                    <select class="form-select" id="editSetor">
+                                        <option value="Financeiro" selected>Financeiro</option>
+                                        <option value="Administração">Administração</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Data de Admissão</label>
+                                    <input type="date" class="form-control" id="editAdmissionDate" value="2021-11-05">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select" id="editStatus">
+                                        <option value="Ativo" selected>Ativo</option>
+                                        <option value="Inativo">Inativo</option>
+                                        <option value="Férias">Férias</option>
+                                        <option value="Licença">Licença</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>Preferências</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Idioma</label>
+                                    <select class="form-select" id="editLanguage">
+                                        <option value="pt" selected>Português</option>
+                                        <option value="en">Inglês</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Tema</label>
+                                    <select class="form-select" id="editTheme">
+                                        <option value="dark" selected>Escuro</option>
+                                        <option value="light">Claro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveProfile"><i class="fas fa-save me-1"></i> Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Sessão -->
+    <div class="modal fade" id="sessionModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-clock me-2" style="color:#ffc107;"></i> Sessão a expirar</h5>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="fas fa-exclamation-triangle" style="font-size:3rem; color:#ffc107; margin-bottom:15px;"></i>
+                    <h4>Tem a certeza que pretende terminar a sessão?</h4>
+                    <p class="text-muted" style="color:var(--text-muted) !important;">A sua sessão irá expirar em <strong id="sessionCountdown">2:00</strong> minutos.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-success" id="sessionContinueBtn"><i class="fas fa-check me-2"></i> Não, continuar</button>
+                    <button type="button" class="btn btn-danger" id="sessionEndBtn"><i class="fas fa-sign-out-alt me-2"></i> Sim, terminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CHATBOT VITA ========== -->
+    <div class="chatbot-container">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <span class="chatbot-name"><i class="fas fa-robot"></i> VITA</span>
+                <button class="chatbot-close" id="chatbotClose"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chatbot-body" id="chatbotBody">
+                <div class="message bot">
+                    <i class="fas fa-robot me-1"></i> Olá! Sou a <strong>VITA</strong>, sua assistente virtual.<br>
+                    Como posso ajudar? Pergunte sobre faturas, pagamentos, despesas ou relatórios.
+                </div>
+            </div>
+             <a href="ia-fin.html">
+                <button class="ml-5" 
+                        style="margin-left: 20px;
+                               margin-bottom: 20px; 
+                               border-radius: 50px;
+                               color: green;
+                               background-color: #0b3b3b">
+                    <i class="fas fa-headset" 
+                   style="color: rgba(204, 185, 204, 0.39)">
+                </i> Vita AI </button>
+            </a>
+            <div class="chatbot-footer">
+                <input type="text" id="chatbotInput" placeholder="Digite sua pergunta...">
+                <button id="chatbotSend"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <button class="chatbot-toggle" id="chatbotToggle">
+            <img class="vita-med" src="images/chat-bot.png" alt="VITA">
+            <span class="badge-notification">1</span>
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // ================================================================
+            // 1. THEME TOGGLE
+            // ================================================================
+            let currentTheme = 'dark';
+            const themeToggle = $('#themeToggle');
+            const themeIcon = $('#themeIcon');
+
+            function setTheme(theme) {
+                currentTheme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                if (theme === 'light') {
+                    themeIcon.removeClass('fa-moon').addClass('fa-sun');
+                } else {
+                    themeIcon.removeClass('fa-sun').addClass('fa-moon');
+                }
+                localStorage.setItem('vitalinka-theme', theme);
+            }
+
+            const savedTheme = localStorage.getItem('vitalinka-theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            }
+
+            themeToggle.click(function() {
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+            });
+
+            // ================================================================
+            // 2. DASHBOARD DROPDOWN
+            // ================================================================
+            $('#dashboardMenu .dropdown-item[data-tab]').click(function(e) {
+                e.preventDefault();
+                const tabId = $(this).data('tab');
+                const tabButton = $(`#${tabId}-tab`);
+                if (tabButton.length) {
+                    const tab = new bootstrap.Tab(tabButton[0]);
+                    tab.show();
+                }
+                $(this).closest('.dropdown').find('.dropdown-toggle').dropdown('toggle');
+            });
+
+            // ================================================================
+            // 3. PERFIL
+            // ================================================================
+            const profileModal = new bootstrap.Modal(document.getElementById('profileModal'));
+            const profileEditModal = new bootstrap.Modal(document.getElementById('profileEditModal'));
+
+            $('#profileCardView').click(function(e) {
+                e.preventDefault();
+                profileModal.show();
+            });
+
+            $('#profileEditBtn').click(function() {
+                profileModal.hide();
+                loadProfileDataToEdit();
+                profileEditModal.show();
+            });
+
+            $('#profileCardEdit').click(function(e) {
+                e.preventDefault();
+                loadProfileDataToEdit();
+                profileEditModal.show();
+            });
+
+            $('#profileCardLogout').click(function(e) {
+                e.preventDefault();
+                if (confirm('Tem certeza que deseja sair?')) {
+                    clearInterval(timerInterval);
+                    window.location.href = "logout-per.html";
+                }
+            });
+
+            $('#profileCardPassword').click(function(e) {
+                e.preventDefault();
+                alert('🔐 Redirecionando para a página de alteração de senha...');
+            });
+
+            // ================================================================
+            // 4. PERFIL - DADOS
+            // ================================================================
+            let profileData = {
+                fullName: 'Gustavo Ferreira Santos',
+                cargo: 'Financeiro Chefe',
+                id: '90123',
+                email: 'gustavo.ferreira@vitalinka.ao',
+                phone: '+244 923 456 784',
+                setor: 'Financeiro',
+                admissionDate: '2021-11-05',
+                status: 'Ativo',
+                language: 'pt',
+                theme: 'dark'
+            };
+
+            function loadProfileDataToEdit() {
+                $('#editFullName').val(profileData.fullName);
+                $('#editCargo').val(profileData.cargo);
+                $('#editID').val(profileData.id);
+                $('#editEmail').val(profileData.email);
+                $('#editPhone').val(profileData.phone);
+                $('#editSetor').val(profileData.setor);
+                $('#editAdmissionDate').val(profileData.admissionDate);
+                $('#editStatus').val(profileData.status);
+                $('#editLanguage').val(profileData.language);
+                $('#editTheme').val(profileData.theme);
+                
+                const initials = profileData.fullName.split(' ').map(n => n[0]).join('');
+                $('#avatarInitials').text(initials);
+                $('#avatarUpload').css('background-image', 'none');
+                $('#avatarInitials').show();
+            }
+
+            function saveProfileData() {
+                profileData.fullName = $('#editFullName').val() || profileData.fullName;
+                profileData.cargo = $('#editCargo').val() || profileData.cargo;
+                profileData.id = $('#editID').val() || profileData.id;
+                profileData.email = $('#editEmail').val() || profileData.email;
+                profileData.phone = $('#editPhone').val() || profileData.phone;
+                profileData.setor = $('#editSetor').val() || profileData.setor;
+                profileData.admissionDate = $('#editAdmissionDate').val() || profileData.admissionDate;
+                profileData.status = $('#editStatus').val() || profileData.status;
+                profileData.language = $('#editLanguage').val() || profileData.language;
+                profileData.theme = $('#editTheme').val() || profileData.theme;
+                
+                updateProfileDisplay();
+                profileEditModal.hide();
+                
+                alert('✅ Perfil atualizado com sucesso!');
+            }
+
+            function updateProfileDisplay() {
+                const initials = profileData.fullName.split(' ').map(n => n[0]).join('');
+                $('.profile-avatar-lg').text(initials);
+                $('#profileDoctorName').text(profileData.fullName);
+                
+                $('#profileCardAvatar').text(initials);
+                $('#profileCardName').text(profileData.fullName);
+                $('#profileCardSpecialty').text('Financeiro');
+                
+                if (profileData.theme !== currentTheme) {
+                    setTheme(profileData.theme);
+                }
+            }
+
+            $('#btnSaveProfile').click(saveProfileData);
+
+            $('#avatarUpload').click(function() { $('#avatarFileInput').click(); });
+            $('#avatarFileInput').change(function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        $('#avatarUpload').css({
+                            'background-image': `url(${event.target.result})`,
+                            'background-size': 'cover',
+                            'background-position': 'center'
+                        });
+                        $('#avatarInitials').hide();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // ================================================================
+            // 5. DADOS DE EXEMPLO
+            // ================================================================
+            
+            // Faturas
+            let faturas = [
+                { id: 1, paciente: 'Maria Silva', numero: 'FAT-2026-001', valor: 1500.00, status: 'Paga', data: '15/08/2026', servico: 'Consulta' },
+                { id: 2, paciente: 'João Pedro', numero: 'FAT-2026-002', valor: 2500.00, status: 'Pendente', data: '15/08/2026', servico: 'Internamento' },
+                { id: 3, paciente: 'Ana Oliveira', numero: 'FAT-2026-003', valor: 800.00, status: 'Vencida', data: '14/08/2026', servico: 'Exames' },
+                { id: 4, paciente: 'Carlos Santos', numero: 'FAT-2026-004', valor: 3500.00, status: 'Pendente', data: '15/08/2026', servico: 'Cirurgia' }
+            ];
+            let faturaCounter = 5;
+
+            // Pagamentos
+            let pagamentos = [];
+
+            // Cobranças
+            let cobrancas = [];
+
+            // Despesas
+            let despesas = [];
+
+            // Convénios
+            let convenios = [];
+
+            // Orçamento
+            let orcamentos = {
+                '2026': {
+                    'Geral': { previsto: 500000, executado: 320000 },
+                    'Clínico': { previsto: 200000, executado: 180000 },
+                    'Administrativo': { previsto: 100000, executado: 85000 },
+                    'Manutenção': { previsto: 80000, executado: 50000 },
+                    'RH': { previsto: 150000, executado: 145000 }
+                }
+            };
+
+            // ================================================================
+            // 6. FUNÇÕES PRINCIPAIS
+            // ================================================================
+            function updateDateTime() {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('pt-BR');
+                const timeStr = now.toLocaleTimeString('pt-BR');
+                $('#dateTimeDisplay').text(`${dateStr} ${timeStr}`);
+            }
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            function getStatusClass(status) {
+                const map = {
+                    'Paga': 'paid',
+                    'Pendente': 'pending',
+                    'Vencida': 'overdue',
+                    'Cancelada': 'cancelled'
+                };
+                return map[status] || 'pending';
+            }
+
+            function getStatusEmoji(status) {
+                const map = {
+                    'Paga': '🟢',
+                    'Pendente': '🟡',
+                    'Vencida': '🔴',
+                    'Cancelada': '⚪'
+                };
+                return map[status] || '🟡';
+            }
+
+            function formatMoeda(valor) {
+                return 'Kz ' + valor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            }
+
+            function updateStats() {
+                const total = faturas.length;
+                const receitas = faturas.filter(f => f.status === 'Paga').reduce((sum, f) => sum + f.valor, 0);
+                const despesasTotal = despesas.reduce((sum, d) => sum + d.valor, 0);
+                const pendentes = faturas.filter(f => f.status === 'Pendente').length;
+                const atraso = faturas.filter(f => f.status === 'Vencida').length;
+                const saldo = receitas - despesasTotal;
+
+                $('#totalFaturas').text(total);
+                $('#receitasHoje').text(formatMoeda(receitas));
+                $('#despesasHoje').text(formatMoeda(despesasTotal));
+                $('#pagamentosPendentes').text(pendentes);
+                $('#cobrancasAtraso').text(atraso);
+                $('#saldoDisponivel').text(formatMoeda(saldo));
+            }
+            updateStats();
+
+            function renderFaturas() {
+                const container = $('#listaFaturas');
+                container.empty();
+
+                const status = $('#filterFatStatus').val();
+                const search = $('#searchFat').val().toLowerCase();
+
+                let filtered = faturas;
+                if (status) filtered = filtered.filter(f => f.status === status);
+                if (search) filtered = filtered.filter(f => f.paciente.toLowerCase().includes(search) || f.numero.toLowerCase().includes(search));
+
+                if (filtered.length === 0) {
+                    container.append('<div class="text-muted text-center p-4">Nenhuma fatura encontrada.</div>');
+                    return;
+                }
+
+                filtered.forEach(f => {
+                    const statusClass = getStatusClass(f.status);
+                    const emoji = getStatusEmoji(f.status);
+                    container.append(`
+                        <div class="fatura-item" data-id="${f.id}">
+                            <div class="fatura-info">
+                                <div>
+                                    <span class="name">${f.paciente}</span>
+                                    <span class="badge bg-secondary ms-2">${f.numero}</span>
+                                    <span class="badge bg-info ms-2">${f.servico}</span>
+                                </div>
+                                <div class="details">
+                                    ${emoji} ${f.status} • ${f.data} • ${formatMoeda(f.valor)}
+                                </div>
+                            </div>
+                            <div class="fatura-valor">${formatMoeda(f.valor)}</div>
+                            <div>
+                                <button class="btn btn-sm btn-success pagar-btn" data-id="${f.id}"><i class="fas fa-check"></i> Pagar</button>
+                                <button class="btn btn-sm btn-danger cancelar-btn" data-id="${f.id}"><i class="fas fa-times"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    `);
+                });
+
+                updateFaturaSelects();
+            }
+
+            function updateFaturaSelects() {
+                const sel = $('#pagFatura');
+                const current = sel.val();
+                sel.empty().append('<option value="">-- Selecione --</option>');
+                const pendentes = faturas.filter(f => f.status === 'Pendente' || f.status === 'Vencida');
+                pendentes.forEach(f => {
+                    sel.append(`<option value="${f.id}">${f.paciente} - ${f.numero} (${formatMoeda(f.valor)})</option>`);
+                });
+                if (current && sel.find(`option[value="${current}"]`).length) {
+                    sel.val(current);
+                }
+
+                // Cobranças - pacientes
+                const cobSel = $('#cobPaciente');
+                cobSel.empty().append('<option value="">-- Selecione --</option>');
+                const devedores = faturas.filter(f => f.status === 'Pendente' || f.status === 'Vencida');
+                devedores.forEach(f => {
+                    cobSel.append(`<option value="${f.paciente}">${f.paciente} - ${f.numero} (${formatMoeda(f.valor)})</option>`);
+                });
+            }
+
+            function renderPagamentos() {
+                const container = $('#pagLista');
+                container.empty();
+                if (pagamentos.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhum pagamento registado</div>');
+                    return;
+                }
+                pagamentos.slice().reverse().forEach(p => {
+                    container.append(`
+                        <div class="pagamento-item">
+                            <div class="pag-info">
+                                <div class="pag-nome">${p.paciente}</div>
+                                <div class="pag-details">${p.fatura} • ${p.forma} • ${p.data}</div>
+                            </div>
+                            <span class="badge bg-success">${formatMoeda(p.valor)}</span>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderCobrancas() {
+                const container = $('#cobrancasLista');
+                container.empty();
+                const atraso = faturas.filter(f => f.status === 'Vencida');
+                if (atraso.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma cobrança em atraso</div>');
+                    return;
+                }
+                atraso.forEach(f => {
+                    container.append(`
+                        <div class="cobranca-item">
+                            <div class="cob-header">
+                                <h6>${f.paciente}</h6>
+                                <span class="badge bg-danger">Vencida</span>
+                            </div>
+                            <div class="cob-details">
+                                ${f.numero} • ${f.servico} • ${formatMoeda(f.valor)} • ${f.data}
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderDespesas() {
+                const container = $('#despLista');
+                container.empty();
+                if (despesas.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma despesa registada</div>');
+                    return;
+                }
+                despesas.slice().reverse().forEach(d => {
+                    container.append(`
+                        <div class="despesa-item">
+                            <div class="desp-header">
+                                <span class="desp-nome">${d.descricao}</span>
+                                <span class="badge bg-secondary">${d.categoria}</span>
+                            </div>
+                            <div class="text-muted small">${d.data} • ${formatMoeda(d.valor)}</div>
+                            ${d.obs ? `<div class="text-muted small">${d.obs}</div>` : ''}
+                        </div>
+                    `);
+                });
+
+                // Categorias
+                const catContainer = $('#despCategorias');
+                const categorias = {};
+                despesas.forEach(d => {
+                    categorias[d.categoria] = (categorias[d.categoria] || 0) + d.valor;
+                });
+                if (Object.keys(categorias).length === 0) {
+                    catContainer.html('<div class="text-muted text-center p-3">Nenhum dado disponível</div>');
+                } else {
+                    let html = '';
+                    Object.entries(categorias).forEach(([key, value]) => {
+                        html += `<div class="d-flex justify-content-between"><span>${key}</span><span>${formatMoeda(value)}</span></div>`;
+                    });
+                    catContainer.html(html);
+                }
+            }
+
+            function renderConvenios() {
+                const container = $('#convLista');
+                container.empty();
+                if (convenios.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhum convénio registado</div>');
+                    return;
+                }
+                convenios.forEach(c => {
+                    container.append(`
+                        <div class="convenio-item">
+                            <div class="conv-info">
+                                <div class="conv-nome">${c.entidade}</div>
+                                <div class="conv-details">${c.tipo} • ${c.inicio} - ${c.fim}</div>
+                            </div>
+                            <span class="badge bg-success">Ativo</span>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderOrcamento() {
+                const container = $('#orcResumo');
+                const ano = $('#orcAno').val();
+                const categoria = $('#orcCategoria').val();
+
+                if (!orcamentos[ano]) {
+                    container.html('<div class="text-muted text-center p-3">Nenhum dado disponível para este ano</div>');
+                    return;
+                }
+
+                let html = '';
+                if (categoria === 'Geral') {
+                    let totalPrevisto = 0, totalExecutado = 0;
+                    Object.entries(orcamentos[ano]).forEach(([cat, vals]) => {
+                        totalPrevisto += vals.previsto;
+                        totalExecutado += vals.executado;
+                        const percent = (vals.executado / vals.previsto * 100);
+                        html += `
+                            <div class="d-flex justify-content-between">
+                                <span>${cat}</span>
+                                <span>${formatMoeda(vals.executado)} / ${formatMoeda(vals.previsto)} (${percent.toFixed(1)}%)</span>
+                            </div>
+                            <div class="progress mb-2">
+                                <div class="progress-bar ${percent > 90 ? 'bg-danger' : percent > 70 ? 'bg-warning' : 'bg-success'}" style="width: ${Math.min(percent, 100)}%"></div>
+                            </div>
+                        `;
+                    });
+                    html += `
+                        <hr>
+                        <div class="d-flex justify-content-between"><strong>Total Previsto:</strong> <strong>${formatMoeda(totalPrevisto)}</strong></div>
+                        <div class="d-flex justify-content-between"><strong>Total Executado:</strong> <strong>${formatMoeda(totalExecutado)}</strong></div>
+                        <div class="d-flex justify-content-between"><strong>Saldo:</strong> <strong>${formatMoeda(totalPrevisto - totalExecutado)}</strong></div>
+                    `;
+                } else if (orcamentos[ano][categoria]) {
+                    const vals = orcamentos[ano][categoria];
+                    const percent = (vals.executado / vals.previsto * 100);
+                    html = `
+                        <div><strong>Categoria:</strong> ${categoria}</div>
+                        <div><strong>Previsto:</strong> ${formatMoeda(vals.previsto)}</div>
+                        <div><strong>Executado:</strong> ${formatMoeda(vals.executado)}</div>
+                        <div><strong>Percentual:</strong> ${percent.toFixed(1)}%</div>
+                        <div class="progress mt-2">
+                            <div class="progress-bar ${percent > 90 ? 'bg-danger' : percent > 70 ? 'bg-warning' : 'bg-success'}" style="width: ${Math.min(percent, 100)}%"></div>
+                        </div>
+                    `;
+                } else {
+                    html = '<div class="text-muted text-center p-3">Categoria não encontrada</div>';
+                }
+
+                container.html(html);
+
+                // Alertas
+                const alertContainer = $('#orcAlertas');
+                let alertas = [];
+                Object.entries(orcamentos[ano]).forEach(([cat, vals]) => {
+                    const percent = (vals.executado / vals.previsto * 100);
+                    if (percent > 90) {
+                        alertas.push(`⚠️ ${cat}: ${percent.toFixed(1)}% do orçamento executado!`);
+                    }
+                });
+                if (alertas.length === 0) {
+                    alertContainer.html('<div class="text-muted text-center p-3">Nenhum alerta</div>');
+                } else {
+                    alertContainer.html(alertas.map(a => `<div class="alerta-item warning"><div class="alerta-text">${a}</div></div>`).join(''));
+                }
+            }
+
+            // ================================================================
+            // 7. EVENTOS - FATURAMENTO
+            // ================================================================
+            $('#btnEmitirFatura').click(function() {
+                const paciente = prompt('Nome do paciente:');
+                if (!paciente) return;
+                const servico = prompt('Serviço prestado (Consulta, Internamento, Exames, Cirurgia):') || 'Consulta';
+                const valor = parseFloat(prompt('Valor da fatura:'));
+                if (!valor) return;
+
+                const numero = 'FAT-2026-' + String(faturaCounter).padStart(3, '0');
+                faturas.push({
+                    id: faturaCounter++,
+                    paciente,
+                    numero,
+                    valor,
+                    status: 'Pendente',
+                    data: new Date().toLocaleDateString('pt-BR'),
+                    servico
+                });
+
+                renderFaturas();
+                updateStats();
+                updateFaturaSelects();
+                alert(`✅ Fatura ${numero} emitida com sucesso!\n\nPaciente: ${paciente}\nValor: ${formatMoeda(valor)}`);
+            });
+
+            $('#filterFatStatus, #searchFat').on('change input', renderFaturas);
+
+            $(document).on('click', '.pagar-btn', function() {
+                const id = $(this).data('id');
+                const fatura = faturas.find(f => f.id === id);
+                if (fatura) {
+                    $('#pagFatura').val(id);
+                    $('#pagFatura').trigger('change');
+                    $('#pagValor').val(fatura.valor);
+                    $('#pagamentos-tab').tab('show');
+                    alert(`💳 Registre o pagamento da fatura ${fatura.numero}`);
+                }
+            });
+
+            $(document).on('click', '.cancelar-btn', function() {
+                const id = $(this).data('id');
+                const fatura = faturas.find(f => f.id === id);
+                if (fatura && confirm(`Cancelar fatura ${fatura.numero}?`)) {
+                    fatura.status = 'Cancelada';
+                    renderFaturas();
+                    updateStats();
+                    updateFaturaSelects();
+                    alert(`❌ Fatura ${fatura.numero} cancelada.`);
+                }
+            });
+
+            // ================================================================
+            // 8. EVENTOS - PAGAMENTOS
+            // ================================================================
+            $('#pagFatura').change(function() {
+                const id = $(this).val();
+                const fatura = faturas.find(f => f.id == id);
+                if (fatura) {
+                    $('#pagDetalhes').html(`
+                        <div class="validacao-item">
+                            <div><strong>Paciente:</strong> ${fatura.paciente}</div>
+                            <div><strong>Fatura:</strong> ${fatura.numero}</div>
+                            <div><strong>Valor:</strong> ${formatMoeda(fatura.valor)}</div>
+                            <div><strong>Serviço:</strong> ${fatura.servico}</div>
+                        </div>
+                    `);
+                    $('#pagValor').val(fatura.valor);
+                } else {
+                    $('#pagDetalhes').html('<div class="text-muted">Selecione uma fatura para pagamento</div>');
+                    $('#pagValor').val('');
+                }
+            });
+
+            $('#btnRegistarPagamento').click(function() {
+                const id = $('#pagFatura').val();
+                if (!id) { alert('Selecione uma fatura.'); return; }
+                const fatura = faturas.find(f => f.id == id);
+                if (fatura) {
+                    const valor = parseFloat($('#pagValor').val());
+                    const forma = $('#pagForma').val();
+                    
+                    if (!valor || valor <= 0) { alert('Valor inválido.'); return; }
+                    if (valor > fatura.valor) { alert('Valor excede o valor da fatura.'); return; }
+
+                    fatura.status = 'Paga';
+                    pagamentos.push({
+                        paciente: fatura.paciente,
+                        fatura: fatura.numero,
+                        valor: valor,
+                        forma: forma,
+                        data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                    });
+
+                    renderFaturas();
+                    renderPagamentos();
+                    updateStats();
+                    updateFaturaSelects();
+                    $('#pagFatura').val('');
+                    $('#pagDetalhes').html('<div class="text-muted">Selecione uma fatura para pagamento</div>');
+                    $('#pagValor').val('');
+                    alert(`✅ Pagamento registado com sucesso!\n\nFatura: ${fatura.numero}\nValor: ${formatMoeda(valor)}\nForma: ${forma}`);
+                }
+            });
+
+            // ================================================================
+            // 9. EVENTOS - COBRANÇAS
+            // ================================================================
+            $('#btnRegistarCobranca').click(function() {
+                const paciente = $('#cobPaciente').val();
+                const acao = $('#cobAcao').val();
+                const obs = $('#cobObs').val();
+
+                if (!paciente) { alert('Selecione um paciente.'); return; }
+
+                cobrancas.push({
+                    paciente,
+                    acao,
+                    obs: obs || 'Sem observações',
+                    data: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                });
+
+                alert(`✅ Ação registada para ${paciente}.\n\nAção: ${acao}\nObservações: ${obs || 'N/A'}`);
+                $('#cobPaciente').val('');
+                $('#cobObs').val('');
+            });
+
+            // ================================================================
+            // 10. EVENTOS - DESPESAS
+            // ================================================================
+            $('#btnRegistarDespesa').click(function() {
+                const descricao = $('#despDescricao').val().trim();
+                const valor = parseFloat($('#despValor').val());
+                const categoria = $('#despCategoria').val();
+                const data = $('#despData').val();
+                const obs = $('#despObs').val();
+
+                if (!descricao || !valor || !data) {
+                    alert('Preencha descrição, valor e data.');
+                    return;
+                }
+
+                despesas.push({
+                    descricao,
+                    valor,
+                    categoria,
+                    data: new Date(data).toLocaleDateString('pt-BR'),
+                    obs: obs || 'Sem observações'
+                });
+
+                renderDespesas();
+                updateStats();
+                $('#despDescricao, #despValor, #despObs').val('');
+                $('#despData').val('');
+                alert(`✅ Despesa registada com sucesso!\n\n${descricao}\nValor: ${formatMoeda(valor)}`);
+            });
+
+            // ================================================================
+            // 11. EVENTOS - ORÇAMENTO
+            // ================================================================
+            $('#orcAno, #orcCategoria').change(renderOrcamento);
+
+            $('#btnAtualizarOrc').click(function() {
+                const ano = $('#orcAno').val();
+                const categoria = $('#orcCategoria').val();
+                const previsto = parseFloat($('#orcPrevisto').val());
+                const executado = parseFloat($('#orcExecutado').val());
+
+                if (!previsto || !executado) {
+                    alert('Preencha os valores.');
+                    return;
+                }
+
+                if (!orcamentos[ano]) orcamentos[ano] = {};
+                orcamentos[ano][categoria] = { previsto, executado };
+
+                renderOrcamento();
+                $('#orcPrevisto, #orcExecutado').val('');
+                alert(`✅ Orçamento atualizado para ${categoria} (${ano})`);
+            });
+
+            // ================================================================
+            // 12. EVENTOS - CONVÉNIOS
+            // ================================================================
+            $('#btnRegistarConvenio').click(function() {
+                const entidade = $('#convEntidade').val().trim();
+                const tipo = $('#convTipo').val();
+                const inicio = $('#convInicio').val();
+                const fim = $('#convFim').val();
+                const cobertura = $('#convCobertura').val();
+
+                if (!entidade || !inicio || !fim) {
+                    alert('Preencha entidade, data início e data fim.');
+                    return;
+                }
+
+                convenios.push({
+                    entidade,
+                    tipo,
+                    inicio: new Date(inicio).toLocaleDateString('pt-BR'),
+                    fim: new Date(fim).toLocaleDateString('pt-BR'),
+                    cobertura: cobertura || 'Não especificada'
+                });
+
+                renderConvenios();
+                $('#convEntidade, #convCobertura').val('');
+                $('#convInicio, #convFim').val('');
+                alert(`✅ Convénio registado com ${entidade} com sucesso!`);
+            });
+
+            // ================================================================
+            // 13. EVENTOS - RELATÓRIOS
+            // ================================================================
+            $('.report-card').click(function() {
+                const type = $(this).attr('id').replace('relatorio', '').toLowerCase();
+                const titles = {
+                    receitas: 'Relatório de Receitas',
+                    despesas: 'Relatório de Despesas',
+                    fluxo: 'Relatório de Fluxo de Caixa'
+                };
+                alert(`📊 ${titles[type] || 'Relatório'}\n\nFaturas: ${faturas.length}\nPagamentos: ${pagamentos.length}\nDespesas: ${despesas.length}\nSaldo: ${formatMoeda(faturas.filter(f => f.status === 'Paga').reduce((sum, f) => sum + f.valor, 0) - despesas.reduce((sum, d) => sum + d.valor, 0))}`);
+            });
+
+            // ================================================================
+            // 14. TIMER DE SESSÃO
+            // ================================================================
+            let totalSeconds = 900;
+            let timerInterval = null;
+            let sessionModalShown = false;
+            let sessionModal = new bootstrap.Modal(document.getElementById('sessionModal'), { backdrop: 'static', keyboard: false });
+
+            const timerProgress = document.getElementById('timerProgress');
+            const timerText = document.getElementById('timerText');
+            const timerContainer = document.getElementById('timerContainer');
+            const circumference = 2 * Math.PI * 27;
+
+            function updateTimer() {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                timerText.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+
+                const progress = totalSeconds / 900;
+                const offset = circumference * (1 - progress);
+                timerProgress.style.strokeDashoffset = offset;
+
+                timerContainer.classList.remove('timer-warning', 'timer-danger');
+                if (totalSeconds <= 120) timerContainer.classList.add('timer-danger');
+                else if (totalSeconds <= 300) timerContainer.classList.add('timer-warning');
+
+                if (totalSeconds === 120 && !sessionModalShown) {
+                    sessionModalShown = true;
+                    $('#sessionCountdown').text('2:00');
+                    sessionModal.show();
+                    const modalInterval = setInterval(() => {
+                        const remaining = totalSeconds;
+                        const mins = Math.floor(remaining / 60);
+                        const secs = remaining % 60;
+                        $('#sessionCountdown').text(`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`);
+                        if (remaining <= 0) clearInterval(modalInterval);
+                    }, 1000);
+                }
+
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    window.location.href = "408.html";
+                }
+            }
+
+            function startTimer() {
+                if (timerInterval) clearInterval(timerInterval);
+                totalSeconds = 900;
+                sessionModalShown = false;
+                timerProgress.style.strokeDasharray = circumference;
+                timerProgress.style.strokeDashoffset = circumference;
+                updateTimer();
+                timerInterval = setInterval(() => {
+                    totalSeconds--;
+                    updateTimer();
+                }, 1000);
+            }
+
+            $('#sessionContinueBtn').click(function() {
+                sessionModal.hide();
+                sessionModalShown = false;
+                startTimer();
+            });
+
+            $('#sessionEndBtn').click(function() {
+                sessionModal.hide();
+                clearInterval(timerInterval);
+                window.location.href = "index.html";
+            });
+
+            startTimer();
+
+            // ================================================================
+            // 15. CHATBOT VITA
+            // ================================================================
+            const chatbotToggle = $('#chatbotToggle');
+            const chatbotWindow = $('#chatbotWindow');
+            const chatbotClose = $('#chatbotClose');
+            const chatbotInput = $('#chatbotInput');
+            const chatbotSend = $('#chatbotSend');
+            const chatbotBody = $('#chatbotBody');
+
+            chatbotToggle.click(function() {
+                chatbotWindow.toggleClass('open');
+                $('.badge-notification').fadeOut();
+            });
+
+            chatbotClose.click(function() {
+                chatbotWindow.removeClass('open');
+            });
+
+            function addMessage(text, isUser = false) {
+                const msg = $('<div class="message ' + (isUser ? 'user' : 'bot') + '">' + text + '</div>');
+                chatbotBody.append(msg);
+                chatbotBody.scrollTop(chatbotBody[0].scrollHeight);
+            }
+
+            function processChatbotQuery(query) {
+                const q = query.toLowerCase();
+                let response = '';
+
+                if (q.includes('fatura') || q.includes('faturamento')) {
+                    const total = faturas.length;
+                    const pendentes = faturas.filter(f => f.status === 'Pendente').length;
+                    const pagas = faturas.filter(f => f.status === 'Paga').length;
+                    response = `📋 Temos <strong>${total} faturas</strong>. ${pagas} pagas, ${pendentes} pendentes.`;
+                } else if (q.includes('pagamento') || q.includes('receita')) {
+                    const total = pagamentos.length;
+                    const valor = pagamentos.reduce((sum, p) => sum + p.valor, 0);
+                    response = `💰 <strong>${total} pagamentos</strong> registados. Total: ${formatMoeda(valor)}`;
+                } else if (q.includes('despesa') || q.includes('custo')) {
+                    const total = despesas.length;
+                    const valor = despesas.reduce((sum, d) => sum + d.valor, 0);
+                    response = `📉 <strong>${total} despesas</strong> registadas. Total: ${formatMoeda(valor)}`;
+                } else if (q.includes('cobrança') || q.includes('atraso')) {
+                    const atraso = faturas.filter(f => f.status === 'Vencida').length;
+                    response = `⚠️ <strong>${atraso} faturas</strong> estão em atraso.`;
+                } else if (q.includes('convénio') || q.includes('convenio')) {
+                    const total = convenios.length;
+                    response = `🤝 <strong>${total} convénios</strong> ativos registados.`;
+                } else if (q.includes('saldo') || q.includes('fluxo')) {
+                    const receitas = faturas.filter(f => f.status === 'Paga').reduce((sum, f) => sum + f.valor, 0);
+                    const despesasTotal = despesas.reduce((sum, d) => sum + d.valor, 0);
+                    response = `💵 Saldo atual: ${formatMoeda(receitas - despesasTotal)}\nReceitas: ${formatMoeda(receitas)}\nDespesas: ${formatMoeda(despesasTotal)}`;
+                } else if (q.includes('ajuda') || q.includes('ajudar')) {
+                    response = '💡 Posso ajudar com: faturas, pagamentos, despesas, cobranças, convénios, saldo e orçamento.';
+                } else {
+                    response = '🤔 Pode reformular a pergunta? Sou a <strong>VITA</strong> e posso ajudar com faturas, pagamentos, despesas, cobranças, convénios, saldo e orçamento.';
+                }
+
+                addMessage(response, false);
+            }
+
+            chatbotSend.click(function() {
+                const query = chatbotInput.val().trim();
+                if (!query) return;
+                addMessage(query, true);
+                chatbotInput.val('');
+                setTimeout(() => processChatbotQuery(query), 500);
+            });
+
+            chatbotInput.keypress(function(e) {
+                if (e.which === 13) chatbotSend.click();
+            });
+
+            setTimeout(() => {
+                addMessage('💡 Estou aqui para ajudar! Pergunte sobre faturas, pagamentos, despesas, cobranças, convénios, saldo e orçamento.', false);
+            }, 2000);
+
+            // ================================================================
+            // 16. INICIALIZAÇÃO
+            // ================================================================
+            renderFaturas();
+            renderPagamentos();
+            renderCobrancas();
+            renderDespesas();
+            renderConvenios();
+            renderOrcamento();
+            updateStats();
+            updateFaturaSelects();
+
+            console.log('✅ VITALINKA - Área do Financeiro carregada com sucesso!');
+            console.log('🕐 Timer de sessão: 15 minutos');
+            console.log('🤖 Assistente VITA ativo');
+            console.log('🎨 Tema: ' + currentTheme);
+            console.log('👨‍💼 Perfil do Financeiro disponível');
+            console.log('📋 Todas as funcionalidades financeiras implementadas!');
+            console.log('  - ✅ Dashboard com indicadores');
+            console.log('  - ✅ Gestão de faturas');
+            console.log('  - ✅ Registro de pagamentos');
+            console.log('  - ✅ Cobranças em atraso');
+            console.log('  - ✅ Gestão de despesas');
+            console.log('  - ✅ Orçamento e controle');
+            console.log('  - ✅ Convénios e parcerias');
+            console.log('  - ✅ Relatórios financeiros');
+            console.log('  - ✅ Chatbot VITA com comandos');
+        });
+    </script>
+</body>
+</html>

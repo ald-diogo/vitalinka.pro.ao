@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ponto de Presenças - Hospital Regional de Malanje</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        /* ===== ESTILO GLASSMORPHISM ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-image: url('images/presencas.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 0;
+        }
+
+        .container-fluid {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            transition: all 0.3s ease;
+            height: 100%;
+            color: #fff;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        .glass-card h5 {
+            color: #fff;
+            font-family: 'Times New Roman', Times, serif;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.10);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+
+        .glass-card .info-label {
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.65);
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .glass-card .info-value {
+            color: #fff;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.1rem;
+        }
+
+        .glass-card .icon-big {
+            font-size: 2.8rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .glass-card p {
+            color: rgba(255, 255, 255, 0.78);
+        }
+
+        .glass-card .text-muted {
+            color: rgba(255, 255, 255, 0.45) !important;
+        }
+
+        /* Banner Principal */
+        .banner-content {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 20px;
+            padding: 40px 35px;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .banner-content h1 {
+            color: #fff;
+            font-family: 'Times New Roman', Times, serif;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .banner-content .banner-message {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.15rem;
+        }
+
+        .banner-content .btn-group .btn {
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            margin: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .banner-content .btn-group .btn:hover {
+            transform: scale(1.04);
+        }
+
+        /* Page Title */
+        .page-title {
+            font-family: 'Times New Roman', Times, serif;
+            color: #fff;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        .page-title .badge {
+            background: rgba(13, 110, 253, 0.45);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Tabs */
+        .nav-tabs .nav-link {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.75);
+            border: none;
+            padding: 10px 22px;
+            margin-right: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 10px 10px 0 0;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .nav-tabs .nav-link:hover {
+            background: rgba(255, 255, 255, 0.16);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .nav-tabs .nav-link.active {
+            background: rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(16px);
+            color: #fff;
+            border-bottom: 3px solid #0d6efd;
+            font-weight: bold;
+            box-shadow: 0 -2px 24px rgba(13, 110, 253, 0.25);
+        }
+
+        .tab-content {
+            padding: 28px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 0 12px 12px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            transition: all 0.3s ease;
+        }
+
+        /* Botão de tema */
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.20);
+            transform: rotate(30deg);
+        }
+
+        /* Data/Hora */
+        #currentDateTime {
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+        }
+
+        /* Tabela de presenças */
+        .table-glass {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .table-glass thead th {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+            padding: 14px 12px;
+        }
+
+        .table-glass tbody td {
+            color: rgba(255, 255, 255, 0.85);
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            vertical-align: middle;
+        }
+
+        .table-glass tbody tr:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .table-glass .badge-status {
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions .btn {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 3px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            padding: 8px 18px;
+        }
+
+        .quick-actions .btn:hover {
+            transform: scale(1.04);
+        }
+
+        .quick-actions .btn-primary {
+            background: rgba(13, 110, 253, 0.55);
+        }
+
+        .quick-actions .btn-success {
+            background: rgba(25, 135, 84, 0.55);
+        }
+
+        .quick-actions .btn-danger {
+            background: rgba(220, 53, 69, 0.55);
+        }
+
+        .quick-actions .btn-warning {
+            background: rgba(255, 193, 7, 0.45);
+            color: #000;
+        }
+
+        .quick-actions .btn-outline-secondary {
+            background: rgba(108, 117, 125, 0.25);
+            color: #fff;
+        }
+
+        .quick-actions .btn-outline-secondary:hover {
+            background: rgba(108, 117, 125, 0.40);
+            color: #fff;
+        }
+
+        /* Modal */
+        .modal-content {
+            background: rgba(30, 40, 55, 0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .modal-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .modal .btn-close {
+            filter: invert(1);
+        }
+
+        .modal .form-label {
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .modal .form-control,
+        .modal .form-select {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border-radius: 10px;
+        }
+
+        .modal .form-control:focus,
+        .modal .form-select:focus {
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(13, 110, 253, 0.4);
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+            color: #fff;
+        }
+
+        .modal .form-select option {
+            background: #1e2837;
+            color: #fff;
+        }
+
+        /* Footer */
+        footer {
+            color: rgba(255, 255, 255, 0.45);
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        footer a {
+            color: rgba(255, 255, 255, 0.40);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        footer a:hover {
+            color: rgba(255, 255, 255, 0.70);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .banner-content {
+                padding: 24px 16px;
+            }
+            .banner-content h1 {
+                font-size: 1.3rem;
+            }
+            .tab-content {
+                padding: 16px;
+            }
+            .page-title {
+                font-size: 1.1rem;
+            }
+            .header-actions {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .quick-actions .btn {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+            .table-glass thead th,
+            .table-glass tbody td {
+                padding: 8px 6px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Animação de fade */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Tema Claro */
+        body.light-theme::before {
+            background: rgba(245, 245, 250, 0.92);
+        }
+
+        body.light-theme .glass-card {
+            background: rgba(255, 255, 255, 0.78);
+            border-color: rgba(0, 0, 0, 0.06);
+            color: #1a1a2e;
+        }
+
+        body.light-theme .glass-card h5,
+        body.light-theme .glass-card .info-value,
+        body.light-theme .glass-card p {
+            color: #1a1a2e;
+        }
+
+        body.light-theme .glass-card .info-label {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        body.light-theme .glass-card .text-muted {
+            color: rgba(0, 0, 0, 0.35) !important;
+        }
+
+        body.light-theme .banner-content {
+            background: rgba(255, 255, 255, 0.75);
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        body.light-theme .banner-content h1,
+        body.light-theme .banner-content .banner-message,
+        body.light-theme .page-title,
+        body.light-theme #currentDateTime {
+            color: #1a1a2e;
+        }
+
+        body.light-theme .nav-tabs .nav-link {
+            color: rgba(0, 0, 0, 0.6);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        body.light-theme .nav-tabs .nav-link.active {
+            color: #0d6efd;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        body.light-theme .tab-content {
+            background: rgba(255, 255, 255, 0.60);
+            border-color: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .table-glass {
+            background: rgba(255, 255, 255, 0.50);
+            border-color: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .table-glass thead th {
+            background: rgba(0, 0, 0, 0.04);
+            color: #1a1a2e;
+            border-bottom-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-theme .table-glass tbody td {
+            color: #1a1a2e;
+            border-bottom-color: rgba(0, 0, 0, 0.04);
+        }
+
+        body.light-theme .table-glass tbody tr:hover {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        body.light-theme .theme-toggle-btn {
+            background: rgba(0, 0, 0, 0.06);
+            color: #1a1a2e;
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-theme .theme-toggle-btn:hover {
+            background: rgba(0, 0, 0, 0.12);
+        }
+
+        body.light-theme .modal-content {
+            background: rgba(255, 255, 255, 0.92);
+            color: #1a1a2e;
+        }
+
+        body.light-theme .modal .form-label {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        body.light-theme .modal .form-control,
+        body.light-theme .modal .form-select {
+            background: rgba(0, 0, 0, 0.04);
+            color: #1a1a2e;
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-theme .modal .form-control:focus,
+        body.light-theme .modal .form-select:focus {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        body.light-theme .modal .btn-close {
+            filter: invert(0);
+        }
+
+        body.light-theme footer {
+            color: rgba(0, 0, 0, 0.4);
+            border-top-color: rgba(0, 0, 0, 0.06);
+        }
+
+        body.light-theme footer a {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        body.light-theme footer a:hover {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        body.light-theme .quick-actions .btn-outline-secondary {
+            color: #1a1a2e;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .quick-actions .btn-outline-secondary:hover {
+            background: rgba(0, 0, 0, 0.10);
+        }
+
+        body.light-theme .quick-actions .btn-primary {
+            background: rgba(13, 110, 253, 0.7);
+        }
+
+        body.light-theme .quick-actions .btn-success {
+            background: rgba(25, 135, 84, 0.7);
+        }
+
+        body.light-theme .quick-actions .btn-danger {
+            background: rgba(220, 53, 69, 0.7);
+        }
+
+        body.light-theme .quick-actions .btn-warning {
+            background: rgba(255, 193, 7, 0.6);
+            color: #000;
+        }
+
+        body.light-theme #currentDateTime {
+            background: rgba(255, 255, 255, 0.6);
+            color: #1a1a2e;
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        /* Badge de status */
+        .badge-presente {
+            background: rgba(40, 167, 69, 0.25);
+            color: #5ddb7a;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+
+        .badge-ausente {
+            background: rgba(220, 53, 69, 0.25);
+            color: #f8a5a5;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+
+        .badge-justificado {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffd93d;
+            border: 1px solid rgba(255, 193, 7, 0.15);
+        }
+
+        .badge-ferias {
+            background: rgba(23, 162, 184, 0.2);
+            color: #6fe0f0;
+            border: 1px solid rgba(23, 162, 184, 0.15);
+        }
+
+        body.light-theme .badge-presente {
+            background: rgba(40, 167, 69, 0.12);
+            color: #1a7a3a;
+        }
+
+        body.light-theme .badge-ausente {
+            background: rgba(220, 53, 69, 0.12);
+            color: #a83232;
+        }
+
+        body.light-theme .badge-justificado {
+            background: rgba(255, 193, 7, 0.15);
+            color: #a8850a;
+        }
+
+        body.light-theme .badge-ferias {
+            background: rgba(23, 162, 184, 0.12);
+            color: #0f6b7a;
+        }
+
+        /* Ícones de status na tabela */
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .status-dot.presente {
+            background: #28a745;
+        }
+        .status-dot.ausente {
+            background: #dc3545;
+        }
+        .status-dot.justificado {
+            background: #ffc107;
+        }
+        .status-dot.ferias {
+            background: #17a2b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+
+        <!-- ===== CABEÇALHO ===== -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap header-actions">
+                    <h2 class="page-title">
+                        <i class="bi bi-clock-history text-primary"></i>
+                        <span class="title-text">Ponto de Presenças</span>
+                        <span class="badge bg-primary ms-2">HRM</span>
+                    </h2>
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- Alternador de Tema -->
+                        <button class="theme-toggle-btn" id="themeToggle" title="Alternar Tema">
+                            <i class="bi bi-moon-stars" id="themeIcon"></i>
+                        </button>
+
+                        <!-- Data/Hora -->
+                        <span class="badge" id="currentDateTime">
+                            <i class="bi bi-clock"></i>
+                            <span id="dateTimeDisplay">Carregando...</span>
+                        </span>
+
+                        <!-- Pesquisa -->
+                        <div class="input-group" style="width: 220px;">
+                            <input type="text" id="quickSearch" class="form-control" placeholder="🔍 Pesquisar...">
+                            <button class="btn btn-outline-primary" type="button">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== BANNER PRINCIPAL ===== -->
+        <div class="banner-content fade-in">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="bi bi-clipboard-check"></i> Controlo de Frequência</h1>
+                    <p class="banner-message">
+                        Registo de presenças do pessoal do <strong>Hospital Regional de Malanje</strong>.
+                        Acompanhe entradas, saídas e status dos colaboradores em tempo real.
+                    </p>
+                    <div class="btn-group flex-wrap justify-content-center mt-3">
+                        <button class="btn btn-primary" onclick="scrollToTab('registro')">
+                            <i class="bi bi-pencil-square"></i> Registrar
+                        </button>
+                        <button class="btn btn-success" onclick="scrollToTab('presencas')">
+                            <i class="bi bi-list-ul"></i> Ver Todos
+                        </button>
+                        <button class="btn btn-warning" onclick="scrollToTab('estatisticas')">
+                            <i class="bi bi-graph-up"></i> Estatísticas
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="scrollToTab('justificativas')">
+                            <i class="bi bi-file-earmark-text"></i> Justificativas
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <span style="font-size: 4rem;">🩺</span>
+                    <p style="color: rgba(255,255,255,0.6); margin-top: 8px; font-size: 0.9rem;">
+                        <i class="bi bi-people-fill"></i> <span id="totalColaboradores">0</span> colaboradores
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== TABS ===== -->
+        <ul class="nav nav-tabs" id="infoTabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="registro-tab" data-bs-toggle="tab" data-bs-target="#registro" type="button">
+                    <i class="bi bi-pencil-square"></i> Registrar
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="presencas-tab" data-bs-toggle="tab" data-bs-target="#presencas" type="button">
+                    <i class="bi bi-list-ul"></i> Presenças
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="estatisticas-tab" data-bs-toggle="tab" data-bs-target="#estatisticas" type="button">
+                    <i class="bi bi-graph-up"></i> Estatísticas
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="justificativas-tab" data-bs-toggle="tab" data-bs-target="#justificativas" type="button">
+                    <i class="bi bi-file-earmark-text"></i> Justificativas
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="config-tab" data-bs-toggle="tab" data-bs-target="#config" type="button">
+                    <i class="bi bi-gear"></i> Configuração
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="infoTabContent">
+
+            <!-- ===== TAB 1: REGISTRAR ===== -->
+            <div class="tab-pane fade show active" id="registro" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-person-plus text-primary"></i> Registrar Presença</h5>
+                            <form id="formPresenca">
+                                <div class="mb-3">
+                                    <label class="info-label"><i class="bi bi-person-badge"></i> Nome do Colaborador</label>
+                                    <input type="text" class="form-control" id="nomeColaborador" placeholder="Digite o nome completo" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="info-label"><i class="bi bi-briefcase"></i> Cargo / Perfil</label>
+                                    <select class="form-select" id="cargoSelect" required>
+                                        <option value="">Selecione o cargo...</option>
+                                        <option value="Médico">Médico</option>
+                                        <option value="Enfermeiro">Enfermeiro</option>
+                                        <option value="Técnico de Laboratório">Técnico de Laboratório</option>
+                                        <option value="Recepcionista">Recepcionista</option>
+                                        <option value="Farmacêutico">Farmacêutico</option>
+                                        <option value="Financeiro">Financeiro</option>
+                                        <option value="Gestor de Internamento">Gestor de Internamento</option>
+                                        <option value="Administrativo">Administrativo</option>
+                                        <option value="Diretor">Diretor</option>
+                                        <option value="Outro">Outro</option>
+                                    </select>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="info-label"><i class="bi bi-calendar-event"></i> Data</label>
+                                        <input type="date" class="form-control" id="dataPresenca" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="info-label"><i class="bi bi-clock"></i> Hora</label>
+                                        <input type="time" class="form-control" id="horaPresenca" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="info-label"><i class="bi bi-tag"></i> Status</label>
+                                    <select class="form-select" id="statusPresenca" required>
+                                        <option value="presente">✅ Presente</option>
+                                        <option value="ausente">❌ Ausente</option>
+                                        <option value="justificado">📋 Justificado</option>
+                                        <option value="ferias">🏖️ Férias</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3" id="obsJustificativa" style="display: none;">
+                                    <label class="info-label"><i class="bi bi-chat-text"></i> Observação / Justificativa</label>
+                                    <textarea class="form-control" id="justificativaTexto" rows="2" placeholder="Motivo da ausência ou justificação..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-save"></i> Salvar Registro
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-clock-history text-warning"></i> Últimos Registros</h5>
+                            <div id="ultimosRegistros">
+                                <div class="d-flex align-items-center gap-2 mb-2 text-muted" style="color: rgba(255,255,255,0.4) !important;">
+                                    <i class="bi bi-info-circle"></i>
+                                    <span style="font-size: 0.9rem;">Nenhum registro recente</span>
+                                </div>
+                            </div>
+                            <hr style="border-color: rgba(255,255,255,0.05);">
+                            <div class="d-flex justify-content-between">
+                                <span class="info-label">Hoje</span>
+                                <span class="info-value" id="presencasHoje">0</span>
+                            </div>
+                            <div class="d-flex justify-content-between mt-1">
+                                <span class="info-label">Presentes</span>
+                                <span class="info-value" id="presentesHoje">0</span>
+                            </div>
+                            <div class="d-flex justify-content-between mt-1">
+                                <span class="info-label">Ausentes</span>
+                                <span class="info-value" id="ausentesHoje">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-qr-code text-info"></i> Registro Rápido por QR Code</h5>
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <p style="color: rgba(255,255,255,0.6);">
+                                        Utilize o leitor de QR Code para registar presença de forma rápida.
+                                        Cada colaborador possui um QR Code institucional único.
+                                    </p>
+                                    <button class="btn btn-outline-info">
+                                        <i class="bi bi-qr-code-scan"></i> Escanear QR Code
+                                    </button>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <span style="font-size: 3rem; opacity: 0.5;">📱</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TAB 2: PRESENÇAS ===== -->
+            <div class="tab-pane fade" id="presencas" role="tabpanel">
+                <div class="glass-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                        <h5><i class="bi bi-list-ul text-primary"></i> Lista de Presenças</h5>
+                        <div class="d-flex gap-2">
+                            <select class="form-select form-select-sm" id="filtroStatus" style="width: 150px; background: rgba(255,255,255,0.06); color: #fff; border-color: rgba(255,255,255,0.08);">
+                                <option value="todos">Todos os status</option>
+                                <option value="presente">✅ Presente</option>
+                                <option value="ausente">❌ Ausente</option>
+                                <option value="justificado">📋 Justificado</option>
+                                <option value="ferias">🏖️ Férias</option>
+                            </select>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="exportarPresencas()">
+                                <i class="bi bi-download"></i> Exportar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-glass" id="tabelaPresencas">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Colaborador</th>
+                                    <th>Cargo</th>
+                                    <th>Data</th>
+                                    <th>Hora</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="corpoTabelaPresencas">
+                                <!-- Dados via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span style="color: rgba(255,255,255,0.4); font-size: 0.85rem;">
+                            Mostrando <span id="totalExibidos">0</span> registros
+                        </span>
+                        <nav>
+                            <ul class="pagination pagination-sm">
+                                <li class="page-item disabled"><a class="page-link" href="#" style="background: transparent; color: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.06);">Anterior</a></li>
+                                <li class="page-item active"><a class="page-link" href="#" style="background: rgba(13,110,253,0.3); border-color: rgba(13,110,253,0.2); color: #fff;">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#" style="background: transparent; color: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.06);">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#" style="background: transparent; color: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.06);">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#" style="background: transparent; color: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.06);">Próximo</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TAB 3: ESTATÍSTICAS ===== -->
+            <div class="tab-pane fade" id="estatisticas" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="glass-card text-center">
+                            <i class="bi bi-people-fill icon-big text-primary"></i>
+                            <h5>Total de Registros</h5>
+                            <div class="info-value" style="font-size: 2.8rem; font-weight: bold;" id="estatTotal">0</div>
+                            <div class="info-label">Presenças registadas</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="glass-card text-center">
+                            <i class="bi bi-check-circle-fill icon-big text-success"></i>
+                            <h5>Taxa de Presença</h5>
+                            <div class="info-value" style="font-size: 2.8rem; font-weight: bold;" id="estatTaxa">0%</div>
+                            <div class="info-label">Média dos últimos 30 dias</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="glass-card text-center">
+                            <i class="bi bi-calendar-week icon-big text-warning"></i>
+                            <h5>Registros Hoje</h5>
+                            <div class="info-value" style="font-size: 2.8rem; font-weight: bold;" id="estatHoje">0</div>
+                            <div class="info-label">Presenças registadas</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-pie-chart-fill text-info"></i> Distribuição por Status</h5>
+                            <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3);">
+                                <i class="bi bi-bar-chart-fill" style="font-size: 4rem;"></i>
+                                <span style="margin-left: 12px; font-size: 1.2rem;">Gráfico em breve</span>
+                            </div>
+                            <div class="row mt-3 text-center">
+                                <div class="col-3">
+                                    <span class="status-dot presente"></span>
+                                    <span class="info-label">Presente</span>
+                                    <div class="info-value" id="statPresente">0</div>
+                                </div>
+                                <div class="col-3">
+                                    <span class="status-dot ausente"></span>
+                                    <span class="info-label">Ausente</span>
+                                    <div class="info-value" id="statAusente">0</div>
+                                </div>
+                                <div class="col-3">
+                                    <span class="status-dot justificado"></span>
+                                    <span class="info-label">Justificado</span>
+                                    <div class="info-value" id="statJustificado">0</div>
+                                </div>
+                                <div class="col-3">
+                                    <span class="status-dot ferias"></span>
+                                    <span class="info-label">Férias</span>
+                                    <div class="info-value" id="statFerias">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-trending-up text-success"></i> Evolução Semanal</h5>
+                            <div style="height: 200px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3);">
+                                <i class="bi bi-graph-up-arrow" style="font-size: 4rem;"></i>
+                                <span style="margin-left: 12px; font-size: 1.2rem;">Gráfico em breve</span>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2">
+                                <span class="info-label">Seg</span>
+                                <span class="info-label">Ter</span>
+                                <span class="info-label">Qua</span>
+                                <span class="info-label">Qui</span>
+                                <span class="info-label">Sex</span>
+                                <span class="info-label">Sáb</span>
+                                <span class="info-label">Dom</span>
+                            </div>
+                            <div class="d-flex justify-content-between mt-1">
+                                <span class="info-value" id="diaSeg">0</span>
+                                <span class="info-value" id="diaTer">0</span>
+                                <span class="info-value" id="diaQua">0</span>
+                                <span class="info-value" id="diaQui">0</span>
+                                <span class="info-value" id="diaSex">0</span>
+                                <span class="info-value" id="diaSab">0</span>
+                                <span class="info-value" id="diaDom">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TAB 4: JUSTIFICATIVAS ===== -->
+            <div class="tab-pane fade" id="justificativas" role="tabpanel">
+                <div class="glass-card">
+                    <h5><i class="bi bi-file-earmark-text text-warning"></i> Justificativas de Ausência</h5>
+                    <p style="color: rgba(255,255,255,0.5);">Registo de justificativas apresentadas pelos colaboradores.</p>
+                    <div class="table-responsive">
+                        <table class="table table-glass">
+                            <thead>
+                                <tr>
+                                    <th>Colaborador</th>
+                                    <th>Cargo</th>
+                                    <th>Data</th>
+                                    <th>Motivo</th>
+                                    <th>Status</th>
+                                    <th>Documento</th>
+                                </tr>
+                            </thead>
+                            <tbody id="corpoJustificativas">
+                                <tr>
+                                    <td colspan="6" class="text-center" style="color: rgba(255,255,255,0.3);">
+                                        <i class="bi bi-inbox"></i> Nenhuma justificativa registada
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#justificativaModal">
+                        <i class="bi bi-plus-circle"></i> Nova Justificativa
+                    </button>
+                </div>
+            </div>
+
+            <!-- ===== TAB 5: CONFIGURAÇÃO ===== -->
+            <div class="tab-pane fade" id="config" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-sliders2 text-primary"></i> Configurações Gerais</h5>
+                            <div class="mb-3">
+                                <label class="info-label">Horário de Entrada</label>
+                                <input type="time" class="form-control" id="horaEntrada" value="08:00">
+                            </div>
+                            <div class="mb-3">
+                                <label class="info-label">Horário de Saída</label>
+                                <input type="time" class="form-control" id="horaSaida" value="17:00">
+                            </div>
+                            <div class="mb-3">
+                                <label class="info-label">Tolerância (minutos)</label>
+                                <input type="number" class="form-control" id="tolerancia" value="15">
+                            </div>
+                            <button class="btn btn-primary" onclick="salvarConfiguracoes()"><i class="bi bi-save"></i> Salvar Configurações</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-people text-success"></i> Estatísticas de Colaboradores</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="info-label">Total de registros: <span id="configTotal">0</span></span>
+                                <span class="info-label">Colaboradores únicos: <span id="configUnicos">0</span></span>
+                            </div>
+                            <div id="listaColaboradores" style="max-height: 250px; overflow-y: auto;">
+                                <!-- Lista dinâmica -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== RODAPÉ ===== -->
+        <footer class="mt-5 text-center">
+            <p>© 2026 <strong>Hospital Regional de Malanje</strong> — Sistema de Ponto de Presenças</p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="#"><i class="bi bi-envelope"></i> rh@hrmalanje.ao</a>
+                <a href="#"><i class="bi bi-telephone"></i> +244 222 222 222</a>
+                <a href="privacy.html"><i class="bi bi-shield-lock"></i> Política de Privacidade</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== MODAL DE CONFIRMAÇÃO ===== -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-check-circle-fill text-success"></i> Registro Salvo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <span style="font-size: 3rem;">✅</span>
+                    <p class="mt-2" id="modalMensagem">Presença registada com sucesso!</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL DE JUSTIFICATIVA ===== -->
+    <div class="modal fade" id="justificativaModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-file-earmark-text text-warning"></i> Nova Justificativa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formJustificativa">
+                        <div class="mb-3">
+                            <label class="form-label">Colaborador</label>
+                            <input type="text" class="form-control" id="justNome" placeholder="Nome completo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Cargo</label>
+                            <input type="text" class="form-control" id="justCargo" placeholder="Cargo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Data</label>
+                            <input type="date" class="form-control" id="justData" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Motivo</label>
+                            <textarea class="form-control" id="justMotivo" rows="3" placeholder="Descreva o motivo da ausência..." required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-danger" data-bs-dismiss="modal"><i class="bi bi-close"></i> Cancelar</button>
+                    <button class="btn btn-outline-warning" onclick="salvarJustificativa()"><i class="bi bi-save"></i> Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            // ============================================
+            // DADOS DE EXEMPLO - AGORA COM NOME DIGITADO
+            // ============================================
+            let presencas = [
+                { id: 1, nome: 'António Lourenço Diogo', cargo: 'Médico', data: '2026-01-15', hora: '08:05', status: 'presente', obs: '' },
+                { id: 2, nome: 'Maria Santos', cargo: 'Enfermeira', data: '2026-01-15', hora: '07:58', status: 'presente', obs: '' },
+                { id: 3, nome: 'Carlos Mendes', cargo: 'Técnico de Laboratório', data: '2026-01-15', hora: '08:12', status: 'presente', obs: '' },
+                { id: 4, nome: 'Ana Ferreira', cargo: 'Recepcionista', data: '2026-01-15', hora: '08:30', status: 'justificado', obs: 'Consulta médica' },
+                { id: 5, nome: 'João Pedro', cargo: 'Farmacêutico', data: '2026-01-14', hora: '08:00', status: 'presente', obs: '' },
+                { id: 6, nome: 'Lúcia Gomes', cargo: 'Financeiro', data: '2026-01-14', hora: '09:15', status: 'ausente', obs: 'Problemas de transporte' },
+                { id: 7, nome: 'Manuel Costa', cargo: 'Gestor de Internamento', data: '2026-01-14', hora: '08:20', status: 'presente', obs: '' },
+                { id: 8, nome: 'António Lourenço Diogo', cargo: 'Médico', data: '2026-01-14', hora: '08:00', status: 'presente', obs: '' },
+                { id: 9, nome: 'Maria Santos', cargo: 'Enfermeira', data: '2026-01-14', hora: '08:10', status: 'presente', obs: '' },
+                { id: 10, nome: 'Carlos Mendes', cargo: 'Técnico de Laboratório', data: '2026-01-13', hora: '08:05', status: 'ferias', obs: 'Férias programadas' },
+            ];
+
+            let lastId = 10;
+            let justificativas = [];
+
+            // ============================================
+            // ATUALIZAR CONTADORES
+            // ============================================
+            function atualizarContadores() {
+                const hoje = new Date().toISOString().split('T')[0];
+                const presencasHoje = presencas.filter(p => p.data === hoje);
+                const presentes = presencasHoje.filter(p => p.status === 'presente');
+                const ausentes = presencasHoje.filter(p => p.status === 'ausente');
+
+                $('#presencasHoje').text(presencasHoje.length);
+                $('#presentesHoje').text(presentes.length);
+                $('#ausentesHoje').text(ausentes.length);
+                $('#totalColaboradores').text(presencas.length);
+                $('#estatHoje').text(presencasHoje.length);
+                $('#configTotal').text(presencas.length);
+
+                // Colaboradores únicos
+                const nomesUnicos = [...new Set(presencas.map(p => p.nome))];
+                $('#configUnicos').text(nomesUnicos.length);
+
+                // Estatísticas
+                const totalPresencas = presencas.length;
+                const totalPresentes = presencas.filter(p => p.status === 'presente').length;
+                const totalAusentes = presencas.filter(p => p.status === 'ausente').length;
+                const totalJustificados = presencas.filter(p => p.status === 'justificado').length;
+                const totalFerias = presencas.filter(p => p.status === 'ferias').length;
+
+                $('#statPresente').text(totalPresentes);
+                $('#statAusente').text(totalAusentes);
+                $('#statJustificado').text(totalJustificados);
+                $('#statFerias').text(totalFerias);
+
+                const taxa = totalPresencas > 0 ? Math.round((totalPresentes / totalPresencas) * 100) : 0;
+                $('#estatTaxa').text(taxa + '%');
+                $('#estatTotal').text(totalPresencas);
+
+                // Estatísticas por dia da semana
+                const dias = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+                const contagemDias = [0, 0, 0, 0, 0, 0, 0];
+                presencas.forEach(p => {
+                    const data = new Date(p.data + 'T00:00:00');
+                    const diaSemana = data.getDay();
+                    const idx = diaSemana === 0 ? 6 : diaSemana - 1;
+                    if (p.status === 'presente') contagemDias[idx]++;
+                });
+                dias.forEach((d, i) => {
+                    const id = `#dia${d}`;
+                    $(id).text(contagemDias[i]);
+                });
+
+                // Lista de colaboradores na configuração
+                renderizarListaColaboradores(nomesUnicos);
+            }
+
+            // ============================================
+            // RENDERIZAR LISTA DE COLABORADORES
+            // ============================================
+            function renderizarListaColaboradores(nomes) {
+                const container = $('#listaColaboradores');
+                container.empty();
+                if (nomes.length === 0) {
+                    container.html('<p style="color: rgba(255,255,255,0.3);">Nenhum colaborador registado</p>');
+                    return;
+                }
+                nomes.forEach(nome => {
+                    const count = presencas.filter(p => p.nome === nome).length;
+                    const presentes = presencas.filter(p => p.nome === nome && p.status === 'presente').length;
+                    const div = `
+                        <div class="d-flex justify-content-between align-items-center py-1" style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                            <span style="font-size: 0.9rem;">${nome}</span>
+                            <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">
+                                ${presentes}/${count} presentes
+                            </span>
+                        </div>
+                    `;
+                    container.append(div);
+                });
+            }
+
+            // ============================================
+            // RENDERIZAR TABELA DE PRESENÇAS
+            // ============================================
+            function renderizarTabela(filtro = 'todos') {
+                const tbody = $('#corpoTabelaPresencas');
+                tbody.empty();
+
+                let dados = [...presencas];
+                if (filtro !== 'todos') {
+                    dados = dados.filter(p => p.status === filtro);
+                }
+
+                if (dados.length === 0) {
+                    tbody.html(`
+                        <tr>
+                            <td colspan="7" class="text-center" style="color: rgba(255,255,255,0.3);">
+                                <i class="bi bi-inbox"></i> Nenhum registro de presença
+                            </td>
+                        </tr>
+                    `);
+                    $('#totalExibidos').text(0);
+                    return;
+                }
+
+                const sorted = dados.sort((a, b) => b.id - a.id);
+
+                sorted.forEach((p, index) => {
+                    const statusMap = {
+                        'presente': { label: 'Presente', cls: 'presente' },
+                        'ausente': { label: 'Ausente', cls: 'ausente' },
+                        'justificado': { label: 'Justificado', cls: 'justificado' },
+                        'ferias': { label: 'Férias', cls: 'ferias' },
+                    };
+                    const st = statusMap[p.status] || { label: p.status, cls: 'ausente' };
+
+                    const tr = `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td><strong>${p.nome}</strong></td>
+                            <td>${p.cargo}</td>
+                            <td>${p.data}</td>
+                            <td>${p.hora}</td>
+                            <td>
+                                <span class="status-dot ${st.cls}"></span>
+                                <span class="badge badge-${st.cls}">${st.label}</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" onclick="editarPresenca(${p.id})">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="eliminarPresenca(${p.id})">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.append(tr);
+                });
+
+                $('#totalExibidos').text(sorted.length);
+            }
+
+            // ============================================
+            // RENDERIZAR ÚLTIMOS REGISTROS
+            // ============================================
+            function renderizarUltimos() {
+                const container = $('#ultimosRegistros');
+                container.empty();
+
+                const sorted = [...presencas].sort((a, b) => b.id - a.id).slice(0, 5);
+
+                if (sorted.length === 0) {
+                    container.html(`
+                        <div class="d-flex align-items-center gap-2 text-muted" style="color: rgba(255,255,255,0.3) !important;">
+                            <i class="bi bi-info-circle"></i>
+                            <span style="font-size: 0.9rem;">Nenhum registro recente</span>
+                        </div>
+                    `);
+                    return;
+                }
+
+                sorted.forEach(p => {
+                    const statusMap = {
+                        'presente': '✅ Presente',
+                        'ausente': '❌ Ausente',
+                        'justificado': '📋 Justificado',
+                        'ferias': '🏖️ Férias'
+                    };
+                    const statusLabel = statusMap[p.status] || p.status;
+
+                    const div = `
+                        <div class="d-flex justify-content-between align-items-center py-1" style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                            <span style="font-size: 0.9rem;">${p.nome}</span>
+                            <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">${p.data} ${p.hora}</span>
+                            <span style="font-size: 0.85rem;">${statusLabel}</span>
+                        </div>
+                    `;
+                    container.append(div);
+                });
+            }
+
+            // ============================================
+            // RENDERIZAR JUSTIFICATIVAS
+            // ============================================
+            function renderizarJustificativas() {
+                const tbody = $('#corpoJustificativas');
+                tbody.empty();
+
+                const justificados = presencas.filter(p => p.status === 'justificado' || p.status === 'ausente');
+
+                if (justificados.length === 0 && justificativas.length === 0) {
+                    tbody.html(`
+                        <tr>
+                            <td colspan="6" class="text-center" style="color: rgba(255,255,255,0.3);">
+                                <i class="bi bi-inbox"></i> Nenhuma justificativa registada
+                            </td>
+                        </tr>
+                    `);
+                    return;
+                }
+
+                // Mostrar justificativas do sistema + as manuais
+                const todasJust = [...justificativos, ...justificativos];
+
+                justificados.forEach(p => {
+                    const tr = `
+                        <tr>
+                            <td>${p.nome}</td>
+                            <td>${p.cargo}</td>
+                            <td>${p.data}</td>
+                            <td>${p.obs || 'Sem justificativa detalhada'}</td>
+                            <td><span class="badge badge-${p.status}">${p.status === 'justificado' ? '📋 Justificado' : '❌ Ausente'}</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-file-earmark-pdf"></i> Ver
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.append(tr);
+                });
+
+                // Justificativas manuais
+                justificativas.forEach(j => {
+                    const tr = `
+                        <tr>
+                            <td>${j.nome}</td>
+                            <td>${j.cargo}</td>
+                            <td>${j.data}</td>
+                            <td>${j.motivo}</td>
+                            <td><span class="badge badge-justificado">📋 Justificado</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-file-earmark-pdf"></i> Ver
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.append(tr);
+                });
+            }
+
+            // ============================================
+            // FUNÇÕES GLOBAIS
+            // ============================================
+            window.editarPresenca = function(id) {
+                alert('Editar registro #' + id + ' (funcionalidade em desenvolvimento)');
+            };
+
+            window.eliminarPresenca = function(id) {
+                if (confirm('Tem certeza que deseja eliminar este registro?')) {
+                    presencas = presencas.filter(p => p.id !== id);
+                    renderizarTabela($('#filtroStatus').val());
+                    renderizarUltimos();
+                    renderizarJustificativas();
+                    atualizarContadores();
+                    mostrarToast('Registro eliminado com sucesso!', 'danger');
+                }
+            };
+
+            window.exportarPresencas = function() {
+                let csv = 'Nome,Cargo,Data,Hora,Status,Observação\n';
+                presencas.forEach(p => {
+                    csv += `${p.nome},${p.cargo},${p.data},${p.hora},${p.status},${p.obs || ''}\n`;
+                });
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'presencas_export.csv';
+                a.click();
+                URL.revokeObjectURL(url);
+                mostrarToast('Exportação realizada com sucesso!', 'info');
+            };
+
+            window.salvarConfiguracoes = function() {
+                const entrada = $('#horaEntrada').val();
+                const saida = $('#horaSaida').val();
+                const tolerancia = $('#tolerancia').val();
+                localStorage.setItem('horaEntrada', entrada);
+                localStorage.setItem('horaSaida', saida);
+                localStorage.setItem('tolerancia', tolerancia);
+                mostrarToast('Configurações salvas com sucesso!', 'success');
+            };
+
+            window.salvarJustificativa = function() {
+                const nome = $('#justNome').val().trim();
+                const cargo = $('#justCargo').val().trim();
+                const data = $('#justData').val();
+                const motivo = $('#justMotivo').val().trim();
+
+                if (!nome || !cargo || !data || !motivo) {
+                    alert('Preencha todos os campos.');
+                    return;
+                }
+
+                justificativas.push({
+                    id: Date.now(),
+                    nome: nome,
+                    cargo: cargo,
+                    data: data,
+                    motivo: motivo
+                });
+
+                $('#justNome').val('');
+                $('#justCargo').val('');
+                $('#justData').val('');
+                $('#justMotivo').val('');
+
+                $('#justificativaModal').modal('hide');
+                renderizarJustificativas();
+                mostrarToast('Justificativa registada com sucesso!', 'success');
+            };
+
+            // ============================================
+            // FORMULÁRIO DE REGISTRO
+            // ============================================
+            $('#formPresenca').on('submit', function(e) {
+                e.preventDefault();
+
+                const nome = $('#nomeColaborador').val().trim();
+                const cargo = $('#cargoSelect').val();
+                const data = $('#dataPresenca').val();
+                const hora = $('#horaPresenca').val();
+                const status = $('#statusPresenca').val();
+                const obs = $('#justificativaTexto').val().trim();
+
+                if (!nome || !cargo || !data || !hora) {
+                    alert('Preencha todos os campos obrigatórios.');
+                    return;
+                }
+
+                const novaPresenca = {
+                    id: ++lastId,
+                    nome: nome,
+                    cargo: cargo,
+                    data: data,
+                    hora: hora,
+                    status: status,
+                    obs: obs || '',
+                };
+
+                presencas.push(novaPresenca);
+
+                // Atualizar interfaces
+                renderizarTabela($('#filtroStatus').val());
+                renderizarUltimos();
+                renderizarJustificativas();
+                atualizarContadores();
+
+                // Limpar formulário
+                $('#nomeColaborador').val('');
+                $('#cargoSelect').val('');
+                $('#dataPresenca').val('');
+                $('#horaPresenca').val('');
+                $('#statusPresenca').val('presente');
+                $('#justificativaTexto').val('');
+                $('#obsJustificativa').hide();
+
+                // Mostrar modal de confirmação
+                const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+                $('#modalMensagem').text(
+                    `Presença registada para ${nome} (${cargo}) com status ${status}.`
+                );
+                modal.show();
+            });
+
+            // ============================================
+            // MOSTRAR/OCULTAR CAMPO DE JUSTIFICATIVA
+            // ============================================
+            $('#statusPresenca').on('change', function() {
+                const val = $(this).val();
+                if (val === 'ausente' || val === 'justificado') {
+                    $('#obsJustificativa').slideDown();
+                } else {
+                    $('#obsJustificativa').slideUp();
+                    $('#justificativaTexto').val('');
+                }
+            });
+
+            // ============================================
+            // FILTRO DE STATUS NA TABELA
+            // ============================================
+            $('#filtroStatus').on('change', function() {
+                renderizarTabela($(this).val());
+            });
+
+            // ============================================
+            // SCROLL PARA TAB
+            // ============================================
+            window.scrollToTab = function(tabId) {
+                const tab = $(`#${tabId}-tab`);
+                if (tab.length) {
+                    tab.tab('show');
+                    $('html, body').animate({
+                        scrollTop: $('#infoTabs').offset().top - 80
+                    }, 400);
+                }
+            };
+
+            // ============================================
+            // DATA/HORA
+            // ============================================
+            function updateDateTime() {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('pt-BR');
+                const timeStr = now.toLocaleTimeString('pt-BR');
+                $('#dateTimeDisplay').text(`${dateStr} ${timeStr}`);
+                // Preencher campos de data/hora
+                if (!$('#dataPresenca').val()) {
+                    $('#dataPresenca').val(now.toISOString().split('T')[0]);
+                }
+                if (!$('#horaPresenca').val()) {
+                    const h = String(now.getHours()).padStart(2, '0');
+                    const m = String(now.getMinutes()).padStart(2, '0');
+                    $('#horaPresenca').val(`${h}:${m}`);
+                }
+                // Preencher data da justificativa
+                if (!$('#justData').val()) {
+                    $('#justData').val(now.toISOString().split('T')[0]);
+                }
+            }
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            // ============================================
+            // CARREGAR CONFIGURAÇÕES SALVAS
+            // ============================================
+            const horaEntrada = localStorage.getItem('horaEntrada');
+            const horaSaida = localStorage.getItem('horaSaida');
+            const tolerancia = localStorage.getItem('tolerancia');
+            if (horaEntrada) $('#horaEntrada').val(horaEntrada);
+            if (horaSaida) $('#horaSaida').val(horaSaida);
+            if (tolerancia) $('#tolerancia').val(tolerancia);
+
+            // ============================================
+            // TEMA (CLARO/ESCURO)
+            // ============================================
+            let isDarkTheme = true;
+
+            function toggleTheme() {
+                isDarkTheme = !isDarkTheme;
+                if (isDarkTheme) {
+                    $('body').removeClass('light-theme');
+                    $('#themeIcon').removeClass('bi-sun-fill').addClass('bi-moon-stars');
+                } else {
+                    $('body').addClass('light-theme');
+                    $('#themeIcon').removeClass('bi-moon-stars').addClass('bi-sun-fill');
+                }
+                localStorage.setItem('ponto-theme', isDarkTheme ? 'dark' : 'light');
+            }
+
+            const savedTheme = localStorage.getItem('ponto-theme');
+            if (savedTheme === 'light') {
+                isDarkTheme = false;
+                $('body').addClass('light-theme');
+                $('#themeIcon').removeClass('bi-moon-stars').addClass('bi-sun-fill');
+            }
+
+            $('#themeToggle').click(toggleTheme);
+
+            // ============================================
+            // PESQUISA RÁPIDA
+            // ============================================
+            $('#quickSearch').on('input', function() {
+                const term = $(this).val().toLowerCase().trim();
+                if (term.length < 2) {
+                    $('#corpoTabelaPresencas tr').show();
+                    return;
+                }
+                $('#corpoTabelaPresencas tr').each(function() {
+                    const text = $(this).text().toLowerCase();
+                    $(this).toggle(text.includes(term));
+                });
+            });
+
+            // ============================================
+            // TOAST DE NOTIFICAÇÃO
+            // ============================================
+            function mostrarToast(mensagem, tipo = 'success') {
+                const cores = {
+                    'success': 'bg-success',
+                    'danger': 'bg-danger',
+                    'warning': 'bg-warning',
+                    'info': 'bg-info'
+                };
+                const cor = cores[tipo] || 'bg-success';
+                const icon = tipo === 'success' ? 'bi-check-circle-fill' :
+                    tipo === 'danger' ? 'bi-exclamation-circle-fill' : 'bi-info-circle-fill';
+
+                const toast = $(`
+                    <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+                        <div class="toast show align-items-center text-white ${cor} border-0" role="alert">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    <i class="bi ${icon} me-2"></i> ${mensagem}
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                $('body').append(toast);
+                setTimeout(() => {
+                    toast.fadeOut(500, function() { $(this).remove(); });
+                }, 3000);
+            }
+
+            // ============================================
+            // INICIALIZAÇÃO
+            // ============================================
+            renderizarTabela('todos');
+            renderizarUltimos();
+            renderizarJustificativas();
+            atualizarContadores();
+
+            console.log('✅ Sistema de Ponto de Presenças - HRM carregado com sucesso!');
+            console.log('ℹ️ Usuário digita o nome e seleciona o cargo manualmente.');
+
+        });
+    </script>
+</body>
+</html>

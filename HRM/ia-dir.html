@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>VITA Diretor · Assistente Executivo do Diretor Geral</title>
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        body {
+            background: url('images/dash-dir.png') center/cover no-repeat fixed;
+            backdrop-filter: blur(2px);
+            height: 100vh;
+            overflow: hidden;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 20, 30, 0.3);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(14px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        }
+        body.dark-theme .glass-panel {
+            background: rgba(20, 25, 28, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        body.dark-theme .message-bubble-user {
+            background: #1a4a6ecc;
+            color: white;
+        }
+        body.dark-theme .message-bubble-bot {
+            background: #1a2a3acc;
+            color: #e8f0f8;
+        }
+        .app-container {
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            padding: 16px;
+        }
+        .sidebar-desktop {
+            width: 340px;
+            height: calc(100vh - 32px);
+            display: flex;
+            flex-direction: column;
+            background: rgba(240, 248, 255, 0.4);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            border: 1px solid rgba(255,255,255,0.5);
+            overflow-y: auto;
+        }
+        body.dark-theme .sidebar-desktop {
+            background: rgba(20, 30, 40, 0.65);
+        }
+        .chat-main {
+            flex: 1;
+            height: calc(100vh - 32px);
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            border: 1px solid rgba(255,255,255,0.5);
+            overflow: hidden;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            scroll-behavior: smooth;
+        }
+        .message-bubble {
+            max-width: 85%;
+            padding: 12px 18px;
+            border-radius: 24px;
+            font-size: 0.95rem;
+            line-height: 1.45;
+            word-wrap: break-word;
+        }
+        .message-bubble-user {
+            background: #d4e8f7ee;
+            color: #0a2a3a;
+            border-bottom-right-radius: 6px;
+            margin-left: auto;
+        }
+        .message-bubble-bot {
+            background: #ffffffcc;
+            backdrop-filter: blur(4px);
+            color: #1a2a3a;
+            border-bottom-left-radius: 6px;
+            border-left: 4px solid #2a7a9a;
+        }
+        .message-bubble-bot .bot-name {
+            color: #2a7a9a;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .message-bubble-bot .bot-icon {
+            margin-right: 6px;
+        }
+        .footer-input {
+            border-top: 1px solid rgba(100,150,180,0.3);
+            padding: 16px 20px;
+        }
+        .btn-send {
+            background: #2a7a9a;
+            border: none;
+            color: white;
+            border-radius: 40px;
+            padding: 8px 20px;
+        }
+        .btn-send:hover {
+            background: #1a5a7a;
+        }
+        .modal-glass .modal-content {
+            background: rgba(20,35,50,0.9);
+            backdrop-filter: blur(12px);
+            color: white;
+        }
+        @media (max-width: 768px) {
+            .app-container { padding: 8px; }
+            .sidebar-desktop { display: none; }
+        }
+        .offcanvas-glass {
+            background: rgba(20, 35, 50, 0.9);
+            backdrop-filter: blur(20px);
+            color: white;
+        }
+        .theme-toggle-icon {
+            cursor: pointer;
+            font-size: 1.4rem;
+        }
+        .chip-suggestion {
+            background: rgba(42, 122, 154, 0.25);
+            border-radius: 40px;
+            padding: 6px 14px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: inline-block;
+            transition: 0.2s;
+            border: 1px solid rgba(42, 122, 154, 0.2);
+        }
+        .chip-suggestion:hover {
+            background: #2a7a9aaa;
+            color: white;
+        }
+        .history-buttons {
+            display: flex;
+            gap: 8px;
+            margin: 12px 0;
+        }
+        .logo-point {
+            width: 100px;
+            height: 50px;
+        }
+        .vita-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2a7a9a;
+        }
+        .vita-title i {
+            margin-right: 8px;
+        }
+        .logo-maker{
+            border-radius: 50px;
+            width: 50px;
+            height: 50px;
+        }
+        .logo-panel {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+        .logo-point {
+            width: 100px;
+            height: 50px;
+        }
+        .chip-intent {
+            font-size: 0.65rem;
+            padding: 2px 10px;
+            border-radius: 20px;
+            background: rgba(42, 122, 154, 0.15);
+            display: inline-block;
+            margin-top: 4px;
+        }
+        .sidebar-info-card {
+            background: rgba(30,50,70,0.4);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            border-left: 4px solid #2a7a9a;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .sidebar-info-card:hover {
+            background: rgba(42, 122, 154, 0.3);
+            transform: translateX(5px);
+        }
+        .sidebar-info-card .label {
+            font-size: 0.7rem;
+            opacity: 0.7;
+        }
+        .sidebar-info-card .value {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .pest-gallery-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-left: 4px solid #2a7a9a;
+            padding-left: 10px;
+            margin: 12px 0 8px 0;
+        }
+        .info-box {
+            background: rgba(42, 122, 154, 0.08);
+            border-left: 4px solid #2a7a9a;
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin: 6px 0;
+        }
+        .info-box i {
+            color: #2a7a9a;
+        }
+        .executive-stat {
+            background: rgba(42, 122, 154, 0.05);
+            border-radius: 10px;
+            padding: 10px 14px;
+            border: 1px solid rgba(42, 122, 154, 0.1);
+            margin-bottom: 6px;
+        }
+        .executive-stat .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .executive-stat .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .stat-critical { color: #dc3545; }
+        .stat-warning { color: #ffc107; }
+        .stat-good { color: #28a745; }
+        .stat-info { color: #2a7a9a; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="d-flex gap-3 h-100">
+        <!-- SIDEBAR DESKTOP -->
+        <div class="sidebar-desktop p-3 d-none d-md-flex flex-column">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <h3 class="fw-bold mb-0" style="color:#2a7a9a;">
+                    <a href="index.html">
+                        <img src="images/Lux-logo-bg.png" class="logo-point" onerror="this.style.display='none'"/>
+                    </a>
+                </h3>
+                <i id="desktopThemeIcon" class="bi bi-moon-stars-fill ms-auto theme-toggle-icon"></i>
+            </div>
+            
+            <div class="glass-panel p-3 mb-2">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-crown fs-3" style="color:#2a7a9a;"></i>
+                    <div>
+                        <span class="fw-bold" style="color:#2a7a9a;">VITA Diretor</span>
+                        <div class="small text-muted">Assistente Executivo</div>
+                    </div>
+                </div>
+                <div class="small mt-2">
+                    <i class="bi bi-circle-fill text-success" style="font-size:0.5rem;"></i> Online
+                    <span class="ms-2">|</span>
+                    <span id="execInfo" class="ms-2">Pronto para atender</span>
+                </div>
+            </div>
+
+            <div class="pest-gallery-title" style="border-left-color:#2a7a9a;">
+                <i class="bi bi-graph-up"></i> Indicadores Estratégicos
+            </div>
+            <div id="guideListSidebar" class="mb-3" style="max-height: 300px; overflow-y: auto; padding-right: 5px;"></div>
+            
+            <div class="pest-gallery-title" style="border-left-color:#ff9f43;">
+                <i class="bi bi-exclamation-triangle"></i> Alertas Estratégicos
+            </div>
+            <div id="alertListSidebar" class="mb-3" style="max-height: 180px; overflow-y: auto; padding-right: 5px;"></div>
+
+            <div class="history-buttons">
+                <button id="saveHistoryBtnDesktop" class="btn btn-outline-info btn-sm rounded-pill"><i class="bi bi-save"></i> Guardar</button>
+                <button id="clearHistoryBtnDesktop" class="btn btn-outline-danger btn-sm rounded-pill">
+                    <i class="bi bi-trash3"></i> Limpar
+                </button>
+            </div>
+            
+            <div class="glass-panel p-2 mb-2 rounded-3 small">
+                <i class="bi bi-shield-check text-success"></i> 
+                <strong>VITA diz:</strong><br>
+                “A decisão final é sempre do Diretor Geral.”
+            </div>
+            
+            <div class="mt-auto pt-2 small">
+                <div><i class="bi bi-wifi"></i> <span id="onlineStatus">Online</span></div>
+                <div id="execSummary" class="mt-1"></div>
+            </div>
+        </div>
+
+        <!-- MAIN CHAT -->
+        <div class="chat-main d-flex flex-column">
+            <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+                <div>
+                    <a href="index.html">
+                        <img src="images/Lux-logo-bg.png" class="logo-point" onerror="this.style.display='none'"/>
+                    </a>
+                    <button class="btn d-md-none" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar"><i class="bi bi-list fs-4"></i></button>
+                    <span class="fw-bold" style="color:#2a7a9a;"> VITA Diretor</span>
+                    <div class="small text-info"><i class="fa-solid fa-chart-line"></i> IA Especializada em Gestão Estratégica</div>
+                </div>
+                <i id="mainThemeIcon" class="bi bi-moon-stars-fill theme-toggle-icon d-md-none"></i>
+            </div>
+            <div id="chatMessagesContainer" class="chat-messages"></div>
+            <div class="footer-input">
+                <div class="d-flex gap-2 mb-2 flex-wrap" id="quickSuggestions">
+                    <span class="chip-suggestion" data-question="Apresentar a situação geral do hospital">📊 Visão Geral</span>
+                    <span class="chip-suggestion" data-question="Quantos pacientes estão internados neste momento?">🏥 Internamentos</span>
+                    <span class="chip-suggestion" data-question="Quais departamentos têm maior carga de trabalho?">📋 Departamentos</span>
+                    <span class="chip-suggestion" data-question="Apresentar o resumo financeiro do mês">💰 Financeiro</span>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="userInput" class="form-control rounded-pill" placeholder="Pergunte sobre indicadores, departamentos, financeiro...">
+                    <button class="btn btn-outline-secondary rounded-pill" id="voiceBtn" title="Comando de voz"><i class="bi bi-mic"></i></button>
+                    <button class="btn btn-send rounded-pill px-3" id="sendBtn"><i class="bi bi-send"></i></button>
+                </div>
+                <div class="small text-muted mt-2 text-center">
+                    💡 <strong>Dica:</strong> Pergunte sobre indicadores, departamentos, financeiro, internamentos ou recursos humanos.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Offcanvas Mobile -->
+<div class="offcanvas offcanvas-start offcanvas-glass" tabindex="-1" id="mobileSidebar">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title"><i class="bi bi-crown" style="color:#2a7a9a;"></i> VITA Diretor</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div id="guideListMobile"></div>
+        <div id="alertListMobile"></div>
+    </div>
+</div>
+
+<!-- Modal Sessão -->
+<div class="modal fade" id="sessionModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-glass">
+            <div class="modal-header">
+                <h5><i class="bi bi-clock-history text-warning"></i> Sessão a expirar</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="bi bi-exclamation-triangle" style="font-size:3rem; color:#ffc107;"></i>
+                <h4 class="mt-3">Tem a certeza que pretende terminar a sessão?</h4>
+                <p class="text-muted">A sua sessão irá expirar em <strong id="sessionCountdown">2:00</strong> minutos.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-success" id="sessionContinueBtn"><i class="bi bi-check"></i> Não, continuar</button>
+                <button type="button" class="btn btn-danger" id="sessionEndBtn"><i class="bi bi-power"></i> Sim, terminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ===================================================================
+// VITA Diretor - Assistente Executivo do Diretor Geral
+// ===================================================================
+// Esta IA é um conselheiro executivo inteligente. Fornece informações
+// estratégicas sobre o hospital, indicadores, departamentos,
+// financeiro, internamentos e recursos humanos.
+// Não utiliza dados simulados - apenas conhecimento institucional geral.
+// ===================================================================
+
+// ===================================================================
+// 1. BASE DE CONHECIMENTO EXECUTIVA
+// ===================================================================
+
+// Guia Executivo
+const guiaExecutivo = {
+    'visao_geral': {
+        titulo: 'Situação Geral do Hospital',
+        descricao: 'Panorama institucional com indicadores principais.',
+        indicadores: [
+            '**Pacientes Internados:** Número atual de pacientes em internamento',
+            '**Taxa de Ocupação:** Percentagem de camas ocupadas',
+            '**Consultas Realizadas:** Total de consultas no período',
+            '**Exames Realizados:** Total de exames laboratoriais e de imagem',
+            '**Receitas vs Despesas:** Saldo financeiro do período',
+            '**Colaboradores:** Número total de profissionais ativos'
+        ],
+        observacoes: 'Os indicadores devem ser analisados em conjunto para uma visão integrada da instituição.'
+    },
+    'departamentos': {
+        titulo: 'Departamentos e Serviços',
+        descricao: 'Estado atual dos departamentos hospitalares.',
+        lista: [
+            '**Receção:** Atendimento ao público, agendamentos e admissões',
+            '**Médico:** Consultas, diagnósticos e prescrições',
+            '**Enfermagem:** Cuidados de enfermagem e monitorização',
+            '**Farmácia:** Gestão de medicamentos e dispensação',
+            '**Laboratório:** Análises clínicas e exames',
+            '**Internamento:** Gestão de camas e internamentos',
+            '**Financeiro:** Gestão de receitas, despesas e faturação'
+        ],
+        observacoes: 'Cada departamento deve ser avaliado pela sua produtividade e qualidade.'
+    },
+    'financeiro': {
+        titulo: 'Resumo Financeiro',
+        descricao: 'Panorama financeiro da instituição.',
+        itens: [
+            '**Receitas:** Valores arrecadados com serviços prestados',
+            '**Despesas:** Custos operacionais, medicamentos, equipamentos',
+            '**Saldo:** Diferença entre receitas e despesas',
+            '**Investimentos:** Projetos e aquisições em curso',
+            '**Custos por Departamento:** Distribuição dos gastos'
+        ],
+        observacoes: 'A sustentabilidade financeira é essencial para a continuidade dos serviços.'
+    },
+    'internamentos': {
+        titulo: 'Gestão de Internamentos',
+        descricao: 'Informações sobre pacientes internados e ocupação.',
+        dados: [
+            '**Pacientes Internados:** Total de pacientes em internamento',
+            '**Ocupação de Camas:** Percentagem de camas ocupadas',
+            '**Tempo Médio de Internamento:** Duração média dos internamentos',
+            '**Altas:** Número de altas no período',
+            '**Urgências:** Pacientes em regime de urgência'
+        ],
+        observacoes: 'A gestão eficiente dos internamentos é fundamental para a qualidade assistencial.'
+    },
+    'recursos_humanos': {
+        titulo: 'Recursos Humanos',
+        descricao: 'Informações sobre os colaboradores do hospital.',
+        dados: [
+            '**Total de Colaboradores:** Número de profissionais ativos',
+            '**Médicos:** Profissionais da área médica',
+            '**Enfermeiros:** Equipa de enfermagem',
+            '**Técnicos:** Técnicos de laboratório, farmácia, etc.',
+            '**Administrativos:** Equipa administrativa e de apoio'
+        ],
+        observacoes: 'Os recursos humanos são o ativo mais importante da instituição.'
+    },
+    'indicadores_kpi': {
+        titulo: 'Indicadores de Desempenho (KPIs)',
+        descricao: 'Principais indicadores de desempenho do hospital.',
+        kpis: [
+            '**Tempo Médio de Atendimento:** Tempo desde a chegada até ao atendimento',
+            '**Taxa de Ocupação Hospitalar:** Percentagem de camas ocupadas',
+            '**Produtividade por Departamento:** Atendimentos por profissional',
+            '**Satisfação do Paciente:** Índice de satisfação dos utentes',
+            '**Tempo de Espera para Exames:** Tempo entre pedido e realização',
+            '**Taxa de Reinternamento:** Percentagem de pacientes que regressam'
+        ],
+        observacoes: 'Os KPIs devem ser monitorizados regularmente para identificar áreas de melhoria.'
+    }
+};
+
+// Alertas Estratégicos
+const alertasExecutivos = [
+    '⚠️ **Ocupação:** Monitorizar a taxa de ocupação das camas diariamente.',
+    '⚠️ **Financeiro:** Acompanhar o fluxo de caixa e despesas mensais.',
+    '⚠️ **Recursos Humanos:** Avaliar a necessidade de novos profissionais.',
+    '⚠️ **Medicamentos:** Verificar disponibilidade de medicamentos essenciais.',
+    '⚠️ **Equipamentos:** Programar manutenção preventiva dos equipamentos.',
+    '⚠️ **Exames:** Acompanhar o tempo de resposta dos exames laboratoriais.',
+    '⚠️ **Satisfação:** Analisar os índices de satisfação dos pacientes.',
+    '⚠️ **Internamentos:** Monitorizar o tempo médio de internamento.',
+    '⚠️ **Segurança:** Reforçar as normas de segurança institucionais.',
+    '⚠️ **Planeamento:** Revisar o planeamento estratégico anualmente.'
+];
+
+// ===================================================================
+// 2. MOTOR NLP - INTENÇÕES
+// ===================================================================
+
+const INTENTS = {
+    VISAO_GERAL: 'visao_geral',
+    DEPARTAMENTOS: 'departamentos',
+    FINANCEIRO: 'financeiro',
+    INTERNAMENTOS: 'internamentos',
+    RECURSOS_HUMANOS: 'recursos_humanos',
+    INDICADORES: 'indicadores',
+    AJUDA: 'ajuda',
+    DESCONHECIDO: 'desconhecido'
+};
+
+const intentPatterns = [
+    { pattern: /situação geral|visão geral|panorama|estado do hospital|resumo geral|indicadores principais/i, intent: INTENTS.VISAO_GERAL },
+    { pattern: /departamento|departamentos|serviços|setores|áreas|unidades|serviço/i, intent: INTENTS.DEPARTAMENTOS },
+    { pattern: /financeiro|receitas|despesas|saldo|orçamento|faturação|valores|financeiros/i, intent: INTENTS.FINANCEIRO },
+    { pattern: /internamento|internados|internação|pacientes internados|camas|ocupação|altas|urgências/i, intent: INTENTS.INTERNAMENTOS },
+    { pattern: /recursos humanos|colaboradores|funcionários|profissionais|equipa|médicos|enfermeiros|técnicos|pessoal/i, intent: INTENTS.RECURSOS_HUMANOS },
+    { pattern: /kpi|indicadores|desempenho|metas|objetivos|produtividade|satisfação|tempo médio/i, intent: INTENTS.INDICADORES },
+    { pattern: /ajuda|comandos|o que você faz|como usar|funcionalidades/i, intent: INTENTS.AJUDA }
+];
+
+function detectIntent(text) {
+    for (let p of intentPatterns) {
+        if (p.pattern.test(text)) {
+            return p.intent;
+        }
+    }
+    return INTENTS.DESCONHECIDO;
+}
+
+// ===================================================================
+// 3. FUNÇÕES DE RESPOSTA
+// ===================================================================
+
+function getVisaoGeral() {
+    const info = guiaExecutivo['visao_geral'];
+    let msg = `📊 **${info.titulo}**\n\n`;
+    msg += `${info.descricao}\n\n`;
+    msg += `📋 **Indicadores principais:**\n`;
+    info.indicadores.forEach(i => {
+        msg += `• ${i}\n`;
+    });
+    msg += `\n📌 **Observações:** ${info.observacoes}`;
+    msg += `\n\n💡 **Exemplo:** "Apresentar a situação geral do hospital"`;
+    return msg;
+}
+
+function getDepartamentos() {
+    const info = guiaExecutivo['departamentos'];
+    let msg = `🏢 **${info.titulo}**\n\n`;
+    msg += `${info.descricao}\n\n`;
+    msg += `📋 **Departamentos:**\n`;
+    info.lista.forEach(d => {
+        msg += `• ${d}\n`;
+    });
+    msg += `\n📌 **Observações:** ${info.observacoes}`;
+    msg += `\n\n💡 **Exemplo:** "Quais departamentos têm maior carga de trabalho?"`;
+    return msg;
+}
+
+function getFinanceiro() {
+    const info = guiaExecutivo['financeiro'];
+    let msg = `💰 **${info.titulo}**\n\n`;
+    msg += `${info.descricao}\n\n`;
+    msg += `📋 **Indicadores financeiros:**\n`;
+    info.itens.forEach(i => {
+        msg += `• ${i}\n`;
+    });
+    msg += `\n📌 **Observações:** ${info.observacoes}`;
+    msg += `\n\n💡 **Exemplo:** "Apresentar o resumo financeiro do mês"`;
+    return msg;
+}
+
+function getInternamentos() {
+    const info = guiaExecutivo['internamentos'];
+    let msg = `🏥 **${info.titulo}**\n\n`;
+    msg += `${info.descricao}\n\n`;
+    msg += `📋 **Dados de internamento:**\n`;
+    info.dados.forEach(d => {
+        msg += `• ${d}\n`;
+    });
+    msg += `\n📌 **Observações:** ${info.observacoes}`;
+    msg += `\n\n💡 **Exemplo:** "Quantos pacientes estão internados neste momento?"`;
+    return msg;
+}
+
+function getRecursosHumanos() {
+    const info = guiaExecutivo['recursos_humanos'];
+    let msg = `👥 **${info.titulo}**\n\n`;
+    msg += `${info.descricao}\n\n`;
+    msg += `📋 **Informações sobre colaboradores:**\n`;
+    info.dados.forEach(d => {
+        msg += `• ${d}\n`;
+    });
+    msg += `\n📌 **Observações:** ${info.observacoes}`;
+    msg += `\n\n💡 **Exemplo:** "Quantos médicos estão ativos no hospital?"`;
+    return msg;
+}
+
+function getIndicadores() {
+    const info = guiaExecutivo['indicadores_kpi'];
+    let msg = `📈 **${info.titulo}**\n\n`;
+    msg += `${info.descricao}\n\n`;
+    msg += `📋 **KPIs institucionais:**\n`;
+    info.kpis.forEach(k => {
+        msg += `• ${k}\n`;
+    });
+    msg += `\n📌 **Observações:** ${info.observacoes}`;
+    msg += `\n\n💡 Os KPIs devem ser monitorizados regularmente para garantir a qualidade e eficiência.`;
+    return msg;
+}
+
+function getAjuda() {
+    return `👑 **VITA Diretor - Assistente Executivo do Diretor Geral**\n\n` +
+           `Sou uma IA especializada em apoio à gestão estratégica hospitalar.\n\n` +
+           `📋 **Comandos disponíveis:**\n\n` +
+           `📊 **Visão Geral**\n` +
+           `• "Apresentar a situação geral do hospital"\n` +
+           `• "Panorama institucional"\n\n` +
+           `🏢 **Departamentos**\n` +
+           `• "Quais departamentos existem?"\n` +
+           `• "Estado dos departamentos"\n\n` +
+           `💰 **Financeiro**\n` +
+           `• "Apresentar o resumo financeiro"\n` +
+           `• "Receitas e despesas"\n\n` +
+           `🏥 **Internamentos**\n` +
+           `• "Quantos pacientes estão internados?"\n` +
+           `• "Ocupação de camas"\n\n` +
+           `👥 **Recursos Humanos**\n` +
+           `• "Quantos colaboradores temos?"\n` +
+           `• "Profissionais ativos"\n\n` +
+           `📈 **Indicadores**\n` +
+           `• "KPIs do hospital"\n` +
+           `• "Indicadores de desempenho"\n\n` +
+           `💡 Use linguagem natural para perguntar sobre a gestão do hospital.`;
+}
+
+function mensagemFallback(text) {
+    // Verifica se menciona algum termo de gestão
+    if (text.toLowerCase().includes('hospital') || text.toLowerCase().includes('instituição') || text.toLowerCase().includes('gestão')) {
+        return getVisaoGeral();
+    }
+    if (text.toLowerCase().includes('cama') || text.toLowerCase().includes('leito')) {
+        return getInternamentos();
+    }
+    if (text.toLowerCase().includes('salário') || text.toLowerCase().includes('contratação') || text.toLowerCase().includes('equipa')) {
+        return getRecursosHumanos();
+    }
+    
+    return `🤔 **Não compreendi completamente a sua pergunta.**\n\n` +
+           `📌 **Perguntas que posso responder:**\n` +
+           `• "Apresentar a situação geral do hospital"\n` +
+           `• "Quais departamentos existem?"\n` +
+           `• "Apresentar o resumo financeiro"\n` +
+           `• "Quantos pacientes estão internados?"\n` +
+           `• "Quantos colaboradores temos?"\n` +
+           `• "KPIs do hospital"\n\n` +
+           `💡 Digite **"Ajuda"** para ver todos os comandos disponíveis.`;
+}
+
+// ===================================================================
+// 4. SISTEMA DE CHAT
+// ===================================================================
+
+const chatContainer = document.getElementById('chatMessagesContainer');
+const userInput = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
+
+let messages = [];
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+}
+
+function renderMessages() {
+    if (!chatContainer) return;
+    chatContainer.innerHTML = '';
+    messages.forEach(msg => {
+        const div = document.createElement('div');
+        div.className = msg.role === 'user' ? 'd-flex justify-content-end' : 'd-flex justify-content-start';
+        
+        if (msg.role === 'assistant') {
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble message-bubble-bot';
+            bubbleDiv.innerHTML = `
+                <div class="bot-name"><i class="bi bi-crown bot-icon"></i> VITA Diretor</div>
+                <div>${escapeHtml(msg.text).replace(/\n/g, '<br>')}</div>
+            `;
+            div.appendChild(bubbleDiv);
+        } else {
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble message-bubble-user';
+            bubbleDiv.innerHTML = `<div>${escapeHtml(msg.text).replace(/\n/g, '<br>')}</div>`;
+            div.appendChild(bubbleDiv);
+        }
+        chatContainer.appendChild(div);
+    });
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function addMessage(role, text) {
+    messages.push({ role, text });
+    renderMessages();
+}
+
+function processMessage(text) {
+    const intent = detectIntent(text);
+    console.log(`[VITA Diretor] Intenção: ${intent}`);
+    
+    switch(intent) {
+        case INTENTS.VISAO_GERAL:
+            return getVisaoGeral();
+        case INTENTS.DEPARTAMENTOS:
+            return getDepartamentos();
+        case INTENTS.FINANCEIRO:
+            return getFinanceiro();
+        case INTENTS.INTERNAMENTOS:
+            return getInternamentos();
+        case INTENTS.RECURSOS_HUMANOS:
+            return getRecursosHumanos();
+        case INTENTS.INDICADORES:
+            return getIndicadores();
+        case INTENTS.AJUDA:
+            return getAjuda();
+        default:
+            return mensagemFallback(text);
+    }
+}
+
+async function sendMessage() {
+    const text = userInput.value.trim();
+    if (!text) return;
+    
+    addMessage('user', text);
+    userInput.value = '';
+    
+    addMessage('assistant', '⏳ Processando...');
+    
+    setTimeout(() => {
+        messages.pop();
+        const resposta = processMessage(text);
+        addMessage('assistant', resposta);
+    }, 400);
+}
+
+// ===================================================================
+// 5. EVENTOS E INICIALIZAÇÃO
+// ===================================================================
+
+sendBtn.addEventListener('click', sendMessage);
+userInput.addEventListener('keypress', (e) => e.key === 'Enter' && sendMessage());
+
+document.querySelectorAll('.chip-suggestion').forEach(chip => {
+    chip.addEventListener('click', () => {
+        const q = chip.getAttribute('data-question') || chip.innerText;
+        userInput.value = q;
+        sendMessage();
+    });
+});
+
+// Sidebar - Guia Rápido
+function renderGuideList(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    const items = [
+        { key: 'visao_geral', icon: 'bi-eye' },
+        { key: 'departamentos', icon: 'bi-building' },
+        { key: 'financeiro', icon: 'bi-wallet2' },
+        { key: 'internamentos', icon: 'bi-hospital' },
+        { key: 'recursos_humanos', icon: 'bi-people' },
+        { key: 'indicadores_kpi', icon: 'bi-graph-up' }
+    ];
+    items.forEach(item => {
+        const info = guiaExecutivo[item.key];
+        if (info) {
+            container.innerHTML += `
+                <div class="sidebar-info-card" data-topic="${item.key}">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi ${item.icon}" style="color:#2a7a9a;"></i>
+                        <div class="value">${info.titulo}</div>
+                    </div>
+                    <div class="label">${info.descricao.substring(0, 60)}...</div>
+                </div>
+            `;
+        }
+    });
+    container.querySelectorAll('.sidebar-info-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const topic = card.getAttribute('data-topic');
+            const questions = {
+                'visao_geral': 'Apresentar a situação geral do hospital',
+                'departamentos': 'Quais departamentos existem?',
+                'financeiro': 'Apresentar o resumo financeiro',
+                'internamentos': 'Quantos pacientes estão internados?',
+                'recursos_humanos': 'Quantos colaboradores temos?',
+                'indicadores_kpi': 'KPIs do hospital'
+            };
+            userInput.value = questions[topic] || topic;
+            sendMessage();
+            if (window.innerWidth < 768) {
+                const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('mobileSidebar'));
+                if (offcanvas) offcanvas.hide();
+            }
+        });
+    });
+}
+
+// Sidebar - Alertas
+function renderAlertList(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    const alertas = alertasExecutivos.slice(0, 5);
+    alertas.forEach(a => {
+        container.innerHTML += `
+            <div class="sidebar-info-card" style="border-left-color:#ff9f43; cursor:default;">
+                <div class="label" style="font-size:0.65rem;">⚠️ ALERTA</div>
+                <div class="value" style="font-size:0.75rem;">${a.replace(/[⚠️]/g, '').trim().substring(0, 50)}...</div>
+            </div>
+        `;
+    });
+}
+
+// Histórico
+function guardarHistorico() {
+    if (messages.length) {
+        localStorage.setItem('vita_diretor_guia', JSON.stringify(messages));
+        alert('✅ Histórico guardado com sucesso!');
+    }
+}
+
+function limparHistorico() {
+    if (confirm('Apagar todo o histórico de mensagens?')) {
+        messages = [];
+        renderMessages();
+        localStorage.removeItem('vita_diretor_guia');
+        addMessage('assistant', '🧹 Histórico limpo. Como posso ajudar?');
+        alert('✅ Histórico limpo!');
+    }
+}
+
+document.getElementById('saveHistoryBtnDesktop')?.addEventListener('click', guardarHistorico);
+document.getElementById('clearHistoryBtnDesktop')?.addEventListener('click', limparHistorico);
+
+function carregarHistorico() {
+    const saved = localStorage.getItem('vita_diretor_guia');
+    if (saved) {
+        try {
+            messages = JSON.parse(saved);
+            renderMessages();
+        } catch(e) {
+            console.warn('Erro ao carregar histórico:', e);
+        }
+    }
+}
+
+// ===================================================================
+// 6. VOZ (Web Speech API)
+// ===================================================================
+
+let recognition = null;
+const voiceBtn = document.getElementById('voiceBtn');
+
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = 'pt-PT';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        userInput.value = transcript;
+        sendMessage();
+    };
+    
+    recognition.onerror = function(event) {
+        console.warn('Erro no reconhecimento de voz:', event.error);
+        addMessage('assistant', '🎤 Não foi possível capturar o áudio. Verifique o microfone e tente novamente.');
+    };
+    
+    voiceBtn.addEventListener('click', function() {
+        try {
+            recognition.start();
+            voiceBtn.innerHTML = '<i class="bi bi-mic-fill" style="color:#2a7a9a;"></i>';
+            setTimeout(() => {
+                voiceBtn.innerHTML = '<i class="bi bi-mic"></i>';
+            }, 5000);
+        } catch(e) {
+            console.warn('Erro ao iniciar reconhecimento de voz:', e);
+        }
+    });
+} else {
+    voiceBtn.style.display = 'none';
+}
+
+// ===================================================================
+// 7. TEMA
+// ===================================================================
+
+const isDark = localStorage.getItem('vita_diretor_theme') === 'dark';
+if (isDark) document.body.classList.add('dark-theme');
+
+function toggleTheme() {
+    document.body.classList.toggle('dark-theme');
+    localStorage.setItem('vita_diretor_theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+}
+
+document.querySelectorAll('.theme-toggle-icon').forEach(btn => btn.addEventListener('click', toggleTheme));
+
+// ===================================================================
+// 8. TIMER DE SESSÃO
+// ===================================================================
+
+let totalSeconds = 900;
+let timerInterval = null;
+let sessionModalShown = false;
+let sessionModal = new bootstrap.Modal(document.getElementById('sessionModal'), { backdrop: 'static', keyboard: false });
+
+function updateTimer() {
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    document.getElementById('sessionCountdown').textContent = 
+        `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+    
+    if (totalSeconds === 120 && !sessionModalShown) {
+        sessionModalShown = true;
+        sessionModal.show();
+    }
+    
+    if (totalSeconds <= 0) {
+        clearInterval(timerInterval);
+        window.location.href = "index.html";
+    }
+}
+
+function startTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    totalSeconds = 900;
+    sessionModalShown = false;
+    updateTimer();
+    timerInterval = setInterval(() => {
+        totalSeconds--;
+        updateTimer();
+    }, 1000);
+}
+
+document.getElementById('sessionContinueBtn')?.addEventListener('click', function() {
+    sessionModal.hide();
+    sessionModalShown = false;
+    startTimer();
+});
+
+document.getElementById('sessionEndBtn')?.addEventListener('click', function() {
+    sessionModal.hide();
+    clearInterval(timerInterval);
+    window.location.href = "index.html";
+});
+
+// ===================================================================
+// 9. INICIALIZAÇÃO
+// ===================================================================
+
+if (!localStorage.getItem('vita_diretor_guia')) {
+    addMessage('assistant', `👑 **Bem-vindo à VITA Diretor!**\n\nSou sua assistente executiva especializada em gestão estratégica hospitalar.\n\n📋 **O que posso fazer por si:**\n\n` +
+        `✅ Apresentar a situação geral do hospital\n` +
+        `✅ Informar sobre departamentos e serviços\n` +
+        `✅ Fornecer resumo financeiro\n` +
+        `✅ Acompanhar internamentos e ocupação\n` +
+        `✅ Informar sobre recursos humanos\n` +
+        `✅ Apresentar indicadores de desempenho (KPIs)\n\n` +
+        `💡 **Exemplos de perguntas:**\n` +
+        `• "Apresentar a situação geral do hospital"\n` +
+        `• "Quais departamentos existem?"\n` +
+        `• "Apresentar o resumo financeiro"\n` +
+        `• "Quantos pacientes estão internados?"\n\n` +
+        `🔍 Digite **"Ajuda"** para ver todos os comandos.\n\n` +
+        `👑 A decisão final é sempre do Diretor Geral.`);
+} else {
+    carregarHistorico();
+}
+
+// Renderizar sidebars
+renderGuideList('guideListSidebar');
+renderGuideList('guideListMobile');
+renderAlertList('alertListSidebar');
+renderAlertList('alertListMobile');
+
+console.log('✅ VITA Diretor - Assistente Executivo do Diretor Geral carregada com sucesso!');
+console.log('🧠 Base de conhecimento executivo');
+console.log('🕐 Timer de sessão: 15 minutos');
+console.log('🎨 Tema: ' + (isDark ? 'Escuro' : 'Claro'));
+console.log('📋 Modo: Guia Inteligente (sem dados simulados)');
+</script>
+</body>
+</html>

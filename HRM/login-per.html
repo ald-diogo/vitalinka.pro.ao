@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>VITALINKA</title>
+    <!-- Bootstrap 5 + Icons + Google Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* ========== TEMA CLARO ========== */
+        :root {
+            --bg-overlay: rgba(0, 0, 0, 0.50);
+            --glass-bg: rgba(255, 255, 255, 0.92);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+            --text-primary: #1a2e2a;
+            --text-secondary: #4a6a5e;
+            --text-light: #ffffff;
+            --input-bg: #f7faf9;
+            --input-border: #dce5e2;
+            --input-focus: #2b7a4b;
+            --accent-green: #2b7a4b;
+            --accent-hover: #1e5a3a;
+            --accent-gradient: linear-gradient(135deg, #2b7a4b 0%, #1e5a3a 100%);
+            --progress-weak: #e53e3e;
+            --progress-medium: #ed8936;
+            --progress-strong: #2b7a4b;
+            --error-bg: #fee2e2;
+            --error-text: #b91c1c;
+            --card-radius: 24px;
+            --input-radius: 12px;
+        }
+
+        /* ========== TEMA ESCURO ========== */
+        body.dark {
+            --bg-overlay: rgba(0, 0, 0, 0.70);
+            --glass-bg: rgba(20, 30, 28, 0.88);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+            --text-primary: #eef4f0;
+            --text-secondary: #b8d0c2;
+            --input-bg: #2a3c36;
+            --input-border: #3a4f48;
+            --input-focus: #4c9f70;
+            --accent-green: #4c9f70;
+            --accent-hover: #6bb886;
+            --accent-gradient: linear-gradient(135deg, #4c9f70 0%, #2b7a4b 100%);
+            --error-bg: #3b1e1e;
+            --error-text: #fca5a5;
+        }
+
+        /* ========== WRAPPER ========== */
+        .login-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100%;
+            background-image: url('images/login.png');
+            background-position: center 30%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            position: relative;
+            padding: 2rem;
+        }
+
+        .login-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--bg-overlay);
+            z-index: 0;
+        }
+
+        /* ========== SLOGAN (canto inferior) ========== */
+        .slogan-overlay {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+            padding: 0 2rem;
+            max-width: 650px;
+            pointer-events: none;
+        }
+
+        .logo-slogan1 {
+            width: 50px;
+            height: 50px;
+        }
+
+        .slogan-overlay h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .slogan-overlay p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            margin-bottom: 0;
+        }
+
+        /* ========== PAINEL PRINCIPAL (vidro) ========== */
+        .form-panel {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .login-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-radius: var(--card-radius);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 2.5rem 2.5rem 2rem;
+            transition: all 0.3s ease;
+        }
+
+        /* ========== HEADER DO CARD ========== */
+        .card-header-custom {
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .card-header-custom .brand-icon {
+            font-size: 2.6rem;
+            color: var(--accent-green);
+            display: inline-block;
+            background: rgba(43, 122, 75, 0.12);
+            padding: 0.6rem;
+            border-radius: 90px;
+            margin-bottom: 0.75rem;
+        }
+
+        body.dark .card-header-custom .brand-icon {
+            background: rgba(76, 159, 112, 0.15);
+        }
+
+        .card-header-custom h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .card-header-custom p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .logo-slogan {
+            width: 150px;
+            height: 150px;
+        }
+
+        /* ========== BOTÕES DE TEMA E IDIOMA ========== */
+        .top-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-btn {
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            transition: 0.2s;
+            padding: 0.35rem 0.5rem;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            text-decoration: none;
+        }
+
+        body.dark .action-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.06);
+            color: var(--text-light);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.08);
+            background: rgba(43, 122, 75, 0.15);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        body.dark .action-btn:hover {
+            background: rgba(76, 159, 112, 0.2);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .dropdown-menu-custom {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 0.4rem;
+            min-width: 160px;
+        }
+
+        .dropdown-menu-custom .dropdown-item {
+            color: var(--text-primary);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-menu-custom .dropdown-item:hover {
+            background: rgba(43, 122, 75, 0.1);
+            color: var(--accent-green);
+        }
+
+        body.dark .dropdown-menu-custom .dropdown-item:hover {
+            background: rgba(76, 159, 112, 0.15);
+        }
+
+        /* ========== FORMULÁRIO ========== */
+        .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .input-group-custom {
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: var(--input-radius);
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .input-group-custom:focus-within {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 4px rgba(43, 122, 75, 0.12);
+        }
+
+        body.dark .input-group-custom:focus-within {
+            box-shadow: 0 0 0 4px rgba(76, 159, 112, 0.15);
+        }
+
+        .form-control {
+            background: transparent;
+            border: none;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            border-radius: var(--input-radius);
+            flex: 1;
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: #a0b8b0;
+        }
+
+        body.dark .form-control::placeholder {
+            color: #6a8a7e;
+        }
+
+        .form-control:focus {
+            background: transparent;
+            box-shadow: none;
+            border-color: transparent;
+            color: var(--text-primary);
+        }
+
+        .input-group-text {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0 0 0 1rem;
+            font-size: 1rem;
+        }
+
+        .password-toggle-icon {
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            padding: 0 1rem;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .password-toggle-icon:hover {
+            color: var(--accent-green);
+        }
+
+        /* ========== BARRA DE FORÇA ========== */
+        .strength-wrapper {
+            margin-top: 0.5rem;
+        }
+
+        .progress {
+            height: 4px;
+            border-radius: 8px;
+            background-color: var(--input-border);
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+        }
+
+        /* ========== BOTÃO LOGIN ========== */
+        .btn-login {
+            background: var(--accent-gradient);
+            border: none;
+            padding: 0.85rem;
+            font-weight: 700;
+            border-radius: var(--input-radius);
+            font-size: 1rem;
+            transition: 0.3s ease;
+            color: #ffffff;
+            box-shadow: 0 6px 24px rgba(43, 122, 75, 0.25);
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(43, 122, 75, 0.35);
+        }
+
+        .btn-login:active {
+            transform: translateY(0px);
+        }
+
+        body.dark .btn-login {
+            box-shadow: 0 6px 24px rgba(76, 159, 112, 0.2);
+        }
+
+        body.dark .btn-login:hover {
+            box-shadow: 0 10px 32px rgba(76, 159, 112, 0.3);
+        }
+
+        /* ========== LINKS ========== */
+        .link-underline {
+            color: var(--accent-green);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .link-underline:hover {
+            text-decoration: underline;
+            color: var(--accent-hover);
+        }
+
+        /* ========== VALIDAÇÕES E ERROS ========== */
+        .invalid-feedback-custom {
+            font-size: 0.7rem;
+            color: var(--error-text);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .global-error {
+            background: var(--error-bg);
+            color: var(--error-text);
+            border-radius: var(--input-radius);
+            padding: 0.6rem 1rem;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            text-align: center;
+            border-left: 4px solid var(--error-text);
+            display: none;
+        }
+
+        .text-muted-custom {
+            font-size: 0.7rem;
+            color: var(--text-secondary) !important;
+            opacity: 0.8;
+        }
+
+        /* ========== BOTÃO SOLICITAR CREDENCIAIS ========== */
+        .btn-credentials {
+            background: linear-gradient(135deg, #2b7a4b, #1e5a3a);
+            border: none;
+            padding: 0.85rem;
+            font-weight: 600;
+            border-radius: var(--input-radius);
+            font-size: 0.95rem;
+            transition: 0.3s ease;
+            color: #ffffff;
+            box-shadow: 0 6px 24px rgba(43, 122, 75, 0.2);
+            letter-spacing: 0.3px;
+            width: 100%;
+        }
+
+        .btn-credentials:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(43, 122, 75, 0.35);
+        }
+
+        body.dark .btn-credentials {
+            background: linear-gradient(135deg, #4c9f70, #2b7a4b);
+        }
+
+        /* ========== MODAL ========== */
+        .modal-content-custom {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .modal-header-custom {
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1.5rem 2rem;
+        }
+
+        .modal-header-custom h5 {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1.3rem;
+        }
+
+        .modal-body-custom {
+            padding: 2rem;
+            position: relative;
+            min-height: 280px;
+        }
+
+        /* Imagem de fundo do modal */
+        .modal-bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('images/duv.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body.dark .modal-bg-image {
+            opacity: 0.3;
+        }
+
+        .modal-body-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-info {
+            background: rgba(43, 122, 75, 0.06);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(43, 122, 75, 0.1);
+        }
+
+        body.dark .contact-info {
+            background: rgba(76, 159, 112, 0.08);
+            border-color: rgba(76, 159, 112, 0.15);
+        }
+
+        .contact-info .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(43, 122, 75, 0.08);
+            color: var(--text-primary);
+        }
+
+        .contact-info .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-info .contact-item i {
+            font-size: 1.4rem;
+            color: var(--accent-green);
+            width: 30px;
+            text-align: center;
+        }
+
+        .contact-info .contact-item span {
+            font-size: 0.95rem;
+        }
+
+        .contact-info .contact-item .label-text {
+            font-weight: 600;
+            min-width: 60px;
+        }
+
+        .btn-close-custom {
+            background: transparent;
+            border: 1px solid var(--input-border);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-close-custom:hover {
+            background: rgba(43, 122, 75, 0.1);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .modal-footer-custom {
+            border-top: 1px solid var(--glass-border);
+            padding: 1.25rem 2rem;
+            justify-content: center;
+        }
+
+        /* ========== TOAST ========== */
+        .toast-container-custom {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+        }
+
+        .toast-custom {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+            padding: 1.25rem 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 320px;
+            max-width: 450px;
+            animation: slideUpToast 0.5s ease forwards;
+            color: var(--text-primary);
+        }
+
+        .toast-custom .toast-icon {
+            font-size: 2rem;
+            color: var(--accent-green);
+        }
+
+        .toast-custom .toast-content h6 {
+            font-weight: 700;
+            margin-bottom: 0.1rem;
+            font-size: 1rem;
+        }
+
+        .toast-custom .toast-content p {
+            margin-bottom: 0;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        @keyframes slideUpToast {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========== RESPONSIVIDADE ========== */
+        @media (max-width: 576px) {
+            .login-wrapper {
+                padding: 1rem;
+                background-position: center 50%;
+            }
+
+            .login-card {
+                padding: 1.75rem 1.25rem 1.5rem;
+                border-radius: 20px;
+            }
+
+            .card-header-custom h2 {
+                font-size: 1.35rem;
+            }
+
+            .card-header-custom .brand-icon {
+                font-size: 2.2rem;
+                padding: 0.5rem;
+            }
+
+            .top-actions {
+                gap: 0.5rem;
+            }
+
+            .action-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 1rem;
+            }
+
+            .slogan-overlay {
+                bottom: 20px;
+                padding: 0 1rem;
+                max-width: 90%;
+            }
+
+            .slogan-overlay h2 {
+                font-size: 1.2rem;
+            }
+
+            .slogan-overlay p {
+                font-size: 0.75rem;
+            }
+
+            .logo-slogan1 {
+                width: 40px;
+                height: 40px;
+            }
+
+            .form-control {
+                font-size: 0.9rem;
+                padding: 0.65rem 0.85rem;
+            }
+
+            .modal-body-custom {
+                padding: 1.25rem;
+            }
+
+            .contact-info .contact-item {
+                padding: 0.6rem 0;
+                flex-wrap: wrap;
+            }
+
+            .toast-custom {
+                min-width: auto;
+                max-width: 320px;
+                padding: 1rem 1.2rem;
+                margin: 0 1rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .login-card {
+                padding: 1.25rem 1rem;
+            }
+        }
+
+        /* ========== ANIMAÇÃO DE ENTRADA ========== */
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-card {
+            animation: fadeSlideUp 0.6s ease forwards;
+        }
+
+        .slogan-overlay {
+            animation: fadeSlideUp 0.8s ease 0.2s both;
+        }
+
+        .toast-custom {
+            animation: fadeSlideUp 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-wrapper">
+    <!-- SLOGAN -->
+    <div class="slogan-overlay">
+        <img class="logo-slogan1" src="images/vitalinka-rbg.png" alt="VITALINKA">
+        <h2>Ligando vidas através da tecnologia</h2>
+        <p>Sistema integrado de gestão hospitalar para uma saúde mais eficiente e humanizada.</p>
+    </div>
+
+    <!-- PAINEL PRINCIPAL -->
+    <div class="form-panel">
+        <div class="login-card">
+            <!-- AÇÕES SUPERIORES -->
+            <div class="top-actions">
+                <button id="btnTresTracos" class="action-btn" aria-label="Menu" title="---">
+                    <i class="bi bi-three-dots"></i>
+                </button>
+                <a href="front-info.html">
+                    <button class="action-btn" aria-label="Informações">
+                        <i class="bi bi-info" style="color: blue"></i>
+                    </button>
+                </a>
+                <button id="themeToggleBtn" class="action-btn" aria-label="Alternar tema">
+                    <i class="bi bi-moon-stars"></i>
+                </button>
+                <div class="dropdown">
+                    <button class="action-btn dropdown-toggle" type="button" id="langDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-globe2"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom" aria-labelledby="langDropdown">
+                        <li><a class="dropdown-item lang-option" data-lang="pt" href="#">🇵🇹 Português</a></li>
+                        <li><a class="dropdown-item lang-option" data-lang="en" href="#">🇬🇧 English</a></li>
+                        <li><a class="dropdown-item lang-option" data-lang="es" href="#">🇪🇸 Español</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- HEADER -->
+            <div class="card-header-custom">
+                <div class="brand-icon">
+                    <a href="index.html">
+                        <img class="logo-slogan" src="images/vitalinka-rbg.png" alt="VITALINKA">
+                    </a>
+                </div>
+                <h2 id="loginTitle">Acesso seguro</h2>
+                <p id="loginSubtitle">Entre no sistema VITALINKA</p>
+            </div>
+
+            <!-- FORMULÁRIO -->
+            <form id="loginForm" novalidate>
+                <div class="mb-3">
+                    <label class="form-label" id="emailLabel">E-mail</label>
+                    <div class="input-group-custom">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="email" class="form-control" id="emailInput" placeholder="usuario@vitalinka.ao" required>
+                    </div>
+                    <div class="invalid-feedback-custom" id="emailError"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" id="passwordLabel">Senha</label>
+                    <div class="input-group-custom">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        <input type="password" class="form-control" id="passwordInput" placeholder="••••••••" required>
+                        <button type="button" class="password-toggle-icon" id="togglePasswordBtn" tabindex="-1">
+                            <i class="bi bi-eye-slash"></i>
+                        </button>
+                    </div>
+                    <div class="strength-wrapper">
+                        <div class="progress">
+                            <div id="strengthBar" class="progress-bar" style="width: 0%; background-color: var(--progress-weak);"></div>
+                        </div>
+                        <div class="strength-text" id="strengthText">Força: —</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-login w-100 mt-2" id="loginBtn">
+                    <span id="btnText">Entrar na plataforma</span>
+                    <span id="btnSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                </button>
+
+                <div id="globalErrorMessage" class="global-error"></div>
+
+                <!--
+                <div class="d-flex justify-content-between mt-3 flex-wrap gap-2">
+                    <a href="ForgotPassword.html" id="forgotLink" class="link-underline">🔐 Esqueci-me da senha</a>
+                    <a href="Register.html" id="signupLink" class="link-underline">📝 Criar conta</a>
+                </div>
+                -->
+
+                <div class="text-center mt-3">
+                    <small class="text-muted-custom" id="demoNote">🔐 Credencial: demo@vitalinka.com | Senha: Demo@123</small>
+                </div>
+            </form>
+
+            <!-- BOTÃO SOLICITAR CREDENCIAIS -->
+            <div class="mt-4">
+                <button type="button" class="btn-credentials" id="btnSolicitarCredenciais" data-bs-toggle="modal" data-bs-target="#credenciaisModal">
+                    <i class="bi bi-person-vcard me-2"></i> Solicitar Credenciais
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL SOLICITAR CREDENCIAIS -->
+<!-- ============================================================ -->
+<div class="modal fade" id="credenciaisModal" tabindex="-1" aria-labelledby="credenciaisModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-content-custom">
+            <!-- FUNDO DO MODAL -->
+            <div class="modal-bg-image"></div>
+            
+            <!-- HEADER -->
+            <div class="modal-header modal-header-custom">
+                <h5 class="modal-title" id="credenciaisModalLabel">
+                    <i class="bi bi-headset me-2" style="color: var(--accent-green);"></i>
+                    Precisa de ajuda?
+                </h5>
+                <button type="button" class="btn-close-custom" data-bs-dismiss="modal" aria-label="Fechar">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body modal-body-custom">
+                <div class="modal-body-content">
+                    <p class="text-muted mb-3" style="color: var(--text-secondary) !important;">
+                        Em caso de dúvidas ou problemas com o acesso, entre em contacto connosco:
+                    </p>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="bi bi-envelope-fill"></i>
+                            <span><span class="label-text">Email:</span> antoniodiogo958@gmail.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="bi bi-telephone-fill"></i>
+                            <span><span class="label-text">Tel:</span> (+244) 921 15 16 85</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="bi bi-clock-fill"></i>
+                            <span><span class="label-text">Horário:</span> Segunda a Sexta, 8h - 17h</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="modal-footer modal-footer-custom">
+                <button type="button" class="btn btn-login w-50" data-bs-dismiss="modal">
+                    <i class="bi bi-check-circle me-2"></i> Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TOAST -->
+<!-- ============================================================ -->
+<div class="toast-container-custom" id="toastContainer" style="display: none;">
+    <div class="toast-custom">
+        <div class="toast-icon">
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <div class="toast-content">
+            <h6 id="toastTitle">Bem-vindo(a)!</h6>
+            <p id="toastMessage">Login efetuado com sucesso.</p>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ============================================================
+    //  PERFIS E REDIRECIONAMENTOS PADRONIZADOS
+    // ============================================================
+    const PROFILES = {
+        'SA': { name: 'Super Administrador', redirect: 'dash-dev.html' },
+        'DG': { name: 'Diretor Geral', redirect: 'dash-dir.html' },
+        'DC': { name: 'Diretor Clínico', redirect: 'dashboard-dc.html' },
+        'MD': { name: 'Médico', redirect: 'dash-med.html' },
+        'EN': { name: 'Enfermeiro', redirect: 'dash-enf.html' },
+        'RC': { name: 'Rececionista', redirect: 'dash-rec.html' },
+        'TL': { name: 'Técnico de Laboratório', redirect: 'dash-tec.html' },
+        'FM': { name: 'Farmacêutico', redirect: 'dash-farm.html' },
+        'GI': { name: 'Gestor de Internamento', redirect: 'dash-internamento.html' },
+        'FN': { name: 'Financeiro', redirect: 'dash-fin.html' },
+        'RH': { name: 'Recursos Humanos', redirect: 'dashboard-rh.html' },
+        'TI': { name: 'Técnico de Informática', redirect: 'dashboard-ti.html' }
+    };
+
+    // ============================================================
+    //  TRADUÇÕES
+    // ============================================================
+    const translations = {
+        pt: {
+            loginTitle: "Acesso seguro",
+            loginSubtitle: "Entre no sistema VITALINKA",
+            emailLabel: "E-mail",
+            passwordLabel: "Senha",
+            btnText: "Entrar na plataforma",
+            demoNote: "🔐 Credencial: demo@vitalinka.com | Senha: Demo@123",
+            strengthPlaceholder: "Força: —",
+            weak: "Fraca",
+            medium: "Média",
+            strong: "Forte",
+            emailRequired: "E-mail é obrigatório",
+            emailInvalid: "Formato de e-mail inválido. Use usuario@vitalinka.ao",
+            loginError: "❌ Falha: verifique e-mail e senha.",
+            toastTitle: "Bem-vindo(a)!",
+            toastMessage: "Login efetuado com sucesso.",
+            profileLabel: "Perfil de acesso",
+            modalTitle: "Precisa de ajuda?"
+        },
+        en: {
+            loginTitle: "Secure Access",
+            loginSubtitle: "Login to VITALINKA system",
+            emailLabel: "Email",
+            passwordLabel: "Password",
+            btnText: "Sign in",
+            demoNote: "🔐 Credential: demo@vitalinka.com | Password: Demo@123",
+            strengthPlaceholder: "Strength: —",
+            weak: "Weak",
+            medium: "Medium",
+            strong: "Strong",
+            emailRequired: "Email is required",
+            emailInvalid: "Invalid email format. Use usuario@vitalinka.ao",
+            loginError: "❌ Authentication failed: check email and password.",
+            toastTitle: "Welcome!",
+            toastMessage: "Login successful.",
+            profileLabel: "Access profile",
+            modalTitle: "Need help?"
+        },
+        es: {
+            loginTitle: "Acceso Seguro",
+            loginSubtitle: "Ingrese al sistema VITALINKA",
+            emailLabel: "Correo",
+            passwordLabel: "Contraseña",
+            btnText: "Iniciar sesión",
+            demoNote: "🔐 Credencial: demo@vitalinka.com | Contraseña: Demo@123",
+            strengthPlaceholder: "Fortaleza: —",
+            weak: "Débil",
+            medium: "Media",
+            strong: "Fuerte",
+            emailRequired: "El correo es obligatorio",
+            emailInvalid: "Formato de correo inválido. Use usuario@vitalinka.ao",
+            loginError: "❌ Fallo: verifique correo y contraseña.",
+            toastTitle: "¡Bienvenido(a)!",
+            toastMessage: "Inicio de sesión exitoso.",
+            profileLabel: "Perfil de acceso",
+            modalTitle: "¿Necesita ayuda?"
+        }
+    };
+
+    // ============================================================
+    //  ESTADO GLOBAL
+    // ============================================================
+    let currentLang = localStorage.getItem('kwendaLang') || 'pt';
+    let isDark = localStorage.getItem('kwendaTheme') === 'dark';
+
+    // ============================================================
+    //  DOM REFS
+    // ============================================================
+    const themeBtn = document.getElementById('themeToggleBtn');
+    const emailInput = document.getElementById('emailInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthText = document.getElementById('strengthText');
+    const loginForm = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const btnTextSpan = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
+    const emailError = document.getElementById('emailError');
+    const globalErrorDiv = document.getElementById('globalErrorMessage');
+    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+    const toastContainer = document.getElementById('toastContainer');
+    const toastTitle = document.getElementById('toastTitle');
+    const toastMessage = document.getElementById('toastMessage');
+    const btnTresTracos = document.getElementById('btnTresTracos');
+    const btnSolicitarCredenciais = document.getElementById('btnSolicitarCredenciais');
+
+    const i18nEls = {
+        loginTitle: document.getElementById('loginTitle'),
+        loginSubtitle: document.getElementById('loginSubtitle'),
+        emailLabel: document.getElementById('emailLabel'),
+        passwordLabel: document.getElementById('passwordLabel'),
+        demoNote: document.getElementById('demoNote')
+    };
+
+    // ============================================================
+    //  FUNÇÕES DE IDIOMA
+    // ============================================================
+    function applyLanguage() {
+        const t = translations[currentLang];
+        if (i18nEls.loginTitle) i18nEls.loginTitle.innerText = t.loginTitle;
+        if (i18nEls.loginSubtitle) i18nEls.loginSubtitle.innerText = t.loginSubtitle;
+        if (i18nEls.emailLabel) i18nEls.emailLabel.innerText = t.emailLabel;
+        if (i18nEls.passwordLabel) i18nEls.passwordLabel.innerText = t.passwordLabel;
+        if (i18nEls.demoNote) i18nEls.demoNote.innerText = t.demoNote;
+        if (btnTextSpan) btnTextSpan.innerText = t.btnText;
+        if (document.getElementById('credenciaisModalLabel')) {
+            document.getElementById('credenciaisModalLabel').innerHTML = 
+                `<i class="bi bi-headset me-2" style="color: var(--accent-green);"></i> ${t.modalTitle || 'Precisa de ajuda?'}`;
+        }
+        updateStrengthTextAndBar();
+    }
+
+    // ============================================================
+    //  FUNÇÕES DE FORÇA DE SENHA
+    // ============================================================
+    function checkPasswordStrength(password) {
+        let score = 0;
+        if (!password) return { score: 0, level: 'weak' };
+        if (password.length >= 6) score++;
+        if (password.length >= 10) score++;
+        if (/[A-Z]/.test(password)) score++;
+        if (/[0-9]/.test(password)) score++;
+        if (/[^A-Za-z0-9]/.test(password)) score++;
+        let level = 'weak';
+        if (score >= 4) level = 'strong';
+        else if (score >= 2) level = 'medium';
+        return { score: Math.min(100, score * 20), level };
+    }
+
+    function updateStrengthTextAndBar() {
+        const pwd = passwordInput.value;
+        const { score, level } = checkPasswordStrength(pwd);
+        strengthBar.style.width = `${score}%`;
+        const t = translations[currentLang];
+        let levelText = '', color = '';
+        if (level === 'weak') { levelText = t.weak; color = 'var(--progress-weak)'; }
+        else if (level === 'medium') { levelText = t.medium; color = 'var(--progress-medium)'; }
+        else { levelText = t.strong; color = 'var(--progress-strong)'; }
+        strengthText.innerText = pwd ? `Força: ${levelText}` : t.strengthPlaceholder;
+        strengthBar.style.backgroundColor = color;
+        return level;
+    }
+
+    // ============================================================
+    //  VALIDAÇÕES
+    // ============================================================
+    function validateEmail() {
+        const email = emailInput.value.trim();
+        if (!email) {
+            emailError.innerText = translations[currentLang].emailRequired;
+            return false;
+        }
+        // Verifica formato username@vitalinka.ao
+        const emailRegex = /^[^\s@]+@vitalinka\.ao$/;
+        if (!emailRegex.test(email)) {
+            emailError.innerText = translations[currentLang].emailInvalid;
+            return false;
+        }
+        emailError.innerText = '';
+        return true;
+    }
+
+    function showGlobalError(message) {
+        globalErrorDiv.innerText = message;
+        globalErrorDiv.style.display = 'block';
+        setTimeout(() => {
+            globalErrorDiv.style.display = 'none';
+        }, 5000);
+    }
+
+    function showToast(title, message) {
+        toastTitle.textContent = title;
+        toastMessage.textContent = message;
+        toastContainer.style.display = 'block';
+        setTimeout(() => {
+            toastContainer.style.display = 'none';
+        }, 4000);
+    }
+
+    // ============================================================
+    //  VALIDAÇÃO DE SENHA PADRONIZADA
+    // ============================================================
+    function validatePasswordFormat(password) {
+        // Formato: {COD}-{ANO}{SEQ}{CARACTERE_ESPECIAL}
+        // Exemplo: SA-260001!
+        const regex = /^([A-Z]{2})-(\d{6})([!@#$%^&*])$/;
+        return regex.test(password);
+    }
+
+    function getProfileFromPassword(password) {
+        const match = password.match(/^([A-Z]{2})-/);
+        if (match) {
+            return match[1]; // SA, DG, DC, etc.
+        }
+        return null;
+    }
+
+    // ============================================================
+    //  AUTENTICAÇÃO PADRONIZADA
+    // ============================================================
+    async function authenticate(email, password) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const emailValid = email && /^[^\s@]+@vitalinka\.ao$/.test(email);
+                const passwordValid = validatePasswordFormat(password);
+                const profileCode = getProfileFromPassword(password);
+                
+                // Conta demo para testes
+                const isDemo = (email === 'demo@vitalinka.com' && password === 'Demo@123');
+                
+                if (isDemo) {
+                    resolve({ success: true, profile: 'SA', profileName: 'Super Administrador' });
+                } else if (emailValid && passwordValid && profileCode && PROFILES[profileCode]) {
+                    resolve({ success: true, profile: profileCode, profileName: PROFILES[profileCode].name });
+                } else {
+                    let errorMsg = translations[currentLang].loginError;
+                    if (!passwordValid && password.length > 0) {
+                        errorMsg = "❌ Formato de senha inválido. Use: COD-ANOSEQ! (ex: SA-260001!)";
+                    }
+                    resolve({ success: false, error: errorMsg });
+                }
+            }, 500);
+        });
+    }
+
+    // ============================================================
+    //  EVENTOS DO FORMULÁRIO
+    // ============================================================
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        globalErrorDiv.style.display = 'none';
+
+        const isEmailOk = validateEmail();
+        const password = passwordInput.value;
+
+        if (!isEmailOk) {
+            showGlobalError(translations[currentLang].loginError);
+            return;
+        }
+
+        btnTextSpan.classList.add('d-none');
+        btnSpinner.classList.remove('d-none');
+        loginBtn.disabled = true;
+
+        const emailVal = emailInput.value.trim();
+        const result = await authenticate(emailVal, password);
+
+        btnTextSpan.classList.remove('d-none');
+        btnSpinner.classList.add('d-none');
+        loginBtn.disabled = false;
+
+        if (result.success) {
+            const t = translations[currentLang];
+            showToast(t.toastTitle, `${t.toastMessage} - ${result.profileName}`);
+            
+            // Redirecionar após 1 segundo para o dashboard correspondente
+            setTimeout(() => {
+                const redirectUrl = PROFILES[result.profile]?.redirect || 'dashboard.html';
+                window.location.href = redirectUrl;
+            }, 1000);
+        } else {
+            showGlobalError(result.error);
+        }
+    });
+
+    // ============================================================
+    //  EVENTOS DE INPUT
+    // ============================================================
+    emailInput.addEventListener('input', validateEmail);
+    passwordInput.addEventListener('input', updateStrengthTextAndBar);
+
+    // ============================================================
+    //  TEMA
+    // ============================================================
+    function setTheme(enableDark) {
+        if (enableDark) {
+            document.body.classList.add('dark');
+            localStorage.setItem('kwendaTheme', 'dark');
+            themeBtn.querySelector('i').className = 'bi bi-sun-fill';
+        } else {
+            document.body.classList.remove('dark');
+            localStorage.setItem('kwendaTheme', 'light');
+            themeBtn.querySelector('i').className = 'bi bi-moon-stars';
+        }
+    }
+
+    themeBtn.addEventListener('click', () => {
+        isDark = !isDark;
+        setTheme(isDark);
+    });
+
+    // ============================================================
+    //  IDIOMA
+    // ============================================================
+    document.querySelectorAll('.lang-option').forEach(option => {
+        option.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentLang = option.getAttribute('data-lang');
+            localStorage.setItem('kwendaLang', currentLang);
+            applyLanguage();
+            validateEmail();
+            updateStrengthTextAndBar();
+        });
+    });
+
+    // ============================================================
+    //  MOSTRAR/OCULTAR SENHA
+    // ============================================================
+    togglePasswordBtn.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        const icon = togglePasswordBtn.querySelector('i');
+        icon.className = type === 'text' ? 'bi bi-eye' : 'bi bi-eye-slash';
+    });
+
+    // ============================================================
+    //  BOTÃO "---" (três traços)
+    // ============================================================
+    btnTresTracos.addEventListener('click', () => {
+        // Ação personalizada para o botão "---"
+        // Pode ser usado para abrir um menu lateral ou exibir informações
+        alert('Menu de opções (---) - Funcionalidade em desenvolvimento');
+    });
+
+    // ============================================================
+    //  BOTÃO SOLICITAR CREDENCIAIS (já configurado via data-bs-toggle)
+    // ============================================================
+    // O botão já está configurado com data-bs-toggle="modal" data-bs-target="#credenciaisModal"
+    // Apenas adicionamos um evento extra para tracking se necessário
+    btnSolicitarCredenciais.addEventListener('click', () => {
+        console.log('Botão Solicitar Credenciais clicado');
+    });
+
+    // ============================================================
+    //  INICIALIZAÇÃO
+    // ============================================================
+    setTheme(isDark);
+    applyLanguage();
+    updateStrengthTextAndBar();
+
+    // Aplicar tradução ao modal quando o idioma mudar
+    // O modal já será traduzido via applyLanguage()
+</script>
+</body>
+</html>

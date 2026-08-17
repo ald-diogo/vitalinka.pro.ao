@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>KwendaFood · Assistente Culinário Inteligente</title>
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        body {
+            background: url('images/ia-rbg.jpg') center/cover no-repeat fixed;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            backdrop-filter: blur(2px);
+            transition: all 0.2s ease;
+            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
+        }
+        @media (max-width: 768px) {
+            body {
+                background-size: cover;
+                background-position: center;
+                background-attachment: scroll;
+                height: 100vh;
+                overflow: hidden;
+            }
+        }
+        @media (max-width: 480px) {
+            body {
+                background-size: cover;
+                background-position: center;
+                background-attachment: scroll;
+            }
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 30, 10, 0.2);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(14px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        body.dark-theme .glass-panel {
+            background: rgba(20, 25, 18, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        body.dark-theme {
+            background-blend-mode: overlay;
+        }
+        body.dark-theme .message-bubble-user {
+            background: #2c5e2ecc;
+            color: white;
+        }
+        body.dark-theme .message-bubble-bot {
+            background: #1e2a1ecc;
+            color: #eef4e5;
+        }
+        body.dark-theme .history-item:hover {
+            background: rgba(255,255,255,0.15);
+        }
+        body.dark-theme .form-control {
+            background: rgba(0,0,0,0.5);
+            border-color: #5f7a5f;
+            color: white;
+        }
+        .app-container {
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            padding: 16px;
+        }
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 8px;
+                height: 100vh;
+            }
+        }
+        @media (max-width: 480px) {
+            .app-container {
+                padding: 4px;
+                height: 100vh;
+            }
+        }
+        .sidebar-desktop {
+            width: 280px;
+            height: calc(100vh - 32px);
+            display: flex;
+            flex-direction: column;
+            background: rgba(245, 248, 235, 0.55);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            border: 1px solid rgba(255,255,240,0.5);
+            overflow-y: auto;
+        }
+        @media (max-width: 768px) {
+            .sidebar-desktop {
+                display: none;
+            }
+        }
+        body.dark-theme .sidebar-desktop {
+            background: rgba(25, 35, 20, 0.65);
+        }
+        .chat-main {
+            flex: 1;
+            height: calc(100vh - 32px);
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 245, 0.35);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            border: 1px solid rgba(255,255,210,0.6);
+            overflow: hidden;
+        }
+        @media (max-width: 768px) {
+            .chat-main {
+                height: calc(100vh - 16px);
+                border-radius: 20px;
+            }
+        }
+        @media (max-width: 480px) {
+            .chat-main {
+                height: calc(100vh - 8px);
+                border-radius: 16px;
+            }
+        }
+        body.dark-theme .chat-main {
+            background: rgba(20, 28, 16, 0.5);
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            scroll-behavior: smooth;
+        }
+        @media (max-width: 768px) {
+            .chat-messages {
+                padding: 12px 16px;
+            }
+        }
+        @media (max-width: 480px) {
+            .chat-messages {
+                padding: 8px 12px;
+            }
+        }
+        .message-bubble {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 24px;
+            font-size: 0.95rem;
+            line-height: 1.45;
+            word-wrap: break-word;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        @media (max-width: 480px) {
+            .message-bubble {
+                max-width: 92%;
+                font-size: 0.85rem;
+                padding: 10px 14px;
+            }
+        }
+        .message-bubble-user {
+            background: #d9f0daee;
+            color: #1a3b1a;
+            border-bottom-right-radius: 6px;
+            margin-left: auto;
+        }
+        .message-bubble-bot {
+            background: #ffffffcc;
+            backdrop-filter: blur(4px);
+            color: #1f2a1b;
+            border-bottom-left-radius: 6px;
+            border: 0.5px solid rgba(140,180,100,0.3);
+        }
+        .message-image {
+            max-width: 100%;
+            margin-top: 10px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid rgba(200,220,160,0.6);
+        }
+        .recipe-image {
+            max-width: 100%;
+            border-radius: 16px;
+            margin: 8px 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            border: 2px solid rgba(200,220,160,0.4);
+        }
+        .avatar-icon {
+            width: 36px;
+            height: 36px;
+            background: #3c7849;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .footer-input {
+            border-top: 1px solid rgba(160,180,130,0.4);
+            padding: 16px 20px;
+        }
+        @media (max-width: 768px) {
+            .footer-input {
+                padding: 12px 16px;
+            }
+        }
+        @media (max-width: 480px) {
+            .footer-input {
+                padding: 8px 12px;
+            }
+        }
+        .btn-send {
+            background: #3c7849;
+            border: none;
+            color: white;
+            border-radius: 40px;
+            padding: 8px 20px;
+        }
+        .btn-send:hover {
+            background: #2d6138;
+        }
+        .modal-glass .modal-content {
+            background: rgba(30,35,25,0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(210,230,170,0.5);
+            color: white;
+        }
+        .offcanvas-glass {
+            background: rgba(30, 40, 25, 0.9);
+            backdrop-filter: blur(20px);
+            color: white;
+        }
+        .theme-toggle-icon {
+            cursor: pointer;
+            font-size: 1.4rem;
+        }
+        .farm-info {
+            background: rgba(255,255,200,0.2);
+            border-radius: 16px;
+            padding: 8px;
+            margin-top: 10px;
+        }
+        .chip-suggestion {
+            background: rgba(80,120,70,0.3);
+            border-radius: 40px;
+            padding: 6px 14px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        @media (max-width: 480px) {
+            .chip-suggestion {
+                font-size: 0.65rem;
+                padding: 4px 10px;
+            }
+        }
+        .chip-suggestion:hover {
+            background: #5e8b56aa;
+            color: white;
+        }
+        .history-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+        .history-buttons .btn-sm {
+            font-size: 0.75rem;
+            flex: 1;
+        }
+        @media (max-width: 480px) {
+            .history-buttons .btn-sm {
+                font-size: 0.65rem;
+            }
+        }
+        .logo-maker {
+            border-radius: 50px;
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+        }
+        .logo-panel {
+            border-radius: 50px;
+            width: 30px;
+            height: 30px;
+            object-fit: cover;
+        }
+        .logo-map {
+            border-radius: 50px;
+            width: 35px;
+            height: 35px;
+            object-fit: cover;
+        }
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 10px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #6FDE9C;
+            border-radius: 10px;
+        }
+        .sidebar-desktop::-webkit-scrollbar {
+            width: 3px;
+        }
+        .sidebar-desktop::-webkit-scrollbar-thumb {
+            background: #6FDE9C;
+            border-radius: 10px;
+        }
+        .recipe-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2f5e2a;
+            margin-top: 8px;
+        }
+        .recipe-ingredients {
+            background: rgba(0,0,0,0.05);
+            border-radius: 12px;
+            padding: 8px 12px;
+            margin: 6px 0;
+        }
+        .recipe-steps {
+            padding-left: 20px;
+            margin: 6px 0;
+        }
+        .recipe-steps li {
+            margin-bottom: 4px;
+        }
+        .recipe-tip {
+            background: rgba(255,200,50,0.15);
+            border-left: 3px solid #f0c040;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin: 6px 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="d-flex gap-3 h-100">
+        <!-- SIDEBAR DESKTOP -->
+        <div class="sidebar-desktop p-3 d-none d-md-flex flex-column">
+            <div class="d-flex align-items-center gap-2 mb-4 mt-2">
+                <h3 class="fw-bold mb-0" style="color: #2f5e2a;">🍽️KwendaFood</h3>
+                <i id="desktopThemeIcon" class="bi bi-moon-stars-fill ms-auto theme-toggle-icon" style="color: #eedb6d;"></i>
+            </div>
+            <div id="mobileHistoryList" class="mt-2"></div>
+            <button id="farmBtnSide" class="btn btn-outline-success mb-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#farmModal"><i class="bi bi-building"></i> Meu Estabelecimento</button>
+            
+            <div class="history-buttons">
+                <button id="saveHistoryBtnDesktop" class="btn btn-outline-info btn-sm rounded-pill"><i class="bi bi-save"></i> Guardar Histórico</button>
+                <button id="clearHistoryBtnDesktop" class="btn btn-outline-danger btn-sm rounded-pill"><i class="bi bi-trash3"></i> Limpar</button>
+            </div>
+            
+            <div class="sidebar-section-title text-muted"><i class="bi bi-clock-history"></i> DICAS CULINÁRIAS</div>
+            <div class="mt-2 small">
+                <div class="glass-panel p-2 mb-2 rounded-3"><i class="bi bi-chat-dots-fill text-success"></i> <strong>Chef Ana, Luanda</strong><br>"A muamba de galinha é o prato mais pedido!"</div>
+                <div class="glass-panel p-2 rounded-3"><i class="bi bi-tree-fill text-success"></i> <strong>Dica da semana</strong><br>Funge combina perfeitamente com carnes e molhos.</div>
+            </div>
+            <div class="mt-2 d-flex align-items-center gap-2 small">
+                <i class="bi bi-wifi"></i> <span id="onlineStatus">Online</span>
+                <i class="bi bi-shield-check ms-2"></i> Dados seguros
+                <button id="whatsappShareSide" class="btn btn-sm btn-success ms-auto" title="Partilhar no WhatsApp"><i class="bi bi-whatsapp"></i></button>
+            </div>
+            <div id="farmSummary" class="farm-info small mt-2"></div>
+        </div>
+
+        <!-- MAIN CHAT AREA -->
+        <div class="chat-main d-flex flex-column">
+            <div class="d-flex align-items-center justify-content-between p-3 border-bottom border-light-subtle">
+                <div class="d-flex gap-2 align-items-center">
+                    <button class="btn d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar"><i class="bi bi-list fs-4"></i></button>
+                    <div class="avatar-icon"><img class="logo-map" src="images/kwenda-logo.jpg"/></div>
+                    <div>
+                        <span class="fw-bold">KwendaChef</span>
+                        <div class="small text-success"><i class="bi bi-egg-fried"></i> Conselheiro Culinário</div>
+                    </div>
+                </div>
+                <div class="d-flex gap-3 align-items-center">
+                    <i class="bi bi-egg-fried fs-5"></i>
+                    <span class="badge bg-warning-subtle text-dark rounded-pill" id="climateAlert">🍳 Dica do dia</span>
+                    <i id="mainThemeIcon" class="bi bi-moon-stars-fill theme-toggle-icon d-md-none"></i>
+                </div>
+            </div>
+
+            <div id="chatMessagesContainer" class="chat-messages"></div>
+
+            <div class="footer-input">
+                <div class="d-flex gap-2 mb-2 flex-wrap" id="quickSuggestions">
+                    <span class="chip-suggestion" data-question="Receita de Muamba de Galinha">🍗 Muamba</span>
+                    <span class="chip-suggestion" data-question="Como fazer Funge">🌽 Funge</span>
+                    <span class="chip-suggestion" data-question="Receita de Calulu">🐟 Calulu</span>
+                    <span class="chip-suggestion" data-question="Dicas para delivery">🚚 Delivery</span>
+                    <span class="chip-suggestion" data-question="Sugestões de menu">📋 Menu</span>
+                    <span class="chip-suggestion" data-question="Ingredientes para sobremesas">🍰 Sobremesas</span>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="userInput" class="form-control rounded-pill" placeholder="Pergunte sobre receitas, ingredientes, dicas culinárias...">
+                    <button class="btn btn-outline-danger rounded-pill" id="voiceMockBtn" type="button" style="color: red;">
+                        <i class="bi bi-mic" style="color: red;"></i>
+                    </button>
+                    <button class="btn btn-send rounded-pill px-3 btn-outline" id="sendBtn" style="border-radius: 50px;">
+                        <i class="bi bi-send"></i>
+                    </button>
+                </div>
+                <div class="small text-muted mt-2 text-center"><i class="bi bi-database"></i> Modo offline sincronizado • IA treinada para gastronomia angolana</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Offcanvas Mobile -->
+<div class="offcanvas offcanvas-start offcanvas-glass" tabindex="-1" id="mobileSidebar">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" style="color: green">🍽️KwendaFood</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <button id="farmBtnMobile" class="btn btn-outline-success w-100 rounded-pill mb-3" data-bs-toggle="modal" data-bs-target="#farmModal"><i class="bi bi-building"></i> Meu Estabelecimento</button>
+        
+        <div class="history-buttons mb-3">
+            <button id="saveHistoryBtnMobile" class="btn btn-outline-info btn-sm rounded-pill w-50"><i class="bi bi-save"></i> Guardar</button>
+            <button id="clearHistoryBtnMobile" class="btn btn-outline-danger btn-sm rounded-pill w-50"><i class="bi bi-trash3"></i> Limpar</button>
+        </div>
+        
+        <div class="fw-bold">📜 Sobre</div>
+        <div class="small">✔️ Partilha de receitas angolanas<br>✔️ Dicas de apresentação de pratos</div>
+        <button id="whatsappShareMobile" class="btn btn-success w-100 mt-3 rounded-pill"><i class="bi bi-whatsapp"></i> Partilhar no WhatsApp</button>
+    </div>
+</div>
+
+<!-- Modal Registo do Estabelecimento -->
+<div class="modal fade" id="farmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-glass">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-building"></i> Registar meu estabelecimento</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <label>Nome do estabelecimento:</label>
+                <input type="text" id="farmName" class="form-control mb-2" placeholder="Ex: Restaurante Tia Bia">
+                <label>Localização (província):</label>
+                <input type="text" id="farmLocation" class="form-control mb-2" placeholder="Ex: Luanda, Malanje...">
+                <label>Especialidades (separadas por vírgula):</label>
+                <input type="text" id="farmCrops" class="form-control mb-2" placeholder="Ex: muamba, calulu, funge">
+                <label>Capacidade (lugares):</label>
+                <input type="number" id="farmArea" class="form-control mb-2" placeholder="0">
+                <button id="saveFarmBtn" class="btn btn-success w-100">Guardar informações</button>
+                <div id="farmFeedback" class="mt-2 small text-light"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Simulação de Cardápio -->
+<div class="modal fade" id="simulacaoModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-glass">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-calculator-fill"></i> Simulação de Cardápio</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <label>Tipo de refeição:</label>
+                <select id="culturaSim" class="form-select mb-2"><option>Muamba de Galinha</option><option>Calulu</option><option>Funge</option><option>Peixe Grelhado</option></select>
+                <label>Porções planeadas:</label>
+                <input type="number" id="areaSim" class="form-control mb-2" value="10" step="5">
+                <label>Custo estimado por porção (Kz):</label>
+                <input type="number" id="prodSim" class="form-control mb-2" value="500" step="50">
+                <button id="calcularSimBtn" class="btn btn-success w-100">Calcular custo total</button>
+                <div id="resultadoSim" class="mt-3 alert alert-light text-dark fw-bold"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ======================= BANCO DE RECEITAS COM IMAGENS =======================
+    const receitas = {
+        'muamba': {
+            nome: 'Muamba de Galinha',
+            emoji: '🍗',
+            imagem: 'images/muamba.jpg',
+            ingredientes: [
+                '1 frango inteiro (cortado em pedaços)',
+                '2 cebolas grandes picadas',
+                '4 dentes de alho amassados',
+                '2 tomates maduros picados',
+                '1 pimento vermelho picado',
+                '1/2 xícara de óleo de palma',
+                '1/2 xícara de quiabos cortados',
+                'Sal e pimenta a gosto',
+                'Folhas de louro',
+                'Água quente'
+            ],
+            preparo: [
+                'Tempere o frango com sal, alho e pimenta. Deixe marinar por 30 minutos.',
+                'Aqueça o óleo de palma numa panela grande em fogo médio.',
+                'Refogue a cebola até ficar transparente.',
+                'Adicione o alho e refogue por 2 minutos.',
+                'Junte o tomate e o pimento, refogue por mais 3 minutos.',
+                'Adicione o frango temperado e frite até dourar.',
+                'Acrescente água quente até cobrir o frango e cozinhe por 20 minutos.',
+                'Adicione os quiabos e cozinhe por mais 10 minutos.',
+                'Sirva quente com funge ou arroz.'
+            ],
+            dica: 'Para estabelecimentos, sugiro servir com farinha de mandioca e uma salada fresca. No delivery, embale o molho separadamente para manter a textura do frango.'
+        },
+        'calulu': {
+            nome: 'Calulu de Peixe',
+            emoji: '🐟',
+            imagem: 'images/calulu.jpg',
+            ingredientes: [
+                '1 kg de peixe seco (bacalhau ou corvina)',
+                '2 cebolas grandes picadas',
+                '3 dentes de alho amassados',
+                '3 tomates maduros picados',
+                '1/2 xícara de óleo de palma',
+                '1 xícara de quiabos cortados',
+                '1 maço de espinafre ou couve',
+                'Sal e pimenta a gosto',
+                'Água quente'
+            ],
+            preparo: [
+                'Demolhe o peixe seco em água por 2 horas, trocando a água algumas vezes para retirar o excesso de sal.',
+                'Escorra o peixe e desfie em pedaços médios.',
+                'Numa panela, aqueça o óleo de palma e refogue a cebola e o alho.',
+                'Adicione o tomate e refogue por 3 minutos.',
+                'Junte o peixe desfiado e mexa bem.',
+                'Adicione água quente até cobrir o peixe e cozinhe por 15 minutos.',
+                'Acrescente o quiabo e cozinhe por mais 5 minutos.',
+                'Adicione o espinafre e cozinhe por 5 minutos até murchar.',
+                'Sirva quente com funge ou arroz.'
+            ],
+            dica: 'Para um toque especial, adicione camarão seco. No delivery, ofereça uma porção extra de molho para os clientes.'
+        },
+        'funge': {
+            nome: 'Funge de Milho',
+            emoji: '🌽',
+            imagem: 'images/funge.jpg',
+            ingredientes: [
+                '4 xícaras de fubá de milho',
+                '2 xícaras de água fria',
+                '6 xícaras de água a ferver',
+                'Sal a gosto'
+            ],
+            preparo: [
+                'Dissolva o fubá na água fria, mexendo bem para evitar grumos.',
+                'Leve ao lume e adicione a água a ferver aos poucos, mexendo sempre.',
+                'Continue mexendo em fogo médio até começar a engrossar.',
+                'Reduza o fogo e continue mexendo por cerca de 10-15 minutos.',
+                'Quando atingir a consistência desejada (firme), retire do lume.',
+                'Molde o funge com uma colher de pau e sirva quente.'
+            ],
+            dica: 'Para uma versão mais sofisticada, adicione um pouco de manteiga no final. No delivery, embale em recipientes térmicos para manter a temperatura.'
+        },
+        'peixe': {
+            nome: 'Peixe Grelhado com Molho de Limão',
+            emoji: '🐠',
+            imagem: 'images/peixe.jpg',
+            ingredientes: [
+                '4 postas de peixe (dourada ou corvina)',
+                'Suco de 3 limões',
+                '4 dentes de alho amassados',
+                'Sal e pimenta a gosto',
+                'Azeite de oliva',
+                'Salsinha picada',
+                'Cebola roxa em rodelas'
+            ],
+            preparo: [
+                'Tempere o peixe com sal, pimenta, alho e suco de limão. Deixe marinar por 30 minutos.',
+                'Pré-aqueça a grelha ou frigideira em fogo médio-alto.',
+                'Pincele o peixe com azeite e grelhe por 4-5 minutos de cada lado.',
+                'Regue com o molho da marinada e finalize com salsinha e cebola roxa.',
+                'Sirva com acompanhamentos como batatas, arroz ou salada.'
+            ],
+            dica: 'Acompanhe com molho de manteiga de ervas. Para delivery, inclua fatias de limão e utilize embalagem com divisórias.'
+        }
+    };
+
+    // ======================= GERADORES DE IMAGEM =======================
+    function gerarMapaMental() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 500; canvas.height = 400;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fef9e6'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#3c7849'; ctx.font = 'bold 16px "Times New Roman"';
+        ctx.fillText("🍳 Gastronomia Angolana", 150, 40);
+        const topicos = ["Muamba", "Calulu", "Funge", "Peixe", "Sobremesas", "Bebidas"];
+        for (let i=0; i<topicos.length; i++) {
+            let ang = (i / topicos.length) * 2 * Math.PI;
+            let x = 250 + Math.cos(ang)*140;
+            let y = 200 + Math.sin(ang)*120;
+            ctx.beginPath(); ctx.arc(x, y, 30, 0, 2*Math.PI);
+            ctx.fillStyle = '#c8e6c9'; ctx.fill();
+            ctx.fillStyle = '#1f4f1f'; ctx.font = '12px "Times New Roman"';
+            ctx.fillText(topicos[i], x-18, y+5);
+            ctx.beginPath(); ctx.moveTo(250,200); ctx.lineTo(x,y); ctx.stroke();
+        }
+        return canvas.toDataURL();
+    }
+    function gerarGraficoClima() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 450; canvas.height = 280;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#f0f7f0'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#2b5e2b'; ctx.font = '14px "Times New Roman"';
+        ctx.fillText("📊 Ingredientes Mais Usados em Angola", 80, 30);
+        ctx.fillStyle = '#2b6e9e'; ctx.fillRect(80, 60, 60, 130);
+        ctx.fillStyle = '#d97a2b'; ctx.fillRect(200, 60, 60, 80);
+        ctx.fillStyle = '#1f3f1f'; ctx.fillText("Óleo de Palma: 40%", 80, 220);
+        ctx.fillText("Peixe: 25%", 200, 220);
+        return canvas.toDataURL();
+    }
+    function gerarCicloMilho() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 500; canvas.height = 180;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fdf8e7'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const fases = ["Preparo", "Cozimento", "Tempero", "Montagem", "Servir"];
+        let x = 40;
+        for (let i=0; i<fases.length; i++) {
+            ctx.fillStyle = '#7b9c6e'; ctx.beginPath(); ctx.arc(x, 70, 22, 0, 2*Math.PI); ctx.fill();
+            ctx.fillStyle = 'white'; ctx.font = '10px "Times New Roman"';
+            ctx.fillText(fases[i], x-18, 75);
+            if (i < fases.length-1) { ctx.beginPath(); ctx.moveTo(x+22,70); ctx.lineTo(x+60,70); ctx.stroke(); }
+            x += 90;
+        }
+        ctx.fillStyle = '#2b472b'; ctx.fillText("Preparação típica: 60-90 minutos", 170, 140);
+        return canvas.toDataURL();
+    }
+
+    // ======================= FUNÇÃO PARA FORMATAR RECEITA (RESPOSTA NATURAL) =======================
+    function formatarReceita(prato) {
+        const receita = receitas[prato];
+        if (!receita) return null;
+        
+        // Texto natural da receita (sem tags HTML visíveis)
+        let texto = `${receita.emoji} ${receita.nome}\n\n`;
+        texto += `🛒 Ingredientes:\n`;
+        receita.ingredientes.forEach(ing => {
+            texto += `• ${ing}\n`;
+        });
+        texto += `\n👨‍🍳 Modo de Preparo:\n`;
+        receita.preparo.forEach((passo, index) => {
+            texto += `${index + 1}. ${passo}\n`;
+        });
+        texto += `\n💡 Dica: ${receita.dica}`;
+        
+        return {
+            texto: texto,
+            imagem: receita.imagem
+        };
+    }
+
+    // ======================= RESPOSTAS INTELIGENTES (NLP) =======================
+    function saudacao() {
+        const hora = new Date().getHours();
+        if (hora < 12) return "Bom dia";
+        if (hora < 18) return "Boa tarde";
+        return "Boa noite";
+    }
+
+    function responder(pergunta) {
+        const p = pergunta.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        
+        // Verifica se a pergunta é sobre uma receita específica
+        if (p.includes('muamba') || p.includes('galinha')) {
+            return formatarReceita('muamba');
+        }
+        if (p.includes('calulu') || p.includes('peixe seco')) {
+            return formatarReceita('calulu');
+        }
+        if (p.includes('funge') || p.includes('fuba')) {
+            return formatarReceita('funge');
+        }
+        if (p.includes('peixe') && (p.includes('grelhado') || p.includes('grelhar'))) {
+            return formatarReceita('peixe');
+        }
+        
+        // Respostas gerais (texto puro, sem tags)
+        if (/(oi|olá|ola|bom dia|boa tarde|boa noite)/.test(p)) 
+            return `${saudacao()}! 🍳 Sou o KwendaChef. Como posso ajudar na sua cozinha hoje?`;
+        if (/(tchau|até logo|adeus)/.test(p)) 
+            return "Até logo, chef! 🍽️ Volte sempre para mais dicas culinárias.";
+        if (/(obrigado|obrigada|valeu)/.test(p)) 
+            return "Por nada! Estou aqui para fortalecer o seu negócio. 🍲";
+        if (/(mapa mental|mapa conceptual)/.test(p)) 
+            return "Aqui está o mapa mental da gastronomia angolana:";
+        if (/(ingredientes|ingrediente|comprar|compras)/.test(p)) 
+            return "Gráfico dos ingredientes mais usados na cozinha angolana:";
+        if (/(preparo|preparação|cozinhar)/.test(p)) 
+            return "Ciclo típico de preparação de uma refeição angolana:";
+        if (/(delivery|entrega|embalagem)/.test(p)) 
+            return "🚚 Dicas para delivery: Use embalagens térmicas, mantenha a temperatura dos alimentos e invista em apresentação. A primeira impressão conta!\n\n💡 Sugestão: Ofereça talheres descartáveis de qualidade e guardanapos personalizados.";
+        if (/(menu|cardápio|sugestão)/.test(p)) 
+            return "📋 Sugestão de menu para estabelecimentos:\n\n• Entrada: Calulu de Peixe\n• Prato Principal: Muamba de Galinha com Funge\n• Bebida: Suco de Fruta Natural\n• Sobremesa: Doce de Banana\n\n💡 Dica: Crie combos promocionais para aumentar as vendas.";
+        if (/(simular|cardápio|porções)/.test(p)) 
+            return "📊 Abra a ferramenta de simulação no menu para calcular custos. Exemplo: 10 porções de Muamba a 500 Kz cada = 5.000 Kz.\n\n💡 Dica: Calcule também o custo dos ingredientes para definir o preço final.";
+        if (/(preço|vender|venda)/.test(p)) 
+            return "💰 Dica de venda: Pratos tradicionais angolanos têm boa aceitação. Invista em apresentação e ingredientes frescos.\n\n💡 Sugestão: Crie um cardápio digital com fotos dos pratos para atrair mais clientes.";
+        if (/(sobremesa|doce|pudim)/.test(p)) 
+            return "🍰 Sugestões de sobremesas:\n\n• Pudim de Leite Condensado\n• Doce de Banana\n• Mousse de Maracujá\n• Cocada Angolana\n\n💡 Dica: Ofereça uma sobremesa do dia para surpreender os clientes.";
+        
+        return `🍽️ Obrigado pela pergunta! Sobre "${pergunta}": recomendo usar ingredientes frescos, temperos tradicionais e caprichar na apresentação.\n\n💡 Dica: Peça uma receita específica (Muamba, Calulu, Funge, Peixe Grelhado) para obter todos os detalhes!`;
+    }
+
+    function imagemParaPergunta(pergunta) {
+        const p = pergunta.toLowerCase();
+        if (p.includes("mapa mental")) return gerarMapaMental();
+        if (p.includes("ingredientes") || p.includes("comprar")) return gerarGraficoClima();
+        if (p.includes("preparo") || p.includes("cozinhar")) return gerarCicloMilho();
+        return null;
+    }
+
+    // ======================= GERENCIAMENTO DO CHAT =======================
+    let messages = [];
+
+    const chatContainer = document.getElementById('chatMessagesContainer');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function renderMessages() {
+        if (!chatContainer) return;
+        chatContainer.innerHTML = '';
+        messages.forEach(msg => {
+            const div = document.createElement('div');
+            div.className = msg.role === 'user' ? 'd-flex justify-content-end' : 'd-flex justify-content-start';
+            const bubbleClass = msg.role === 'user' ? 'message-bubble-user' : 'message-bubble-bot';
+            
+            let content = `<div class="message-bubble ${bubbleClass}">`;
+            content += msg.role === 'assistant' ? '<img class="logo-panel" src="images/chef-kwenda.jpg"/> ' : '<img class="logo-panel" src="images/user.png"/> ';
+            content += escapeHtml(msg.text).replace(/\n/g, '<br>');
+            content += `</div>`;
+            
+            // Se houver imagem da receita, exibe fora da bolha
+            if (msg.recipeImage) {
+                content += `<img src="${msg.recipeImage}" class="recipe-image" alt="Imagem do prato" onerror="this.style.display='none'">`;
+            }
+            
+            if (msg.imageUrl) {
+                content += `<img src="${msg.imageUrl}" class="message-image" alt="Imagem gerada">`;
+            }
+            
+            div.innerHTML = content;
+            chatContainer.appendChild(div);
+        });
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function addMessage(role, text, imageUrl = null, recipeImage = null) {
+        messages.push({ role, text, imageUrl, recipeImage });
+        renderMessages();
+    }
+
+    async function sendMessage() {
+        const text = userInput.value.trim();
+        if (!text) return;
+        addMessage('user', text);
+        userInput.value = '';
+
+        addMessage('assistant', '✍️ A analisar a sua pergunta...');
+
+        setTimeout(() => {
+            messages.pop();
+            const resposta = responder(text);
+            const imagem = imagemParaPergunta(text);
+            
+            // Verifica se a resposta é uma receita (objeto com texto e imagem)
+            let respostaTexto = resposta;
+            let recipeImg = null;
+            
+            if (typeof resposta === 'object' && resposta !== null && resposta.texto) {
+                respostaTexto = resposta.texto;
+                recipeImg = resposta.imagem;
+            }
+            
+            if (/(simular|cardápio|porções)/.test(text.toLowerCase())) {
+                const modalEl = new bootstrap.Modal(document.getElementById('simulacaoModal'));
+                modalEl.show();
+            }
+            
+            addMessage('assistant', respostaTexto, imagem, recipeImg);
+        }, 500);
+    }
+
+    // ======================= FUNÇÕES PARA GUARDAR E LIMPAR HISTÓRICO =======================
+    function guardarHistorico() {
+        if (messages.length === 0) {
+            alert("Não há mensagens para guardar no histórico.");
+            return;
+        }
+        localStorage.setItem('kwenda_historico_salvo', JSON.stringify(messages));
+        alert("✅ Histórico guardado com sucesso!");
+    }
+
+    function limparHistorico() {
+        if (confirm("⚠️ Tem certeza que deseja limpar TODO o histórico de mensagens?")) {
+            messages = [];
+            addMessage('assistant', '🍳 Histórico limpo! Sou KwendaChef, seu assistente culinário. Pergunte sobre receitas, ingredientes, dicas de menu ou delivery.');
+            localStorage.removeItem('kwenda_historico_salvo');
+            alert("🗑️ Histórico de mensagens foi limpo.");
+        }
+    }
+
+    function carregarHistoricoSalvo() {
+        const saved = localStorage.getItem('kwenda_historico_salvo');
+        if (saved) {
+            try {
+                const savedMessages = JSON.parse(saved);
+                if (Array.isArray(savedMessages) && savedMessages.length > 0) {
+                    messages = savedMessages;
+                    renderMessages();
+                }
+            } catch(e) { console.warn("Erro ao carregar histórico"); }
+        }
+    }
+
+    // ======================= EVENTOS =======================
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+    document.querySelectorAll('.chip-suggestion').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const quest = chip.getAttribute('data-question') || chip.innerText;
+            userInput.value = quest;
+            sendMessage();
+        });
+    });
+
+    const saveDesktop = document.getElementById('saveHistoryBtnDesktop');
+    const clearDesktop = document.getElementById('clearHistoryBtnDesktop');
+    const saveMobile = document.getElementById('saveHistoryBtnMobile');
+    const clearMobile = document.getElementById('clearHistoryBtnMobile');
+    if (saveDesktop) saveDesktop.addEventListener('click', guardarHistorico);
+    if (clearDesktop) clearDesktop.addEventListener('click', limparHistorico);
+    if (saveMobile) saveMobile.addEventListener('click', guardarHistorico);
+    if (clearMobile) clearMobile.addEventListener('click', limparHistorico);
+
+    if (!localStorage.getItem('kwenda_historico_salvo')) {
+        addMessage('assistant', '🍳 Olá! Sou o KwendaChef, seu assistente culinário. Pergunte sobre receitas como Muamba, Calulu, Funge, dicas de ingredientes, menu ou delivery. Estou aqui para ajudar!');
+    } else {
+        carregarHistoricoSalvo();
+    }
+
+    // ======================= TEMA ESCURO =======================
+    function initTheme() {
+        const isDark = localStorage.getItem('kwenda_theme') === 'dark';
+        if (isDark) document.body.classList.add('dark-theme');
+        updateThemeIcons(isDark);
+    }
+    function toggleTheme() {
+        const isDarkNow = document.body.classList.toggle('dark-theme');
+        localStorage.setItem('kwenda_theme', isDarkNow ? 'dark' : 'light');
+        updateThemeIcons(isDarkNow);
+    }
+    function updateThemeIcons(dark) {
+        document.querySelectorAll('.theme-toggle-icon').forEach(icon => {
+            if (dark) icon.classList.remove('bi-moon-stars-fill'), icon.classList.add('bi-brightness-high-fill');
+            else icon.classList.remove('bi-brightness-high-fill'), icon.classList.add('bi-moon-stars-fill');
+        });
+    }
+    document.querySelectorAll('.theme-toggle-icon').forEach(btn => btn.addEventListener('click', toggleTheme));
+    initTheme();
+
+    // ======================= ESTABELECIMENTO (localStorage) =======================
+    let farmData = { name: "", location: "", crops: [], area: 0 };
+    function loadFarmData() {
+        const stored = localStorage.getItem('kwenda_establishment');
+        if (stored) farmData = JSON.parse(stored);
+        updateFarmUI();
+    }
+    function saveFarmData() { localStorage.setItem('kwenda_establishment', JSON.stringify(farmData)); updateFarmUI(); }
+    function updateFarmUI() {
+        const summaryDiv = document.getElementById('farmSummary');
+        if (summaryDiv) {
+            if (farmData.name) {
+                summaryDiv.innerHTML = `<i class="bi bi-building"></i> <strong>${farmData.name}</strong><br>📍 ${farmData.location || 'N/A'}<br>🍽️ ${farmData.crops.join(', ') || 'Nenhuma'}<br>👥 ${farmData.area} lugares<br><span class="badge bg-success mt-1">Registado</span>`;
+            } else {
+                summaryDiv.innerHTML = `<i class="bi bi-building"></i> <span class="text-muted">Nenhum estabelecimento registado.<br>Clique em "Meu Estabelecimento".</span>`;
+            }
+        }
+    }
+    document.getElementById('saveFarmBtn')?.addEventListener('click', () => {
+        const name = document.getElementById('farmName').value.trim();
+        const location = document.getElementById('farmLocation').value.trim();
+        const cropsStr = document.getElementById('farmCrops').value.trim();
+        const area = parseFloat(document.getElementById('farmArea').value) || 0;
+        const crops = cropsStr.split(',').map(c => c.trim().toLowerCase()).filter(c => c);
+        farmData = { name, location, crops, area };
+        saveFarmData();
+        document.getElementById('farmFeedback').innerHTML = '<span class="text-success">✅ Estabelecimento registado com sucesso!</span>';
+        setTimeout(() => {
+            bootstrap.Modal.getInstance(document.getElementById('farmModal')).hide();
+        }, 1500);
+    });
+    loadFarmData();
+
+    // ======================= SIMULAÇÃO DE CARDÁPIO =======================
+    document.getElementById('calcularSimBtn')?.addEventListener('click', () => {
+        const refeicao = document.getElementById('culturaSim').value;
+        const porcoes = parseFloat(document.getElementById('areaSim').value);
+        const custo = parseFloat(document.getElementById('prodSim').value);
+        if (!isNaN(porcoes) && !isNaN(custo)) {
+            const total = porcoes * custo;
+            document.getElementById('resultadoSim').innerHTML = `🍽️ ${refeicao}: <strong>${total.toFixed(0)} Kz</strong> estimados para ${porcoes} porções. Custo por porção ${custo} Kz.`;
+        }
+    });
+
+    // ======================= WHATSAPP SHARE =======================
+    function shareOnWhatsApp() {
+        let lastMessages = messages.slice(-5).map(m => `${m.role === 'user' ? '👤' : '🍳'} ${m.text}`).join('\n');
+        let text = `🍽️ *KwendaFood* - Dicas culinárias:\n${lastMessages}\n\nEnviado pelo KwendaChef.`;
+        let url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+    }
+    document.querySelectorAll('#whatsappShareSide, #whatsappShareMobile').forEach(btn => btn?.addEventListener('click', shareOnWhatsApp));
+
+    // ======================= OUTROS =======================
+    document.getElementById('voiceMockBtn')?.addEventListener('click', () => alert("🎤 Reconhecimento de voz (simulação): em breve poderá falar com o KwendaChef."));
+    function updateOnlineStatus() {
+        const statusSpan = document.getElementById('onlineStatus');
+        if (navigator.onLine) statusSpan.innerHTML = 'Online ✓';
+        else statusSpan.innerHTML = 'Offline (dados locais)';
+    }
+    updateOnlineStatus();
+    window.addEventListener('online', updateOnlineStatus);
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+</script>
+</body>
+</html>

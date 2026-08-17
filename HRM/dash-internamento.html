@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VITALINKA | Gestor de Internamento</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ===== VARIÁVEIS DE TEMA ===== */
+        :root {
+            --bg-image: url('images/dash-int.png');
+            --bg-overlay: rgba(0, 0, 0, 0.55);
+            --glass-bg: rgba(255, 255, 255, 0.10);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-color: #f0f4f8;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --input-border: rgba(255, 255, 255, 0.12);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --primary-gradient: linear-gradient(135deg, #2b7a4b, #4c9f70);
+            --success-color: #75f0a0;
+            --warning-color: #ffd75a;
+            --danger-color: #ff7a8a;
+            --info-color: #6ee7ff;
+            --primary-color: #2b7a4b;
+        }
+
+        [data-theme="light"] {
+            --bg-overlay: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --text-color: #1a2634;
+            --text-muted: rgba(0, 0, 0, 0.6);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --input-bg: rgba(255, 255, 255, 0.75);
+            --input-border: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+        }
+
+        * { font-family: 'Times New Roman', Times, serif; }
+
+        body {
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+            position: relative;
+            background-color: #1a2634;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-overlay);
+            z-index: 0;
+        }
+
+        .container-fluid { position: relative; z-index: 1; }
+
+        /* ===== GLASSMORPHISM ===== */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.12);
+        }
+
+        .glass-card h5 {
+            color: var(--text-color);
+            border-bottom: 2px solid var(--glass-border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .glass-card .info-label {
+            font-weight: bold;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .glass-card .info-value {
+            color: var(--text-color);
+            font-size: 1.1rem;
+        }
+
+        /* ===== NAV TABS ===== */
+        .nav-tabs .nav-link {
+            color: var(--text-color);
+            border: none;
+            padding: 10px 18px;
+            margin-right: 4px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+        .nav-tabs .nav-link:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+        .nav-tabs .nav-link.active {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(15px);
+            border-bottom: 3px solid #0d6efd;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            padding: 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 0 8px 8px 8px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+
+        /* ===== INDICATOR CARDS ===== */
+        .indicator-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .indicator-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.12); }
+        .indicator-card .number { font-size: 2.2rem; font-weight: bold; }
+        .indicator-card .label { font-size: 0.8rem; color: var(--text-muted); }
+        .indicator-card.success .number { color: var(--success-color); }
+        .indicator-card.warning .number { color: var(--warning-color); }
+        .indicator-card.danger .number { color: var(--danger-color); }
+        .indicator-card.info .number { color: var(--info-color); }
+        .indicator-card.primary .number { color: #6ea8fe; }
+
+        /* ===== BADGES ===== */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-badge.estavel { background: rgba(40,167,69,0.3); color: #75f0a0; }
+        .status-badge.critico { background: rgba(220,53,69,0.3); color: #ff7a8a; }
+        .status-badge.grave { background: rgba(255,159,67,0.3); color: #ffd75a; }
+        .status-badge.em-recuperacao { background: rgba(23,162,184,0.3); color: #6ee7ff; }
+        .status-badge.alta { background: rgba(108,117,125,0.3); color: #adb5bd; }
+
+        [data-theme="light"] .status-badge.estavel { background: rgba(40,167,69,0.15); color: #1a7a3a; }
+        [data-theme="light"] .status-badge.critico { background: rgba(220,53,69,0.15); color: #a83232; }
+        [data-theme="light"] .status-badge.grave { background: rgba(255,159,67,0.15); color: #a8850a; }
+        [data-theme="light"] .status-badge.em-recuperacao { background: rgba(23,162,184,0.15); color: #0f6b7a; }
+
+        /* ===== TABLE ===== */
+        .table-glass {
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+        .table-glass thead th {
+            background: rgba(255,255,255,0.08);
+            color: var(--text-color);
+            border-bottom: 2px solid var(--glass-border);
+            padding: 12px;
+        }
+        .table-glass tbody td {
+            color: var(--text-color);
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--glass-border);
+            vertical-align: middle;
+        }
+        .table-glass tbody tr:hover { background: rgba(255,255,255,0.05); }
+
+        /* ===== MODAL ===== */
+        .modal-content {
+            background: rgba(20,30,40,0.95);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        [data-theme="light"] .modal-content {
+            background: rgba(255,255,255,0.95);
+            color: #1a2634;
+        }
+        .modal-header { border-bottom: 1px solid var(--glass-border); }
+        .modal-footer { border-top: 1px solid var(--glass-border); }
+        .modal .btn-close { filter: invert(1); }
+        [data-theme="light"] .modal .btn-close { filter: invert(0); }
+        .modal .form-control, .modal .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+            border-radius: 8px;
+        }
+        .modal .form-control:focus, .modal .form-select:focus {
+            background: var(--input-bg);
+            border-color: rgba(13,110,253,0.5);
+            box-shadow: 0 0 0 0.25rem rgba(13,110,253,0.15);
+        }
+        .modal .form-label { color: var(--text-muted); font-weight: 500; }
+        .modal .form-text { color: var(--text-muted); }
+
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .theme-toggle:hover { transform: scale(1.1); background: rgba(255,255,255,0.15); }
+
+        /* ===== PAGE TITLE ===== */
+        .page-title {
+            color: var(--text-color);
+            text-shadow: 0 2px 20px var(--shadow-color);
+        }
+        .page-title .badge {
+            background: rgba(13,110,253,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== DATETIME ===== */
+        #currentDateTime {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .tab-content { padding: 15px; }
+            .indicator-card .number { font-size: 1.5rem; }
+            .page-title { font-size: 1.3rem; }
+        }
+
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+        }
+        .btn-primary:hover { opacity: 0.9; transform: scale(1.02); color: #fff; }
+        .btn-outline-primary { color: var(--text-color); border-color: var(--glass-border); }
+        .btn-outline-primary:hover { background: rgba(13,110,253,0.2); color: var(--text-color); }
+
+        .profile-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-color);
+        }
+        .profile-card .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .profile-card .info h6 { margin: 0; font-size: 0.85rem; }
+        .profile-card .info small { color: var(--text-muted); font-size: 0.7rem; }
+
+        .search-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 20px;
+        }
+        .search-section .form-control,
+        .search-section .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+            border-radius: 8px;
+        }
+        .search-section .form-control::placeholder { color: var(--text-muted); }
+
+        /* ===== PROFILE DETAILS ===== */
+        .profile-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .profile-detail:last-child { border-bottom: none; }
+
+        /* ===== CAMA STATUS ===== */
+        .cama-ocupada { background: #2b7a4b; color: #fff; }
+        .cama-livre { background: #6c757d; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+
+        <!-- ===== CABEÇALHO ===== -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h2 class="page-title">
+                        <i class="fas fa-procedures text-primary"></i> 
+                        Gestor de Internamento
+                        <span class="badge bg-success notification-badge">ATIVO</span>
+                    </h2>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <span class="badge" id="currentDateTime">
+                            <i class="bi bi-clock"></i> 
+                            <span id="dateTimeDisplay">Carregando...</span>
+                        </span>
+                        <div class="theme-toggle" id="themeToggle" title="Alterar Tema">
+                            <i class="fas fa-moon" id="themeIcon"></i>
+                        </div>
+                        <div class="profile-card">
+                            <div class="avatar" id="profileAvatar">GI</div>
+                            <div class="info">
+                                <h6 id="profileName">Gestor Internamento</h6>
+                                <small id="profileSpecialty">Dr. Manuel Costa</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== INDICADORES ===== -->
+        <div class="row mb-4">
+            <div class="col-md-2 col-6">
+                <div class="indicator-card primary fade-in">
+                    <div class="number" id="totalPacientes">0</div>
+                    <div class="label"><i class="fas fa-users"></i> Total Internados</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card info fade-in">
+                    <div class="number" id="ocupacao">0%</div>
+                    <div class="label"><i class="fas fa-bed"></i> Ocupação</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card success fade-in">
+                    <div class="number" id="altasHoje">0</div>
+                    <div class="label"><i class="fas fa-door-open"></i> Altas Hoje</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card warning fade-in">
+                    <div class="number" id="internamentosHoje">0</div>
+                    <div class="label"><i class="fas fa-user-plus"></i> Internamentos</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card danger fade-in">
+                    <div class="number" id="criticos">0</div>
+                    <div class="label"><i class="fas fa-exclamation-triangle"></i> Críticos</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card primary fade-in">
+                    <div class="number" id="equipaPresente">0</div>
+                    <div class="label"><i class="fas fa-user-md"></i> Equipa Presente</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== TABS ===== -->
+        <ul class="nav nav-tabs" id="internamentoTabs" role="tablist">
+            <li class="nav-item"><button class="nav-link active" id="pacientes-tab" data-bs-toggle="tab" data-bs-target="#pacientes" type="button"><i class="fas fa-users"></i> Pacientes</button></li>
+            <li class="nav-item"><button class="nav-link" id="camas-tab" data-bs-toggle="tab" data-bs-target="#camas" type="button"><i class="fas fa-bed"></i> Camas</button></li>
+            <li class="nav-item"><button class="nav-link" id="equipa-tab" data-bs-toggle="tab" data-bs-target="#equipa" type="button"><i class="fas fa-user-md"></i> Equipa</button></li>
+            <li class="nav-item"><button class="nav-link" id="escalas-tab" data-bs-toggle="tab" data-bs-target="#escalas" type="button"><i class="fas fa-calendar-alt"></i> Escalas</button></li>
+            <li class="nav-item"><button class="nav-link" id="estatisticas-tab" data-bs-toggle="tab" data-bs-target="#estatisticas" type="button"><i class="fas fa-chart-bar"></i> Estatísticas</button></li>
+            <li class="nav-item"><button class="nav-link" id="presencas-tab" data-bs-toggle="tab" data-bs-target="#presencas" type="button"><i class="fas fa-clock"></i> Presenças</button></li>
+        </ul>
+
+        <div class="tab-content" id="internamentoTabContent">
+
+            <!-- ===== TAB PACIENTES ===== -->
+            <div class="tab-pane fade show active" id="pacientes" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="search-section">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="searchPaciente" placeholder="🔍 Buscar paciente...">
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="filterStatus">
+                                        <option value="">Todos os status</option>
+                                        <option value="Estável">🟢 Estável</option>
+                                        <option value="Grave">🟡 Grave</option>
+                                        <option value="Crítico">🔴 Crítico</option>
+                                        <option value="Em recuperação">🔵 Em recuperação</option>
+                                        <option value="Alta">⚪ Alta</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="filterAndar">
+                                        <option value="">Todos andares</option>
+                                        <option value="1º Andar">1º Andar</option>
+                                        <option value="2º Andar">2º Andar</option>
+                                        <option value="3º Andar">3º Andar</option>
+                                        <option value="4º Andar">4º Andar</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#novoInternamentoModal">
+                                        <i class="fas fa-plus"></i> Novo Internamento
+                                    </button>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-outline-primary w-100" id="btnExportarPacientes">
+                                        <i class="fas fa-download"></i> Exportar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card">
+                            <h5><i class="fas fa-list me-2"></i> Lista de Pacientes Internados</h5>
+                            <div class="table-responsive">
+                                <table class="table table-glass" id="tabelaPacientes">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Paciente</th>
+                                            <th>Idade</th>
+                                            <th>Diagnóstico</th>
+                                            <th>Andar</th>
+                                            <th>Quarto</th>
+                                            <th>Cama</th>
+                                            <th>Status</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="corpoPacientes">
+                                        <!-- Dados via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <span style="color: var(--text-muted); font-size: 0.85rem;">
+                                    Mostrando <span id="totalPacientesExibidos">0</span> pacientes
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TAB CAMAS ===== -->
+            <div class="tab-pane fade" id="camas" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="glass-card">
+                            <h5><i class="fas fa-bed me-2"></i> Mapa de Ocupação de Camas</h5>
+                            <div class="row" id="mapaCamas">
+                                <!-- Gerado via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TAB EQUIPA ===== -->
+            <div class="tab-pane fade" id="equipa" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="glass-card">
+                            <h5><i class="fas fa-user-md me-2"></i> Equipa de Internamento</h5>
+                            <div class="table-responsive">
+                                <table class="table table-glass">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Cargo</th>
+                                            <th>Turno</th>
+                                            <th>Status</th>
+                                            <th>Pacientes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="corpoEquipa">
+                                        <!-- Dados via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TAB ESCALAS ===== -->
+            <div class="tab-pane fade" id="escalas" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="glass-card">
+                            <h5><i class="fas fa-calendar-alt me-2"></i> Escalas de Trabalho</h5>
+                            <div class="row" id="escalasContainer">
+                                <!-- Gerado via JS -->
+                            </div>
+                            <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#novaEscalaModal">
+                                <i class="fas fa-plus"></i> Nova Escala
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TAB ESTATÍSTICAS ===== -->
+            <div class="tab-pane fade" id="estatisticas" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="fas fa-chart-pie me-2"></i> Distribuição por Status</h5>
+                            <div id="distribuicaoStatus">
+                                <!-- Gerado via JS -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="fas fa-chart-bar me-2"></i> Internamentos por Andar</h5>
+                            <div id="distribuicaoAndar">
+                                <!-- Gerado via JS -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="glass-card">
+                            <h5><i class="fas fa-trending-up me-2"></i> Evolução de Internamentos</h5>
+                            <div id="evolucaoInternamentos">
+                                <!-- Gerado via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== TAB PRESENÇAS ===== -->
+            <div class="tab-pane fade" id="presencas" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="glass-card">
+                            <h5><i class="fas fa-clock me-2"></i> Registro de Presenças da Equipa</h5>
+                            <div class="table-responsive">
+                                <table class="table table-glass">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Data</th>
+                                            <th>Entrada</th>
+                                            <th>Saída</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="corpoPresencas">
+                                        <!-- Dados via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===== MODAIS ===== -->
+    <!-- ============================================================ -->
+
+    <!-- MODAL: NOVO INTERNAMENTO -->
+    <div class="modal fade" id="novoInternamentoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-plus me-2 text-success"></i> Novo Internamento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formInternamento">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-user"></i> Nome do Paciente</label>
+                                <input type="text" class="form-control" id="pacNome" placeholder="Nome completo" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label"><i class="fas fa-calendar"></i> Idade</label>
+                                <input type="number" class="form-control" id="pacIdade" placeholder="Idade" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label"><i class="fas fa-venus-mars"></i> Sexo</label>
+                                <select class="form-select" id="pacSexo">
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Feminino">Feminino</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-stethoscope"></i> Diagnóstico Principal</label>
+                                <input type="text" class="form-control" id="pacDiagnostico" placeholder="Diagnóstico" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-notes-medical"></i> Doenças Associadas</label>
+                                <input type="text" class="form-control" id="pacDoencas" placeholder="Ex: Hipertensão, Diabetes">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label"><i class="fas fa-layer-group"></i> Andar</label>
+                                <select class="form-select" id="pacAndar">
+                                    <option value="1º Andar">1º Andar</option>
+                                    <option value="2º Andar">2º Andar</option>
+                                    <option value="3º Andar">3º Andar</option>
+                                    <option value="4º Andar">4º Andar</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label"><i class="fas fa-door-open"></i> Quarto</label>
+                                <input type="text" class="form-control" id="pacQuarto" placeholder="Ex: A-101" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label"><i class="fas fa-bed"></i> Cama</label>
+                                <input type="text" class="form-control" id="pacCama" placeholder="Ex: 01" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label"><i class="fas fa-heartbeat"></i> Status Clínico</label>
+                                <select class="form-select" id="pacStatus">
+                                    <option value="Estável">🟢 Estável</option>
+                                    <option value="Grave">🟡 Grave</option>
+                                    <option value="Crítico">🔴 Crítico</option>
+                                    <option value="Em recuperação">🔵 Em recuperação</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-calendar-day"></i> Data de Internamento</label>
+                                <input type="date" class="form-control" id="pacDataInternamento" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-user-md"></i> Médico Responsável</label>
+                                <input type="text" class="form-control" id="pacMedico" placeholder="Nome do médico">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><i class="fas fa-comment-medical"></i> Observações Clínicas</label>
+                            <textarea class="form-control" id="pacObservacoes" rows="2" placeholder="Observações relevantes..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSalvarInternamento"><i class="fas fa-save"></i> Internar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: DETALHES DO PACIENTE -->
+    <div class="modal fade" id="detalhesPacienteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user me-2 text-primary"></i> Detalhes do Paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="detalhesPacienteBody">
+                    <!-- Conteúdo via JS -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" id="btnAltaPaciente"><i class="fas fa-door-open"></i> Dar Alta</button>
+                    <button class="btn btn-warning" id="btnTransferirPaciente"><i class="fas fa-exchange-alt"></i> Transferir</button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: TRANSFERIR PACIENTE -->
+    <div class="modal fade" id="transferirPacienteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-exchange-alt me-2 text-warning"></i> Transferir Paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formTransferencia">
+                        <div class="mb-3">
+                            <label class="form-label">Paciente</label>
+                            <input type="text" class="form-control" id="transPacienteNome" disabled>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Andar</label>
+                                <select class="form-select" id="transAndar">
+                                    <option value="1º Andar">1º Andar</option>
+                                    <option value="2º Andar">2º Andar</option>
+                                    <option value="3º Andar">3º Andar</option>
+                                    <option value="4º Andar">4º Andar</option>
+                                    <option value="1º Andar">5º Andar</option>
+                                    <option value="2º Andar">6º Andar</option>
+                                    <option value="3º Andar">7º Andar</option>
+                                    <option value="4º Andar">8º Andar</option>
+                                    <option value="4º Andar">9º Andar</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Quarto</label>
+                                <input type="text" class="form-control" id="transQuarto" placeholder="Ex: B-201" required>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Cama</label>
+                                <input type="text" class="form-control" id="transCama" placeholder="Ex: 05" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Motivo da Transferência</label>
+                            <textarea class="form-control" id="transMotivo" rows="2" placeholder="Motivo da transferência..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-warning" id="btnConfirmarTransferencia"><i class="fas fa-check"></i> Transferir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: NOVA ESCALA -->
+    <div class="modal fade" id="novaEscalaModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-calendar-plus me-2 text-primary"></i> Nova Escala</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEscala">
+                        <div class="mb-3">
+                            <label class="form-label">Data</label>
+                            <input type="date" class="form-control" id="escalaData" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Turno</label>
+                            <select class="form-select" id="escalaTurno">
+                                <option value="Manhã">Manhã (08:00 - 16:00)</option>
+                                <option value="Tarde">Tarde (16:00 - 00:00)</option>
+                                <option value="Noite">Noite (00:00 - 08:00)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Colaboradores</label>
+                            <select class="form-select" id="escalaColaboradores" multiple style="height: 120px;">
+                                <option value="Enf. Fernanda Santos">Enf. Fernanda Santos</option>
+                                <option value="Enf. João Silva">Enf. João Silva</option>
+                                <option value="Téc. Luís Mendes">Téc. Luís Mendes</option>
+                                <option value="Enf. Carla Oliveira">Enf. Carla Oliveira</option>
+                                <option value="Aux. Ricardo Santos">Aux. Ricardo Santos</option>
+                                <option value="Enf. Pedro Gomes">Enf. Pedro Gomes</option>
+                            </select>
+                            <small class="form-text">Segure Ctrl para selecionar múltiplos</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" id="btnSalvarEscala"><i class="fas fa-save"></i> Salvar Escala</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ALTA PACIENTE -->
+    <div class="modal fade" id="altaPacienteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-door-open me-2 text-success"></i> Dar Alta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAlta">
+                        <div class="mb-3">
+                            <label class="form-label">Paciente</label>
+                            <input type="text" class="form-control" id="altaPacienteNome" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Data de Alta</label>
+                            <input type="date" class="form-control" id="altaData" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Motivo da Alta</label>
+                            <select class="form-select" id="altaMotivo">
+                                <option value="Curado">Curado</option>
+                                <option value="Transferido">Transferido</option>
+                                <option value="Alta Voluntária">Alta Voluntária</option>
+                                <option value="Alta a Pedido">Alta a Pedido</option>
+                                <option value="Óbito">Óbito</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Observações</label>
+                            <textarea class="form-control" id="altaObservacoes" rows="2" placeholder="Observações finais..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success" id="btnConfirmarAlta"><i class="fas fa-check"></i> Confirmar Alta</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===== SCRIPTS ===== -->
+    <!-- ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            // ============================================================
+            // 1. DADOS DE EXEMPLO - PACIENTES
+            // ============================================================
+            let pacientes = [
+                { id: 1, nome: 'José Manuel', idade: 65, sexo: 'Masculino', diagnostico: 'Pneumonia', doencas: 'Hipertensão',
+                  andar: '1º Andar', quarto: 'A-101', cama: '01', status: 'Estável', medico: 'Dr. Pedro Santos',
+                  dataInternamento: '2026-07-15', observacoes: 'Paciente em recuperação' },
+                { id: 2, nome: 'Maria da Luz', idade: 72, sexo: 'Feminino', diagnostico: 'Fratura de fêmur', doencas: 'Diabetes, Osteoporose',
+                  andar: '2º Andar', quarto: 'B-201', cama: '03', status: 'Grave', medico: 'Dra. Ana Manuel',
+                  dataInternamento: '2026-07-18', observacoes: 'Paciente com complicações' },
+                { id: 3, nome: 'António Pedro', idade: 58, sexo: 'Masculino', diagnostico: 'Acidente Vascular Cerebral', doencas: 'Hipertensão, Diabetes',
+                  andar: '3º Andar', quarto: 'C-301', cama: '02', status: 'Crítico', medico: 'Dr. Ricardo Lima',
+                  dataInternamento: '2026-07-20', observacoes: 'Paciente em UTI' },
+                { id: 4, nome: 'Francisca Costa', idade: 45, sexo: 'Feminino', diagnostico: 'Insuficiência Renal', doencas: 'Sem comorbidades',
+                  andar: '1º Andar', quarto: 'A-103', cama: '04', status: 'Em recuperação', medico: 'Dra. Ana Manuel',
+                  dataInternamento: '2026-07-10', observacoes: 'Diálise programada' },
+                { id: 5, nome: 'Manuel da Silva', idade: 80, sexo: 'Masculino', diagnostico: 'Insuficiência Cardíaca', doencas: 'Hipertensão, Diabetes, Osteoporose',
+                  andar: '2º Andar', quarto: 'B-202', cama: '01', status: 'Grave', medico: 'Dr. Pedro Santos',
+                  dataInternamento: '2026-07-22', observacoes: 'Paciente idoso, acompanhamento intensivo' },
+                { id: 6, nome: 'Ana Pereira', idade: 35, sexo: 'Feminino', diagnostico: 'Apêndice agudo', doencas: 'Sem comorbidades',
+                  andar: '4º Andar', quarto: 'D-401', cama: '05', status: 'Estável', medico: 'Dr. Ricardo Lima',
+                  dataInternamento: '2026-07-23', observacoes: 'Pós-operatório' },
+            ];
+            let pacienteIdCounter = 7;
+
+            // ============================================================
+            // 2. DADOS - CAMAS
+            // ============================================================
+            let camas = [
+                { id: 1, andar: '1º Andar', quarto: 'A-101', cama: '01', status: 'Ocupado', pacienteId: 1 },
+                { id: 2, andar: '1º Andar', quarto: 'A-101', cama: '02', status: 'Livre', pacienteId: null },
+                { id: 3, andar: '1º Andar', quarto: 'A-102', cama: '01', status: 'Livre', pacienteId: null },
+                { id: 4, andar: '1º Andar', quarto: 'A-103', cama: '04', status: 'Ocupado', pacienteId: 4 },
+                { id: 5, andar: '2º Andar', quarto: 'B-201', cama: '03', status: 'Ocupado', pacienteId: 2 },
+                { id: 6, andar: '2º Andar', quarto: 'B-202', cama: '01', status: 'Ocupado', pacienteId: 5 },
+                { id: 7, andar: '2º Andar', quarto: 'B-202', cama: '02', status: 'Livre', pacienteId: null },
+                { id: 8, andar: '3º Andar', quarto: 'C-301', cama: '01', status: 'Livre', pacienteId: null },
+                { id: 9, andar: '3º Andar', quarto: 'C-301', cama: '02', status: 'Ocupado', pacienteId: 3 },
+                { id: 10, andar: '3º Andar', quarto: 'C-302', cama: '01', status: 'Livre', pacienteId: null },
+                { id: 11, andar: '4º Andar', quarto: 'D-401', cama: '05', status: 'Ocupado', pacienteId: 6 },
+                { id: 12, andar: '4º Andar', quarto: 'D-401', cama: '06', status: 'Livre', pacienteId: null },
+            ];
+
+            // ============================================================
+            // 3. DADOS - EQUIPA
+            // ============================================================
+            let equipa = [
+                { id: 1, nome: 'Enf. Fernanda Santos', cargo: 'Enfermeira Chefe', turno: 'Manhã', status: 'Presente', pacientes: 3 },
+                { id: 2, nome: 'Enf. João Silva', cargo: 'Enfermeiro', turno: 'Manhã', status: 'Presente', pacientes: 4 },
+                { id: 3, nome: 'Téc. Luís Mendes', cargo: 'Técnico de Enfermagem', turno: 'Manhã', status: 'Presente', pacientes: 2 },
+                { id: 4, nome: 'Enf. Carla Oliveira', cargo: 'Enfermeira', turno: 'Tarde', status: 'Presente', pacientes: 3 },
+                { id: 5, nome: 'Aux. Ricardo Santos', cargo: 'Auxiliar de Enfermagem', turno: 'Tarde', status: 'Ausente', pacientes: 0 },
+                { id: 6, nome: 'Enf. Pedro Gomes', cargo: 'Enfermeiro', turno: 'Noite', status: 'Presente', pacientes: 4 },
+            ];
+
+            // ============================================================
+            // 4. DADOS - ESCALAS
+            // ============================================================
+            let escalas = [
+                { id: 1, data: '2026-07-24', turno: 'Manhã', colaboradores: ['Enf. Fernanda Santos', 'Enf. João Silva', 'Téc. Luís Mendes'] },
+                { id: 2, data: '2026-07-24', turno: 'Tarde', colaboradores: ['Enf. Carla Oliveira'] },
+                { id: 3, data: '2026-07-24', turno: 'Noite', colaboradores: ['Enf. Pedro Gomes'] },
+            ];
+            let escalaIdCounter = 4;
+
+            // ============================================================
+            // 5. DADOS - PRESENÇAS
+            // ============================================================
+            let presencas = [
+                { id: 1, nome: 'Enf. Fernanda Santos', data: '2026-07-24', entrada: '08:00', saida: '16:00', status: 'Presente' },
+                { id: 2, nome: 'Enf. João Silva', data: '2026-07-24', entrada: '08:15', saida: '16:00', status: 'Presente' },
+                { id: 3, nome: 'Téc. Luís Mendes', data: '2026-07-24', entrada: '08:05', saida: '16:00', status: 'Presente' },
+                { id: 4, nome: 'Enf. Carla Oliveira', data: '2026-07-24', entrada: '16:00', saida: '00:00', status: 'Presente' },
+                { id: 5, nome: 'Aux. Ricardo Santos', data: '2026-07-24', entrada: '-', saida: '-', status: 'Ausente' },
+            ];
+
+            // ============================================================
+            // 6. FUNÇÕES PRINCIPAIS
+            // ============================================================
+
+            function getStatusBadge(status) {
+                const map = {
+                    'Estável': 'estavel',
+                    'Grave': 'grave',
+                    'Crítico': 'critico',
+                    'Em recuperação': 'em-recuperacao',
+                    'Alta': 'alta'
+                };
+                return map[status] || 'estavel';
+            }
+
+            function getStatusEmoji(status) {
+                const map = {
+                    'Estável': '🟢',
+                    'Grave': '🟡',
+                    'Crítico': '🔴',
+                    'Em recuperação': '🔵',
+                    'Alta': '⚪'
+                };
+                return map[status] || '🟢';
+            }
+
+            function updateIndicators() {
+                const total = pacientes.filter(p => p.status !== 'Alta').length;
+                const altas = pacientes.filter(p => p.status === 'Alta').length;
+                const criticos = pacientes.filter(p => p.status === 'Crítico').length;
+                const hoje = new Date().toISOString().split('T')[0];
+                const internadosHoje = pacientes.filter(p => p.dataInternamento === hoje).length;
+
+                const ocupados = camas.filter(c => c.status === 'Ocupado').length;
+                const totalCamas = camas.length;
+                const ocupacao = totalCamas > 0 ? Math.round((ocupados / totalCamas) * 100) : 0;
+
+                const presentes = equipa.filter(e => e.status === 'Presente').length;
+
+                $('#totalPacientes').text(total);
+                $('#ocupacao').text(ocupacao + '%');
+                $('#altasHoje').text(altas);
+                $('#internamentosHoje').text(internadosHoje);
+                $('#criticos').text(criticos);
+                $('#equipaPresente').text(presentes);
+            }
+
+            // ============================================================
+            // 7. RENDERIZAR PACIENTES
+            // ============================================================
+            function renderPacientes() {
+                const tbody = $('#corpoPacientes');
+                tbody.empty();
+
+                const search = $('#searchPaciente').val().toLowerCase();
+                const statusFilter = $('#filterStatus').val();
+                const andarFilter = $('#filterAndar').val();
+
+                let filtered = pacientes.filter(p => p.status !== 'Alta');
+
+                if (search) filtered = filtered.filter(p => p.nome.toLowerCase().includes(search));
+                if (statusFilter) filtered = filtered.filter(p => p.status === statusFilter);
+                if (andarFilter) filtered = filtered.filter(p => p.andar === andarFilter);
+
+                if (filtered.length === 0) {
+                    tbody.html(`
+                        <tr>
+                            <td colspan="9" class="text-center" style="color: var(--text-muted);">
+                                <i class="fas fa-inbox me-2"></i> Nenhum paciente encontrado
+                            </td>
+                        </tr>
+                    `);
+                    $('#totalPacientesExibidos').text(0);
+                    return;
+                }
+
+                filtered.forEach((p, index) => {
+                    const badgeClass = getStatusBadge(p.status);
+                    const emoji = getStatusEmoji(p.status);
+                    const tr = `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td><strong>${p.nome}</strong></td>
+                            <td>${p.idade}</td>
+                            <td>${p.diagnostico}</td>
+                            <td>${p.andar}</td>
+                            <td>${p.quarto}</td>
+                            <td>${p.cama}</td>
+                            <td>
+                                <span class="status-badge ${badgeClass}">${emoji} ${p.status}</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary ver-paciente" data-id="${p.id}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-warning editar-paciente" data-id="${p.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.append(tr);
+                });
+
+                $('#totalPacientesExibidos').text(filtered.length);
+            }
+
+            // ============================================================
+            // 8. RENDERIZAR CAMAS
+            // ============================================================
+            function renderCamas() {
+                const container = $('#mapaCamas');
+                container.empty();
+
+                const andares = ['1º Andar', '2º Andar', '3º Andar', '4º Andar'];
+                andares.forEach(andar => {
+                    const camasAndar = camas.filter(c => c.andar === andar);
+                    const ocupadas = camasAndar.filter(c => c.status === 'Ocupado').length;
+                    const total = camasAndar.length;
+
+                    let html = `
+                        <div class="col-md-3 mb-3">
+                            <div class="glass-card" style="padding: 15px;">
+                                <h6><i class="fas fa-layer-group me-2"></i>${andar}</h6>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="info-label">Ocupação</span>
+                                    <span class="info-value">${ocupadas}/${total}</span>
+                                </div>
+                                <div class="progress mb-3" style="height: 8px;">
+                                    <div class="progress-bar ${ocupadas/total > 0.7 ? 'bg-danger' : ocupadas/total > 0.5 ? 'bg-warning' : 'bg-success'}" 
+                                         style="width: ${total > 0 ? (ocupadas/total)*100 : 0}%"></div>
+                                </div>
+                                <div class="row g-1">
+                    `;
+
+                    camasAndar.forEach(c => {
+                        const paciente = pacientes.find(p => p.id === c.pacienteId);
+                        const nome = paciente ? paciente.nome : 'Livre';
+                        const statusClass = c.status === 'Ocupado' ? 'cama-ocupada' : 'cama-livre';
+                        html += `
+                            <div class="col-4">
+                                <div class="small p-1 rounded text-center ${statusClass}" style="font-size:0.65rem; border-radius:4px;">
+                                    ${c.cama}
+                                    <br><small>${c.status === 'Ocupado' ? '👤' : '🟢'}</small>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    html += `
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.append(html);
+                });
+            }
+
+            // ============================================================
+            // 9. RENDERIZAR EQUIPA
+            // ============================================================
+            function renderEquipa() {
+                const tbody = $('#corpoEquipa');
+                tbody.empty();
+
+                equipa.forEach(e => {
+                    const statusClass = e.status === 'Presente' ? 'success' : 'danger';
+                    const tr = `
+                        <tr>
+                            <td><strong>${e.nome}</strong></td>
+                            <td>${e.cargo}</td>
+                            <td>${e.turno}</td>
+                            <td><span class="badge bg-${statusClass}">${e.status}</span></td>
+                            <td>${e.pacientes}</td>
+                        </tr>
+                    `;
+                    tbody.append(tr);
+                });
+            }
+
+            // ============================================================
+            // 10. RENDERIZAR ESCALAS
+            // ============================================================
+            function renderEscalas() {
+                const container = $('#escalasContainer');
+                container.empty();
+
+                if (escalas.length === 0) {
+                    container.html(`
+                        <div class="text-center p-3" style="color: var(--text-muted);">
+                            <i class="fas fa-calendar-plus me-2"></i> Nenhuma escala cadastrada
+                        </div>
+                    `);
+                    return;
+                }
+
+                escalas.forEach(e => {
+                    const html = `
+                        <div class="col-md-4 mb-3">
+                            <div class="glass-card" style="padding: 15px;">
+                                <h6><i class="fas fa-calendar-day me-2"></i>${e.data}</h6>
+                                <p><strong>Turno:</strong> ${e.turno}</p>
+                                <p><strong>Colaboradores:</strong></p>
+                                <ul style="padding-left: 20px; color: var(--text-muted);">
+                                    ${e.colaboradores.map(c => `<li>${c}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    container.append(html);
+                });
+            }
+
+            // ============================================================
+            // 11. RENDERIZAR PRESENÇAS
+            // ============================================================
+            function renderPresencas() {
+                const tbody = $('#corpoPresencas');
+                tbody.empty();
+
+                const hoje = new Date().toISOString().split('T')[0];
+                const presencasHoje = presencas.filter(p => p.data === hoje);
+
+                if (presencasHoje.length === 0) {
+                    tbody.html(`
+                        <tr>
+                            <td colspan="5" class="text-center" style="color: var(--text-muted);">
+                                <i class="fas fa-clock me-2"></i> Nenhum registro de presença hoje
+                            </td>
+                        </tr>
+                    `);
+                    return;
+                }
+
+                presencasHoje.forEach(p => {
+                    const statusClass = p.status === 'Presente' ? 'success' : 'danger';
+                    const tr = `
+                        <tr>
+                            <td><strong>${p.nome}</strong></td>
+                            <td>${p.data}</td>
+                            <td>${p.entrada}</td>
+                            <td>${p.saida}</td>
+                            <td><span class="badge bg-${statusClass}">${p.status}</span></td>
+                        </tr>
+                    `;
+                    tbody.append(tr);
+                });
+            }
+
+            // ============================================================
+            // 12. RENDERIZAR ESTATÍSTICAS
+            // ============================================================
+            function renderEstatisticas() {
+                // Distribuição por Status
+                const statusContainer = $('#distribuicaoStatus');
+                const statusCounts = {};
+                pacientes.forEach(p => {
+                    if (p.status !== 'Alta') {
+                        statusCounts[p.status] = (statusCounts[p.status] || 0) + 1;
+                    }
+                });
+                const totalAtivos = pacientes.filter(p => p.status !== 'Alta').length;
+                let htmlStatus = '';
+                if (Object.keys(statusCounts).length === 0) {
+                    htmlStatus = '<p class="text-muted">Nenhum dado disponível</p>';
+                } else {
+                    Object.entries(statusCounts).forEach(([key, value]) => {
+                        const emoji = getStatusEmoji(key);
+                        const pct = totalAtivos > 0 ? Math.round((value / totalAtivos) * 100) : 0;
+                        htmlStatus += `
+                            <div class="d-flex justify-content-between">
+                                <span>${emoji} ${key}</span>
+                                <span>${value} pacientes (${pct}%)</span>
+                            </div>
+                            <div class="progress mb-2">
+                                <div class="progress-bar ${key === 'Crítico' ? 'bg-danger' : key === 'Grave' ? 'bg-warning' : key === 'Estável' ? 'bg-success' : 'bg-info'}" 
+                                     style="width: ${pct}%"></div>
+                            </div>
+                        `;
+                    });
+                }
+                statusContainer.html(htmlStatus);
+
+                // Distribuição por Andar
+                const andarContainer = $('#distribuicaoAndar');
+                const andarCounts = {};
+                pacientes.forEach(p => {
+                    if (p.status !== 'Alta') {
+                        andarCounts[p.andar] = (andarCounts[p.andar] || 0) + 1;
+                    }
+                });
+                let htmlAndar = '';
+                if (Object.keys(andarCounts).length === 0) {
+                    htmlAndar = '<p class="text-muted">Nenhum dado disponível</p>';
+                } else {
+                    Object.entries(andarCounts).forEach(([key, value]) => {
+                        const pct = totalAtivos > 0 ? Math.round((value / totalAtivos) * 100) : 0;
+                        htmlAndar += `
+                            <div class="d-flex justify-content-between">
+                                <span>${key}</span>
+                                <span>${value} pacientes (${pct}%)</span>
+                            </div>
+                            <div class="progress mb-2">
+                                <div class="progress-bar bg-primary" style="width: ${pct}%"></div>
+                            </div>
+                        `;
+                    });
+                }
+                andarContainer.html(htmlAndar);
+
+                // Evolução de Internamentos (últimos 7 dias)
+                const evolContainer = $('#evolucaoInternamentos');
+                const hoje = new Date();
+                let htmlEvol = '<div class="row">';
+                let hasData = false;
+                for (let i = 6; i >= 0; i--) {
+                    const data = new Date(hoje);
+                    data.setDate(data.getDate() - i);
+                    const dataStr = data.toISOString().split('T')[0];
+                    const count = pacientes.filter(p => p.dataInternamento === dataStr).length;
+                    if (count > 0) hasData = true;
+                    const dia = data.toLocaleDateString('pt-BR', { weekday: 'short' });
+                    const mesDia = data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                    htmlEvol += `
+                        <div class="col text-center">
+                            <div style="font-size:0.7rem; color: var(--text-muted);">${dia}</div>
+                            <div style="font-size:1.5rem; font-weight:bold; color: var(--text-color);">${count}</div>
+                            <div style="font-size:0.6rem; color: var(--text-muted);">${mesDia}</div>
+                        </div>
+                    `;
+                }
+                htmlEvol += '</div>';
+                if (!hasData) {
+                    htmlEvol = '<p class="text-center text-muted">Nenhum internamento registrado nos últimos 7 dias</p>';
+                }
+                evolContainer.html(htmlEvol);
+            }
+
+            // ============================================================
+            // 13. FUNÇÕES DE MODAL
+            // ============================================================
+
+            // Novo Internamento
+            $('#btnSalvarInternamento').click(function() {
+                const nome = $('#pacNome').val().trim();
+                const idade = parseInt($('#pacIdade').val());
+                const sexo = $('#pacSexo').val();
+                const diagnostico = $('#pacDiagnostico').val().trim();
+                const doencas = $('#pacDoencas').val().trim();
+                const andar = $('#pacAndar').val();
+                const quarto = $('#pacQuarto').val().trim();
+                const cama = $('#pacCama').val().trim();
+                const status = $('#pacStatus').val();
+                const medico = $('#pacMedico').val().trim();
+                const dataInternamento = $('#pacDataInternamento').val();
+                const observacoes = $('#pacObservacoes').val().trim();
+
+                if (!nome || !idade || !diagnostico || !quarto || !cama || !dataInternamento) {
+                    alert('Preencha todos os campos obrigatórios.');
+                    return;
+                }
+
+                // Verificar se a cama já está ocupada
+                const camaExistente = camas.find(c => c.andar === andar && c.quarto === quarto && c.cama === cama);
+                if (camaExistente && camaExistente.status === 'Ocupado') {
+                    alert('❌ Esta cama já está ocupada. Por favor, selecione outra cama.');
+                    return;
+                }
+
+                const novoPaciente = {
+                    id: pacienteIdCounter++,
+                    nome, idade, sexo, diagnostico, doencas: doencas || 'Nenhuma',
+                    andar, quarto, cama, status, medico: medico || 'Não atribuído',
+                    dataInternamento, observacoes: observacoes || 'Sem observações'
+                };
+
+                pacientes.push(novoPaciente);
+
+                // Atualizar cama
+                if (camaExistente) {
+                    camaExistente.status = 'Ocupado';
+                    camaExistente.pacienteId = novoPaciente.id;
+                } else {
+                    // Adicionar nova cama se não existir
+                    camas.push({
+                        id: camas.length + 1,
+                        andar: andar,
+                        quarto: quarto,
+                        cama: cama,
+                        status: 'Ocupado',
+                        pacienteId: novoPaciente.id
+                    });
+                }
+
+                renderAll();
+                $('#novoInternamentoModal').modal('hide');
+                $('#formInternamento')[0].reset();
+                // Resetar data para hoje
+                $('#pacDataInternamento').val(new Date().toISOString().split('T')[0]);
+                alert(`✅ Paciente ${nome} internado com sucesso!`);
+            });
+
+            // Ver Paciente
+            $(document).on('click', '.ver-paciente', function() {
+                const id = $(this).data('id');
+                const paciente = pacientes.find(p => p.id === id);
+                if (paciente) {
+                    const body = $('#detalhesPacienteBody');
+                    const statusEmoji = getStatusEmoji(paciente.status);
+                    const badgeClass = getStatusBadge(paciente.status);
+                    body.html(`
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="profile-detail"><span class="info-label">Nome</span><span class="info-value">${paciente.nome}</span></div>
+                                <div class="profile-detail"><span class="info-label">Idade</span><span class="info-value">${paciente.idade} anos</span></div>
+                                <div class="profile-detail"><span class="info-label">Sexo</span><span class="info-value">${paciente.sexo}</span></div>
+                                <div class="profile-detail"><span class="info-label">Diagnóstico</span><span class="info-value">${paciente.diagnostico}</span></div>
+                                <div class="profile-detail"><span class="info-label">Doenças Associadas</span><span class="info-value">${paciente.doencas}</span></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="profile-detail"><span class="info-label">Andar</span><span class="info-value">${paciente.andar}</span></div>
+                                <div class="profile-detail"><span class="info-label">Quarto</span><span class="info-value">${paciente.quarto}</span></div>
+                                <div class="profile-detail"><span class="info-label">Cama</span><span class="info-value">${paciente.cama}</span></div>
+                                <div class="profile-detail"><span class="info-label">Status</span><span class="info-value"><span class="status-badge ${badgeClass}">${statusEmoji} ${paciente.status}</span></span></div>
+                                <div class="profile-detail"><span class="info-label">Médico</span><span class="info-value">${paciente.medico}</span></div>
+                                <div class="profile-detail"><span class="info-label">Data Internamento</span><span class="info-value">${paciente.dataInternamento}</span></div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <h6><i class="fas fa-comment-medical me-2"></i>Observações Clínicas</h6>
+                            <p style="color: var(--text-muted);">${paciente.observacoes}</p>
+                        </div>
+                    `);
+                    $('#detalhesPacienteModal').data('pacienteId', paciente.id);
+                    $('#detalhesPacienteModal').modal('show');
+                }
+            });
+
+            // Alta Paciente
+            $('#btnAltaPaciente').click(function() {
+                const id = $('#detalhesPacienteModal').data('pacienteId');
+                const paciente = pacientes.find(p => p.id === id);
+                if (paciente) {
+                    $('#altaPacienteNome').val(paciente.nome);
+                    $('#altaData').val(new Date().toISOString().split('T')[0]);
+                    $('#altaPacienteModal').data('pacienteId', id);
+                    $('#detalhesPacienteModal').modal('hide');
+                    $('#altaPacienteModal').modal('show');
+                }
+            });
+
+            $('#btnConfirmarAlta').click(function() {
+                const id = $('#altaPacienteModal').data('pacienteId');
+                const paciente = pacientes.find(p => p.id === id);
+                if (paciente) {
+                    const motivo = $('#altaMotivo').val();
+                    const observacoes = $('#altaObservacoes').val().trim();
+                    const dataAlta = $('#altaData').val();
+                    paciente.status = 'Alta';
+                    paciente.observacoes = (paciente.observacoes || '') + ` | Alta: ${dataAlta} - ${motivo} - ${observacoes || 'Sem observações'}`;
+
+                    // Liberar cama
+                    const cama = camas.find(c => c.pacienteId === id);
+                    if (cama) {
+                        cama.status = 'Livre';
+                        cama.pacienteId = null;
+                    }
+
+                    renderAll();
+                    $('#altaPacienteModal').modal('hide');
+                    alert(`✅ Alta do paciente ${paciente.nome} confirmada!`);
+                }
+            });
+
+            // Transferir Paciente
+            $('#btnTransferirPaciente').click(function() {
+                const id = $('#detalhesPacienteModal').data('pacienteId');
+                const paciente = pacientes.find(p => p.id === id);
+                if (paciente) {
+                    $('#transPacienteNome').val(paciente.nome);
+                    $('#transAndar').val(paciente.andar);
+                    $('#transQuarto').val(paciente.quarto);
+                    $('#transCama').val(paciente.cama);
+                    $('#transferirPacienteModal').data('pacienteId', id);
+                    $('#detalhesPacienteModal').modal('hide');
+                    $('#transferirPacienteModal').modal('show');
+                }
+            });
+
+            $('#btnConfirmarTransferencia').click(function() {
+                const id = $('#transferirPacienteModal').data('pacienteId');
+                const paciente = pacientes.find(p => p.id === id);
+                if (paciente) {
+                    const novoAndar = $('#transAndar').val();
+                    const novoQuarto = $('#transQuarto').val().trim();
+                    const novaCama = $('#transCama').val().trim();
+                    const motivo = $('#transMotivo').val().trim();
+
+                    if (!novoQuarto || !novaCama) {
+                        alert('Preencha o quarto e cama de destino.');
+                        return;
+                    }
+
+                    // Verificar se a nova cama está disponível
+                    const camaDestino = camas.find(c => c.andar === novoAndar && c.quarto === novoQuarto && c.cama === novaCama);
+                    if (camaDestino && camaDestino.status === 'Ocupado') {
+                        alert('❌ A cama de destino já está ocupada.');
+                        return;
+                    }
+
+                    // Liberar cama antiga
+                    const camaAntiga = camas.find(c => c.pacienteId === id);
+                    if (camaAntiga) {
+                        camaAntiga.status = 'Livre';
+                        camaAntiga.pacienteId = null;
+                    }
+
+                    // Ocupar nova cama
+                    if (camaDestino) {
+                        camaDestino.status = 'Ocupado';
+                        camaDestino.pacienteId = id;
+                    } else {
+                        // Adicionar nova cama se não existir
+                        camas.push({
+                            id: camas.length + 1,
+                            andar: novoAndar,
+                            quarto: novoQuarto,
+                            cama: novaCama,
+                            status: 'Ocupado',
+                            pacienteId: id
+                        });
+                    }
+
+                    paciente.andar = novoAndar;
+                    paciente.quarto = novoQuarto;
+                    paciente.cama = novaCama;
+                    paciente.observacoes = (paciente.observacoes || '') + ` | Transferido: ${motivo || 'Sem motivo especificado'}`;
+
+                    renderAll();
+                    $('#transferirPacienteModal').modal('hide');
+                    alert(`✅ Paciente ${paciente.nome} transferido com sucesso!`);
+                }
+            });
+
+            // Editar Paciente - Modal de Edição
+            $(document).on('click', '.editar-paciente', function() {
+                const id = $(this).data('id');
+                const paciente = pacientes.find(p => p.id === id);
+                if (paciente) {
+                    // Preencher formulário de edição
+                    $('#editPacienteId').val(paciente.id);
+                    $('#editPacNome').val(paciente.nome);
+                    $('#editPacIdade').val(paciente.idade);
+                    $('#editPacSexo').val(paciente.sexo);
+                    $('#editPacDiagnostico').val(paciente.diagnostico);
+                    $('#editPacDoencas').val(paciente.doencas);
+                    $('#editPacAndar').val(paciente.andar);
+                    $('#editPacQuarto').val(paciente.quarto);
+                    $('#editPacCama').val(paciente.cama);
+                    $('#editPacStatus').val(paciente.status);
+                    $('#editPacMedico').val(paciente.medico);
+                    $('#editPacDataInternamento').val(paciente.dataInternamento);
+                    $('#editPacObservacoes').val(paciente.observacoes);
+                    $('#editarPacienteModal').modal('show');
+                }
+            });
+
+            // Salvar Edição
+            $('#btnSalvarEdicao').click(function() {
+                const id = parseInt($('#editPacienteId').val());
+                const paciente = pacientes.find(p => p.id === id);
+                if (paciente) {
+                    const nome = $('#editPacNome').val().trim();
+                    const idade = parseInt($('#editPacIdade').val());
+                    const sexo = $('#editPacSexo').val();
+                    const diagnostico = $('#editPacDiagnostico').val().trim();
+                    const doencas = $('#editPacDoencas').val().trim();
+                    const andar = $('#editPacAndar').val();
+                    const quarto = $('#editPacQuarto').val().trim();
+                    const cama = $('#editPacCama').val().trim();
+                    const status = $('#editPacStatus').val();
+                    const medico = $('#editPacMedico').val().trim();
+                    const dataInternamento = $('#editPacDataInternamento').val();
+                    const observacoes = $('#editPacObservacoes').val().trim();
+
+                    if (!nome || !idade || !diagnostico || !quarto || !cama || !dataInternamento) {
+                        alert('Preencha todos os campos obrigatórios.');
+                        return;
+                    }
+
+                    // Se a cama mudou, atualizar
+                    if (paciente.andar !== andar || paciente.quarto !== quarto || paciente.cama !== cama) {
+                        // Liberar cama antiga
+                        const camaAntiga = camas.find(c => c.pacienteId === id);
+                        if (camaAntiga) {
+                            camaAntiga.status = 'Livre';
+                            camaAntiga.pacienteId = null;
+                        }
+                        // Ocupar nova cama
+                        const camaNova = camas.find(c => c.andar === andar && c.quarto === quarto && c.cama === cama);
+                        if (camaNova) {
+                            if (camaNova.status === 'Ocupado') {
+                                alert('❌ A cama de destino já está ocupada.');
+                                return;
+                            }
+                            camaNova.status = 'Ocupado';
+                            camaNova.pacienteId = id;
+                        } else {
+                            camas.push({
+                                id: camas.length + 1,
+                                andar: andar,
+                                quarto: quarto,
+                                cama: cama,
+                                status: 'Ocupado',
+                                pacienteId: id
+                            });
+                        }
+                    }
+
+                    paciente.nome = nome;
+                    paciente.idade = idade;
+                    paciente.sexo = sexo;
+                    paciente.diagnostico = diagnostico;
+                    paciente.doencas = doencas || 'Nenhuma';
+                    paciente.andar = andar;
+                    paciente.quarto = quarto;
+                    paciente.cama = cama;
+                    paciente.status = status;
+                    paciente.medico = medico || 'Não atribuído';
+                    paciente.dataInternamento = dataInternamento;
+                    paciente.observacoes = observacoes || 'Sem observações';
+
+                    renderAll();
+                    $('#editarPacienteModal').modal('hide');
+                    alert(`✅ Paciente ${paciente.nome} atualizado com sucesso!`);
+                }
+            });
+
+            // Nova Escala
+            $('#btnSalvarEscala').click(function() {
+                const data = $('#escalaData').val();
+                const turno = $('#escalaTurno').val();
+                const colaboradores = $('#escalaColaboradores').val() || [];
+
+                if (!data || colaboradores.length === 0) {
+                    alert('Selecione a data e pelo menos um colaborador.');
+                    return;
+                }
+
+                escalas.push({
+                    id: escalaIdCounter++,
+                    data: data,
+                    turno: turno,
+                    colaboradores: colaboradores
+                });
+
+                renderEscalas();
+                $('#novaEscalaModal').modal('hide');
+                $('#formEscala')[0].reset();
+                alert('✅ Escala criada com sucesso!');
+            });
+
+            // Exportar Pacientes
+            $('#btnExportarPacientes').click(function() {
+                let csv = 'Nome,Idade,Sexo,Diagnóstico,Doenças Associadas,Andar,Quarto,Cama,Status,Médico,Data Internamento,Observações\n';
+                pacientes.filter(p => p.status !== 'Alta').forEach(p => {
+                    csv += `"${p.nome}",${p.idade},"${p.sexo}","${p.diagnostico}","${p.doencas}","${p.andar}","${p.quarto}","${p.cama}","${p.status}","${p.medico}","${p.dataInternamento}","${p.observacoes}"\n`;
+                });
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'internamentos_export.csv';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                alert('✅ Exportação realizada com sucesso!');
+            });
+
+            // ============================================================
+            // 14. RENDER ALL
+            // ============================================================
+            function renderAll() {
+                renderPacientes();
+                renderCamas();
+                renderEquipa();
+                renderEscalas();
+                renderPresencas();
+                renderEstatisticas();
+                updateIndicators();
+            }
+
+            // ============================================================
+            // 15. FILTROS E BUSCA
+            // ============================================================
+            $('#searchPaciente, #filterStatus, #filterAndar').on('input change', renderPacientes);
+
+            // ============================================================
+            // 16. DATA/HORA
+            // ============================================================
+            function updateDateTime() {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('pt-BR');
+                const timeStr = now.toLocaleTimeString('pt-BR');
+                $('#dateTimeDisplay').text(`${dateStr} ${timeStr}`);
+                if (!$('#pacDataInternamento').val()) {
+                    $('#pacDataInternamento').val(now.toISOString().split('T')[0]);
+                }
+                if (!$('#escalaData').val()) {
+                    $('#escalaData').val(now.toISOString().split('T')[0]);
+                }
+            }
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            // ============================================================
+            // 17. TEMA
+            // ============================================================
+            let currentTheme = 'dark';
+
+            function setTheme(theme) {
+                currentTheme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                if (theme === 'light') {
+                    $('#themeIcon').removeClass('fa-moon').addClass('fa-sun');
+                } else {
+                    $('#themeIcon').removeClass('fa-sun').addClass('fa-moon');
+                }
+                localStorage.setItem('internamento-theme', theme);
+            }
+
+            const savedTheme = localStorage.getItem('internamento-theme');
+            if (savedTheme) setTheme(savedTheme);
+
+            $('#themeToggle').click(function() {
+                setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+            });
+
+            // ============================================================
+            // 18. INICIALIZAÇÃO
+            // ============================================================
+            renderAll();
+
+            console.log('✅ VITALINKA - Gestor de Internamento carregado com sucesso!');
+            console.log(`📊 ${pacientes.length} pacientes internados`);
+            console.log(`🛏️ ${camas.filter(c => c.status === 'Ocupado').length}/${camas.length} camas ocupadas`);
+            console.log(`👥 ${equipa.length} colaboradores`);
+            console.log(`📅 ${escalas.length} escalas registadas`);
+
+        });
+    </script>
+
+    <!-- ===== MODAL: EDITAR PACIENTE ===== -->
+    <div class="modal fade" id="editarPacienteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-edit me-2 text-warning"></i> Editar Paciente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEdicao">
+                        <input type="hidden" id="editPacienteId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-user"></i> Nome do Paciente</label>
+                                <input type="text" class="form-control" id="editPacNome" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label"><i class="fas fa-calendar"></i> Idade</label>
+                                <input type="number" class="form-control" id="editPacIdade" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label"><i class="fas fa-venus-mars"></i> Sexo</label>
+                                <select class="form-select" id="editPacSexo">
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Feminino">Feminino</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-stethoscope"></i> Diagnóstico Principal</label>
+                                <input type="text" class="form-control" id="editPacDiagnostico" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-notes-medical"></i> Doenças Associadas</label>
+                                <input type="text" class="form-control" id="editPacDoencas">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label"><i class="fas fa-layer-group"></i> Andar</label>
+                                <select class="form-select" id="editPacAndar">
+                                    <option value="1º Andar">1º Andar</option>
+                                    <option value="2º Andar">2º Andar</option>
+                                    <option value="3º Andar">3º Andar</option>
+                                    <option value="4º Andar">4º Andar</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label"><i class="fas fa-door-open"></i> Quarto</label>
+                                <input type="text" class="form-control" id="editPacQuarto" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label"><i class="fas fa-bed"></i> Cama</label>
+                                <input type="text" class="form-control" id="editPacCama" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label"><i class="fas fa-heartbeat"></i> Status Clínico</label>
+                                <select class="form-select" id="editPacStatus">
+                                    <option value="Estável">🟢 Estável</option>
+                                    <option value="Grave">🟡 Grave</option>
+                                    <option value="Crítico">🔴 Crítico</option>
+                                    <option value="Em recuperação">🔵 Em recuperação</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-calendar-day"></i> Data de Internamento</label>
+                                <input type="date" class="form-control" id="editPacDataInternamento" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-user-md"></i> Médico Responsável</label>
+                                <input type="text" class="form-control" id="editPacMedico">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label"><i class="fas fa-comment-medical"></i> Observações Clínicas</label>
+                            <textarea class="form-control" id="editPacObservacoes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-warning" id="btnSalvarEdicao"><i class="fas fa-save"></i> Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

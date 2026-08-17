@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>VITALINKA · Central de Ajuda e FAQ</title>
+    <!-- Bootstrap 5 + Ícones + Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Times New Roman', Times, serif; }
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            transition: background 0.3s ease, color 0.2s;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: auto;
+        }
+        /* Carrossel de fundo */
+        .carousel-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+        .carousel-bg .carousel-inner, .carousel-bg .carousel-item { height: 100%; }
+        .carousel-bg .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+            pointer-events: none;
+            transition: background 0.3s;
+        }
+        body.light::before { background: rgba(240, 248, 242, 0.92); }
+        body.light { color: #143523; }
+        body.light .glass-card, body.light .top-bar, body.light .faq-card, body.light .category-chip {
+            background: rgba(250, 255, 250, 0.92);
+            border-color: rgba(43, 122, 75, 0.3);
+            color: #1a3a2b;
+        }
+        .glass-card, .top-bar, .faq-card, .category-chip {
+            background: rgba(18, 32, 28, 0.8);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(43, 122, 75, 0.4);
+            border-radius: 28px;
+        }
+        .top-bar {
+            padding: 12px 24px;
+            margin: 20px 20px 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .logo-center {
+            text-align: center;
+            margin: 10px 0 0 0;
+        }
+        .logo-center img {
+            max-height: 70px;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+        }
+        body.light .logo-center img { filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1)); }
+        .main-panel {
+            margin: 20px;
+            padding: 25px 30px;
+            transition: all 0.2s;
+        }
+        .category-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: rgba(30, 50, 40, 0.7);
+            color: #e0f2e9;
+            border: 1px solid rgba(43, 122, 75, 0.5);
+        }
+        .category-chip.active {
+            background: #2b7a4b;
+            color: #fff;
+            border-color: #2b7a4b;
+            box-shadow: 0 4px 12px rgba(43, 122, 75, 0.3);
+        }
+        .category-chip:hover {
+            transform: translateY(-2px);
+            background: #3a9a5e;
+            color: #fff;
+        }
+        .search-box {
+            background: rgba(255,255,240,0.15);
+            border-radius: 60px;
+            padding: 6px 20px;
+            border: 1px solid rgba(43, 122, 75, 0.6);
+        }
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: inherit;
+            width: 100%;
+            padding: 10px 0;
+            outline: none;
+        }
+        .faq-accordion .accordion-item {
+            background: transparent;
+            border: none;
+            margin-bottom: 12px;
+            border-radius: 24px !important;
+            overflow: hidden;
+            backdrop-filter: blur(4px);
+            background: rgba(30, 40, 35, 0.5);
+            border: 1px solid rgba(43, 122, 75, 0.3);
+        }
+        body.light .faq-accordion .accordion-item {
+            background: rgba(245, 255, 245, 0.8);
+        }
+        .accordion-button {
+            background: transparent;
+            color: #eef5ea;
+            font-weight: 600;
+            border-radius: 24px;
+            box-shadow: none;
+        }
+        body.light .accordion-button {
+            color: #1a472a;
+        }
+        .accordion-button:not(.collapsed) {
+            background: rgba(43, 122, 75, 0.2);
+            color: #c6ffd6;
+        }
+        body.light .accordion-button:not(.collapsed) {
+            background: rgba(43, 122, 75, 0.15);
+            color: #0a2f1d;
+        }
+        .accordion-button:focus {
+            box-shadow: none;
+            border-color: #2b7a4b;
+        }
+        .accordion-body {
+            color: #eef3ec;
+            border-top: 1px solid rgba(43, 122, 75, 0.3);
+        }
+        body.light .accordion-body {
+            color: #1f3828;
+        }
+        .theme-switch { position: relative; display: inline-block; width: 56px; height: 28px; }
+        .theme-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #2c3e2f; transition: 0.3s; border-radius: 34px;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 6px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px;
+            background-color: white; transition: 0.3s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #2b7a4b; }
+        input:checked + .slider:before { transform: translateX(28px); }
+        .lang-btn {
+            background: transparent; border: 1px solid #2b7a4b; border-radius: 40px;
+            padding: 4px 12px; color: inherit; cursor: pointer;
+        }
+        .btn-outline-success-custom {
+            border: 1px solid #2b7a4b;
+            background: transparent;
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: 0.2s;
+            color: inherit;
+        }
+        .btn-outline-success-custom:hover {
+            background: #2b7a4b;
+            color: #fff;
+        }
+        footer { text-align: center; padding: 20px; font-size: 0.75rem; opacity: 0.7; }
+        @media (max-width: 768px) {
+            .main-panel { padding: 16px; margin: 12px; }
+            .category-chip { padding: 5px 16px; font-size: 0.8rem; }
+        }
+        .empty-faq {
+            text-align: center;
+            padding: 40px;
+            font-style: italic;
+        }
+        .help-footer-buttons .btn {
+            border-radius: 60px;
+            padding: 10px 28px;
+            font-weight: 600;
+            margin: 8px;
+        }
+        
+        .logo-panel{
+            border-radius: 50px;
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Carrossel de fundo com imagens hospitalares -->
+    <div id="bgCarousel" class="carousel-bg carousel slide" data-bs-ride="carousel" data-bs-interval="7000">
+        <div class="carousel-inner">
+            <div class="carousel-item active"><img src="images/faq.png" alt="Hospital Regional de Malanje"></div>
+            <div class="carousel-item"><img src="images/medico-bg.jpg" alt="Atendimento Médico"></div>
+            <div class="carousel-item"><img src="images/enfermeira-bg.jpg" alt="Cuidados de Saúde"></div>
+            <div class="carousel-item"><img src="images/urgencia-bg.jpg" alt="Serviço de Urgência"></div>
+            <div class="carousel-item"><img src="images/laboratorio-bg.jpg" alt="Laboratório de Análises"></div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#bgCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+        <button class="carousel-control-next" type="button" data-bs-target="#bgCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+    </div>
+
+    <div class="logo-center">
+        <a href="index.html"><img src="images/vitalinka-rbg.png" 
+                                  alt="VITALINKA Logo" 
+                                  onerror="this.src='https://placehold.co/200x70?text=VITALINKA+ASSISTÊNCIA'; this.style.width='200px'">
+        </a>
+    </div>
+    <div class="top-bar">
+        <div><i class="fas fa-question-circle"></i> <strong id="platformTitle">Central de Ajuda · FAQ Inteligente</strong></div>
+        <div class="d-flex gap-3 align-items-center">
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch">
+                    <input type="checkbox" id="themeToggleCheckbox">
+                    <div class="slider"><i class="fas fa-sun"></i><i class="fas fa-moon"></i></div>
+                </label>
+            </div>
+            <button class="lang-btn" id="langToggleBtn"><i class="fas fa-language"></i> <span id="langLabel">PT</span></button>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <!-- cabeçalho FAQ -->
+        <div class="text-center mb-4">
+            <h1 class="display-5 fw-bold"><i class="fas fa-headset text-success"></i> Central de Ajuda VITALINKA</h1>
+            <p class="lead">Encontre respostas rápidas para as dúvidas mais frequentes sobre o sistema de gestão hospitalar.</p>
+        </div>
+
+        <!-- barra de pesquisa + filtros categoria -->
+        <div class="glass-card p-4 rounded-4 mb-5">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-6">
+                    <div class="search-box d-flex align-items-center gap-2">
+                        <i class="fas fa-search text-success"></i>
+                        <input type="text" id="searchFaqInput" class="form-control bg-transparent border-0" placeholder="Pesquisar pergunta... Ex: Paciente, Internamento, Consulta">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex flex-wrap gap-2 justify-content-md-end" id="categoryFilters">
+                        <!-- categorias dinamicas via js -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Container FAQ acordeão dinâmico -->
+        <div id="faqAccordionContainer" class="faq-accordion accordion">
+            <div class="text-center py-5" id="loadingFaqPlaceholder">
+                <i class="fas fa-spinner fa-spin fa-2x text-success"></i> Carregando perguntas frequentes...
+            </div>
+        </div>
+
+        <!-- Área de contato / ajuda adicional -->
+        <div class="glass-card p-4 rounded-4 mt-5 text-center">
+            <h4><i class="fas fa-life-ring"></i> Ainda precisa de ajuda?</h4>
+            <p class="mb-3">Nossa equipe de suporte está disponível para orientações personalizadas sobre o sistema VITALINKA.</p>
+            <div class="help-footer-buttons d-flex flex-wrap justify-content-center">
+                <button id="chatbotRedirectBtn" class="btn btn-outline-success-custom">
+                    <img class="logo-panel" 
+                             src="images/vitalinka-bot.png" 
+                             onerror="this.src='https://via.placeholder.com/24'">
+                    Falar com o ChatBot
+                </button>
+                <button id="supportRedirectBtn" class="btn btn-success-custom btn-outline-success-custom"><i class="fas fa-headset"></i> Contactar Suporte</button>
+            </div>
+            <small class="text-muted mt-2 d-block"><i class="fas fa-external-link-alt"></i> Os links de suporte direcionam para página informativa</small>
+        </div>
+    </div>
+
+    <footer>VITALINKA · Sistema Inteligente de Gestão Hospitalar · Hospital Regional de Malanje · Angola 2026</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --------------------------------------------------------------
+        //  BASE DE DADOS DAS PERGUNTAS FREQUENTES (categorias, perguntas, respostas)
+        // --------------------------------------------------------------
+        const faqDatabase = [
+            { id: 1, category: "pacientes", question: "🩺 Como cadastrar um novo paciente no sistema?", answer: "No painel principal, clique em 'Cadastro e Gestão de Pacientes', preencha nome, idade, sexo, morada, contacto, diagnóstico e data de admissão. Após salvar, o paciente aparece automaticamente na lista de atendimento." },
+            { id: 2, category: "pacientes", question: "✏️ Posso editar ou remover um paciente depois de registado?", answer: "Sim! Na lista de pacientes, use os botões Editar (lápis) ou Remover (lixeira). As alterações são salvas instantaneamente e o histórico é atualizado." },
+            { id: 3, category: "pacientes", question: "🏷️ O que significa o selo 'Prioridade' nos pacientes?", answer: "O selo prioridade destaca pacientes que necessitam de atenção especial. Você pode ativar essa opção no card do paciente para identificar casos urgentes." },
+            { id: 4, category: "atendimento", question: "📋 Como registar um atendimento médico?", answer: "Acesse o perfil do paciente, vá até a secção 'Atendimentos' e clique em 'Novo Atendimento'. Preencha os dados do diagnóstico, exames solicitados e prescrições." },
+            { id: 5, category: "atendimento", question: "📊 Como visualizar o histórico de atendimentos do paciente?", answer: "Na ficha do paciente, existe a aba 'Histórico' onde todos os atendimentos, exames e prescrições são listados cronologicamente." },
+            { id: 6, category: "atendimento", question: "🚑 Quais os tipos de atendimento disponíveis?", answer: "O sistema permite registar consultas, urgências, internamentos, cirurgias e procedimentos de enfermagem, cada um com seus formulários específicos." },
+            { id: 7, category: "internamento", question: "🏥 Como gerir o internamento de um paciente?", answer: "No perfil do paciente, selecione 'Internar' e preencha os dados do leito, enfermaria, data de entrada e previsão de alta. O sistema mantém o controlo de ocupação." },
+            { id: 8, category: "internamento", question: "🛏️ Como visualizar a ocupação dos leitos?", answer: "Acesse o painel 'Internamento' onde é possível ver a lista de leitos disponíveis, ocupados e em manutenção, com a identificação do paciente em cada leito." },
+            { id: 9, category: "internamento", question: "🔁 Como dar alta a um paciente internado?", answer: "No perfil do paciente, clique em 'Alta', preencha o relatório de alta e as orientações pós-alta. O sistema liberta automaticamente o leito." },
+            { id: 10, category: "exames", question: "🧪 Como solicitar exames laboratoriais?", answer: "Na ficha do paciente, vá em 'Exames', selecione os exames desejados e gere a requisição. O técnico de laboratório terá acesso à lista de pedidos." },
+            { id: 11, category: "exames", question: "📈 Como visualizar os resultados de exames?", answer: "Após a realização, os resultados são registados no sistema e ficam disponíveis na ficha do paciente, com alerta para resultados críticos." },
+            { id: 12, category: "medicamentos", question: "💊 Como gerir a medicação do paciente?", answer: "A prescrição médica pode ser registada na ficha do paciente, com indicação do medicamento, dosagem, frequência e duração do tratamento." },
+            { id: 13, category: "medicamentos", question: "📦 Como controlar o stock de medicamentos?", answer: "O módulo 'Farmácia' permite gerir o inventário, com alertas de stock mínimo e validade, garantindo a disponibilidade de medicamentos essenciais." },
+            { id: 14, category: "seguranca", question: "🔒 Os dados dos pacientes estão protegidos?", answer: "Sim! O VITALINKA segue as normas da Lei de Protecção de Dados, com acesso restrito a profissionais autorizados e logs de auditoria." },
+            { id: 15, category: "seguranca", question: "🛡️ Como funciona o controlo de acesso ao sistema?", answer: "Cada profissional possui um perfil com permissões específicas (Médico, Enfermeiro, Técnico, etc.), garantindo que apenas vejam os dados necessários para sua função." },
+            { id: 16, category: "seguranca", question: "📄 O sistema gera relatórios de auditoria?", answer: "Sim! O VITALINKA mantém um registo detalhado de todas as operações realizadas, permitindo auditoria completa das actividades clínicas e administrativas." }
+        ];
+
+        let currentLang = 'pt';
+        let activeCategory = "todos";
+        let searchTerm = "";
+
+        const container = document.getElementById('faqAccordionContainer');
+        const searchInput = document.getElementById('searchFaqInput');
+        const categoryFilterDiv = document.getElementById('categoryFilters');
+
+        const categoriesMap = [
+            { id: "todos", label: "📌 Todos", icon: "fa-grid" },
+            { id: "pacientes", label: " Pacientes", icon: "fa-user-injured" },
+            { id: "atendimento", label: " Atendimento", icon: "fa-stethoscope" },
+            { id: "internamento", label: " Internamento", icon: "fa-hospital" },
+            { id: "exames", label: " Exames", icon: "fa-flask" },
+            { id: "medicamentos", label: " Medicamentos", icon: "fa-pills" },
+            { id: "seguranca", label: " Segurança", icon: "fa-shield-alt" }
+        ];
+
+        function filterFaqs() {
+            let filtered = faqDatabase.filter(faq => {
+                const matchesCategory = (activeCategory === "todos" || faq.category === activeCategory);
+                const matchesSearch = searchTerm === "" || faq.question.toLowerCase().includes(searchTerm.toLowerCase()) || faq.answer.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+            return filtered;
+        }
+
+        function renderFaqs() {
+            const filtered = filterFaqs();
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="glass-card p-5 text-center rounded-4"><i class="fas fa-search fa-3x"></i><h5 class="mt-3">Nenhuma pergunta encontrada</h5><p>Tente outro termo ou categoria diferente.</p></div>`;
+                return;
+            }
+
+            let grouped = {};
+            if (activeCategory === "todos") {
+                filtered.forEach(faq => { if (!grouped[faq.category]) grouped[faq.category] = []; grouped[faq.category].push(faq); });
+            } else {
+                grouped[activeCategory] = filtered;
+            }
+
+            let html = '';
+            let accordionCounter = 0;
+            for (const [cat, faqsArray] of Object.entries(grouped)) {
+                if (faqsArray.length === 0) continue;
+                let categoryDisplayName = categoriesMap.find(c => c.id === cat)?.label || cat.charAt(0).toUpperCase() + cat.slice(1);
+                html += `<div class="mb-4"><h3 class="mb-3"><i class="fas ${categoriesMap.find(c=>c.id===cat)?.icon || 'fa-folder-open'} text-success"></i> ${categoryDisplayName}</h3>`;
+                faqsArray.forEach(faq => {
+                    const collapseId = `faqCollapse${accordionCounter}`;
+                    const headingId = `faqHeading${accordionCounter}`;
+                    html += `
+                        <div class="accordion-item mb-3 rounded-4">
+                            <h2 class="accordion-header" id="${headingId}">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
+                                    <strong><i class="fas fa-question-circle text-success me-2"></i> ${faq.question}</strong>
+                                </button>
+                            </h2>
+                            <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headingId}" data-bs-parent="#faqAccordionContainer">
+                                <div class="accordion-body">
+                                    <i class="fas fa-reply-all me-2 text-success"></i> ${faq.answer}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    accordionCounter++;
+                });
+                html += `</div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function renderCategoryFilters() {
+            let btnsHtml = '';
+            categoriesMap.forEach(cat => {
+                const isActive = (activeCategory === cat.id);
+                btnsHtml += `
+                    <button class="category-chip ${isActive ? 'active' : ''}" data-category="${cat.id}">
+                        <i class="fas ${cat.icon}"></i> ${cat.label}
+                    </button>
+                `;
+            });
+            categoryFilterDiv.innerHTML = btnsHtml;
+            document.querySelectorAll('.category-chip').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const catId = btn.getAttribute('data-category');
+                    activeCategory = catId;
+                    renderCategoryFilters();
+                    renderFaqs();
+                });
+            });
+        }
+
+        function handleSearch() {
+            searchTerm = searchInput.value.trim();
+            renderFaqs();
+        }
+
+        function initFaq() {
+            renderCategoryFilters();
+            renderFaqs();
+            searchInput.addEventListener('input', handleSearch);
+        }
+
+        function redirectTo404() {
+            window.location.href = "404.html";
+        }
+
+        function applyTheme(isLight) {
+            if (isLight) document.body.classList.add('light');
+            else document.body.classList.remove('light');
+            const checkbox = document.getElementById('themeToggleCheckbox');
+            if (checkbox) checkbox.checked = isLight;
+            localStorage.setItem('vitalinka_theme', isLight ? 'light' : 'dark');
+        }
+        const themeToggle = document.getElementById('themeToggleCheckbox');
+        if (themeToggle) {
+            themeToggle.addEventListener('change', (e) => applyTheme(e.target.checked));
+            const savedTheme = localStorage.getItem('vitalinka_theme');
+            if (savedTheme === 'light') applyTheme(true);
+            else applyTheme(false);
+        }
+
+        const langBtn = document.getElementById('langToggleBtn');
+        if (langBtn) {
+            langBtn.addEventListener('click', () => {
+                alert("🌍 VITALINKA disponível em Português. Em breve mais idiomas. As respostas estão em PT.");
+            });
+        }
+
+        const chatbotRedirect = document.getElementById('chatbotRedirectBtn');
+        const supportRedirect = document.getElementById('supportRedirectBtn');
+        if (chatbotRedirect) chatbotRedirect.addEventListener('click', redirectTo404);
+        if (supportRedirect) supportRedirect.addEventListener('click', redirectTo404);
+
+        initFaq();
+    </script>
+</body>
+</html>

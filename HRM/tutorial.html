@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VITALINKA | Onboarding Wizard</title>
+    <!-- Bootstrap 5 + Bootstrap Icons + Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ===== VARIÁVEIS DE TEMA ===== */
+        :root {
+            --bg-image: url('images/tutorial.jpg');
+            --bg-overlay: rgba(0, 0, 0, 0.4);
+            --glass-bg: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --text-color: #f0f4f8;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --input-bg: rgba(255, 255, 255, 0.10);
+            --input-border: rgba(255, 255, 255, 0.15);
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --primary-color: #2b7a4b;
+            --primary-gradient: linear-gradient(135deg, #2b7a4b, #4c9f70);
+            --progress-color: #4c9f70;
+            --btn-hover-scale: 1.03;
+        }
+
+        * {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0d1b1a 0%, #1a3a2f 50%, #0d1b1a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            background-image: url('images/tutorial.jpg');
+             background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(43, 122, 75, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(76, 159, 112, 0.10) 0%, transparent 60%);
+            z-index: 0;
+        }
+
+        /* ===== CONTAINER PRINCIPAL ===== */
+        .onboarding-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        /* ===== GLASSMORPHISM MODAL ===== */
+        .modal-glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 40px 35px 35px 35px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            color: var(--text-color);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: modalFadeIn 0.5s ease forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-glass::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===== BARRA DE PROGRESSO ===== */
+        .progress-step {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 8px;
+        }
+
+        .progress-step .step-dot {
+            flex: 1;
+            height: 4px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.15);
+            transition: all 0.6s ease;
+            position: relative;
+        }
+
+        .progress-step .step-dot.active {
+            background: var(--primary-gradient);
+            box-shadow: 0 0 20px rgba(76, 159, 112, 0.3);
+        }
+
+        .progress-step .step-dot.done {
+            background: var(--primary-gradient);
+            opacity: 0.5;
+        }
+
+        .progress-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-label span {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        /* ===== IMAGEM ILUSTRATIVA ===== */
+        .step-image {
+            width: 100%;
+            height: 500px;
+            max-height: 180px;
+            object-fit: contain;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 10px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .step-image:hover {
+            transform: scale(1.01);
+            border-color: rgba(76, 159, 112, 0.3);
+        }
+
+        /* ===== TÍTULO E TEXTO ===== */
+        .step-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .step-description {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 18px;
+        }
+
+        .step-description strong {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        /* ===== CAMPOS ===== */
+        .form-control-glass {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 14px;
+            padding: 14px 18px;
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .form-control-glass::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        .form-control-glass:focus {
+            outline: none;
+            border-color: #4c9f70;
+            box-shadow: 0 0 0 4px rgba(76, 159, 112, 0.15);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .form-label-glass {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        /* ===== BIOMETRIA ===== */
+        .biometric-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 20px;
+            border: 2px dashed var(--glass-border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+        }
+
+        .biometric-area:hover {
+            border-color: #4c9f70;
+            background: rgba(76, 159, 112, 0.08);
+        }
+
+        .biometric-area .fingerprint-icon {
+            font-size: 4rem;
+            color: #4c9f70;
+            margin-bottom: 10px;
+            animation: pulseGlow 2s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .biometric-progress {
+            width: 100%;
+            max-width: 200px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .biometric-progress .fill {
+            height: 100%;
+            width: 0%;
+            background: var(--primary-gradient);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* ===== OTP ===== */
+        .otp-display {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .otp-display .otp-box {
+            width: 50px;
+            height: 60px;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .otp-display .otp-box.active {
+            border-color: #4c9f70;
+            box-shadow: 0 0 20px rgba(76, 159, 112, 0.2);
+        }
+
+        /* ===== ASSINATURA DIGITAL ===== */
+        .signature-area {
+            border: 2px dashed var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            min-height: 100px;
+            background: rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .signature-area:hover {
+            border-color: #4c9f70;
+            background: rgba(76, 159, 112, 0.05);
+        }
+
+        .signature-area canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            touch-action: none;
+        }
+
+        .signature-area .placeholder {
+            position: absolute;
+            color: var(--text-muted);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* ===== AVALIAÇÃO ESTRELAS ===== */
+        .stars-rating {
+            display: flex;
+            gap: 10px;
+            font-size: 2.2rem;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+
+        .stars-rating .star {
+            color: rgba(255, 255, 255, 0.15);
+            transition: all 0.2s ease;
+        }
+
+        .stars-rating .star.active {
+            color: #ffc107;
+            text-shadow: 0 0 30px rgba(255, 193, 7, 0.3);
+        }
+
+        .stars-rating .star:hover {
+            transform: scale(1.15);
+        }
+
+        /* ===== CHECKBOX PERSONALIZADA ===== */
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 8px 0;
+        }
+
+        .custom-checkbox:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .custom-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #4c9f70;
+            cursor: pointer;
+        }
+
+        .custom-checkbox label {
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        /* ===== BOTÕES ===== */
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            padding: 12px 28px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(var(--btn-hover-scale));
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .btn-glass-primary {
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+            box-shadow: 0 4px 25px rgba(76, 159, 112, 0.3);
+        }
+
+        .btn-glass-primary:hover {
+            background: linear-gradient(135deg, #1e6a3a, #3d8a5a);
+            color: #fff;
+            transform: scale(var(--btn-hover-scale));
+            box-shadow: 0 6px 35px rgba(76, 159, 112, 0.4);
+        }
+
+        .btn-glass-outline {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+        }
+
+        .btn-glass-outline:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-color);
+        }
+
+        .btn-glass-danger {
+            background: rgba(220, 53, 69, 0.15);
+            border: 1px solid rgba(220, 53, 69, 0.25);
+            color: #ff7a8a;
+        }
+
+        .btn-glass-danger:hover {
+            background: rgba(220, 53, 69, 0.25);
+            color: #ff8a9a;
+        }
+
+        .btn-glass-success {
+            background: rgba(76, 159, 112, 0.15);
+            border: 1px solid rgba(76, 159, 112, 0.25);
+            color: #75f0a0;
+        }
+
+        .btn-glass-success:hover {
+            background: rgba(76, 159, 112, 0.25);
+            color: #8affb0;
+        }
+
+        .btn-group-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .btn-group-actions .left-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-group-actions .right-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== ASSISTENTE VITA ===== */
+        .vita-avatar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 18px;
+            background: rgba(76, 159, 112, 0.10);
+            border-radius: 16px;
+            border: 1px solid rgba(76, 159, 112, 0.15);
+            margin-bottom: 20px;
+        }
+
+        .vita-avatar .avatar-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .vita-avatar .vita-message {
+            color: var(--text-color);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .vita-avatar .vita-message .highlight {
+            color: #75f0a0;
+            font-weight: 600;
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 640px) {
+            .modal-glass {
+                padding: 25px 18px 25px 18px;
+                border-radius: 20px;
+            }
+
+            .step-title {
+                font-size: 1.3rem;
+            }
+
+            .step-image {
+                max-height: 130px;
+                
+            }
+
+            .btn-group-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-group-actions .left-group,
+            .btn-group-actions .right-group {
+                justify-content: center;
+            }
+
+            .btn-glass {
+                padding: 10px 18px;
+                font-size: 0.8rem;
+                justify-content: center;
+            }
+
+            .otp-display .otp-box {
+                width: 40px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .stars-rating {
+                font-size: 1.8rem;
+            }
+
+            .progress-step .step-dot {
+                height: 3px;
+            }
+
+            .vita-avatar {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+            }
+
+            .vita-avatar .avatar-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .modal-glass {
+                padding: 18px 12px 20px 12px;
+            }
+
+            .step-title {
+                font-size: 1.1rem;
+            }
+
+            .step-description {
+                font-size: 0.85rem;
+            }
+
+            .btn-glass {
+                padding: 8px 14px;
+                font-size: 0.75rem;
+            }
+
+            .otp-display .otp-box {
+                width: 32px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+
+        /* ===== ANIMAÇÕES ADICIONAIS ===== */
+        .fade-slide-in {
+            animation: fadeSlideIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .shake {
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-gradient);
+            border-radius: 4px;
+        }
+
+        /* ===== TOOLTIP ===== */
+        .info-tip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            cursor: help;
+            transition: all 0.3s ease;
+            margin-left: 6px;
+        }
+
+        .info-tip:hover {
+            background: rgba(76, 159, 112, 0.15);
+            border-color: #4c9f70;
+            color: var(--text-color);
+        }
+
+        /* Password rules */
+        .password-rules {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .password-rules .rule {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .password-rules .rule.valid {
+            color: #75f0a0;
+            border-color: rgba(76, 159, 112, 0.3);
+            background: rgba(76, 159, 112, 0.08);
+        }
+
+        .password-rules .rule i {
+            margin-right: 4px;
+        }
+        
+       .avatares .step-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+        }
+        
+        
+    </style>
+</head>
+<body>
+
+    <div class="onboarding-wrapper">
+        <!-- ===== MODAL 1 – SAUDAÇÕES ===== -->
+        <div class="modal-glass step-container" id="step1">
+            <!-- Progresso -->
+            <div class="progress-label">Etapa <span>1</span> de 10</div>
+            <div class="progress-step">
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <!-- Assistente VITA -->
+            <div class="vita-avatar">
+                <div class="avatar-icon"><i class="fas fa-robot"></i></div>
+                <div class="vita-message">
+                    👋 Olá! Sou a <span class="highlight">VITA</span>, sua assistente virtual. Vamos guiá-lo(a) pelos primeiros passos no <span class="highlight">VITALINKA</span>!
+                </div>
+            </div>
+            
+            <div class="avatares">
+                <!-- Imagem -->
+            <img 
+                 class="step-image" 
+                 src="images/bem-vindo.png" alt="Boas-vindas VITALINKA">
+            </div>
+
+            
+
+            <h2 class="step-title">👋 Bem-vindo(a) ao VITALINKA!</h2>
+            <p class="step-description">
+                Estamos muito felizes por tê-lo(a) connosco. Antes de começarmos, gostaríamos de saber como prefere ser tratado(a).
+            </p>
+
+            <!-- Campo Nome -->
+            <div style="margin-bottom: 10px;">
+                <label class="form-label-glass">Nome <span style="color:#ff7a8a;">*</span></label>
+                <input type="text" class="form-control-glass" id="userName" placeholder="Digite o seu nome completo" autofocus>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">Este nome será usado para personalizar a sua experiência.</div>
+            </div>
+
+            <!-- Botões -->
+            <div class="btn-group-actions">
+                <div class="left-group">
+                    <button class="btn-glass btn-glass-danger" id="closeTutorial"><i class="fas fa-times"></i> Fechar Tutorial</button>
+                </div>
+                <div class="right-group">
+                    <button class="btn-glass btn-glass-primary" id="step1Next"><i class="fas fa-arrow-right"></i> Seguinte</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MODAL 2 – IDENTIFICAÇÃO ===== -->
+        <div class="modal-glass step-container" id="step2" style="display:none;">
+            <div class="progress-label">Etapa <span>2</span> de 10</div>
+            <div class="progress-step">
+                <div class="step-dot done"></div>
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <div class="vita-avatar">
+                <div class="avatar-icon"><i class="fas fa-robot"></i></div>
+                <div class="vita-message">
+                    Olá, <span class="highlight" id="displayName">Utilizador</span>! ✨ A partir de agora, utilizaremos o seu nome para personalizar a sua experiência.
+                </div>
+            </div>
+            
+             <div class="avatares">
+                <!-- Imagem -->
+            <img class="step-image" 
+                 src="images/identidade.png" alt="Identificação">
+            </div>
+
+            
+
+            <h2 class="step-title">👤 Olá, <span id="greetingName">Utilizador</span>!</h2>
+            <p class="step-description">
+                A partir deste momento, utilizaremos o seu nome durante toda a navegação para proporcionar uma experiência mais personalizada e intuitiva.
+            </p>
+
+            <div style="background:rgba(76,159,112,0.06); border-radius:12px; padding:12px 16px; border:1px solid rgba(76,159,112,0.12);">
+                <i class="fas fa-check-circle" style="color:#75f0a0;"></i>
+                <span style="color:var(--text-muted); font-size:0.9rem;">A sua experiência será única e adaptada a si.</span>
+            </div>
+
+            <div class="btn-group-actions">
+                <div class="left-group">
+                    <button class="btn-glass btn-glass-outline" id="step2Prev"><i class="fas fa-arrow-left"></i> Anterior</button>
+                    <button class="btn-glass btn-glass-danger" id="closeTutorial2"><i class="fas fa-times"></i> Fechar</button>
+                </div>
+                <div class="right-group">
+                    <button class="btn-glass btn-glass-primary" id="step2Next"><i class="fas fa-arrow-right"></i> Seguinte</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MODAL 3 – BIOMETRIA ===== -->
+        <div class="modal-glass step-container" id="step3" style="display:none;">
+            <div class="progress-label">Etapa <span>3</span> de 10</div>
+            <div class="progress-step">
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <div class="vita-avatar">
+                <div class="avatar-icon"><i class="fas fa-robot"></i></div>
+                <div class="vita-message">
+                    🔒 Para reforçar a segurança da sua conta, pode registar a sua <span class="highlight">impressão digital</span>. Este procedimento é <span class="highlight">opcional</span>.
+                </div>
+            </div>
+            
+             <div class="avatares">
+                <!-- Imagem -->
+            <img class="step-image" 
+                 src="images/biometria.png" alt="Biometria">
+            </div>
+
+            
+
+            <h2 class="step-title">🔐 Verificação Biométrica <span style="font-size:0.8rem; color:var(--text-muted); font-weight:400;">(Opcional)</span></h2>
+            <p class="step-description">
+                Para reforçar a segurança da sua conta, poderá efetuar o registo da sua impressão digital.
+                Este procedimento é <strong>opcional</strong> e pode ser realizado posteriormente.
+            </p>
+
+            <!-- Área biométrica -->
+            <div class="biometric-area" id="biometricArea">
+                <div class="fingerprint-icon"><i class="fas fa-fingerprint"></i></div>
+                <div style="color:var(--text-muted); font-size:0.9rem;">Clique para simular a leitura biométrica</div>
+                <div class="biometric-progress">
+                    <div class="fill" id="biometricFill" style="width:0%;"></div>
+                </div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;" id="biometricStatus">Aguardando leitura...</div>
+            </div>
+
+            <div class="btn-group-actions">
+                <div class="left-group">
+                    <button class="btn-glass btn-glass-outline" id="step3Prev"><i class="fas fa-arrow-left"></i> Anterior</button>
+                    <button class="btn-glass btn-glass-danger" id="closeTutorial3"><i class="fas fa-times"></i> Fechar</button>
+                </div>
+                <div class="right-group">
+                    <button class="btn-glass btn-glass-success" id="biometricScan"><i class="fas fa-fingerprint"></i> Scanear Impressão</button>
+                    <button class="btn-glass btn-glass-outline" id="biometricSkip">Ignorar</button>
+                    <button class="btn-glass btn-glass-primary" id="step3Next"><i class="fas fa-arrow-right"></i> Seguinte</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MODAL 4 – CRIAÇÃO DA CONTA ===== -->
+        <div class="modal-glass step-container" id="step4" style="display:none;">
+            <div class="progress-label">Etapa <span>4</span> de 10</div>
+            <div class="progress-step">
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <div class="vita-avatar">
+                <div class="avatar-icon"><i class="fas fa-robot"></i></div>
+                <div class="vita-message">
+                    📝 Vamos criar a sua conta! Siga os passos abaixo e preencha os dados corretamente.
+                </div>
+            </div>
+            
+             <div class="avatares">
+                <!-- Imagem -->
+            <img class="step-image" 
+                 src="images/autemticacao.png" alt="Criação de Conta">
+            </div>
+
+            
+            <h2 class="step-title">📝 Criação da Conta</h2>
+            <p class="step-description">
+                1. Aceda ao endereço oficial do VITALINKA.<br>
+                2. Clique em <strong>Criar Conta</strong>.<br>
+                3. Preencha os seus dados pessoais.<br>
+                4. O sistema irá gerar automaticamente o seu e-mail institucional.
+            </p>
+
+            <div style="background:rgba(76,159,112,0.08); border-radius:12px; padding:12px 16px; border:1px solid rgba(76,159,112,0.15); margin-bottom:12px;">
+                <span style="color:var(--text-muted); font-size:0.85rem;">Exemplo: </span>
+                <span style="color:#75f0a0; font-weight:600; font-size:0.95rem;">anasouza@vitalinka.ao</span>
+            </div>
+
+            <div>
+                <label class="form-label-glass">Regras da Palavra-passe</label>
+                <div class="password-rules">
+                    <span class="rule"><i class="fas fa-check-circle"></i> 8+ caracteres</span>
+                    <span class="rule"><i class="fas fa-check-circle"></i> Maiúscula</span>
+                    <span class="rule"><i class="fas fa-check-circle"></i> Minúscula</span>
+                    <span class="rule"><i class="fas fa-check-circle"></i> Número</span>
+                    <span class="rule"><i class="fas fa-check-circle"></i> Caractere especial</span>
+                </div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:5px;">
+                    <i class="fas fa-info-circle"></i> A palavra-passe deverá ser confirmada e ambas deverão coincidir.
+                </div>
+            </div>
+
+            <div class="btn-group-actions">
+                <div class="left-group">
+                    <button class="btn-glass btn-glass-outline" id="step4Prev"><i class="fas fa-arrow-left"></i> Anterior</button>
+                    <button class="btn-glass btn-glass-danger" id="closeTutorial4"><i class="fas fa-times"></i> Fechar</button>
+                </div>
+                <div class="right-group">
+                    <button class="btn-glass btn-glass-primary" id="step4Next"><i class="fas fa-arrow-right"></i> Seguinte</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MODAL 5 – CONTA CRIADA ===== -->
+        <div class="modal-glass step-container" id="step5" style="display:none;">
+            <div class="progress-label">Etapa <span>5</span> de 10</div>
+            <div class="progress-step">
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <div class="vita-avatar">
+                <div class="avatar-icon"><i class="fas fa-robot"></i></div>
+                <div class="vita-message">
+                    🎉 <span class="highlight">Parabéns!</span> A sua conta foi criada com sucesso. Agora já pode iniciar sessão.
+                </div>
+            </div>
+            
+             <div class="avatares">
+                <!-- Imagem -->
+           <img class="step-image" 
+                 src="images/success.png" alt="Conta Criada">
+            </div>
+
+            
+
+            <h2 class="step-title">🎉 Parabéns!</h2>
+            <p class="step-description">
+                A sua conta foi criada com sucesso.<br>
+                Agora já pode iniciar sessão utilizando as credenciais criadas.
+            </p>
+
+            <div style="background:rgba(76,159,112,0.06); border-radius:12px; padding:12px 16px; border:1px solid rgba(76,159,112,0.12);">
+                <i class="fas fa-check-circle" style="color:#75f0a0;"></i>
+                <span style="color:var(--text-muted); font-size:0.9rem;">Agora está pronto(a) para explorar o VITALINKA!</span>
+            </div>
+
+            <div class="btn-group-actions">
+                <div class="left-group">
+                    <button class="btn-glass btn-glass-outline" id="step5Prev"><i class="fas fa-arrow-left"></i> Anterior</button>
+                    <button class="btn-glass btn-glass-danger" id="closeTutorial5"><i class="fas fa-times"></i> Fechar</button>
+                </div>
+                <div class="right-group">
+                    <button class="btn-glass btn-glass-primary" id="step5Next"><i class="fas fa-arrow-right"></i> Seguinte</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MODAL 6 – ESCOLHA DO PERFIL ===== -->
+        <div class="modal-glass step-container" id="step6" style="display:none;">
+            <div class="progress-label">Etapa <span>6</span> de 10</div>
+            <div class="progress-step">
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <div class="vita-avatar">
+                <div class="avatar-icon"><i class="fas fa-robot"></i></div>
+                <div class="vita-message">
+                    👤 Selecione o perfil correspondente à sua função. Cada perfil possui <span class="highlight">funcionalidades e permissões específicas</span>.
+                </div>
+            </div>
+            
+            <div class="avatares">
+                <!-- Imagem -->
+            <img class="step-image" 
+                 src="images/dados.png" alt="Perfis">
+            </div>
+
+            
+
+            <h2 class="step-title">👤 Escolha do Perfil</h2>
+            <p class="step-description">
+                Na página de autenticação, selecione o perfil correspondente à sua função.
+            </p>
+
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin:10px 0;">
+                <span style="background:rgba(255,255,255,0.06); padding:6px 14px; border-radius:20px; font-size:0.8rem; border:1px solid var(--glass-border);">Paciente</span>
+                <span style="background:rgba(255,255,255,0.06); padding:6px 14px; border-radius:20px; font-size:0.8rem; border:1px solid var(--glass-border);">Médico</span>
+                <span style="background:rgba(76,159,112,0.15); padding:6px 14px; border-radius:20px; font-size:0.8rem; border:1px solid rgba(76,159,112,0.3); color:#75f0a0;">Enfermeiro</span>
+                <span style="background:rgba(255,255,255,0.06); padding:6px 14px; border-radius:20px; font-size:0.8rem; border:1px solid var(--glass-border);">Rececionista</span>
+                <span style="background:rgba(255,255,255,0.06); padding:6px 14px; border-radius:20px; font-size:0.8rem; border:1px solid var(--glass-border);">Farmacêutico</span>
+                <span style="background:rgba(255,255,255,0.06); padding:6px 14px; border-radius:20px; font-size:0.8rem; border:1px solid var(--glass-border);">Téc. Laboratório</span>
+                <span style="background:rgba(255,255,255,0.06); padding:6px 14px; border-radius:20px; font-size:0.8rem; border:1px solid var(--glass-border);">Gestor Internamento</span>
+                <span style="background:rgba(255,255,255,0.06); padding:6px 14px; border-radius:20px; font-size:0.8rem; border:1px solid var(--glass-border);">Financeiro</span>
+                <span style="background:rgba(255,255,255,0.06); padding:6px 14px; border-radius:20px; font-size:0.8rem; border:1px solid var(--glass-border);">Diretor Geral</span>
+                <span style="background:rgba(255,255,255,0.06); padding:6px 14px; border-radius:20px; font-size:0.8rem; border:1px solid var(--glass-border);">Super Admin</span>
+            </div>
+            <p class="step-description" style="font-size:0.85rem; margin-top:0;">
+                Cada perfil possui funcionalidades e permissões específicas.
+            </p>
+
+            <div class="btn-group-actions">
+                <div class="left-group">
+                    <button class="btn-glass btn-glass-outline" id="step6Prev"><i class="fas fa-arrow-left"></i> Anterior</button>
+                    <button class="btn-glass btn-glass-danger" id="closeTutorial6"><i class="fas fa-times"></i> Fechar</button>
+                </div>
+                <div class="right-group">
+                    <button class="btn-glass btn-glass-primary" id="step6Next"><i class="fas fa-arrow-right"></i> Seguinte</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MODAL 7 – VALIDAÇÃO DA CONTA ===== -->
+        <div class="modal-glass step-container" id="step7" style="display:none;">
+            <div class="progress-label">Etapa <span>7</span> de 10</div>
+            <div class="progress-step">
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <div class="vita-avatar">
+                <div class="avatar-icon"><i class="fas fa-robot"></i></div>
+                <div class="vita-message">
+                    🔑 Após introduzir as credenciais, o sistema solicitará um <span class="highlight">código de verificação (OTP)</span> para confirmar a sua identidade.
+                </div>
+            </div>
+            
+            <div class="avatares">
+                <!-- Imagem -->
+            <img class="step-image" 
+                 src="images/validate.png" alt="Validação OTP">
+            </div>
+
+            
+
+            <h2 class="step-title">🔑 Validação da Conta</h2>
+            <p class="step-description">
+                Após introduzir as credenciais, o sistema solicitará um <strong>código de verificação (OTP)</strong> composto por <strong>6 dígitos</strong>.
+                Este código será utilizado para confirmar a sua identidade e aumentar a segurança da conta.
+            </p>
+
+            <div class="otp-display">
+                <div class="otp-box active">_</div>
+                <div class="otp-box">_</div>
+                <div class="otp-box">_</div>
+                <div class="otp-box">_</div>
+                <div class="otp-box">_</div>
+                <div class="otp-box">_</div>
+            </div>
+            <div style="text-align:center; font-size:0.75rem; color:var(--text-muted);">Campo ilustrativo para introdução do OTP</div>
+
+            <div class="btn-group-actions">
+                <div class="left-group">
+                    <button class="btn-glass btn-glass-outline" id="step7Prev"><i class="fas fa-arrow-left"></i> Anterior</button>
+                    <button class="btn-glass btn-glass-danger" id="closeTutorial7"><i class="fas fa-times"></i> Fechar</button>
+                </div>
+                <div class="right-group">
+                    <button class="btn-glass btn-glass-primary" id="step7Next"><i class="fas fa-arrow-right"></i> Seguinte</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MODAL 8 – ENTRADA NA PLATAFORMA ===== -->
+        <div class="modal-glass step-container" id="step8" style="display:none;">
+            <div class="progress-label">Etapa <span>8</span> de 10</div>
+            <div class="progress-step">
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <div class="vita-avatar">
+                <div class="avatar-icon"><i class="fas fa-robot"></i></div>
+                <div class="vita-message">
+                    🚀 Depois da validação, será redirecionado para o seu <span class="highlight">Dashboard</span>, onde encontrará todas as funcionalidades disponíveis para o seu perfil.
+                </div>
+            </div>
+            
+            <div class="avatares">
+                <!-- Imagem -->
+            <img class="step-image" 
+                 src="images/teste-dash.png" alt="Dashboard">
+            </div>
+
+            
+
+            <h2 class="step-title">📊 Entrada na Plataforma</h2>
+            <p class="step-description">
+                Depois da validação da conta, será redirecionado para o seu <strong>Dashboard</strong>, onde encontrará todas as funcionalidades disponíveis para o seu perfil.
+                <br><br>
+                O sistema apresentará apenas os módulos e ferramentas autorizados para si.
+            </p>
+
+            <div style="background:rgba(76,159,112,0.06); border-radius:12px; padding:12px 16px; border:1px solid rgba(76,159,112,0.12);">
+                <i class="fas fa-shield-alt" style="color:#4c9f70;"></i>
+                <span style="color:var(--text-muted); font-size:0.9rem;">Segurança e personalização garantidas para o seu perfil.</span>
+            </div>
+
+            <div class="btn-group-actions">
+                <div class="left-group">
+                    <button class="btn-glass btn-glass-outline" id="step8Prev"><i class="fas fa-arrow-left"></i> Anterior</button>
+                    <button class="btn-glass btn-glass-danger" id="closeTutorial8"><i class="fas fa-times"></i> Fechar</button>
+                </div>
+                <div class="right-group">
+                    <button class="btn-glass btn-glass-primary" id="step8Next"><i class="fas fa-arrow-right"></i> Seguinte</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MODAL 9 – SUPORTE ===== -->
+        <div class="modal-glass step-container" id="step9" style="display:none;">
+            <div class="progress-label">Etapa <span>9</span> de 10</div>
+            <div class="progress-step">
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot active"></div>
+                <div class="step-dot"></div>
+            </div>
+
+            <div class="vita-avatar">
+                <div class="avatar-icon"><i class="fas fa-robot"></i></div>
+                <div class="vita-message">
+                    💬 Caso necessite de ajuda, a nossa equipa de <span class="highlight">suporte</span> está disponível para si.
+                </div>
+            </div>
+            
+            <div class="avatares">
+                <!-- Imagem -->
+           <img class="step-image" 
+                 src="images/duv.png" alt="Suporte">
+            </div>
+
+            
+
+            <h2 class="step-title">💬 Suporte</h2>
+            <p class="step-description">
+                Caso necessite de ajuda, entre em contacto com a nossa equipa de suporte.
+            </p>
+
+            <div style="background:rgba(255,255,255,0.04); border-radius:12px; padding:14px 18px; border:1px solid var(--glass-border);">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+                    <i class="fas fa-phone" style="color:#4c9f70;"></i>
+                    <span style="color:var(--text-color);"><strong>(+244) 921 151 685</strong></span>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+                    <i class="fas fa-envelope" style="color:#4c9f70;"></i>
+                    <span style="color:var(--text-color);"><strong>antoniodiogo958@vitalinka.ao</strong></span>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <i class="fas fa-clock" style="color:#4c9f70;"></i>
+                    <span style="color:var(--text-muted);">Segunda a Sexta-feira, das 08h00 às 17h00</span>
+                </div>
+            </div>
+
+            <div class="btn-group-actions">
+                <div class="left-group">
+                    <button class="btn-glass btn-glass-outline" id="step9Prev"><i class="fas fa-arrow-left"></i> Anterior</button>
+                    <button class="btn-glass btn-glass-danger" id="closeTutorial9"><i class="fas fa-times"></i> Fechar</button>
+                </div>
+                <div class="right-group">
+                    <button class="btn-glass btn-glass-primary" id="step9Next"><i class="fas fa-arrow-right"></i> Seguinte</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MODAL 10 – ASSINATURA DIGITAL E AVALIAÇÃO ===== -->
+        <div class="modal-glass step-container" id="step10" style="display:none;">
+            <div class="progress-label">Etapa <span>10</span> de 10</div>
+            <div class="progress-step">
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot done"></div>
+                <div class="step-dot active"></div>
+            </div>
+
+            <div class="vita-avatar">
+                <div class="avatar-icon"><i class="fas fa-robot"></i></div>
+                <div class="vita-message">
+                    🏁 <span class="highlight">Parabéns!</span> Concluiu o processo de apresentação do VITALINKA. Gostaríamos de conhecer a sua opinião.
+                </div>
+            </div>
+            
+            <div class="avatares">
+                <!-- Imagem -->
+            <img class="step-image" 
+                 src="images/signature.png" alt="Assinatura e Avaliação">
+            </div>
+
+            
+
+            <h2 class="step-title">✍️ Assinatura Digital e Avaliação</h2>
+            <p class="step-description">
+                Parabéns! Concluiu o processo de apresentação do VITALINKA.<br>
+                Agora gostaríamos de conhecer a sua opinião.
+            </p>
+
+            <!-- Assinatura Digital -->
+            <div style="margin-bottom:12px;">
+                <label class="form-label-glass">Assinatura Digital</label>
+                <div class="signature-area" id="signatureArea">
+                    <span class="placeholder"><i class="fas fa-pen"></i> Desenhe ou insira a sua assinatura aqui</span>
+                    <canvas id="signatureCanvas" width="400" height="100"></canvas>
+                </div>
+                <div style="display:flex; gap:8px; margin-top:6px;">
+                    <button class="btn-glass btn-glass-outline" style="padding:4px 12px; font-size:0.75rem;" id="clearSignature"><i class="fas fa-undo"></i> Limpar</button>
+                </div>
+            </div>
+
+            <!-- Avaliação -->
+            <div style="margin-bottom:12px;">
+                <label class="form-label-glass">O quanto gostou desta experiência?</label>
+                <div class="stars-rating" id="starsRating">
+                    <span class="star" data-value="1">☆</span>
+                    <span class="star" data-value="2">☆</span>
+                    <span class="star" data-value="3">☆</span>
+                    <span class="star" data-value="4">☆</span>
+                    <span class="star" data-value="5">☆</span>
+                </div>
+                <div style="font-size:0.8rem; color:var(--text-muted);" id="ratingLabel">Clique nas estrelas para avaliar</div>
+            </div>
+
+            <!-- Comentário -->
+            <div style="margin-bottom:12px;">
+                <label class="form-label-glass">Comentário <span style="color:var(--text-muted); font-weight:400;">(opcional)</span></label>
+                <input type="text" class="form-control-glass" id="feedbackComment" placeholder="Deixe sugestões ou comentários...">
+            </div>
+
+            <!-- Subscrição -->
+            <div class="custom-checkbox">
+                <input type="checkbox" id="subscribeNews" checked>
+                <label for="subscribeNews"><i class="fas fa-envelope" style="color:#4c9f70;"></i> Pretendo receber novidades, atualizações e notificações do VITALINKA no meu e-mail.</label>
+            </div>
+
+            <div class="btn-group-actions">
+                <div class="left-group">
+                    <button class="btn-glass btn-glass-outline" id="step10Prev"><i class="fas fa-arrow-left"></i> Anterior</button>
+                    <button class="btn-glass btn-glass-danger" id="closeTutorial10"><i class="fas fa-times"></i> Fechar</button>
+                </div>
+                <div class="right-group">
+                    <button class="btn-glass btn-glass-primary" id="finishTutorial"><i class="fas fa-check-circle"></i> Concluir Tutorial</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // ONBOARDING WIZARD - VITALINKA
+        // ================================================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // ---- ESTADO ----
+            let currentStep = 1;
+            const totalSteps = 10;
+            let userName = '';
+            let biometricDone = false;
+            let selectedRating = 0;
+
+            // ---- REFERÊNCIAS ----
+            const steps = {
+                1: document.getElementById('step1'),
+                2: document.getElementById('step2'),
+                3: document.getElementById('step3'),
+                4: document.getElementById('step4'),
+                5: document.getElementById('step5'),
+                6: document.getElementById('step6'),
+                7: document.getElementById('step7'),
+                8: document.getElementById('step8'),
+                9: document.getElementById('step9'),
+                10: document.getElementById('step10')
+            };
+
+            // ---- FUNÇÕES DE NAVEGAÇÃO ----
+            function showStep(step) {
+                // Esconde todos
+                Object.values(steps).forEach(el => el.style.display = 'none');
+                // Mostra o step atual
+                if (steps[step]) {
+                    steps[step].style.display = 'block';
+                    steps[step].style.animation = 'none';
+                    requestAnimationFrame(() => {
+                        steps[step].style.animation = 'modalFadeIn 0.5s ease forwards';
+                    });
+                }
+                currentStep = step;
+                updateProgress();
+                updateVitaMessage();
+            }
+
+            function updateProgress() {
+                // Atualiza os dots
+                const allDots = document.querySelectorAll('.progress-step .step-dot');
+                allDots.forEach((dot, index) => {
+                    dot.className = 'step-dot';
+                    if (index + 1 === currentStep) dot.classList.add('active');
+                    else if (index + 1 < currentStep) dot.classList.add('done');
+                });
+
+                // Atualiza label
+                document.querySelectorAll('.progress-label span').forEach(el => {
+                    el.textContent = currentStep;
+                });
+            }
+
+            function updateVitaMessage() {
+                // Atualiza a saudação com o nome
+                const nameDisplay = document.getElementById('displayName');
+                const greetingDisplay = document.getElementById('greetingName');
+                if (nameDisplay) nameDisplay.textContent = userName || 'Utilizador';
+                if (greetingDisplay) greetingDisplay.textContent = userName || 'Utilizador';
+            }
+
+            function goToNext() {
+                if (currentStep < totalSteps) {
+                    showStep(currentStep + 1);
+                }
+            }
+
+            function goToPrev() {
+                if (currentStep > 1) {
+                    showStep(currentStep - 1);
+                }
+            }
+
+            // ---- VALIDAÇÕES ----
+            function validateStep1() {
+                const nameInput = document.getElementById('userName');
+                if (!nameInput.value.trim()) {
+                    nameInput.classList.add('shake');
+                    setTimeout(() => nameInput.classList.remove('shake'), 500);
+                    nameInput.focus();
+                    return false;
+                }
+                userName = nameInput.value.trim();
+                return true;
+            }
+
+            // ---- EVENTOS DOS BOTÕES ----
+            // Step 1
+            document.getElementById('step1Next').addEventListener('click', function() {
+                if (validateStep1()) {
+                    goToNext();
+                }
+            });
+
+            document.getElementById('userName').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('step1Next').click();
+                }
+            });
+
+            // Step 2
+            document.getElementById('step2Next').addEventListener('click', goToNext);
+            document.getElementById('step2Prev').addEventListener('click', goToPrev);
+
+            // Step 3
+            document.getElementById('step3Next').addEventListener('click', goToNext);
+            document.getElementById('step3Prev').addEventListener('click', goToPrev);
+
+            document.getElementById('biometricSkip').addEventListener('click', function() {
+                goToNext();
+            });
+
+            // Biometria
+            let biometricInterval = null;
+            document.getElementById('biometricScan').addEventListener('click', function() {
+                const fill = document.getElementById('biometricFill');
+                const status = document.getElementById('biometricStatus');
+                const area = document.getElementById('biometricArea');
+
+                if (biometricInterval) {
+                    clearInterval(biometricInterval);
+                    biometricInterval = null;
+                }
+
+                let progress = 0;
+                status.textContent = '🔍 A ler impressão digital...';
+                area.style.borderColor = '#4c9f70';
+
+                biometricInterval = setInterval(() => {
+                    progress += Math.random() * 8 + 2;
+                    if (progress > 100) progress = 100;
+                    fill.style.width = progress + '%';
+
+                    if (progress >= 100) {
+                        clearInterval(biometricInterval);
+                        biometricInterval = null;
+                        status.textContent = '✅ Impressão digital registada com sucesso!';
+                        area.style.borderColor = '#75f0a0';
+                        biometricDone = true;
+                        document.getElementById('biometricScan').textContent = '✅ Registado';
+                        document.getElementById('biometricScan').disabled = true;
+                    }
+                }, 150);
+            });
+
+            document.getElementById('biometricArea').addEventListener('click', function() {
+                document.getElementById('biometricScan').click();
+            });
+
+            // Step 4
+            document.getElementById('step4Next').addEventListener('click', goToNext);
+            document.getElementById('step4Prev').addEventListener('click', goToPrev);
+
+            // Step 5
+            document.getElementById('step5Next').addEventListener('click', goToNext);
+            document.getElementById('step5Prev').addEventListener('click', goToPrev);
+
+            // Step 6
+            document.getElementById('step6Next').addEventListener('click', goToNext);
+            document.getElementById('step6Prev').addEventListener('click', goToPrev);
+
+            // Step 7
+            document.getElementById('step7Next').addEventListener('click', goToNext);
+            document.getElementById('step7Prev').addEventListener('click', goToPrev);
+
+            // Step 8
+            document.getElementById('step8Next').addEventListener('click', goToNext);
+            document.getElementById('step8Prev').addEventListener('click', goToPrev);
+
+            // Step 9
+            document.getElementById('step9Next').addEventListener('click', goToNext);
+            document.getElementById('step9Prev').addEventListener('click', goToPrev);
+
+            // Step 10
+            document.getElementById('step10Prev').addEventListener('click', goToPrev);
+
+            // ---- ASSINATURA DIGITAL ----
+            const canvas = document.getElementById('signatureCanvas');
+            const ctx = canvas.getContext('2d');
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+
+            function resizeCanvas() {
+                const rect = canvas.parentElement.getBoundingClientRect();
+                canvas.width = rect.width - 40 || 400;
+                canvas.height = 100;
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#75f0a0';
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+            }
+
+            resizeCanvas();
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX || e.touches[0].clientX) - rect.left;
+                const y = (e.clientY || e.touches[0].clientY) - rect.top;
+                return { x, y };
+            }
+
+            function startDraw(e) {
+                e.preventDefault();
+                isDrawing = true;
+                const pos = getPos(e);
+                lastX = pos.x;
+                lastY = pos.y;
+                canvas.parentElement.querySelector('.placeholder').style.display = 'none';
+            }
+
+            function draw(e) {
+                e.preventDefault();
+                if (!isDrawing) return;
+                const pos = getPos(e);
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                lastX = pos.x;
+                lastY = pos.y;
+            }
+
+            function stopDraw(e) {
+                isDrawing = false;
+            }
+
+            canvas.addEventListener('mousedown', startDraw);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDraw);
+            canvas.addEventListener('mouseleave', stopDraw);
+            canvas.addEventListener('touchstart', startDraw, { passive: false });
+            canvas.addEventListener('touchmove', draw, { passive: false });
+            canvas.addEventListener('touchend', stopDraw, { passive: false });
+
+            document.getElementById('clearSignature').addEventListener('click', function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                canvas.parentElement.querySelector('.placeholder').style.display = 'block';
+            });
+
+            window.addEventListener('resize', resizeCanvas);
+
+            // ---- AVALIAÇÃO POR ESTRELAS ----
+            const stars = document.querySelectorAll('.stars-rating .star');
+            const ratingLabel = document.getElementById('ratingLabel');
+
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const value = parseInt(this.dataset.value);
+                    selectedRating = value;
+                    stars.forEach(s => {
+                        s.classList.toggle('active', parseInt(s.dataset.value) <= value);
+                        s.textContent = parseInt(s.dataset.value) <= value ? '★' : '☆';
+                    });
+                    const labels = ['', 'Muito Insatisfeito', 'Insatisfeito', 'Neutro', 'Satisfeito', 'Muito Satisfeito'];
+                    ratingLabel.textContent = `⭐ ${labels[value] || ''} (${value}/5)`;
+                });
+
+                star.addEventListener('mouseenter', function() {
+                    const value = parseInt(this.dataset.value);
+                    stars.forEach(s => {
+                        const v = parseInt(s.dataset.value);
+                        if (v <= value) {
+                            s.textContent = '★';
+                            s.style.color = '#ffc107';
+                        } else {
+                            s.textContent = '☆';
+                            s.style.color = 'rgba(255,255,255,0.15)';
+                        }
+                    });
+                });
+
+                star.addEventListener('mouseleave', function() {
+                    stars.forEach(s => {
+                        const v = parseInt(s.dataset.value);
+                        if (v <= selectedRating) {
+                            s.textContent = '★';
+                            s.style.color = '#ffc107';
+                        } else {
+                            s.textContent = '☆';
+                            s.style.color = 'rgba(255,255,255,0.15)';
+                        }
+                    });
+                });
+            });
+
+            // ---- FINALIZAR TUTORIAL ----
+            document.getElementById('finishTutorial').addEventListener('click', function() {
+                const comment = document.getElementById('feedbackComment').value;
+                const subscribed = document.getElementById('subscribeNews').checked;
+                const rating = selectedRating;
+
+                let message = '🎉 Tutorial concluído com sucesso!\n\n';
+                message += `👤 Nome: ${userName || 'Não informado'}\n`;
+                message += `⭐ Avaliação: ${rating}/5\n`;
+                message += `💬 Comentário: ${comment || 'Nenhum'}\n`;
+                message += `📧 Subscrição: ${subscribed ? 'Sim' : 'Não'}\n`;
+                message += `🔐 Biometria: ${biometricDone ? 'Registada' : 'Não registada'}`;
+
+                alert(message);
+
+                // Redirecionar para a página principal
+                window.location.href = 'login.html';
+            });
+
+            // ---- FECHAR TUTORIAL ----
+            document.querySelectorAll('[id^="closeTutorial"]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (confirm('Tem certeza que deseja fechar o tutorial? Pode voltar a acessá-lo nas configurações.')) {
+                        window.location.href = 'login.html';
+                    }
+                });
+            });
+
+            // ---- INICIALIZAÇÃO ----
+            showStep(1);
+
+            // Permitir navegação com teclado (setas)
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (currentStep < totalSteps) {
+                        // Verifica se é step 1 e valida
+                        if (currentStep === 1) {
+                            if (validateStep1()) goToNext();
+                        } else {
+                            goToNext();
+                        }
+                    }
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (currentStep > 1) goToPrev();
+                } else if (e.key === 'Enter') {
+                    const nextBtn = document.querySelector(`#step${currentStep} .btn-glass-primary`);
+                    if (nextBtn) nextBtn.click();
+                }
+            });
+
+            console.log('✅ VITALINKA - Onboarding Wizard carregado com sucesso!');
+            console.log('📋 10 etapas disponíveis');
+            console.log('🤖 Assistente VITA ativo');
+            console.log('🖐️ Biometria simulada disponível');
+            console.log('✍️ Assinatura digital funcional');
+            console.log('⭐ Avaliação por estrelas implementada');
+
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>VITALINKA | Gestão Hospitalar</title>
+    <!-- Bootstrap 5 + Ícones + Fonts + QRCode -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <!-- Bibliotecas para gerar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Times New Roman', Times, serif; }
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            transition: background 0.3s ease, color 0.2s;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: auto;
+        }
+        /* Carrossel de fundo */
+        .carousel-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+        .carousel-bg .carousel-inner, .carousel-bg .carousel-item { height: 100%; }
+        .carousel-bg .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+            pointer-events: none;
+            transition: background 0.3s;
+        }
+        body.light::before { background: rgba(240, 248, 242, 0.92); }
+        body.light { color: #143523; }
+        body.light .glass-card, body.light .main-panel, body.light .top-bar, body.light .patient-card, body.light .chat-card, body.light .contract-card {
+            background: rgba(250, 255, 250, 0.92);
+            border-color: rgba(60, 110, 80, 0.3);
+            color: #1a3a2b;
+        }
+        .glass-card, .main-panel, .top-bar, .patient-card, .chat-card, .contract-card {
+            background: rgba(18, 32, 28, 0.8);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(90, 180, 120, 0.4);
+            border-radius: 28px;
+        }
+        .top-bar {
+            padding: 12px 24px;
+            margin: 20px 20px 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .logo-center {
+            text-align: center;
+            margin: 10px 0 0 0;
+        }
+        .logo-center img {
+            max-height: 70px;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+        }
+        body.light .logo-center img { filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1)); }
+        .main-panel {
+            margin: 20px;
+            padding: 25px 30px;
+            transition: all 0.2s;
+        }
+        .patient-card {
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+            height: 100%;
+        }
+        .patient-card:hover { transform: translateY(-5px); }
+        .patient-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 20px;
+            background: #e9ecef;
+        }
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border-radius: 50px;
+            padding: 5px 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .status-internado { background: #ffc107; color: #2c3e2f; }
+        .status-alta { background: #28a745; color: white; }
+        .status-observacao { background: #17a2b8; color: white; }
+        .btn-share-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 40px;
+        }
+        .qr-code-container {
+            background: white;
+            padding: 10px;
+            border-radius: 16px;
+            display: inline-block;
+        }
+        .faq-question {
+            background: rgba(111,222,156,0.15);
+            border-radius: 50px;
+            padding: 6px 15px;
+            margin: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+        .faq-question:hover {
+            background: #6FDE9C;
+            color: #1e2a1f;
+        }
+        .chat-message {
+            background: rgba(255,255,240,0.2);
+            border-radius: 18px;
+            padding: 10px 14px;
+            margin: 8px 0;
+        }
+        .theme-switch { position: relative; display: inline-block; width: 56px; height: 28px; }
+        .theme-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #2c3e2f; transition: 0.3s; border-radius: 34px;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 6px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px;
+            background-color: white; transition: 0.3s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #6FDE9C; }
+        input:checked + .slider:before { transform: translateX(28px); }
+        .lang-btn {
+            background: transparent; border: 1px solid #6FDE9C; border-radius: 40px;
+            padding: 4px 12px; color: inherit; cursor: pointer;
+        }
+        footer { text-align: center; padding: 20px; font-size: 0.75rem; opacity: 0.7; }
+        /* Estilos para assinatura digital */
+        .signature-pad {
+            border: 2px dashed rgba(111,222,156,0.7);
+            border-radius: 16px;
+            background: rgba(255,255,240,0.1);
+            touch-action: none;
+            cursor: crosshair;
+            width: 100%;
+            height: 160px;
+        }
+        .btn-clear-sign {
+            background: rgba(200,70,70,0.8);
+            border: none;
+            color: white;
+            border-radius: 40px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        .contract-link {
+            color: #6FDE9C;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            .main-panel { padding: 16px; margin: 12px; }
+            .signature-pad { height: 120px; }
+        }
+        
+        /* OUTHER CSS */
+        .codec{
+            align-items: center;
+            text-align: center;
+            margin: 10px 0 0 0;
+            height: 200px;
+            width: 200px;
+            color: blue;
+        }
+        
+        .logo-panel{
+            border-radius: 50px;
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div id="bgCarousel" class="carousel-bg carousel slide" data-bs-ride="carousel" data-bs-interval="7000">
+        <div class="carousel-inner">
+            <div class="carousel-item active"><img src="images/med-gest.jpg" alt="Hospital Regional de Malanje"></div>
+            <div class="carousel-item"><img src="images/suport1.png" alt="Atendimento Médico"></div>
+            <div class="carousel-item"><img src="images/coci.png" alt="Cuidados de Saúde"></div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#bgCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+        <button class="carousel-control-next" type="button" data-bs-target="#bgCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+    </div>
+
+    <div class="logo-center">
+        <a href="index.html"><img src="images/vitalinka-rbg.png" alt="VITALINKA Logo" onerror="this.src='https://placehold.co/200x70?text=VITALINKA'; this.style.width='200px'"></a>
+    </div>
+    <div class="top-bar">
+        <div><strong id="platformTitle"> VITALINKA · Gestão e Controlo de Pacientes</strong></div>
+        <div class="d-flex gap-3 align-items-center">
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch">
+                    <input type="checkbox" id="themeToggleCheckbox">
+                    <div class="slider"><i class="fas fa-sun"></i><i class="fas fa-moon"></i></div>
+                </label>
+            </div>
+            <button class="lang-btn" id="langToggleBtn">
+                <i class="fas fa-question-circle"></i><a href="faq.html" ><span>FAQ</span></a>
+            </button>
+        </div>
+    </div>
+
+    <div class="main-panel">
+        <!-- Seção explicativa -->
+        <div class="alert alert-success bg-opacity-25 border-0 rounded-4 mb-4">
+            <i class="fas fa-hospital-user"></i> <strong id="helpTextTitle"> Sistema Inteligente de Gestão Hospitalar</strong><br>
+            <span id="helpDesc">O VITALINKA é um sistema web inteligente desenvolvido para informatizar os processos administrativos, clínicos e operacionais do Hospital Regional de Malanje, proporcionando maior eficiência, segurança da informação, redução do tempo de atendimento e melhoria da qualidade dos serviços de saúde.</span>
+        </div>
+
+        <div class="row g-4">
+            <!-- COLUNA ESQUERDA: CADASTRO E GESTÃO DE PACIENTES -->
+            <div class="col-lg-6">
+                <div class="glass-card p-3 p-md-4 rounded-4">
+                    <h4><i class="fas fa-user-injured"></i> <span id="patientManageTitle"> Cadastro e Gestão de Pacientes</span></h4>
+                    <hr>
+                    <form id="patientForm">
+                        <input type="hidden" id="editId" value="">
+                        <div class="row g-2">
+                            <div class="col-md-6"><label class="form-label"><i class="fas fa-user"></i> <span id="patientNameLabel">Nome completo</span></label><input type="text" id="patientName" class="form-control" placeholder="Ex: João Manuel da Silva" required></div>
+                            <div class="col-md-3"><label class="form-label"><span id="ageLabel">Idade</span></label><input type="number" id="patientAge" class="form-control" placeholder="Idade" required></div>
+                            <div class="col-md-3"><label class="form-label"><span id="genderLabel">Sexo</span></label>
+                                <select id="patientGender" class="form-control" required>
+                                    <option value="">Selecione</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Feminino</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6"><label class="form-label"><i class="fas fa-map-marker-alt"></i> <span id="locLabel">Morada</span></label><input type="text" id="patientLocation" class="form-control" placeholder="Província/Município" required></div>
+                            <div class="col-md-6"><label class="form-label"><i class="fas fa-phone"></i> <span id="contactLabel">Contacto</span></label><input type="text" id="patientContact" class="form-control" placeholder="Número de telefone" required></div>
+                            <div class="col-md-6"><label class="form-label"><i class="fas fa-notes-medical"></i> <span id="conditionLabel">Diagnóstico</span></label>
+                                <select id="patientCondition" class="form-control" required>
+                                    <option value="">Selecione</option>
+                                    <option value="Internado">Internado</option>
+                                    <option value="Observação">Em Observação</option>
+                                    <option value="Alta">Alta</option>
+                                    <option value="Urgência">Urgência</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6"><label class="form-label"><i class="fas fa-calendar-alt"></i> <span id="dateLabel">Data de Admissão</span></label><input type="date" id="patientDate" class="form-control" required></div>
+                            <div class="col-12 mt-2"><button type="submit" class="btn btn-success" id="submitBtn"><i class="fas fa-save"></i> <span id="saveBtnText">Registar Paciente</span></button>
+                            <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none"><span id="cancelText">Cancelar</span></button></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="glass-card p-3 p-md-4 rounded-4 mt-4">
+                    <h5><i class="fas fa-list-ul"></i> <span id="patientListTitle">Pacientes em Atendimento</span></h5>
+                    <div id="patientsContainer" class="row mt-3"></div>
+                </div>
+            </div>
+
+            <!-- COLUNA DIREITA: FERRAMENTAS DE COMUNICAÇÃO E CHAT -->
+            <div class="col-lg-6">
+                <div class="glass-card p-3 p-md-4 rounded-4 mb-4">
+                    <h5><i class="fas fa-share-alt"></i> <span id="shareToolsTitle">Partilha de Informação & QR Code</span></h5>
+                    <p id="shareDesc">Gere links diretos para partilhar informações do paciente.</p>
+                    <div class="row g-2 align-items-end">
+                        <div class="col-8"><select id="sharePatientSelect" class="form-select"><option value="">-- Selecione um paciente --</option></select></div>
+                        <div class="col-4"><button id="generateQrBtn" class="btn btn-outline-success w-100"><i class="fas fa-qrcode"></i> <span id="qrBtnText">QR Code</span></button></div>
+                    </div>
+                    <div class="row mt-3 g-2">
+                        <div class="col-4"><button id="shareFbBtn" class="btn btn-facebook w-100" style="background:#1877F2; color:white; border:none;"><i class="fab fa-facebook-f"></i> Facebook</button></div>
+                        <div class="col-4"><button id="shareWpBtn" class="btn btn-whatsapp w-100" style="background:#25D366; color:white; border:none;"><i class="fab fa-whatsapp"></i> WhatsApp</button></div>
+                        <div class="col-4"><button id="shareIgBtn" class="btn btn-instagram w-100" style="background:#E4405F; color:white; border:none;"><i class="fab fa-instagram"></i> Instagram</button></div>
+                    </div>
+                    
+                    <div class="row mt-3 g-2">
+                        <a href="index.html">
+                        <img style="color: blue; " class="codec" src="images/bg-vita.png" alt="Qr Code" onerror="this.src='https://placehold.co/200x70?text=VITALINKA'; this.style.width='200px'"></a>
+                    </div>
+                    
+                    <div class="mt-3 text-center" id="qrCodeDisplay" style="min-height: 130px;"></div>
+                </div>
+
+                <div class="glass-card p-3 p-md-4 rounded-4 mb-4">
+                    <h5><img class="logo-panel" src="images/vitalinka-bot.png" onerror="this.src='https://via.placeholder.com/24'"> <span id="chatTitle"> Assistente Virtual (FAQ)</span></h5>
+                    <div id="chatWindow" style="max-height: 250px; overflow-y: auto;" class="mb-2">
+                        <div class="chat-message bg-success bg-opacity-25"><i class="fas fa-heartbeat"></i> <span id="welcomeMsg">Olá! Sou o assistente VITALINKA. Posso ajudar com informações sobre pacientes, procedimentos e serviços do hospital.</span></div>
+                    </div>
+                    <div class="d-flex flex-wrap justify-content-center gap-2 mb-2">
+                        <button class="faq-question" data-question="paciente"><span id="faqPatient">🩺 Estado do paciente</span></button>
+                        <button class="faq-question" data-question="procedimento"><span id="faqProcedure">📋 Procedimentos</span></button>
+                        <button class="faq-question" data-question="local"><span id="faqLocal">📍 Localização</span></button>
+                        <button class="faq-question" data-question="contato"><span id="faqContact">📞 Contactar hospital</span></button>
+                        <button class="faq-question" data-question="social"><span id="faqSocial">🌐 Serviços disponíveis</span></button>
+                    </div>
+                    <div class="input-group"><input type="text" id="chatInput" class="form-control" placeholder="Escreva sua pergunta..."><button class="btn btn-success" id="sendChatBtn"><i class="fas fa-paper-plane"></i> <span id="askBtnText">Perguntar</span></button></div>
+                </div>
+
+                <div class="glass-card p-3 p-md-4 rounded-4">
+                    <h5><i class="fas fa-address-card"></i> <span id="contactTitle">📞 Contactos Hospitalares</span></h5>
+                    <div class="row">
+                        <div class="col-md-6"><p><i class="fas fa-phone text-success"></i> <strong>Telefone:</strong> <span id="hospitalPhone">+244 923 456 789</span><br><i class="fas fa-envelope"></i> <strong>Email:</strong> <span id="hospitalEmail">vitalinka@hospital.ao</span><br><i class="fas fa-map-pin"></i> <strong>Localização:</strong> <span id="hospitalLocation">Malanje / Angola</span></p>
+                        <a id="whatsappDirectLink" href="https://wa.me/244923456789?text=Olá!%20Preciso%20de%20informações%20sobre%20o%20hospital" target="_blank" class="btn btn-success btn-sm w-100" style="background:#25D366; border:none;"><i class="fab fa-whatsapp"></i> <span id="contactWpBtn">Falar via WhatsApp</span></a></div>
+                        <div class="col-md-6"><label><span id="requestLabel">📋 Pedido de informação</span></label><input type="text" id="reqName" class="form-control mb-2" placeholder="Seu nome"><input type="text" id="reqMessage" class="form-control mb-2" placeholder="Ex: Gostaria de saber sobre consultas"><button id="sendRequestBtn" class="btn btn-outline-light btn-sm"><i class="fas fa-paper-plane"></i> <span id="requestBtnText">Enviar pedido</span></button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTRATO DE PRIVACIDADE E RESPONSABILIDADE -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="contract-card glass-card p-4 rounded-4">
+                    <h3><i class="fas fa-file-signature"></i> <span id="contractTitle">Termos de Responsabilidade e Privacidade</span></h3>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div id="contractTerms">
+                                <p><strong id="clause1">Cláusula 1 – Objectivo:</strong> <span id="clause1Text">O sistema VITALINKA tem como objectivo informatizar a gestão de pacientes, assegurando a integridade, confidencialidade e disponibilidade dos dados clínicos.</span></p>
+                                <p><strong id="clause2">Cláusula 2 – Responsabilidade:</strong> <span id="clause2Text">Os profissionais de saúde são responsáveis pela veracidade e actualização dos dados inseridos no sistema, seguindo as melhores práticas médicas.</span></p>
+                                <p><strong id="clause3">Cláusula 3 – Privacidade:</strong> <span id="clause3Text">Os dados pessoais e clínicos dos pacientes são protegidos nos termos da Lei de Protecção de Dados, sendo acedidos apenas por pessoal autorizado.</span></p>
+                                <p><strong id="clause4">Cláusula 4 – Consentimento:</strong> <span id="clause4Text">Ao utilizar o sistema, o profissional declara ter conhecimento e aceita as políticas de uso e segurança da informação.</span></p>
+                                <p><i class="fas fa-link"></i> <span id="contractLinkNote">Consulte os termos completos:</span> <a href="#" id="fullContractLink" class="contract-link" data-bs-toggle="modal" data-bs-target="#contractModal"><span id="readFullLink">📜 Ler na íntegra</span></a></p>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="bg-dark bg-opacity-25 p-3 rounded-4">
+                                <h5><i class="fas fa-pen-fancy"></i> <span id="signatureSectionTitle">Assinatura Digital (obrigatória)</span></h5>
+                                <div class="mb-2">
+                                    <label class="form-label"><span id="fullNameLabel">Nome completo (profissional)</span></label>
+                                    <input type="text" id="signerName" class="form-control" placeholder="Ex: Dra. Maria Silva">
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label"><span id="idDocLabel">Nº de Ordem / Cédula Profissional</span></label>
+                                    <input type="text" id="signerDoc" class="form-control" placeholder="Nº de documento profissional">
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label"><span id="signatureMethodLabel">Método de assinatura:</span></label>
+                                    <div class="btn-group w-100 mb-2">
+                                        <button type="button" id="chooseTypeText" class="btn btn-outline-light"><i class="fas fa-keyboard"></i> <span id="textSignBtnLabel">Assinar por texto</span></button>
+                                        <button type="button" id="chooseTypeDraw" class="btn btn-outline-success"><i class="fas fa-draw-polygon"></i> <span id="drawSignBtnLabel">Desenhar assinatura</span></button>
+                                    </div>
+                                    <!-- Assinatura por texto -->
+                                    <div id="textSignatureDiv">
+                                        <input type="text" id="textSignature" class="form-control" placeholder="Digite seu nome completo como assinatura electrónica">
+                                    </div>
+                                    <!-- Assinatura desenhada -->
+                                    <div id="drawSignatureDiv" style="display: none;">
+                                        <canvas id="signatureCanvas" class="signature-pad" width="400" height="160" style="width:100%; height:auto; background:#fff; border-radius:12px;"></canvas>
+                                        <button type="button" id="clearCanvasBtn" class="btn-clear-sign mt-2"><i class="fas fa-eraser"></i> <span id="clearSignBtnText">Limpar assinatura</span></button>
+                                        <small class="text-muted d-block"><span id="drawHint">Use o rato ou toque para desenhar a sua assinatura</span></small>
+                                    </div>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="acceptTermsCheckbox">
+                                    <label class="form-check-label" for="acceptTermsCheckbox" id="acceptTermsLabel">
+                                        Li e aceito as cláusulas de responsabilidade e privacidade.
+                                    </label>
+                                </div>
+                                <button id="signContractBtn" class="btn btn-success w-100"><i class="fas fa-signature"></i> <span id="signNowBtnText">Assinar Digitalmente</span></button>
+                                <div id="contractSignatureHistory" class="mt-3">
+                                    <small><i class="fas fa-history"></i> <span id="historyLabel">Últimas assinaturas registadas:</span></small>
+                                    <ul id="signatureList" class="list-unstyled small mt-1"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer><i class="fas fa-heartbeat"></i> VITALINKA · Sistema Inteligente de Gestão e Controlo de Pacientes · Hospital Regional de Malanje</footer>
+
+    <!-- Modal para contrato completo -->
+    <div class="modal fade" id="contractModal" tabindex="-1" aria-labelledby="contractModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contractModalLabel">📑 Termos Completos VITALINKA</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>TERMOS DE RESPONSABILIDADE E PRIVACIDADE</strong></p>
+                    <p>1. O VITALINKA é um sistema de gestão hospitalar que visa optimizar o atendimento e segurança do paciente.<br>
+                    2. Os profissionais de saúde devem manter a confidencialidade e integridade dos dados dos pacientes.<br>
+                    3. A assinatura digital (texto ou desenho) tem o mesmo valor jurídico que a assinatura manuscrita nos termos da Lei n.º 14/21 (Angola).<br>
+                    4. Os dados pessoais são tratados apenas para fins de gestão clínica e administrativa.<br>
+                    5. O sistema assegura que o acesso aos dados seja restrito a profissionais autorizados.<br>
+                    6. Ao assinar, o profissional declara ter capacidade legal e consentimento para os termos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ---------------- GESTÃO DE PACIENTES ----------------
+        let patients = [];
+        let currentLang = 'pt';
+        let selectedPatientId = null;
+        let signatureDrawing = false; let drawCtx, canvas;
+
+        function loadPatients() {
+            const stored = localStorage.getItem('vitalinka_patients');
+            if(stored) patients = JSON.parse(stored);
+            else patients = [
+                { 
+                    id: Date.now()+1,
+                    name: "Maria João dos Santos",
+                    age: 35,
+                    gender: "F",
+                    location: "Malanje",
+                    contact: "923 456 789",
+                    condition: "Internado",
+                    date: "2026-07-20",
+                    featured: true 
+                },
+                { 
+                    id: Date.now()+2, 
+                    name: "José Pedro Manuel", 
+                    age: 45, 
+                    gender: "M",
+                    location: "Luanda",
+                    contact: "924 567 890",
+                    condition: "Observação", 
+                    date: "2026-07-19",
+                    featured: false 
+                }
+            ]; 
+            savePatients();
+            renderPatients();
+            updatePatientSelect(); 
+        }
+        function savePatients() 
+        { 
+            localStorage.setItem('vitalinka_patients', JSON.stringify(patients));
+        }
+        function renderPatients()
+        {
+            let container = document.getElementById('patientsContainer'); container.innerHTML = ''; 
+            if(patients.length===0)
+            { 
+                container.innerHTML='<p class="text-muted">Nenhum paciente cadastrado.</p>';
+                return;
+            } patients.forEach(pac=> { 
+                let statusClass = '';
+                if(pac.condition === 'Internado') statusClass = 'status-internado';
+                else if(pac.condition === 'Alta') statusClass = 'status-alta';
+                else if(pac.condition === 'Observação') statusClass = 'status-observacao';
+                
+                let col=document.createElement('div'); col.className='col-md-6 col-12'; col.innerHTML=`<div class="patient-card position-relative">${pac.featured?'<div class="status-badge status-internado"><i class="fas fa-star"></i> Prioridade</div>':''}<img src="${'images/paciente.png'}" class="patient-img" onerror="this.src='https://placehold.co/400x200?text=Paciente'"><div class="mt-2"><strong>${pac.name}</strong> <span class="badge bg-secondary">${pac.age} anos</span></div><div>🩺 ${pac.condition} | 📍 ${pac.location}</div><div>📞 ${pac.contact} | 📅 ${pac.date}</div><div class="mt-2 d-flex gap-1 flex-wrap"><button class="btn btn-sm btn-outline-primary edit-patient" data-id="${pac.id}"><i class="fas fa-edit"></i></button><button class="btn btn-sm btn-outline-danger delete-patient" data-id="${pac.id}"><i class="fas fa-trash"></i></button><button class="btn btn-sm btn-outline-warning toggle-featured" data-id="${pac.id}"><i class="fas fa-star"></i> ${pac.featured?'Desmarcar':'Marcar'}</button><button class="btn btn-sm btn-success share-this-patient" data-id="${pac.id}"><i class="fas fa-share-alt"></i> Partilhar</button></div></div>`; container.appendChild(col); }); attachPatientEvents(); }
+        function attachPatientEvents(){ document.querySelectorAll('.edit-patient').forEach(btn=>btn.addEventListener('click',(e)=>editPatient(parseInt(btn.dataset.id)))); document.querySelectorAll('.delete-patient').forEach(btn=>btn.addEventListener('click',(e)=>deletePatient(parseInt(btn.dataset.id)))); document.querySelectorAll('.toggle-featured').forEach(btn=>btn.addEventListener('click',(e)=>toggleFeatured(parseInt(btn.dataset.id)))); document.querySelectorAll('.share-this-patient').forEach(btn=>btn.addEventListener('click',(e)=>selectPatientForShare(parseInt(btn.dataset.id)))); }
+        function updatePatientSelect(){ let select=document.getElementById('sharePatientSelect'); select.innerHTML='<option value="">-- Paciente para partilha/QR --</option>'+patients.map(p=>`<option value="${p.id}">${p.name} - ${p.condition}</option>`).join(''); }
+        function selectPatientForShare(id){ let patient=patients.find(p=>p.id===id); if(patient){ document.getElementById('sharePatientSelect').value=id; showQRCode(patient); } }
+        function showQRCode(patient){ let div=document.getElementById('qrCodeDisplay'); div.innerHTML=''; new QRCode(div, { text: `Paciente: ${patient.name} | Idade: ${patient.age} | Estado: ${patient.condition} | Contacto: ${patient.contact} | Hospital Regional de Malanje`, width:120, height:120 }); }
+        function editPatient(id){ let pac=patients.find(p=>p.id===id); if(pac){ document.getElementById('patientName').value=pac.name; document.getElementById('patientAge').value=pac.age; document.getElementById('patientGender').value=pac.gender; document.getElementById('patientLocation').value=pac.location; document.getElementById('patientContact').value=pac.contact; document.getElementById('patientCondition').value=pac.condition; document.getElementById('patientDate').value=pac.date; document.getElementById('editId').value=id; document.getElementById('submitBtn').innerHTML='<i class="fas fa-sync-alt"></i> Actualizar Paciente'; document.getElementById('cancelEditBtn').style.display='inline-block'; } }
+        function deletePatient(id){ if(confirm("Remover paciente do sistema?")){ patients=patients.filter(p=>p.id!==id); savePatients(); renderPatients(); updatePatientSelect(); } }
+        function toggleFeatured(id){ let pac=patients.find(p=>p.id===id); if(pac){ pac.featured=!pac.featured; savePatients(); renderPatients(); updatePatientSelect(); } }
+        document.getElementById('patientForm').addEventListener('submit', (e)=>{ e.preventDefault(); let id=document.getElementById('editId').value?parseInt(document.getElementById('editId').value):null; savePatientFinal(id); });
+        function savePatientFinal(id){ 
+            let name=document.getElementById('patientName').value.trim(); 
+            if(!name) return; 
+            let newPatient={ 
+                id:id||Date.now(), 
+                name:name, 
+                age:parseInt(document.getElementById('patientAge').value), 
+                gender:document.getElementById('patientGender').value,
+                location:document.getElementById('patientLocation').value,
+                contact:document.getElementById('patientContact').value,
+                condition:document.getElementById('patientCondition').value,
+                date:document.getElementById('patientDate').value,
+                featured:id? (patients.find(p=>p.id===id)?.featured||false):false 
+            }; 
+            if(id){ let idx=patients.findIndex(p=>p.id===id); if(idx!==-1) patients[idx]=newPatient; } 
+            else patients.push(newPatient); 
+            savePatients(); renderPatients(); updatePatientSelect(); 
+            document.getElementById('patientForm').reset(); 
+            document.getElementById('editId').value=''; 
+            document.getElementById('submitBtn').innerHTML='<i class="fas fa-save"></i> Registar Paciente'; 
+            document.getElementById('cancelEditBtn').style.display='none'; 
+        }
+        document.getElementById('cancelEditBtn').addEventListener('click',()=>{ document.getElementById('patientForm').reset(); document.getElementById('editId').value=''; document.getElementById('submitBtn').innerHTML='<i class="fas fa-save"></i> Registar Paciente'; document.getElementById('cancelEditBtn').style.display='none'; });
+        document.getElementById('generateQrBtn').addEventListener('click',()=>{ let id=document.getElementById('sharePatientSelect').value; if(id){ let pac=patients.find(p=>p.id==id); if(pac) showQRCode(pac); } else alert("Selecione paciente primeiro"); });
+        document.getElementById('shareFbBtn').addEventListener('click',()=>{ let pac=getSelectedPatient(); if(pac){ let msg=`🏥 ${pac.name} | ${pac.age} anos | Estado: ${pac.condition} | Contacto: ${pac.contact} | VITALINKA`; window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(msg)}`,'_blank'); } });
+        document.getElementById('shareWpBtn').addEventListener('click',()=>{ let pac=getSelectedPatient(); if(pac){ let msg=`🏥 ${pac.name} | Idade: ${pac.age} | Estado: ${pac.condition} | Contacto: ${pac.contact}`; window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank'); } });
+        document.getElementById('shareIgBtn').addEventListener('click',()=>{ let pac=getSelectedPatient(); if(pac) alert(`Copie a legenda: ${pac.name} - ${pac.condition} - Contacto: ${pac.contact}. Use #VITALINKA`); });
+        function getSelectedPatient(){ let id=document.getElementById('sharePatientSelect').value; if(!id){ alert("Selecione paciente"); return null; } return patients.find(p=>p.id==id); }
+
+        // CHATBOT
+        function getAnswer(q){ let pac=patients.find(p=>p.featured)||patients[0]; if(!pac && q!=='social' && q!=='contato') return "Cadastre pacientes primeiro."; if(q==='paciente') return `🩺 Paciente: ${pac?.name||'N/D'} | Estado: ${pac?.condition||'N/D'} | Contacto: ${pac?.contact||'N/D'}`; if(q==='procedimento') return `📋 Procedimentos disponíveis: consultas, exames, internamento, cirurgias, urgências.`; if(q==='local') return `📍 Hospital Regional de Malanje, Angola`; if(q==='contato') return `📞 Telefone: ${document.getElementById('hospitalPhone').innerText}`; if(q==='social') return "Serviços: Urgência, Internamento, Consultas, Exames, Cirurgia, Maternidade."; return "Pergunte sobre pacientes, procedimentos ou localização."; }
+        document.querySelectorAll('.faq-question').forEach(btn=>btn.addEventListener('click',()=>{ let chat=document.getElementById('chatWindow'); let msg=document.createElement('div'); msg.className='chat-message bg-success bg-opacity-25'; msg.innerHTML=`<i class="fas fa-robot"></i> ${getAnswer(btn.dataset.question)}`; chat.appendChild(msg); chat.scrollTop=chat.scrollHeight; }));
+        document.getElementById('sendChatBtn').addEventListener('click',()=>{ let inp=document.getElementById('chatInput'); let txt=inp.value.trim(); if(!txt) return; let chat=document.getElementById('chatWindow'); let userMsg=document.createElement('div'); userMsg.className='chat-message bg-primary bg-opacity-25 text-end'; userMsg.innerHTML=`<i class="fas fa-user"></i> ${txt}`; chat.appendChild(userMsg); let lower=txt.toLowerCase(); let answer=""; if(lower.includes('paciente')||lower.includes('estado')) answer=getAnswer('paciente'); else if(lower.includes('proced')) answer=getAnswer('procedimento'); else if(lower.includes('local')) answer=getAnswer('local'); else if(lower.includes('contacto')||lower.includes('telefone')) answer=getAnswer('contato'); else answer=getAnswer('social'); let botMsg=document.createElement('div'); botMsg.className='chat-message bg-success bg-opacity-25'; botMsg.innerHTML=`<i class="fas fa-robot"></i> ${answer}`; chat.appendChild(botMsg); chat.scrollTop=chat.scrollHeight; inp.value=''; });
+        document.getElementById('sendRequestBtn').addEventListener('click',()=>{ let nome=document.getElementById('reqName').value; if(!nome) return alert("Preencha nome"); alert(`Pedido enviado com sucesso! Obrigado ${nome}.`); document.getElementById('reqName').value=''; document.getElementById('reqMessage').value=''; });
+
+        // ================== CONTRATO + ASSINATURA DIGITAL + PDF ==================
+        let signatureDataURL = null;
+        canvas = document.getElementById('signatureCanvas');
+        drawCtx = canvas.getContext('2d');
+        function resizeCanvas(){ let container = canvas.parentElement; let width = container.clientWidth; canvas.width = width; canvas.height = 140; drawCtx.fillStyle = '#fff'; drawCtx.fillRect(0,0,canvas.width,canvas.height); drawCtx.strokeStyle = '#1e4d2e'; drawCtx.lineWidth = 2; drawCtx.lineCap = 'round'; }
+        window.addEventListener('resize', resizeCanvas);
+        let drawing = false;
+        function startDraw(e){ drawing=true; let rect=canvas.getBoundingClientRect(); let x=(e.clientX-rect.left)*(canvas.width/rect.width); let y=(e.clientY-rect.top)*(canvas.height/rect.height); drawCtx.beginPath(); drawCtx.moveTo(x,y); drawCtx.lineTo(x,y); drawCtx.stroke(); }
+        function drawMove(e){ if(!drawing) return; let rect=canvas.getBoundingClientRect(); let x=(e.clientX-rect.left)*(canvas.width/rect.width); let y=(e.clientY-rect.top)*(canvas.height/rect.height); drawCtx.lineTo(x,y); drawCtx.stroke(); drawCtx.beginPath(); drawCtx.moveTo(x,y); }
+        function endDraw(){ drawing=false; drawCtx.beginPath(); signatureDataURL = canvas.toDataURL(); }
+        canvas.addEventListener('mousedown', startDraw); canvas.addEventListener('mousemove', drawMove); canvas.addEventListener('mouseup', endDraw); canvas.addEventListener('touchstart', (e)=>{ e.preventDefault(); let touch=e.touches[0]; startDraw(touch); }); canvas.addEventListener('touchmove', (e)=>{ e.preventDefault(); let touch=e.touches[0]; drawMove(touch); }); canvas.addEventListener('touchend', endDraw);
+        document.getElementById('clearCanvasBtn').addEventListener('click',()=>{ drawCtx.clearRect(0,0,canvas.width,canvas.height); drawCtx.fillStyle='#fff'; drawCtx.fillRect(0,0,canvas.width,canvas.height); signatureDataURL=null; });
+        document.getElementById('chooseTypeText').addEventListener('click',()=>{ document.getElementById('textSignatureDiv').style.display='block'; document.getElementById('drawSignatureDiv').style.display='none'; });
+        document.getElementById('chooseTypeDraw').addEventListener('click',()=>{ document.getElementById('textSignatureDiv').style.display='none'; document.getElementById('drawSignatureDiv').style.display='block'; resizeCanvas(); });
+        
+        function loadSignatures(){ let signs=JSON.parse(localStorage.getItem('vitalinka_signatures')||'[]'); let list=document.getElementById('signatureList'); list.innerHTML=''; signs.slice(-5).reverse().forEach(s=>{ let li=document.createElement('li'); li.innerHTML=`<i class="fas fa-check-circle text-success"></i> ${s.name} (${s.doc}) - ${s.date}`; list.appendChild(li); }); }
+        
+        // FUNÇÃO PARA GERAR PDF DO CONTRATO ASSINADO
+        async function gerarPDF(record, signatureValue, signatureType) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+            const pageWidth = doc.internal.pageSize.getWidth();
+            let y = 20;
+            
+            doc.setFontSize(18);
+            doc.setFont(undefined, 'bold');
+            doc.text("VITALINKA - Termos de Responsabilidade e Privacidade", pageWidth / 2, y, { align: 'center' });
+            y += 10;
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'normal');
+            doc.text(`Data: ${record.date}`, 20, y);
+            y += 8;
+            
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.text("Dados do Profissional:", 20, y);
+            y += 6;
+            doc.setFont(undefined, 'normal');
+            doc.text(`Nome completo: ${record.name}`, 20, y); y += 5;
+            doc.text(`Nº Ordem/Cédula: ${record.doc}`, 20, y); y += 8;
+            
+            doc.setFont(undefined, 'bold');
+            doc.text("Cláusulas principais:", 20, y); y += 6;
+            doc.setFont(undefined, 'normal');
+            const termos = [
+                "1. Objectivo: informatizar a gestão de pacientes com integridade dos dados.",
+                "2. Responsabilidade: profissionais asseguram veracidade das informações.",
+                "3. Privacidade: dados protegidos pela Lei de Protecção de Dados.",
+                "4. Consentimento: aceitação das políticas de uso e segurança."
+            ];
+            termos.forEach(t => { doc.text(t, 20, y); y += 5; });
+            y += 5;
+            
+            doc.setFont(undefined, 'bold');
+            doc.text("Pacientes em gestão no momento da assinatura:", 20, y); y += 6;
+            doc.setFont(undefined, 'normal');
+            if (patients.length === 0) {
+                doc.text("Nenhum paciente registado.", 20, y); y += 5;
+            } else {
+                patients.forEach(pac => {
+                    doc.text(`- ${pac.name}: ${pac.age} anos · ${pac.condition} · ${pac.location}`, 20, y);
+                    y += 5;
+                    if (y > 270) { doc.addPage(); y = 20; }
+                });
+            }
+            y += 8;
+            
+            doc.setFont(undefined, 'bold');
+            doc.text("Assinatura digital:", 20, y); y += 8;
+            if (signatureType === 'texto') {
+                doc.setFont(undefined, 'italic');
+                doc.text(`Assinatura por texto: ${signatureValue}`, 20, y);
+            } else {
+                try {
+                    const imgData = signatureValue;
+                    const imgWidth = 60;
+                    const imgHeight = 25;
+                    doc.addImage(imgData, 'PNG', 20, y, imgWidth, imgHeight);
+                    y += imgHeight + 5;
+                    doc.text("(assinatura manuscrita digitalizada)", 20, y);
+                } catch(e) { doc.text("(imagem da assinatura não disponível)", 20, y); }
+            }
+            y += 12;
+            
+            doc.setFontSize(9);
+            doc.setTextColor(100);
+            doc.text("Documento gerado electronicamente pelo sistema VITALINKA. O profissional declara que leu e aceita todos os termos.", 20, y);
+            
+            doc.save(`Termos_VITALINKA_${record.name.replace(/\s/g,'_')}.pdf`);
+        }
+        
+        // LISTENER PRINCIPAL DO BOTÃO ASSINAR
+        document.getElementById('signContractBtn').addEventListener('click', async () => {
+            let name = document.getElementById('signerName').value.trim();
+            let docNum = document.getElementById('signerDoc').value.trim();
+            let accept = document.getElementById('acceptTermsCheckbox').checked;
+            if (!name || !docNum) { alert("Preencha nome completo e documento profissional."); return; }
+            if (!accept) { alert("Deve aceitar os termos de responsabilidade e privacidade."); return; }
+            
+            let signatureValue = "";
+            let signatureType = "";
+            let isTextVisible = document.getElementById('textSignatureDiv').style.display !== 'none';
+            if (isTextVisible) {
+                signatureValue = document.getElementById('textSignature').value.trim();
+                if (!signatureValue) signatureValue = name;
+                signatureType = "texto";
+            } else {
+                if (!signatureDataURL) { alert("Desenhe a sua assinatura no quadro acima."); return; }
+                signatureValue = signatureDataURL;
+                signatureType = "desenho";
+            }
+            
+            let now = new Date().toLocaleString('pt-PT');
+            let contractRecord = { name: name, doc: docNum, signature: signatureValue, signatureType: signatureType, date: now, termsAccepted: true };
+            let signatures = JSON.parse(localStorage.getItem('vitalinka_signatures') || '[]');
+            signatures.unshift(contractRecord);
+            localStorage.setItem('vitalinka_signatures', JSON.stringify(signatures));
+            loadSignatures();
+            
+            alert(`✅ Termos assinados digitalmente por ${name} em ${now}. Obrigado!`);
+            
+            // GERAR PDF AUTOMATICAMENTE
+            await gerarPDF(contractRecord, signatureValue, signatureType);
+            
+            // Limpar campos
+            document.getElementById('signerName').value = '';
+            document.getElementById('signerDoc').value = '';
+            document.getElementById('textSignature').value = '';
+            drawCtx.clearRect(0, 0, canvas.width, canvas.height);
+            drawCtx.fillStyle = '#fff';
+            drawCtx.fillRect(0, 0, canvas.width, canvas.height);
+            signatureDataURL = null;
+            document.getElementById('acceptTermsCheckbox').checked = false;
+        });
+        
+        loadSignatures();
+        // theme / language
+        function applyTheme(isLight){ if(isLight) document.body.classList.add('light'); else document.body.classList.remove('light'); document.getElementById('themeToggleCheckbox').checked=isLight; localStorage.setItem('vitalinka_theme', isLight?'light':'dark'); }
+        document.getElementById('themeToggleCheckbox').addEventListener('change',(e)=>applyTheme(e.target.checked));
+        if(localStorage.getItem('vitalinka_theme')==='light') applyTheme(true); else applyTheme(false);
+        document.getElementById('langToggleBtn').addEventListener('click',()=>{ alert("Idioma actual: Português. Funcionalidade multilíngue em breve."); });
+        loadPatients(); resizeCanvas();
+    </script>
+</body>
+</html>

@@ -1,0 +1,2997 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informações Úteis - Turismo Malanje</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        /* Estilo geral - Glassmorphism */
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-image: url('images/info.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Tema Claro */
+        body.light-theme::before {
+            background: rgba(255, 255, 255, 0.88);
+        }
+
+        body.light-theme .page-title,
+        body.light-theme .info-card .card-title,
+        body.light-theme .info-card .info-label,
+        body.light-theme .info-card .info-value,
+        body.light-theme .glass-card h5,
+        body.light-theme .glass-card p,
+        body.light-theme .glass-card .text-muted,
+        body.light-theme .faq-item .faq-question,
+        body.light-theme .faq-item .faq-answer,
+        body.light-theme .team-card h6,
+        body.light-theme .team-card p,
+        body.light-theme .team-card .bio,
+        body.light-theme .banner-message,
+        body.light-theme .nav-tabs .nav-link,
+        body.light-theme .modal-content,
+        body.light-theme .modal .form-label {
+            color: #1a1a2e !important;
+        }
+
+        body.light-theme .nav-tabs .nav-link {
+            color: #1a1a2e !important;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        body.light-theme .nav-tabs .nav-link.active {
+            background: rgba(255, 255, 255, 0.8);
+            color: #0d6efd !important;
+        }
+
+        body.light-theme .tab-content,
+        body.light-theme .glass-card,
+        body.light-theme .info-card,
+        body.light-theme .faq-item,
+        body.light-theme .team-card,
+        body.light-theme .banner-content,
+        body.light-theme .filter-section,
+        body.light-theme .chart-container,
+        body.light-theme .assistant-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .filter-section .form-control,
+        body.light-theme .filter-section .form-select {
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a2e;
+            border-color: rgba(0, 0, 0, 0.15);
+        }
+
+        body.light-theme .filter-section .form-control::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        body.light-theme #currentDateTime {
+            background: rgba(255, 255, 255, 0.8);
+            color: #1a1a2e;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a2e;
+        }
+
+        body.light-theme .modal .form-control {
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a2e;
+            border-color: rgba(0, 0, 0, 0.15);
+        }
+
+        body.light-theme .theme-toggle-btn {
+            background: rgba(0, 0, 0, 0.08);
+            border-color: rgba(0, 0, 0, 0.15);
+            color: #1a1a2e;
+        }
+
+        body.light-theme .theme-toggle-btn:hover {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        body.light-theme .quick-actions .btn-outline-secondary {
+            background: rgba(108, 117, 125, 0.2);
+            color: #1a1a2e;
+        }
+
+        body.light-theme .quick-actions .btn-primary {
+            background: rgba(13, 110, 253, 0.8);
+        }
+
+        body.light-theme .quick-actions .btn-success {
+            background: rgba(25, 135, 84, 0.8);
+        }
+
+        body.light-theme .quick-actions .btn-info {
+            background: rgba(13, 202, 240, 0.8);
+            color: #000;
+        }
+
+        body.light-theme .quick-actions .btn-warning {
+            background: rgba(255, 193, 7, 0.8);
+            color: #000;
+        }
+
+        body.light-theme .quick-actions .btn-danger {
+            background: rgba(220, 53, 69, 0.8);
+        }
+
+        body.light-theme .quick-actions .btn-outline-dark {
+            color: #1a1a2e;
+            border-color: rgba(0, 0, 0, 0.2);
+        }
+
+        body.light-theme .quick-actions .btn-outline-dark:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-theme .team-card .social-links a {
+            color: #1a1a2e;
+        }
+
+        body.light-theme .team-card .social-links a:hover {
+            color: #0d6efd;
+        }
+
+        body.light-theme .assistant-card {
+            background: linear-gradient(135deg, rgba(240, 147, 251, 0.85) 0%, rgba(245, 87, 108, 0.85) 100%);
+        }
+
+        body.light-theme .team-card .avatar {
+            border-color: rgba(13, 110, 253, 0.3);
+        }
+
+        body.light-theme .attraction-card .attraction-info h6 {
+            color: #1a1a2e;
+        }
+
+        body.light-theme .attraction-card .attraction-info p {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        body.light-theme .attraction-card {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .dropdown-menu {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(15px);
+        }
+
+        body.light-theme .dropdown-item {
+            color: #1a1a2e !important;
+        }
+
+        body.light-theme .dropdown-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .container-fluid {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-card h5 {
+            color: #fff;
+            font-family: 'Times New Roman', Times, serif;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .glass-card .info-label {
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .glass-card .info-value {
+            color: #fff;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .glass-card .icon-big {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .glass-card p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .glass-card .text-muted {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        /* Banner Principal */
+        .banner-content {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .banner-content h1 {
+            color: #fff;
+            font-family: 'Times New Roman', Times, serif;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .banner-content .banner-message {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+        }
+
+        .banner-content .btn-group .btn {
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .banner-content .btn-group .btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Tabs */
+        .nav-tabs .nav-link {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 16px;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin-right: 5px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-tabs .nav-link:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .nav-tabs .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: #fff;
+            border-bottom: 3px solid #0d6efd;
+            font-weight: bold;
+            box-shadow: 0 -2px 20px rgba(13, 110, 253, 0.3);
+        }
+
+        .tab-content {
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 0 8px 8px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        /* FAQ */
+        .faq-item {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .faq-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .faq-item .faq-question {
+            padding: 15px 20px;
+            color: #fff;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-item .faq-answer {
+            padding: 0 20px 15px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            display: none;
+        }
+
+        .faq-item .faq-answer.show {
+            display: block;
+        }
+
+        /* Team Cards */
+        .team-card {
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .team-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .team-card .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(13, 110, 253, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #fff;
+            margin: 0 auto 15px auto;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .team-card .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team-card:hover .avatar {
+            transform: scale(1.05);
+            border-color: rgba(13, 110, 253, 0.6);
+        }
+
+        .team-card h6 {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .team-card .role {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .team-card .bio {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            margin: 10px 0;
+        }
+
+        .team-card .social-links a {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0 8px;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .team-card .social-links a:hover {
+            color: #0d6efd;
+            transform: translateY(-2px);
+        }
+
+        .team-card .stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .team-card .stats .stat-item {
+            text-align: center;
+        }
+
+        .team-card .stats .stat-number {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .team-card .stats .stat-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.7rem;
+        }
+
+        /* Assistente */
+        .assistant-card {
+            background: rgba(240, 147, 251, 0.25);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .assistant-card .bi-robot {
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+
+        .assistant-card h5 {
+            color: #fff;
+        }
+
+        .assistant-card p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .assistant-card .chat-input {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 15px;
+            color: #fff;
+            width: 80%;
+        }
+
+        .assistant-card .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .assistant-card .chat-input:focus {
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+        }
+
+        /* Page Title */
+        .page-title {
+            font-family: 'Times New Roman', Times, serif;
+            color: #fff;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-title .badge {
+            background: rgba(13, 110, 253, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: rotate(30deg);
+        }
+
+        /* Quick Actions */
+        .quick-actions .btn {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 3px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .quick-actions .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .quick-actions .btn-primary {
+            background: rgba(13, 110, 253, 0.6);
+        }
+
+        .quick-actions .btn-success {
+            background: rgba(25, 135, 84, 0.6);
+        }
+
+        .quick-actions .btn-info {
+            background: rgba(13, 202, 240, 0.6);
+        }
+
+        .quick-actions .btn-warning {
+            background: rgba(255, 193, 7, 0.6);
+        }
+
+        .quick-actions .btn-danger {
+            background: rgba(220, 53, 69, 0.6);
+        }
+
+        .quick-actions .btn-outline-secondary {
+            background: rgba(108, 117, 125, 0.3);
+            color: #fff;
+        }
+
+        .quick-actions .btn-outline-dark {
+            background: rgba(33, 37, 41, 0.3);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .quick-actions .btn-outline-dark:hover {
+            background: rgba(33, 37, 41, 0.5);
+            color: #fff;
+        }
+
+        #currentDateTime {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: rgba(13, 110, 253, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-primary:hover {
+            background: rgba(13, 110, 253, 0.8);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Modal */
+        .modal-content {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal .btn-close {
+            filter: invert(1);
+        }
+
+        .modal .form-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .modal .form-control,
+        .modal .form-select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .modal .form-control:focus,
+        .modal .form-select:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(13, 110, 253, 0.5);
+        }
+
+        .modal .form-select option {
+            background: #2c3e50;
+            color: #fff;
+        }
+
+        /* Estilo para os cards de gastronomia com imagens */
+        .dish-card {
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.4s ease;
+            height: 100%;
+        }
+
+        .dish-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .dish-card .dish-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+        }
+
+        .dish-card:hover .dish-image {
+            transform: scale(1.05);
+        }
+
+        .dish-card .dish-info {
+            padding: 15px;
+        }
+
+        .dish-card .dish-info h6 {
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .dish-card .dish-info p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        .dish-card .dish-info .dish-price {
+            color: #ffc107;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        body.light-theme .dish-card {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .dish-card .dish-info h6 {
+            color: #1a1a2e;
+        }
+
+        body.light-theme .dish-card .dish-info p {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        body.light-theme .dish-card .dish-info .dish-price {
+            color: #e67e22;
+        }
+
+        /* Estilo para os cards de atrações turísticas com imagens */
+        .attraction-card {
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.4s ease;
+            height: 100%;
+        }
+
+        .attraction-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .attraction-card .attraction-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+        }
+
+        .attraction-card:hover .attraction-image {
+            transform: scale(1.05);
+        }
+
+        .attraction-card .attraction-info {
+            padding: 15px;
+        }
+
+        .attraction-card .attraction-info h6 {
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .attraction-card .attraction-info p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        .attraction-card .attraction-info .attraction-location {
+            color: #ffc107;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        body.light-theme .attraction-card {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-theme .attraction-card .attraction-info h6 {
+            color: #1a1a2e;
+        }
+
+        body.light-theme .attraction-card .attraction-info p {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        body.light-theme .attraction-card .attraction-info .attraction-location {
+            color: #e67e22;
+        }
+
+        /* Estilo para o mapa OSM */
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .leaflet-control-zoom a {
+            background: rgba(255, 255, 255, 0.9) !important;
+            color: #1a1a2e !important;
+        }
+
+        .leaflet-popup-content-wrapper {
+            background: rgba(255, 255, 255, 0.95) !important;
+            color: #1a1a2e !important;
+            border-radius: 10px !important;
+        }
+
+        .leaflet-popup-tip {
+            background: rgba(255, 255, 255, 0.95) !important;
+        }
+
+        body.light-theme #map {
+            border-color: rgba(0, 0, 0, 0.15);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Dropdown de idioma */
+        .dropdown-menu {
+            background: rgba(0, 0, 0, 0.85) !important;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .dropdown-item {
+            color: #fff !important;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(13, 110, 253, 0.3) !important;
+            color: #fff !important;
+        }
+
+        .dropdown-item .flag {
+            margin-right: 8px;
+        }
+
+        /* Estilo para o botão de idioma */
+        .btn-outline-primary.dropdown-toggle {
+            color: #fff !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .btn-outline-primary.dropdown-toggle:hover {
+            background: rgba(13, 110, 253, 0.3) !important;
+            border-color: rgba(13, 110, 253, 0.5) !important;
+        }
+
+        .btn-outline-primary.dropdown-toggle::after {
+            border-top-color: #fff;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .banner-content {
+                padding: 20px;
+            }
+            .banner-content h1 {
+                font-size: 1.5rem;
+            }
+            .tab-content {
+                padding: 15px;
+            }
+            .header-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .page-title {
+                font-size: 1.3rem;
+            }
+            .team-card .avatar {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+            .quick-actions .btn {
+                font-size: 0.85rem;
+                padding: 5px 10px;
+            }
+            .dish-card .dish-image,
+            .attraction-card .attraction-image {
+                height: 150px;
+            }
+            #map {
+                height: 300px;
+            }
+        }
+
+        .team-photo-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .team-photo-container img {
+            max-width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .team-photo-container img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+        }
+
+        .team-photo-container .photo-caption {
+            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
+        }
+
+        body.light-theme .team-photo-container .photo-caption {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        body.light-theme .team-photo-container img {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- Cabeçalho -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap header-actions">
+                    <h2 class="page-title" data-i18n="page-title">
+                        <i class="bi bi-info-circle-fill text-primary"></i> 
+                        <span class="title-text">Informações Úteis</span>
+                        <span class="badge bg-primary ms-2">TURISTA</span>
+                    </h2>
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- Alternador de Tema -->
+                        <button class="theme-toggle-btn" id="themeToggle" title="Alternar Tema">
+                            <i class="bi bi-moon-stars" id="themeIcon"></i>
+                        </button>
+                        
+                        <!-- Botão Dicionário com Modal Verdadeiro -->
+                        <button class="btn btn-outline-warning" type="button" data-bs-toggle="modal" data-bs-target="#dictionaryModal" style="color: #fff; border-color: rgba(255,255,255,0.2);">
+                            <i class="bi bi-book"></i> <span data-i18n="dictionary">Dicionário</span>
+                        </button>
+
+                        <!-- Dropdown de Idiomas com Modal Verdadeiro -->
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" style="color: #fff; border-color: rgba(255,255,255,0.2);">
+                                <i class="bi bi-globe"></i> <span data-i18n="language">Idioma</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" data-lang="pt"><span class="flag">🇦🇴</span> Português</a></li>
+                                <li><a class="dropdown-item" href="#" data-lang="en"><span class="flag">🇬🇧</span> English</a></li>
+                                <li><a class="dropdown-item" href="#" data-lang="fr"><span class="flag">🇫🇷</span> Français</a></li>
+                                <li><a class="dropdown-item" href="#" data-lang="es"><span class="flag">🇪🇸</span> Español</a></li>
+                            </ul>
+                        </div>
+
+                        <span class="badge bg-info text-dark" id="currentDateTime">
+                            <i class="bi bi-clock"></i> 
+                            <span id="dateTimeDisplay">Carregando...</span>
+                        </span>
+
+                        <div class="input-group" style="width: 250px;">
+                            <input type="text" id="quickSearch" class="form-control" placeholder="🔍 Pesquisar...">
+                            <button class="btn btn-outline-primary" type="button">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Banner Principal com Imagem -->
+        <div class="banner-content fade-in">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <h1><i class="bi bi-pin-map"></i> <span data-i18n="banner-title">Tudo o que precisa saber antes de visitar Malanje</span></h1>
+                    <p class="banner-message" data-i18n="banner-subtitle">Explore as belezas naturais, cultura e hospitalidade da província de Malanje</p>
+                    <div class="btn-group flex-wrap justify-content-center mt-3">
+                        <button class="btn btn-primary" onclick="scrollToTab('gerais')"><i class="bi bi-info-circle"></i> <span data-i18n="tab-gerais">Informações Gerais</span></button>
+                        <button class="btn btn-success" onclick="scrollToTab('emergencias')"><i class="bi bi-exclamation-triangle"></i> <span data-i18n="tab-emergencias">Emergências</span></button>
+                        <button class="btn btn-warning" onclick="scrollToTab('clima')"><i class="bi bi-sun"></i> <span data-i18n="tab-clima">Clima</span></button>
+                        <button class="btn btn-info" onclick="scrollToTab('transportes')"><i class="bi bi-bus-front"></i> <span data-i18n="tab-transportes">Transportes</span></button>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <a href="enciclopedia.html">
+                        <img src="images/malanje.png" 
+                             alt="Paisagem de Malanje" class="img-fluid rounded-3" style="max-height: 250px; width: 100%; object-fit: cover; border: 2px solid rgba(255,255,255,0.2);">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs" id="infoTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="gerais-tab" data-bs-toggle="tab" data-bs-target="#gerais" type="button" role="tab">
+                    <i class="bi bi-globe2"></i> <span data-i18n="tab-gerais">Gerais</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="clima-tab" data-bs-toggle="tab" data-bs-target="#clima" type="button" role="tab">
+                    <i class="bi bi-sun"></i> <span data-i18n="tab-clima">Clima</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="transportes-tab" data-bs-toggle="tab" data-bs-target="#transportes" type="button" role="tab">
+                    <i class="bi bi-bus-front"></i> <span data-i18n="tab-transportes">Transportes</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="hospedagem-tab" data-bs-toggle="tab" data-bs-target="#hospedagem" type="button" role="tab">
+                    <i class="bi bi-building"></i> <span data-i18n="tab-hospedagem">Hospedagem</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="gastronomia-tab" data-bs-toggle="tab" data-bs-target="#gastronomia" type="button" role="tab">
+                    <i class="bi bi-egg-fried"></i> <span data-i18n="tab-gastronomia">Gastronomia</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="emergencias-tab" data-bs-toggle="tab" data-bs-target="#emergencias" type="button" role="tab">
+                    <i class="bi bi-shield"></i> <span data-i18n="tab-emergencias">Emergências</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="saude-tab" data-bs-toggle="tab" data-bs-target="#saude" type="button" role="tab">
+                    <i class="bi bi-heart-pulse"></i> <span data-i18n="tab-saude">Saúde</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="cambio-tab" data-bs-toggle="tab" data-bs-target="#cambio" type="button" role="tab">
+                    <i class="bi bi-currency-exchange"></i> <span data-i18n="tab-cambio">Câmbio</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="mapa-tab" data-bs-toggle="tab" data-bs-target="#mapa" type="button" role="tab">
+                    <i class="bi bi-map"></i> <span data-i18n="tab-mapa">Mapa</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="faq-tab" data-bs-toggle="tab" data-bs-target="#faq" type="button" role="tab">
+                    <i class="bi bi-question-circle"></i> <span data-i18n="tab-faq">FAQ</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="equipa-tab" data-bs-toggle="tab" data-bs-target="#equipa" type="button" role="tab">
+                    <i class="bi bi-people-fill"></i> <span data-i18n="tab-equipa">Equipa</span>
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="infoTabContent">
+            <!-- Aba Gerais com Imagens -->
+            <div class="tab-pane fade show active" id="gerais" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-globe2 text-primary"></i> <span data-i18n="gerais-title">Informações Gerais</span></h5>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="info-label"><span data-i18n="gerais-capital">Capital da Província</span></div>
+                                    <div class="info-value">Malanje</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="info-label"><span data-i18n="gerais-currency">Moeda</span></div>
+                                    <div class="info-value">Kwanza (AOA)</div>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <div class="info-label"><span data-i18n="gerais-language">Idioma Oficial</span></div>
+                                    <div class="info-value">Português</div>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <div class="info-label"><span data-i18n="gerais-timezone">Fuso Horário</span></div>
+                                    <div class="info-value">UTC+1</div>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <div class="info-label"><span data-i18n="gerais-population">População</span></div>
+                                    <div class="info-value">~1.2 milhões</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-star text-warning"></i> <span data-i18n="gerais-attractions">Atrações Turísticas</span></h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="attraction-card">
+                                        <img src="images/quedas.png" alt="Quedas de Kalandula" class="attraction-image">
+                                        <div class="attraction-info">
+                                            <h6>💧 <span data-i18n="attr-kalandula">Quedas de Kalandula</span></h6>
+                                            <p data-i18n="attr-kalandula-desc">Uma das maiores quedas de água de Angola, com 105 metros de altura.</p>
+                                            <div class="attraction-location"><i class="bi bi-geo-alt"></i> <span data-i18n="attr-kalandula-loc">Kalandula, Malanje</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="attraction-card">
+                                        <img src="images/pungo-an-dongo.png" alt="Pedras Negras de Pungo Andongo" class="attraction-image">
+                                        <div class="attraction-info">
+                                            <h6>⛰️ <span data-i18n="attr-pungo">Pedras Negras de Pungo Andongo</span></h6>
+                                            <p data-i18n="attr-pungo-desc">Formações rochosas imponentes com valor histórico e cultural.</p>
+                                            <div class="attraction-location"><i class="bi bi-geo-alt"></i> <span data-i18n="attr-pungo-loc">Pungo Andongo, Malanje</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="attraction-card">
+                                        <img src="images/parque-cangandala.png" alt="Parque Nacional da Cangandala" class="attraction-image">
+                                        <div class="attraction-info">
+                                            <h6>🌿 <span data-i18n="attr-cangandala">Parque Nacional da Cangandala</span></h6>
+                                            <p data-i18n="attr-cangandala-desc">Santuario da Palanca Negra Gigante, espécie endémica de Angola.</p>
+                                            <div class="attraction-location"><i class="bi bi-geo-alt"></i> <span data-i18n="attr-cangandala-loc">Cangandala, Malanje</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="attraction-card">
+                                        <img src="images/museu-malanje.jpg" alt="Museu Regional de Malanje" class="attraction-image">
+                                        <div class="attraction-info">
+                                            <h6>🏛️ <span data-i18n="attr-museum">Museu Regional de Malanje</span></h6>
+                                            <p data-i18n="attr-museum-desc">Acervo histórico e cultural da província de Malanje.</p>
+                                            <div class="attraction-location"><i class="bi bi-geo-alt"></i> <span data-i18n="attr-museum-loc">Centro de Malanje</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="attraction-card">
+                                        <img src="images/forte.jpg" alt="Forte de Pungo Andongo" class="attraction-image">
+                                        <div class="attraction-info">
+                                            <h6>🏰 <span data-i18n="attr-forte">Forte de Pungo Andongo</span></h6>
+                                            <p data-i18n="attr-forte-desc">Construção histórica do período colonial português.</p>
+                                            <div class="attraction-location"><i class="bi bi-geo-alt"></i> <span data-i18n="attr-forte-loc">Pungo Andongo, Malanje</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="attraction-card">
+                                        <img src="images/muceque.jpg" alt="Lagoa do Muceque" class="attraction-image">
+                                        <div class="attraction-info">
+                                            <h6>🏞️ <span data-i18n="attr-muceque">Lagoa do Muceque</span></h6>
+                                            <p data-i18n="attr-muceque-desc">Lagoa com águas cristalinas e paisagem deslumbrante.</p>
+                                            <div class="attraction-location"><i class="bi bi-geo-alt"></i> <span data-i18n="attr-muceque-loc">Muceque, Malanje</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aba Clima com Imagens -->
+            <div class="tab-pane fade" id="clima" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-thermometer-half text-warning"></i> <span data-i18n="clima-current">Clima Atual</span></h5>
+                            <div class="text-center">
+                                <span style="font-size: 3rem; color: #ffc107;">☀️</span>
+                                <div style="font-size: 2.5rem; color: #fff;">28°C</div>
+                                <div style="color: rgba(255,255,255,0.7);"><span data-i18n="clima-sunny">Ensolarado</span></div>
+                                <div class="mt-2" style="color: rgba(255,255,255,0.6);">
+                                    <i class="bi bi-droplet"></i> <span data-i18n="clima-humidity">Umidade</span>: 45% | 
+                                    <i class="bi bi-wind"></i> <span data-i18n="clima-wind">Vento</span>: 12 km/h
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <img src="https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?w=600&h=150&fit=crop&crop=center" 
+                                     alt="Clima de Malanje" class="img-fluid rounded-3" style="width: 100%; max-height: 120px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-calendar-week text-info"></i> <span data-i18n="clima-forecast">Previsão para 7 Dias</span></h5>
+                            <div class="row text-center">
+                                <div class="col"><span style="color: #ffc107;">☀️</span><br><small style="color: rgba(255,255,255,0.7);" data-i18n="day-mon">Seg</small><br><span style="color: #fff;">27°</span></div>
+                                <div class="col"><span style="color: #ffc107;">☀️</span><br><small style="color: rgba(255,255,255,0.7);" data-i18n="day-tue">Ter</small><br><span style="color: #fff;">29°</span></div>
+                                <div class="col"><span style="color: #ffc107;">⛅</span><br><small style="color: rgba(255,255,255,0.7);" data-i18n="day-wed">Qua</small><br><span style="color: #fff;">26°</span></div>
+                                <div class="col"><span style="color: #6c757d;">🌧️</span><br><small style="color: rgba(255,255,255,0.7);" data-i18n="day-thu">Qui</small><br><span style="color: #fff;">22°</span></div>
+                                <div class="col"><span style="color: #ffc107;">☀️</span><br><small style="color: rgba(255,255,255,0.7);" data-i18n="day-fri">Sex</small><br><span style="color: #fff;">28°</span></div>
+                                <div class="col"><span style="color: #ffc107;">☀️</span><br><small style="color: rgba(255,255,255,0.7);" data-i18n="day-sat">Sáb</small><br><span style="color: #fff;">30°</span></div>
+                                <div class="col"><span style="color: #ffc107;">⛅</span><br><small style="color: rgba(255,255,255,0.7);" data-i18n="day-sun">Dom</small><br><span style="color: #fff;">27°</span></div>
+                            </div>
+                            <div class="mt-3 text-center" style="color: rgba(255,255,255,0.6);">
+                                <i class="bi bi-info-circle"></i> <span data-i18n="clima-best-season">Melhor época: Maio a Setembro (estação seca)</span>
+                            </div>
+                            <div class="mt-2">
+                                <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&h=100&fit=crop&crop=center" 
+                                     alt="Previsão do tempo" class="img-fluid rounded-3" style="width: 100%; max-height: 80px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aba Transportes com Imagens -->
+            <div class="tab-pane fade" id="transportes" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-bus-front text-info"></i> <span data-i18n="transport-title">Transportes em Malanje</span></h5>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="info-label"><span data-i18n="transport-taxi">Táxis</span></div>
+                                    <div class="info-value"><span data-i18n="transport-taxi-desc">Disponíveis 24h</span></div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="info-label"><span data-i18n="transport-moto">Moto-táxis</span></div>
+                                    <div class="info-value"><span data-i18n="transport-moto-desc">Rápidos e acessíveis</span></div>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <div class="info-label"><span data-i18n="transport-bus">Autocarros</span></div>
+                                    <div class="info-value"><span data-i18n="transport-bus-desc">Linhas urbanas e interurbanas</span></div>
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <div class="info-label"><span data-i18n="transport-rental">Aluguer de Viaturas</span></div>
+                                    <div class="info-value"><span data-i18n="transport-rental-desc">Diversas empresas disponíveis</span></div>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=150&fit=crop&crop=center" 
+                                     alt="Transportes em Malanje" class="img-fluid rounded-3" style="width: 100%; max-height: 120px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-pin-map text-danger"></i> <span data-i18n="transport-how">Como Chegar</span></h5>
+                            <ul style="color: rgba(255,255,255,0.8); list-style: none; padding-left: 0;">
+                                <li><i class="bi bi-airplane text-primary"></i> <span data-i18n="transport-airport">Aeroporto de Malanje (MEG)</span></li>
+                                <li><i class="bi bi-road text-success"></i> <span data-i18n="transport-road">Estrada Nacional EN-230 (Luanda-Malanje)</span></li>
+                                <li><i class="bi bi-train-front text-warning"></i> <span data-i18n="transport-train">Caminho de Ferro (CFB)</span></li>
+                            </ul>
+                            <div class="mt-3">
+                                <img src="https://images.unsplash.com/photo-1548213238-0da7521bd6e0?w=600&h=150&fit=crop&crop=center" 
+                                     alt="Como chegar a Malanje" class="img-fluid rounded-3" style="width: 100%; max-height: 120px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aba Hospedagem com Imagens -->
+            <div class="tab-pane fade" id="hospedagem" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="glass-card text-center">
+                            <i class="bi bi-building icon-big text-primary"></i>
+                            <h5><span data-i18n="hospedagem-hotels">Hotéis</span></h5>
+                            <p data-i18n="hospedagem-hotels-desc">Opções de luxo e conforto</p>
+                            <div class="info-label"><span data-i18n="hospedagem-contact">Contacto</span></div>
+                            <div class="info-value">+244 999 999 999</div>
+                            <div class="mt-2">
+                                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=300&h=150&fit=crop&crop=center" 
+                                     alt="Hotel em Malanje" class="img-fluid rounded-3" style="width: 100%; max-height: 100px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="glass-card text-center">
+                            <i class="bi bi-house-door icon-big text-success"></i>
+                            <h5><span data-i18n="hospedagem-pensions">Pensões</span></h5>
+                            <p data-i18n="hospedagem-pensions-desc">Alojamento económico</p>
+                            <div class="info-label"><span data-i18n="hospedagem-contact">Contacto</span></div>
+                            <div class="info-value">+244 999 999 998</div>
+                            <div class="mt-2">
+                                <img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?w=300&h=150&fit=crop&crop=center" 
+                                     alt="Pensão em Malanje" class="img-fluid rounded-3" style="width: 100%; max-height: 100px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="glass-card text-center">
+                            <i class="bi bi-tree icon-big text-warning"></i>
+                            <h5><span data-i18n="hospedagem-residential">Residenciais</span></h5>
+                            <p data-i18n="hospedagem-residential-desc">Ambiente familiar</p>
+                            <div class="info-label"><span data-i18n="hospedagem-contact">Contacto</span></div>
+                            <div class="info-value">+244 999 999 997</div>
+                            <div class="mt-2">
+                                <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=300&h=150&fit=crop&crop=center" 
+                                     alt="Residencial em Malanje" class="img-fluid rounded-3" style="width: 100%; max-height: 100px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aba Gastronomia com Imagens -->
+            <div class="tab-pane fade" id="gastronomia" role="tabpanel">
+                <div class="glass-card">
+                    <h5><i class="bi bi-egg-fried text-warning"></i> <span data-i18n="gastro-title">Gastronomia Típica de Malanje</span></h5>
+                    <p style="color: rgba(255,255,255,0.7);" data-i18n="gastro-subtitle">Descubra os sabores autênticos da culinária angolana</p>
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <div class="dish-card">
+                                <img src="images/calulu.png" alt="Calulu" class="dish-image">
+                                <div class="dish-info">
+                                    <h6>🍲 <span data-i18n="dish-calulu">Calulu</span></h6>
+                                    <p data-i18n="dish-calulu-desc">Guisado de carne ou peixe com quiabo, alface e legumes</p>
+                                    <div class="dish-price">💰 3.500 AOA</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="dish-card">
+                                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=200&fit=crop&crop=center" alt="Funje" class="dish-image">
+                                <div class="dish-info">
+                                    <h6>🍚 <span data-i18n="dish-funje">Funje</span></h6>
+                                    <p data-i18n="dish-funje-desc">Massa de farinha de milho ou mandioca, acompanhamento tradicional</p>
+                                    <div class="dish-price">💰 1.200 AOA</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="dish-card">
+                                <img src="images/muamba.png" alt="Muamba de Galinha" class="dish-image">
+                                <div class="dish-info">
+                                    <h6>🍗 <span data-i18n="dish-muamba">Muamba de Galinha</span></h6>
+                                    <p data-i18n="dish-muamba-desc">Frango estufado com óleo de palma, quiabo e gindungo</p>
+                                    <div class="dish-price">💰 4.200 AOA</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="dish-card">
+                                <img src="https://images.unsplash.com/photo-1574781334755-b0bb7678ff5b?w=400&h=200&fit=crop&crop=center" alt="Peixe Grelhado" class="dish-image">
+                                <div class="dish-info">
+                                    <h6>🐟 <span data-i18n="dish-fish">Peixe Grelhado</span></h6>
+                                    <p data-i18n="dish-fish-desc">Peixe fresco grelhado com pirão e salada</p>
+                                    <div class="dish-price">💰 3.800 AOA</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="dish-card">
+                                <img src="images/mufete.png" alt="Mufete" class="dish-image">
+                                <div class="dish-info">
+                                    <h6>🍖 <span data-i18n="dish-mufete">Mufete</span></h6>
+                                    <p data-i18n="dish-mufete-desc">Peixe grelhado com feijão, farofa e banana</p>
+                                    <div class="dish-price">💰 4.500 AOA</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="dish-card">
+                                <img src="https://images.unsplash.com/photo-1604908177343-a04499e62bfe?w=400&h=200&fit=crop&crop=center" alt="Caldeirada" class="dish-image">
+                                <div class="dish-info">
+                                    <h6>🥘 <span data-i18n="dish-caldeirada">Caldeirada</span></h6>
+                                    <p data-i18n="dish-caldeirada-desc">Ensopado de peixe com legumes e especiarias</p>
+                                    <div class="dish-price">💰 4.000 AOA</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="dish-card">
+                                <img src="images/banana-frita.png" alt="Banana Frita" class="dish-image">
+                                <div class="dish-info">
+                                    <h6>🍌 <span data-i18n="dish-banana">Banana Frita</span></h6>
+                                    <p data-i18n="dish-banana-desc">Banana da terra frita, acompanhamento ou sobremesa</p>
+                                    <div class="dish-price">💰 800 AOA</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="dish-card">
+                                <img src="images/funge.png" alt="Pirão" class="dish-image">
+                                <div class="dish-info">
+                                    <h6>🍚 <span data-i18n="dish-pirao">Pirão</span></h6>
+                                    <p data-i18n="dish-pirao-desc">Puré de farinha de mandioca, acompanhamento cremoso</p>
+                                    <div class="dish-price">💰 900 AOA</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 p-3" style="background: rgba(255,255,255,0.05); border-radius: 10px; text-align: center;">
+                        <p style="color: rgba(255,255,255,0.6);">
+                            <i class="bi bi-info-circle"></i> 
+                            <span data-i18n="gastro-recommended"><strong>Restaurantes Recomendados:</strong></span> 
+                            <span class="badge bg-warning text-dark">Kalandula</span>
+                            <span class="badge bg-warning text-dark">Sabores de Malanje</span>
+                            <span class="badge bg-warning text-dark">Pungo Andongo</span>
+                        </p>
+                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=100&fit=crop&crop=center" 
+                             alt="Restaurantes em Malanje" class="img-fluid rounded-3" style="width: 100%; max-height: 80px; object-fit: cover;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aba Emergências com Imagens -->
+            <div class="tab-pane fade" id="emergencias" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-3 mb-4">
+                        <div class="glass-card text-center">
+                            <i class="bi bi-shield-fill icon-big text-danger"></i>
+                            <h5><span data-i18n="emergency-police">Polícia</span></h5>
+                            <div class="info-label"><span data-i18n="emergency-number">Número</span></div>
+                            <div class="info-value">113</div>
+                            <div class="mt-2">
+                                <img src="https://images.unsplash.com/photo-1582139329536-e7284fece509?w=300&h=100&fit=crop&crop=center" 
+                                     alt="Polícia" class="img-fluid rounded-3" style="width: 100%; max-height: 70px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="glass-card text-center">
+                            <i class="bi bi-fire icon-big text-warning"></i>
+                            <h5><span data-i18n="emergency-fire">Bombeiros</span></h5>
+                            <div class="info-label"><span data-i18n="emergency-number">Número</span></div>
+                            <div class="info-value">115</div>
+                            <div class="mt-2">
+                                <img src="https://images.unsplash.com/photo-1582139329536-e7284fece509?w=300&h=100&fit=crop&crop=center" 
+                                     alt="Bombeiros" class="img-fluid rounded-3" style="width: 100%; max-height: 70px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="glass-card text-center">
+                            <i class="bi bi-hospital icon-big text-success"></i>
+                            <h5><span data-i18n="emergency-hospital">Hospital</span></h5>
+                            <div class="info-label"><span data-i18n="emergency-number">Número</span></div>
+                            <div class="info-value">+244 222 222 222</div>
+                            <div class="mt-2">
+                                <img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=300&h=100&fit=crop&crop=center" 
+                                     alt="Hospital" class="img-fluid rounded-3" style="width: 100%; max-height: 70px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="glass-card text-center">
+                            <i class="bi bi-people icon-big text-info"></i>
+                            <h5><span data-i18n="emergency-civil">Proteção Civil</span></h5>
+                            <div class="info-label"><span data-i18n="emergency-number">Número</span></div>
+                            <div class="info-value">116</div>
+                            <div class="mt-2">
+                                <img src="https://images.unsplash.com/photo-1582139329536-e7284fece509?w=300&h=100&fit=crop&crop=center" 
+                                     alt="Proteção Civil" class="img-fluid rounded-3" style="width: 100%; max-height: 70px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aba Saúde com Imagens -->
+            <div class="tab-pane fade" id="saude" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-syringe text-danger"></i> <span data-i18n="health-vaccines">Vacinas Recomendadas</span></h5>
+                            <ul style="color: rgba(255,255,255,0.8);">
+                                <li>✅ <span data-i18n="health-yellow-fever">Febre Amarela</span></li>
+                                <li>✅ <span data-i18n="health-typhoid">Febre Tifóide</span></li>
+                                <li>✅ <span data-i18n="health-hepatitis">Hepatite A e B</span></li>
+                                <li>✅ <span data-i18n="health-tetanus">Tétano</span></li>
+                            </ul>
+                            <div class="mt-2">
+                                <img src="https://images.unsplash.com/photo-1584483766114-2cea6facdf57?w=600&h=100&fit=crop&crop=center" 
+                                     alt="Vacinas" class="img-fluid rounded-3" style="width: 100%; max-height: 80px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-hospital text-success"></i> <span data-i18n="health-hospitals">Hospitais e Farmácias</span></h5>
+                            <ul style="color: rgba(255,255,255,0.8); list-style: none; padding-left: 0;">
+                                <li><i class="bi bi-building"></i> <span data-i18n="health-regional">Hospital Regional de Malanje</span></li>
+                                <li><i class="bi bi-building"></i> <span data-i18n="health-pediatric">Hospital Pediátrico</span></li>
+                                <li><i class="bi bi-capsule"></i> <span data-i18n="health-pharmacy">Farmácias 24h</span></li>
+                            </ul>
+                            <div class="mt-2">
+                                <img src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?w=600&h=100&fit=crop&crop=center" 
+                                     alt="Hospitais" class="img-fluid rounded-3" style="width: 100%; max-height: 80px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aba Câmbio com Imagens -->
+            <div class="tab-pane fade" id="cambio" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-currency-exchange text-success"></i> <span data-i18n="exchange-title">Câmbio</span></h5>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="info-label">USD</div>
+                                    <div class="info-value">1 USD = 912 AOA</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="info-label">EUR</div>
+                                    <div class="info-value">1 EUR = 985 AOA</div>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <img src="https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=600&h=100&fit=crop&crop=center" 
+                                     alt="Moedas" class="img-fluid rounded-3" style="width: 100%; max-height: 80px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="glass-card">
+                            <h5><i class="bi bi-bank text-primary"></i> <span data-i18n="exchange-banks">Bancos e Multicaixas</span></h5>
+                            <ul style="color: rgba(255,255,255,0.8); list-style: none; padding-left: 0;">
+                                <li>🏦 <span data-i18n="bank-bai">Banco BAI</span></li>
+                                <li>🏦 <span data-i18n="bank-bic">Banco BIC</span></li>
+                                <li>🏦 <span data-i18n="bank-angola">Banco de Angola</span></li>
+                                <li>📍 <span data-i18n="bank-atm">Multicaixas disponíveis no centro</span></li>
+                            </ul>
+                            <div class="mt-2">
+                                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&h=100&fit=crop&crop=center" 
+                                     alt="Bancos" class="img-fluid rounded-3" style="width: 100%; max-height: 80px; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aba Mapa com OSM -->
+            <div class="tab-pane fade" id="mapa" role="tabpanel">
+                <div class="glass-card">
+                    <h5><i class="bi bi-map text-danger"></i> <span data-i18n="map-title">Mapa Interativo de Malanje</span></h5>
+                    <p style="color: rgba(255,255,255,0.7);" data-i18n="map-subtitle">Explore os pontos turísticos, hotéis, hospitais e muito mais</p>
+                    <div id="map"></div>
+                </div>
+            </div>
+
+            <!-- Aba FAQ com Imagem -->
+            <div class="tab-pane fade" id="faq" role="tabpanel">
+                <div class="glass-card">
+                    <h5><i class="bi bi-question-circle text-primary"></i> <span data-i18n="faq-title">Perguntas Frequentes</span></h5>
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-question">
+                            <span><i class="bi bi-shield-check text-success"></i> <span data-i18n="faq-safe">É seguro visitar Malanje?</span></span>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer show" data-i18n="faq-safe-answer">Sim, Malanje é uma cidade acolhedora e segura. Como em qualquer destino, recomenda-se tomar precauções básicas.</div>
+                    </div>
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-question">
+                            <span><i class="bi bi-calendar-check text-warning"></i> <span data-i18n="faq-best-time">Qual a melhor época para visitar?</span></span>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer" data-i18n="faq-best-time-answer">A melhor época é durante a estação seca, de Maio a Setembro, com temperaturas amenas e menos chuva.</div>
+                    </div>
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-question">
+                            <span><i class="bi bi-water text-primary"></i> <span data-i18n="faq-kalandula">Como chegar às Quedas de Kalandula?</span></span>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer" data-i18n="faq-kalandula-answer">As Quedas de Kalandula ficam a cerca de 85 km de Malanje. É possível chegar de carro, táxi ou excursão organizada.</div>
+                    </div>
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-question">
+                            <span><i class="bi bi-currency-exchange text-success"></i> <span data-i18n="faq-exchange">Onde posso trocar dinheiro?</span></span>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer" data-i18n="faq-exchange-answer">Pode trocar dinheiro em bancos, casas de câmbio ou hotéis principais. Recomenda-se trocar em instituições oficiais.</div>
+                    </div>
+                    <div class="mt-3">
+                        <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&h=100&fit=crop&crop=center" 
+                             alt="FAQ Turismo" class="img-fluid rounded-3" style="width: 100%; max-height: 80px; object-fit: cover;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aba Equipa com Imagens -->
+            <div class="tab-pane fade" id="equipa" role="tabpanel">
+                <div class="glass-card">
+                    <h5><i class="bi bi-people-fill text-primary"></i> <span data-i18n="team-title">Conheça os Criadores</span></h5>
+                    <p style="color: rgba(255,255,255,0.7);" data-i18n="team-subtitle">A equipa por trás do Sistema Web de Apoio ao Turismo em Malanje</p>
+
+                    <div class="team-photo-container">
+                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=400&fit=crop&crop=center" 
+                             alt="Equipa de Criadores do Sistema de Turismo de Malanje" 
+                             class="img-fluid">
+                        <p class="photo-caption" data-i18n="team-photo-caption">Equipa de desenvolvimento do Sistema Web de Apoio ao Turismo em Malanje</p>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-3 mb-4">
+                            <div class="team-card">
+                                <div class="avatar">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" alt="António Diogo">
+                                </div>
+                                <h6>António Diogo</h6>
+                                <div class="role" data-i18n="team-antonio-role">Desenvolvedor Full Stack</div>
+                                <div class="bio" data-i18n="team-antonio-bio">Especialista em desenvolvimento web com 5 anos de experiência.</div>
+                                <div class="social-links">
+                                    <a href="#"><i class="bi bi-envelope-fill"></i></a>
+                                    <a href="#"><i class="bi bi-linkedin"></i></a>
+                                    <a href="#"><i class="bi bi-github"></i></a>
+                                </div>
+                                <div class="stats">
+                                    <div class="stat-item">
+                                        <div class="stat-number">12</div>
+                                        <div class="stat-label" data-i18n="team-projects">Projetos</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-number">5</div>
+                                        <div class="stat-label" data-i18n="team-years">Anos Exp.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="team-card">
+                                <div class="avatar">
+                                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face" alt="Maria Santos">
+                                </div>
+                                <h6>Maria Santos</h6>
+                                <div class="role" data-i18n="team-maria-role">Designer UI/UX</div>
+                                <div class="bio" data-i18n="team-maria-bio">Cria experiências digitais intuitivas e visualmente impactantes.</div>
+                                <div class="social-links">
+                                    <a href="#"><i class="bi bi-envelope-fill"></i></a>
+                                    <a href="#"><i class="bi bi-linkedin"></i></a>
+                                    <a href="#"><i class="bi bi-github"></i></a>
+                                </div>
+                                <div class="stats">
+                                    <div class="stat-item">
+                                        <div class="stat-number">8</div>
+                                        <div class="stat-label" data-i18n="team-projects">Projetos</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-number">3</div>
+                                        <div class="stat-label" data-i18n="team-years">Anos Exp.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="team-card">
+                                <div class="avatar">
+                                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face" alt="Carlos Mendes">
+                                </div>
+                                <h6>Carlos Mendes</h6>
+                                <div class="role" data-i18n="team-carlos-role">Analista de Sistemas</div>
+                                <div class="bio" data-i18n="team-carlos-bio">Especialista em análise de requisitos e arquitetura de software.</div>
+                                <div class="social-links">
+                                    <a href="#"><i class="bi bi-envelope-fill"></i></a>
+                                    <a href="#"><i class="bi bi-linkedin"></i></a>
+                                    <a href="#"><i class="bi bi-github"></i></a>
+                                </div>
+                                <div class="stats">
+                                    <div class="stat-item">
+                                        <div class="stat-number">10</div>
+                                        <div class="stat-label" data-i18n="team-projects">Projetos</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-number">6</div>
+                                        <div class="stat-label" data-i18n="team-years">Anos Exp.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="team-card">
+                                <div class="avatar">
+                                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" alt="Ana Ferreira">
+                                </div>
+                                <h6>Ana Ferreira</h6>
+                                <div class="role" data-i18n="team-ana-role">Gestora de Projeto</div>
+                                <div class="bio" data-i18n="team-ana-bio">Coordena equipas e garante a entrega de projetos com qualidade.</div>
+                                <div class="social-links">
+                                    <a href="#"><i class="bi bi-envelope-fill"></i></a>
+                                    <a href="#"><i class="bi bi-linkedin"></i></a>
+                                    <a href="#"><i class="bi bi-github"></i></a>
+                                </div>
+                                <div class="stats">
+                                    <div class="stat-item">
+                                        <div class="stat-number">7</div>
+                                        <div class="stat-label" data-i18n="team-projects">Projetos</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-number">4</div>
+                                        <div class="stat-label" data-i18n="team-years">Anos Exp.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assistente Virtual -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="assistant-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-robot"></i>
+                                <div>
+                                    <h5><i class="bi bi-stars"></i> <span data-i18n="assistant-title">Assistente Turístico</span></h5>
+                                    <p id="assistantMessage" data-i18n="assistant-message">Olá! Como posso ajudar na sua viagem a Malanje?</p>
+                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                        <button class="btn btn-sm btn-outline-light" onclick="askAssistant('Como chegar às Pedras Negras?')">📍 <span data-i18n="assistant-pungo">Pedras Negras</span></button>
+                                        <button class="btn btn-sm btn-outline-light" onclick="askAssistant('Quais hotéis estão disponíveis?')">🏨 <span data-i18n="assistant-hotels">Hotéis</span></button>
+                                        <button class="btn btn-sm btn-outline-light" onclick="askAssistant('Qual o clima hoje?')">🌤️ <span data-i18n="assistant-weather">Clima</span></button>
+                                        <button class="btn btn-sm btn-outline-light" onclick="askAssistant('Onde comer?')">🍽️ <span data-i18n="assistant-food">Gastronomia</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" id="chatInput" class="chat-input" placeholder="Faça uma pergunta...">
+                                <button class="btn btn-primary" onclick="sendChat()"><i class="bi bi-send"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rodapé -->
+        <footer class="mt-5 text-center" style="color: rgba(255,255,255,0.6); padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p class="mb-2">© 2026 <span data-i18n="footer-title">Sistema Web de Apoio ao Turismo em Malanje</span></p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="#" style="color: rgba(255,255,255,0.5); text-decoration: none;"><i class="bi bi-envelope"></i> contacto@turismomalanje.ao</a>
+                <a href="#" style="color: rgba(255,255,255,0.5); text-decoration: none;"><i class="bi bi-instagram"></i> Instagram</a>
+                <a href="#" style="color: rgba(255,255,255,0.5); text-decoration: none;"><i class="bi bi-facebook"></i> Facebook</a>
+                <a href="privacy.html" style="color: rgba(255,255,255,0.5); text-decoration: none;" data-i18n="footer-privacy">Política de Privacidade</a>
+                <a href="term.html" style="color: rgba(255,255,255,0.5); text-decoration: none;" data-i18n="footer-terms">Termos de Utilização</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal de Idioma -->
+    <div class="modal fade" id="languageModal" tabindex="-1" aria-labelledby="languageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="languageModalLabel"><i class="bi bi-globe2"></i> <span data-i18n="modal-language-title">Alterar Idioma</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p data-i18n="modal-language-desc">Selecione o idioma desejado para a aplicação:</p>
+                    <div class="list-group">
+                        <button class="list-group-item list-group-item-action d-flex align-items-center gap-3" onclick="changeLanguage('pt')">
+                            <span style="font-size: 1.5rem;">🇦🇴</span>
+                            <div>
+                                <strong>Português</strong>
+                                <small class="d-block text-muted" data-i18n="lang-pt-desc">Idioma padrão</small>
+                            </div>
+                            <span class="ms-auto badge bg-success" id="langBadge-pt">✓</span>
+                        </button>
+                        <button class="list-group-item list-group-item-action d-flex align-items-center gap-3" onclick="changeLanguage('en')">
+                            <span style="font-size: 1.5rem;">🇬🇧</span>
+                            <div>
+                                <strong>English</strong>
+                                <small class="d-block text-muted" data-i18n="lang-en-desc">International language</small>
+                            </div>
+                            <span class="ms-auto badge bg-success d-none" id="langBadge-en">✓</span>
+                        </button>
+                        <button class="list-group-item list-group-item-action d-flex align-items-center gap-3" onclick="changeLanguage('fr')">
+                            <span style="font-size: 1.5rem;">🇫🇷</span>
+                            <div>
+                                <strong>Français</strong>
+                                <small class="d-block text-muted" data-i18n="lang-fr-desc">Langue internationale</small>
+                            </div>
+                            <span class="ms-auto badge bg-success d-none" id="langBadge-fr">✓</span>
+                        </button>
+                        <button class="list-group-item list-group-item-action d-flex align-items-center gap-3" onclick="changeLanguage('es')">
+                            <span style="font-size: 1.5rem;">🇪🇸</span>
+                            <div>
+                                <strong>Español</strong>
+                                <small class="d-block text-muted" data-i18n="lang-es-desc">Idioma internacional</small>
+                            </div>
+                            <span class="ms-auto badge bg-success d-none" id="langBadge-es">✓</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="modal-close">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Dicionário -->
+    <div class="modal fade" id="dictionaryModal" tabindex="-1" aria-labelledby="dictionaryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dictionaryModalLabel"><i class="bi bi-book"></i> <span data-i18n="dictionary-title">Dicionário Turístico</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="glass-card" style="background: rgba(255,255,255,0.05);">
+                                <h6>🌍 <span data-i18n="dict-general">Termos Gerais</span></h6>
+                                <ul style="list-style: none; padding: 0; color: rgba(255,255,255,0.8);">
+                                    <li><strong data-i18n="dict-tourist">Turista</strong> <span data-i18n="dict-tourist-desc">- Pessoa que viaja por lazer</span></li>
+                                    <li><strong data-i18n="dict-accommodation">Hospedagem</strong> <span data-i18n="dict-accommodation-desc">- Local para pernoitar</span></li>
+                                    <li><strong data-i18n="dict-gastronomy">Gastronomia</strong> <span data-i18n="dict-gastronomy-desc">- Culinária típica</span></li>
+                                    <li><strong data-i18n="dict-heritage">Património</strong> <span data-i18n="dict-heritage-desc">- Bens culturais e históricos</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="glass-card" style="background: rgba(255,255,255,0.05);">
+                                <h6>📍 <span data-i18n="dict-places">Lugares em Malanje</span></h6>
+                                <ul style="list-style: none; padding: 0; color: rgba(255,255,255,0.8);">
+                                    <li><strong>Kalandula</strong> <span data-i18n="dict-kalandula-desc">- Quedas de água</span></li>
+                                    <li><strong>Pungo Andongo</strong> <span data-i18n="dict-pungo-desc">- Pedras Negras</span></li>
+                                    <li><strong>Cangandala</strong> <span data-i18n="dict-cangandala-desc">- Parque Nacional</span></li>
+                                    <li><strong>Muceque</strong> <span data-i18n="dict-muceque-desc">- Lagoa cristalina</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <div class="glass-card" style="background: rgba(255,255,255,0.05);">
+                                <h6>🍽️ <span data-i18n="dict-gastronomy-title">Gastronomia</span></h6>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <strong data-i18n="dict-calulu">Calulu</strong>
+                                        <small class="d-block text-muted" data-i18n="dict-calulu-desc">Guisado com quiabo</small>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong data-i18n="dict-funje">Funje</strong>
+                                        <small class="d-block text-muted" data-i18n="dict-funje-desc">Massa de milho</small>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong data-i18n="dict-muamba">Muamba</strong>
+                                        <small class="d-block text-muted" data-i18n="dict-muamba-desc">Frango estufado</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="modal-close">
+                        <a href="dictionary.html">Saber mais</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        $(document).ready(function() {
+            // ============================================
+            // TEMA (CLARO/ESCURO)
+            // ============================================
+            let isDarkTheme = true;
+
+            function toggleTheme() {
+                isDarkTheme = !isDarkTheme;
+                if (isDarkTheme) {
+                    $('body').removeClass('light-theme');
+                    $('#themeIcon').removeClass('bi-sun-fill').addClass('bi-moon-stars');
+                } else {
+                    $('body').addClass('light-theme');
+                    $('#themeIcon').removeClass('bi-moon-stars').addClass('bi-sun-fill');
+                }
+                localStorage.setItem('sicami-theme-info', isDarkTheme ? 'dark' : 'light');
+            }
+
+            const savedTheme = localStorage.getItem('sicami-theme-info');
+            if (savedTheme === 'light') {
+                isDarkTheme = false;
+                $('body').addClass('light-theme');
+                $('#themeIcon').removeClass('bi-moon-stars').addClass('bi-sun-fill');
+            }
+
+            $('#themeToggle').click(toggleTheme);
+
+            // ============================================
+            // DATA E HORA
+            // ============================================
+            function updateDateTime() {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('pt-BR');
+                const timeStr = now.toLocaleTimeString('pt-BR');
+                $('#dateTimeDisplay').text(`${dateStr} ${timeStr}`);
+            }
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            // ============================================
+            // FAQ TOGGLE
+            // ============================================
+            window.toggleFaq = function(element) {
+                const answer = $(element).find('.faq-answer');
+                const icon = $(element).find('.bi-chevron-down');
+                answer.toggleClass('show');
+                icon.toggleClass('bi-chevron-down').toggleClass('bi-chevron-up');
+            };
+
+            // ============================================
+            // ASSISTENTE
+            // ============================================
+            window.askAssistant = function(question) {
+                $('#chatInput').val(question);
+                sendChat();
+            };
+
+            window.sendChat = function() {
+                const input = $('#chatInput');
+                const question = input.val().trim();
+                if (!question) return;
+
+                const message = $('#assistantMessage');
+                message.html(`🧐 <strong>Você:</strong> "${question}"<br><br><i class="bi bi-robot"></i> Processando...`);
+
+                setTimeout(() => {
+                    const responses = {
+                        'Pedras Negras': 'Para chegar às Pedras Negras de Pungo Andongo, pegue a estrada nacional em direção ao município de Pungo Andongo, a cerca de 120 km de Malanje. Recomenda-se contratar um guia local.',
+                        'Hotéis': 'Temos vários hotéis em Malanje: Hotel Kalandula, Hotel Palmeiras, Hotel Malanje e diversas pensões com ótimo custo-benefício.',
+                        'Clima': 'O clima hoje está ensolarado com 28°C. A previsão para os próximos dias permanece estável, com pequenas possibilidades de chuva.',
+                        'Gastronomia': 'Não deixe de provar o Calulu, Funje e Muamba de Galinha. Recomendo o Restaurante Kalandula para uma experiência autêntica.'
+                    };
+
+                    let response = 'Desculpe, não entendi sua pergunta. Pode reformular?';
+                    for (const [key, value] of Object.entries(responses)) {
+                        if (question.includes(key)) {
+                            response = value;
+                            break;
+                        }
+                    }
+                    message.html(`🧐 <strong>Você:</strong> "${question}"<br><br><i class="bi bi-robot"></i> ${response}`);
+                }, 1000);
+
+                input.val('');
+            };
+
+            $('#chatInput').keypress(function(e) {
+                if (e.which === 13) sendChat();
+            });
+
+            // ============================================
+            // SCROLL PARA TABS
+            // ============================================
+            window.scrollToTab = function(tabId) {
+                const tab = $(`#${tabId}-tab`);
+                if (tab.length) {
+                    tab.tab('show');
+                    $('html, body').animate({
+                        scrollTop: $('#infoTabs').offset().top - 100
+                    }, 500);
+                }
+            };
+
+            // ============================================
+            // PESQUISA RÁPIDA
+            // ============================================
+            $('#quickSearch').on('input', function() {
+                const term = $(this).val().toLowerCase();
+                if (term.length > 2) {
+                    $('.glass-card, .dish-card, .attraction-card').each(function() {
+                        const text = $(this).text().toLowerCase();
+                        if (text.includes(term)) {
+                            $(this).closest('.tab-pane').addClass('show active');
+                            $(this).closest('.tab-pane').siblings('.tab-pane').removeClass('show active');
+                            $(this).closest('.tab-pane').find('.glass-card, .dish-card, .attraction-card').show();
+                            $(this).show();
+                        }
+                    });
+                } else {
+                    $('.tab-pane').removeClass('show active');
+                    $('#gerais-tab').tab('show');
+                    $('.glass-card, .dish-card, .attraction-card').show();
+                }
+            });
+
+            // ============================================
+            // IDIOMA (SISTEMA DE TRADUÇÃO)
+            // ============================================
+            const translations = {
+                'pt': {
+                    'page-title': 'Informações Úteis',
+                    'dictionary': 'Dicionário',
+                    'language': 'Idioma',
+                    'banner-title': 'Tudo o que precisa saber antes de visitar Malanje',
+                    'banner-subtitle': 'Explore as belezas naturais, cultura e hospitalidade da província de Malanje',
+                    'tab-gerais': 'Informações Gerais',
+                    'tab-emergencias': 'Emergências',
+                    'tab-clima': 'Clima',
+                    'tab-transportes': 'Transportes',
+                    'tab-hospedagem': 'Hospedagem',
+                    'tab-gastronomia': 'Gastronomia',
+                    'tab-saude': 'Saúde',
+                    'tab-cambio': 'Câmbio',
+                    'tab-mapa': 'Mapa',
+                    'tab-faq': 'FAQ',
+                    'tab-equipa': 'Equipa',
+                    'gerais-title': 'Informações Gerais',
+                    'gerais-capital': 'Capital da Província',
+                    'gerais-currency': 'Moeda',
+                    'gerais-language': 'Idioma Oficial',
+                    'gerais-timezone': 'Fuso Horário',
+                    'gerais-population': 'População',
+                    'gerais-attractions': 'Atrações Turísticas',
+                    'attr-kalandula': 'Quedas de Kalandula',
+                    'attr-kalandula-desc': 'Uma das maiores quedas de água de Angola, com 105 metros de altura.',
+                    'attr-kalandula-loc': 'Kalandula, Malanje',
+                    'attr-pungo': 'Pedras Negras de Pungo Andongo',
+                    'attr-pungo-desc': 'Formações rochosas imponentes com valor histórico e cultural.',
+                    'attr-pungo-loc': 'Pungo Andongo, Malanje',
+                    'attr-cangandala': 'Parque Nacional da Cangandala',
+                    'attr-cangandala-desc': 'Santuario da Palanca Negra Gigante, espécie endémica de Angola.',
+                    'attr-cangandala-loc': 'Cangandala, Malanje',
+                    'attr-museum': 'Museu Regional de Malanje',
+                    'attr-museum-desc': 'Acervo histórico e cultural da província de Malanje.',
+                    'attr-museum-loc': 'Centro de Malanje',
+                    'attr-forte': 'Forte de Pungo Andongo',
+                    'attr-forte-desc': 'Construção histórica do período colonial português.',
+                    'attr-forte-loc': 'Pungo Andongo, Malanje',
+                    'attr-muceque': 'Lagoa do Muceque',
+                    'attr-muceque-desc': 'Lagoa com águas cristalinas e paisagem deslumbrante.',
+                    'attr-muceque-loc': 'Muceque, Malanje',
+                    'clima-current': 'Clima Atual',
+                    'clima-sunny': 'Ensolarado',
+                    'clima-humidity': 'Umidade',
+                    'clima-wind': 'Vento',
+                    'clima-forecast': 'Previsão para 7 Dias',
+                    'day-mon': 'Seg',
+                    'day-tue': 'Ter',
+                    'day-wed': 'Qua',
+                    'day-thu': 'Qui',
+                    'day-fri': 'Sex',
+                    'day-sat': 'Sáb',
+                    'day-sun': 'Dom',
+                    'clima-best-season': 'Melhor época: Maio a Setembro (estação seca)',
+                    'transport-title': 'Transportes em Malanje',
+                    'transport-taxi': 'Táxis',
+                    'transport-taxi-desc': 'Disponíveis 24h',
+                    'transport-moto': 'Moto-táxis',
+                    'transport-moto-desc': 'Rápidos e acessíveis',
+                    'transport-bus': 'Autocarros',
+                    'transport-bus-desc': 'Linhas urbanas e interurbanas',
+                    'transport-rental': 'Aluguer de Viaturas',
+                    'transport-rental-desc': 'Diversas empresas disponíveis',
+                    'transport-how': 'Como Chegar',
+                    'transport-airport': 'Aeroporto de Malanje (MEG)',
+                    'transport-road': 'Estrada Nacional EN-230 (Luanda-Malanje)',
+                    'transport-train': 'Caminho de Ferro (CFB)',
+                    'hospedagem-hotels': 'Hotéis',
+                    'hospedagem-hotels-desc': 'Opções de luxo e conforto',
+                    'hospedagem-pensions': 'Pensões',
+                    'hospedagem-pensions-desc': 'Alojamento económico',
+                    'hospedagem-residential': 'Residenciais',
+                    'hospedagem-residential-desc': 'Ambiente familiar',
+                    'hospedagem-contact': 'Contacto',
+                    'gastro-title': 'Gastronomia Típica de Malanje',
+                    'gastro-subtitle': 'Descubra os sabores autênticos da culinária angolana',
+                    'dish-calulu': 'Calulu',
+                    'dish-calulu-desc': 'Guisado de carne ou peixe com quiabo, alface e legumes',
+                    'dish-funje': 'Funje',
+                    'dish-funje-desc': 'Massa de farinha de milho ou mandioca, acompanhamento tradicional',
+                    'dish-muamba': 'Muamba de Galinha',
+                    'dish-muamba-desc': 'Frango estufado com óleo de palma, quiabo e gindungo',
+                    'dish-fish': 'Peixe Grelhado',
+                    'dish-fish-desc': 'Peixe fresco grelhado com pirão e salada',
+                    'dish-mufete': 'Mufete',
+                    'dish-mufete-desc': 'Peixe grelhado com feijão, farofa e banana',
+                    'dish-caldeirada': 'Caldeirada',
+                    'dish-caldeirada-desc': 'Ensopado de peixe com legumes e especiarias',
+                    'dish-banana': 'Banana Frita',
+                    'dish-banana-desc': 'Banana da terra frita, acompanhamento ou sobremesa',
+                    'dish-pirao': 'Pirão',
+                    'dish-pirao-desc': 'Puré de farinha de mandioca, acompanhamento cremoso',
+                    'gastro-recommended': 'Restaurantes Recomendados:',
+                    'emergency-police': 'Polícia',
+                    'emergency-fire': 'Bombeiros',
+                    'emergency-hospital': 'Hospital',
+                    'emergency-civil': 'Proteção Civil',
+                    'emergency-number': 'Número',
+                    'health-vaccines': 'Vacinas Recomendadas',
+                    'health-yellow-fever': 'Febre Amarela',
+                    'health-typhoid': 'Febre Tifóide',
+                    'health-hepatitis': 'Hepatite A e B',
+                    'health-tetanus': 'Tétano',
+                    'health-hospitals': 'Hospitais e Farmácias',
+                    'health-regional': 'Hospital Regional de Malanje',
+                    'health-pediatric': 'Hospital Pediátrico',
+                    'health-pharmacy': 'Farmácias 24h',
+                    'exchange-title': 'Câmbio',
+                    'exchange-banks': 'Bancos e Multicaixas',
+                    'bank-bai': 'Banco BAI',
+                    'bank-bic': 'Banco BIC',
+                    'bank-angola': 'Banco de Angola',
+                    'bank-atm': 'Multicaixas disponíveis no centro',
+                    'map-title': 'Mapa Interativo de Malanje',
+                    'map-subtitle': 'Explore os pontos turísticos, hotéis, hospitais e muito mais',
+                    'faq-title': 'Perguntas Frequentes',
+                    'faq-safe': 'É seguro visitar Malanje?',
+                    'faq-safe-answer': 'Sim, Malanje é uma cidade acolhedora e segura. Como em qualquer destino, recomenda-se tomar precauções básicas.',
+                    'faq-best-time': 'Qual a melhor época para visitar?',
+                    'faq-best-time-answer': 'A melhor época é durante a estação seca, de Maio a Setembro, com temperaturas amenas e menos chuva.',
+                    'faq-kalandula': 'Como chegar às Quedas de Kalandula?',
+                    'faq-kalandula-answer': 'As Quedas de Kalandula ficam a cerca de 85 km de Malanje. É possível chegar de carro, táxi ou excursão organizada.',
+                    'faq-exchange': 'Onde posso trocar dinheiro?',
+                    'faq-exchange-answer': 'Pode trocar dinheiro em bancos, casas de câmbio ou hotéis principais. Recomenda-se trocar em instituições oficiais.',
+                    'team-title': 'Conheça os Criadores',
+                    'team-subtitle': 'A equipa por trás do Sistema Web de Apoio ao Turismo em Malanje',
+                    'team-photo-caption': 'Equipa de desenvolvimento do Sistema Web de Apoio ao Turismo em Malanje',
+                    'team-antonio-role': 'Desenvolvedor Full Stack',
+                    'team-antonio-bio': 'Especialista em desenvolvimento web com 5 anos de experiência.',
+                    'team-maria-role': 'Designer UI/UX',
+                    'team-maria-bio': 'Cria experiências digitais intuitivas e visualmente impactantes.',
+                    'team-carlos-role': 'Analista de Sistemas',
+                    'team-carlos-bio': 'Especialista em análise de requisitos e arquitetura de software.',
+                    'team-ana-role': 'Gestora de Projeto',
+                    'team-ana-bio': 'Coordena equipas e garante a entrega de projetos com qualidade.',
+                    'team-projects': 'Projetos',
+                    'team-years': 'Anos Exp.',
+                    'assistant-title': 'Assistente Turístico',
+                    'assistant-message': 'Olá! Como posso ajudar na sua viagem a Malanje?',
+                    'assistant-pungo': 'Pedras Negras',
+                    'assistant-hotels': 'Hotéis',
+                    'assistant-weather': 'Clima',
+                    'assistant-food': 'Gastronomia',
+                    'footer-title': 'Sistema Web de Apoio ao Turismo em Malanje',
+                    'footer-privacy': 'Política de Privacidade',
+                    'footer-terms': 'Termos de Utilização',
+                    'modal-language-title': 'Alterar Idioma',
+                    'modal-language-desc': 'Selecione o idioma desejado para a aplicação:',
+                    'lang-pt-desc': 'Idioma padrão',
+                    'lang-en-desc': 'International language',
+                    'lang-fr-desc': 'Langue internationale',
+                    'lang-es-desc': 'Idioma internacional',
+                    'modal-close': 'Saber mais',
+                    'dictionary-title': 'Dicionário Turístico',
+                    'dict-general': 'Termos Gerais',
+                    'dict-tourist': 'Turista',
+                    'dict-tourist-desc': '- Pessoa que viaja por lazer',
+                    'dict-accommodation': 'Hospedagem',
+                    'dict-accommodation-desc': '- Local para pernoitar',
+                    'dict-gastronomy': 'Gastronomia',
+                    'dict-gastronomy-desc': '- Culinária típica',
+                    'dict-heritage': 'Património',
+                    'dict-heritage-desc': '- Bens culturais e históricos',
+                    'dict-places': 'Lugares em Malanje',
+                    'dict-kalandula-desc': '- Quedas de água',
+                    'dict-pungo-desc': '- Pedras Negras',
+                    'dict-cangandala-desc': '- Parque Nacional',
+                    'dict-muceque-desc': '- Lagoa cristalina',
+                    'dict-gastronomy-title': 'Gastronomia',
+                    'dict-calulu': 'Calulu',
+                    'dict-calulu-desc': 'Guisado com quiabo',
+                    'dict-funje': 'Funje',
+                    'dict-funje-desc': 'Massa de milho',
+                    'dict-muamba': 'Muamba',
+                    'dict-muamba-desc': 'Frango estufado'
+                },
+                'en': {
+                    'page-title': 'Useful Information',
+                    'dictionary': 'Dictionary',
+                    'language': 'Language',
+                    'banner-title': 'Everything you need to know before visiting Malanje',
+                    'banner-subtitle': 'Explore the natural beauty, culture and hospitality of Malanje province',
+                    'tab-gerais': 'General Information',
+                    'tab-emergencias': 'Emergencies',
+                    'tab-clima': 'Weather',
+                    'tab-transportes': 'Transport',
+                    'tab-hospedagem': 'Accommodation',
+                    'tab-gastronomia': 'Gastronomy',
+                    'tab-saude': 'Health',
+                    'tab-cambio': 'Exchange',
+                    'tab-mapa': 'Map',
+                    'tab-faq': 'FAQ',
+                    'tab-equipa': 'Team',
+                    'gerais-title': 'General Information',
+                    'gerais-capital': 'Provincial Capital',
+                    'gerais-currency': 'Currency',
+                    'gerais-language': 'Official Language',
+                    'gerais-timezone': 'Time Zone',
+                    'gerais-population': 'Population',
+                    'gerais-attractions': 'Tourist Attractions',
+                    'attr-kalandula': 'Kalandula Falls',
+                    'attr-kalandula-desc': 'One of the largest waterfalls in Angola, with 105 meters in height.',
+                    'attr-kalandula-loc': 'Kalandula, Malanje',
+                    'attr-pungo': 'Black Stones of Pungo Andongo',
+                    'attr-pungo-desc': 'Imposing rock formations with historical and cultural value.',
+                    'attr-pungo-loc': 'Pungo Andongo, Malanje',
+                    'attr-cangandala': 'Cangandala National Park',
+                    'attr-cangandala-desc': 'Sanctuary of the Giant Black Sable, an endemic species of Angola.',
+                    'attr-cangandala-loc': 'Cangandala, Malanje',
+                    'attr-museum': 'Regional Museum of Malanje',
+                    'attr-museum-desc': 'Historical and cultural collection of Malanje province.',
+                    'attr-museum-loc': 'Malanje Center',
+                    'attr-forte': 'Fort of Pungo Andongo',
+                    'attr-forte-desc': 'Historical construction from the Portuguese colonial period.',
+                    'attr-forte-loc': 'Pungo Andongo, Malanje',
+                    'attr-muceque': 'Muceque Lagoon',
+                    'attr-muceque-desc': 'Lagoon with crystal clear waters and stunning landscape.',
+                    'attr-muceque-loc': 'Muceque, Malanje',
+                    'clima-current': 'Current Weather',
+                    'clima-sunny': 'Sunny',
+                    'clima-humidity': 'Humidity',
+                    'clima-wind': 'Wind',
+                    'clima-forecast': '7-Day Forecast',
+                    'day-mon': 'Mon',
+                    'day-tue': 'Tue',
+                    'day-wed': 'Wed',
+                    'day-thu': 'Thu',
+                    'day-fri': 'Fri',
+                    'day-sat': 'Sat',
+                    'day-sun': 'Sun',
+                    'clima-best-season': 'Best time: May to September (dry season)',
+                    'transport-title': 'Transport in Malanje',
+                    'transport-taxi': 'Taxis',
+                    'transport-taxi-desc': 'Available 24h',
+                    'transport-moto': 'Motorcycle taxis',
+                    'transport-moto-desc': 'Fast and affordable',
+                    'transport-bus': 'Buses',
+                    'transport-bus-desc': 'Urban and intercity lines',
+                    'transport-rental': 'Car Rental',
+                    'transport-rental-desc': 'Various companies available',
+                    'transport-how': 'How to Get There',
+                    'transport-airport': 'Malanje Airport (MEG)',
+                    'transport-road': 'National Road EN-230 (Luanda-Malanje)',
+                    'transport-train': 'Railway (CFB)',
+                    'hospedagem-hotels': 'Hotels',
+                    'hospedagem-hotels-desc': 'Luxury and comfort options',
+                    'hospedagem-pensions': 'Pensions',
+                    'hospedagem-pensions-desc': 'Economic accommodation',
+                    'hospedagem-residential': 'Residential',
+                    'hospedagem-residential-desc': 'Family atmosphere',
+                    'hospedagem-contact': 'Contact',
+                    'gastro-title': 'Typical Gastronomy of Malanje',
+                    'gastro-subtitle': 'Discover the authentic flavors of Angolan cuisine',
+                    'dish-calulu': 'Calulu',
+                    'dish-calulu-desc': 'Meat or fish stew with okra, lettuce and vegetables',
+                    'dish-funje': 'Funje',
+                    'dish-funje-desc': 'Corn or cassava flour dough, traditional side dish',
+                    'dish-muamba': 'Chicken Muamba',
+                    'dish-muamba-desc': 'Stewed chicken with palm oil, okra and chili',
+                    'dish-fish': 'Grilled Fish',
+                    'dish-fish-desc': 'Fresh grilled fish with pirão and salad',
+                    'dish-mufete': 'Mufete',
+                    'dish-mufete-desc': 'Grilled fish with beans, farofa and banana',
+                    'dish-caldeirada': 'Caldeirada',
+                    'dish-caldeirada-desc': 'Fish stew with vegetables and spices',
+                    'dish-banana': 'Fried Banana',
+                    'dish-banana-desc': 'Fried plantain, side dish or dessert',
+                    'dish-pirao': 'Pirão',
+                    'dish-pirao-desc': 'Cassava flour puree, creamy side dish',
+                    'gastro-recommended': 'Recommended Restaurants:',
+                    'emergency-police': 'Police',
+                    'emergency-fire': 'Fire Brigade',
+                    'emergency-hospital': 'Hospital',
+                    'emergency-civil': 'Civil Protection',
+                    'emergency-number': 'Number',
+                    'health-vaccines': 'Recommended Vaccines',
+                    'health-yellow-fever': 'Yellow Fever',
+                    'health-typhoid': 'Typhoid Fever',
+                    'health-hepatitis': 'Hepatitis A and B',
+                    'health-tetanus': 'Tetanus',
+                    'health-hospitals': 'Hospitals and Pharmacies',
+                    'health-regional': 'Regional Hospital of Malanje',
+                    'health-pediatric': 'Pediatric Hospital',
+                    'health-pharmacy': '24h Pharmacies',
+                    'exchange-title': 'Exchange',
+                    'exchange-banks': 'Banks and ATMs',
+                    'bank-bai': 'BAI Bank',
+                    'bank-bic': 'BIC Bank',
+                    'bank-angola': 'Bank of Angola',
+                    'bank-atm': 'ATMs available in the center',
+                    'map-title': 'Interactive Map of Malanje',
+                    'map-subtitle': 'Explore tourist spots, hotels, hospitals and more',
+                    'faq-title': 'Frequently Asked Questions',
+                    'faq-safe': 'Is it safe to visit Malanje?',
+                    'faq-safe-answer': 'Yes, Malanje is a welcoming and safe city. As with any destination, basic precautions are recommended.',
+                    'faq-best-time': 'What is the best time to visit?',
+                    'faq-best-time-answer': 'The best time is during the dry season, from May to September, with mild temperatures and less rain.',
+                    'faq-kalandula': 'How to get to Kalandula Falls?',
+                    'faq-kalandula-answer': 'Kalandula Falls are about 85 km from Malanje. You can get there by car, taxi or organized tour.',
+                    'faq-exchange': 'Where can I exchange money?',
+                    'faq-exchange-answer': 'You can exchange money at banks, exchange offices or main hotels. It is recommended to exchange at official institutions.',
+                    'team-title': 'Meet the Creators',
+                    'team-subtitle': 'The team behind the Web System for Tourism Support in Malanje',
+                    'team-photo-caption': 'Development team of the Web System for Tourism Support in Malanje',
+                    'team-antonio-role': 'Full Stack Developer',
+                    'team-antonio-bio': 'Web development specialist with 5 years of experience.',
+                    'team-maria-role': 'UI/UX Designer',
+                    'team-maria-bio': 'Creates intuitive and visually impactful digital experiences.',
+                    'team-carlos-role': 'Systems Analyst',
+                    'team-carlos-bio': 'Specialist in requirements analysis and software architecture.',
+                    'team-ana-role': 'Project Manager',
+                    'team-ana-bio': 'Coordinates teams and ensures delivery of quality projects.',
+                    'team-projects': 'Projects',
+                    'team-years': 'Years Exp.',
+                    'assistant-title': 'Tourist Assistant',
+                    'assistant-message': 'Hello! How can I help with your trip to Malanje?',
+                    'assistant-pungo': 'Black Stones',
+                    'assistant-hotels': 'Hotels',
+                    'assistant-weather': 'Weather',
+                    'assistant-food': 'Gastronomy',
+                    'footer-title': 'Web System for Tourism Support in Malanje',
+                    'footer-privacy': 'Privacy Policy',
+                    'footer-terms': 'Terms of Use',
+                    'modal-language-title': 'Change Language',
+                    'modal-language-desc': 'Select the desired language for the application:',
+                    'lang-pt-desc': 'Default language',
+                    'lang-en-desc': 'International language',
+                    'lang-fr-desc': 'International language',
+                    'lang-es-desc': 'International language',
+                    'modal-close': 'Learn More',
+                    'dictionary-title': 'Tourist Dictionary',
+                    'dict-general': 'General Terms',
+                    'dict-tourist': 'Tourist',
+                    'dict-tourist-desc': '- Person who travels for leisure',
+                    'dict-accommodation': 'Accommodation',
+                    'dict-accommodation-desc': '- Place to stay overnight',
+                    'dict-gastronomy': 'Gastronomy',
+                    'dict-gastronomy-desc': '- Typical cuisine',
+                    'dict-heritage': 'Heritage',
+                    'dict-heritage-desc': '- Cultural and historical assets',
+                    'dict-places': 'Places in Malanje',
+                    'dict-kalandula-desc': '- Waterfalls',
+                    'dict-pungo-desc': '- Black Stones',
+                    'dict-cangandala-desc': '- National Park',
+                    'dict-muceque-desc': '- Crystal clear lagoon',
+                    'dict-gastronomy-title': 'Gastronomy',
+                    'dict-calulu': 'Calulu',
+                    'dict-calulu-desc': 'Stew with okra',
+                    'dict-funje': 'Funje',
+                    'dict-funje-desc': 'Corn dough',
+                    'dict-muamba': 'Muamba',
+                    'dict-muamba-desc': 'Stewed chicken'
+                },
+                'fr': {
+                    'page-title': 'Informations Utiles',
+                    'dictionary': 'Dictionnaire',
+                    'language': 'Langue',
+                    'banner-title': 'Tout ce que vous devez savoir avant de visiter Malanje',
+                    'banner-subtitle': 'Explorez les beautés naturelles, la culture et l\'hospitalité de la province de Malanje',
+                    'tab-gerais': 'Informations Générales',
+                    'tab-emergencias': 'Urgences',
+                    'tab-clima': 'Climat',
+                    'tab-transportes': 'Transports',
+                    'tab-hospedagem': 'Hébergement',
+                    'tab-gastronomia': 'Gastronomie',
+                    'tab-saude': 'Santé',
+                    'tab-cambio': 'Change',
+                    'tab-mapa': 'Carte',
+                    'tab-faq': 'FAQ',
+                    'tab-equipa': 'Équipe',
+                    'gerais-title': 'Informations Générales',
+                    'gerais-capital': 'Capitale de la Province',
+                    'gerais-currency': 'Monnaie',
+                    'gerais-language': 'Langue Officielle',
+                    'gerais-timezone': 'Fuseau Horaire',
+                    'gerais-population': 'Population',
+                    'gerais-attractions': 'Attractions Touristiques',
+                    'attr-kalandula': 'Chutes de Kalandula',
+                    'attr-kalandula-desc': 'L\'une des plus grandes chutes d\'eau d\'Angola, avec 105 mètres de hauteur.',
+                    'attr-kalandula-loc': 'Kalandula, Malanje',
+                    'attr-pungo': 'Pierres Noires de Pungo Andongo',
+                    'attr-pungo-desc': 'Formations rocheuses imposantes avec une valeur historique et culturelle.',
+                    'attr-pungo-loc': 'Pungo Andongo, Malanje',
+                    'attr-cangandala': 'Parc National de Cangandala',
+                    'attr-cangandala-desc': 'Sanctuaire de l\'Hippotrague noir géant, espèce endémique d\'Angola.',
+                    'attr-cangandala-loc': 'Cangandala, Malanje',
+                    'attr-museum': 'Musée Régional de Malanje',
+                    'attr-museum-desc': 'Collection historique et culturelle de la province de Malanje.',
+                    'attr-museum-loc': 'Centre de Malanje',
+                    'attr-forte': 'Fort de Pungo Andongo',
+                    'attr-forte-desc': 'Construction historique de la période coloniale portugaise.',
+                    'attr-forte-loc': 'Pungo Andongo, Malanje',
+                    'attr-muceque': 'Lagune de Muceque',
+                    'attr-muceque-desc': 'Lagune aux eaux cristallines et paysage époustouflant.',
+                    'attr-muceque-loc': 'Muceque, Malanje',
+                    'clima-current': 'Climat Actuel',
+                    'clima-sunny': 'Ensoleillé',
+                    'clima-humidity': 'Humidité',
+                    'clima-wind': 'Vent',
+                    'clima-forecast': 'Prévisions sur 7 Jours',
+                    'day-mon': 'Lun',
+                    'day-tue': 'Mar',
+                    'day-wed': 'Mer',
+                    'day-thu': 'Jeu',
+                    'day-fri': 'Ven',
+                    'day-sat': 'Sam',
+                    'day-sun': 'Dim',
+                    'clima-best-season': 'Meilleure période: Mai à Septembre (saison sèche)',
+                    'transport-title': 'Transports à Malanje',
+                    'transport-taxi': 'Taxis',
+                    'transport-taxi-desc': 'Disponibles 24h/24',
+                    'transport-moto': 'Moto-taxis',
+                    'transport-moto-desc': 'Rapides et abordables',
+                    'transport-bus': 'Bus',
+                    'transport-bus-desc': 'Lignes urbaines et interurbaines',
+                    'transport-rental': 'Location de Véhicules',
+                    'transport-rental-desc': 'Diverses entreprises disponibles',
+                    'transport-how': 'Comment Arriver',
+                    'transport-airport': 'Aéroport de Malanje (MEG)',
+                    'transport-road': 'Route Nationale EN-230 (Luanda-Malanje)',
+                    'transport-train': 'Chemin de Fer (CFB)',
+                    'hospedagem-hotels': 'Hôtels',
+                    'hospedagem-hotels-desc': 'Options de luxe et confort',
+                    'hospedagem-pensions': 'Pensions',
+                    'hospedagem-pensions-desc': 'Hébergement économique',
+                    'hospedagem-residential': 'Résidentiels',
+                    'hospedagem-residential-desc': 'Ambiance familiale',
+                    'hospedagem-contact': 'Contact',
+                    'gastro-title': 'Gastronomie Typique de Malanje',
+                    'gastro-subtitle': 'Découvrez les saveurs authentiques de la cuisine angolaise',
+                    'dish-calulu': 'Calulu',
+                    'dish-calulu-desc': 'Ragoût de viande ou de poisson avec gombo, laitue et légumes',
+                    'dish-funje': 'Funje',
+                    'dish-funje-desc': 'Pâte de farine de maïs ou de manioc, accompagnement traditionnel',
+                    'dish-muamba': 'Muamba de Poulet',
+                    'dish-muamba-desc': 'Poulet braisé avec huile de palme, gombo et piment',
+                    'dish-fish': 'Poisson Grillé',
+                    'dish-fish-desc': 'Poisson frais grillé avec pirão et salade',
+                    'dish-mufete': 'Mufete',
+                    'dish-mufete-desc': 'Poisson grillé avec haricots, farofa et banane',
+                    'dish-caldeirada': 'Caldeirada',
+                    'dish-caldeirada-desc': 'Ragoût de poisson avec légumes et épices',
+                    'dish-banana': 'Banane Frite',
+                    'dish-banana-desc': 'Banane plantain frite, accompagnement ou dessert',
+                    'dish-pirao': 'Pirão',
+                    'dish-pirao-desc': 'Purée de farine de manioc, accompagnement crémeux',
+                    'gastro-recommended': 'Restaurants Recommandés:',
+                    'emergency-police': 'Police',
+                    'emergency-fire': 'Pompiers',
+                    'emergency-hospital': 'Hôpital',
+                    'emergency-civil': 'Protection Civile',
+                    'emergency-number': 'Numéro',
+                    'health-vaccines': 'Vaccins Recommandés',
+                    'health-yellow-fever': 'Fièvre Jaune',
+                    'health-typhoid': 'Fièvre Typhoïde',
+                    'health-hepatitis': 'Hépatite A et B',
+                    'health-tetanus': 'Tétanos',
+                    'health-hospitals': 'Hôpitaux et Pharmacies',
+                    'health-regional': 'Hôpital Régional de Malanje',
+                    'health-pediatric': 'Hôpital Pédiatrique',
+                    'health-pharmacy': 'Pharmacies 24h/24',
+                    'exchange-title': 'Change',
+                    'exchange-banks': 'Banques et Distributeurs',
+                    'bank-bai': 'Banque BAI',
+                    'bank-bic': 'Banque BIC',
+                    'bank-angola': 'Banque d\'Angola',
+                    'bank-atm': 'Distributeurs disponibles au centre',
+                    'map-title': 'Carte Interactive de Malanje',
+                    'map-subtitle': 'Explorez les sites touristiques, hôtels, hôpitaux et plus encore',
+                    'faq-title': 'Questions Fréquemment Posées',
+                    'faq-safe': 'Est-ce sûr de visiter Malanje?',
+                    'faq-safe-answer': 'Oui, Malanje est une ville accueillante et sûre. Comme pour toute destination, il est recommandé de prendre des précautions de base.',
+                    'faq-best-time': 'Quelle est la meilleure période pour visiter?',
+                    'faq-best-time-answer': 'La meilleure période est pendant la saison sèche, de mai à septembre, avec des températures douces et moins de pluie.',
+                    'faq-kalandula': 'Comment se rendre aux Chutes de Kalandula?',
+                    'faq-kalandula-answer': 'Les Chutes de Kalandula se trouvent à environ 85 km de Malanje. Vous pouvez y accéder en voiture, en taxi ou en excursion organisée.',
+                    'faq-exchange': 'Où puis-je changer de l\'argent?',
+                    'faq-exchange-answer': 'Vous pouvez changer de l\'argent dans les banques, les bureaux de change ou les hôtels principaux. Il est recommandé de changer dans des institutions officielles.',
+                    'team-title': 'Rencontrez les Créateurs',
+                    'team-subtitle': 'L\'équipe derrière le Système Web de Soutien au Tourisme à Malanje',
+                    'team-photo-caption': 'Équipe de développement du Système Web de Soutien au Tourisme à Malanje',
+                    'team-antonio-role': 'Développeur Full Stack',
+                    'team-antonio-bio': 'Spécialiste en développement web avec 5 ans d\'expérience.',
+                    'team-maria-role': 'Designer UI/UX',
+                    'team-maria-bio': 'Crée des expériences numériques intuitives et visuellement percutantes.',
+                    'team-carlos-role': 'Analyste Systèmes',
+                    'team-carlos-bio': 'Spécialiste en analyse des exigences et architecture logicielle.',
+                    'team-ana-role': 'Chef de Projet',
+                    'team-ana-bio': 'Coordonne les équipes et assure la livraison de projets de qualité.',
+                    'team-projects': 'Projets',
+                    'team-years': 'Années Exp.',
+                    'assistant-title': 'Assistant Touristique',
+                    'assistant-message': 'Bonjour! Comment puis-je vous aider pour votre voyage à Malanje?',
+                    'assistant-pungo': 'Pierres Noires',
+                    'assistant-hotels': 'Hôtels',
+                    'assistant-weather': 'Climat',
+                    'assistant-food': 'Gastronomie',
+                    'footer-title': 'Système Web de Soutien au Tourisme à Malanje',
+                    'footer-privacy': 'Politique de Confidentialité',
+                    'footer-terms': 'Conditions d\'Utilisation',
+                    'modal-language-title': 'Changer de Langue',
+                    'modal-language-desc': 'Sélectionnez la langue souhaitée pour l\'application:',
+                    'lang-pt-desc': 'Langue par défaut',
+                    'lang-en-desc': 'Langue internationale',
+                    'lang-fr-desc': 'Langue internationale',
+                    'lang-es-desc': 'Langue internationale',
+                    'modal-close': 'En savoir plus',
+                    'dictionary-title': 'Dictionnaire Touristique',
+                    'dict-general': 'Termes Généraux',
+                    'dict-tourist': 'Touriste',
+                    'dict-tourist-desc': '- Personne qui voyage pour le loisir',
+                    'dict-accommodation': 'Hébergement',
+                    'dict-accommodation-desc': '- Lieu pour passer la nuit',
+                    'dict-gastronomy': 'Gastronomie',
+                    'dict-gastronomy-desc': '- Cuisine typique',
+                    'dict-heritage': 'Patrimoine',
+                    'dict-heritage-desc': '- Biens culturels et historiques',
+                    'dict-places': 'Lieux à Malanje',
+                    'dict-kalandula-desc': '- Chutes d\'eau',
+                    'dict-pungo-desc': '- Pierres Noires',
+                    'dict-cangandala-desc': '- Parc National',
+                    'dict-muceque-desc': '- Lagune cristalline',
+                    'dict-gastronomy-title': 'Gastronomie',
+                    'dict-calulu': 'Calulu',
+                    'dict-calulu-desc': 'Ragoût avec gombo',
+                    'dict-funje': 'Funje',
+                    'dict-funje-desc': 'Pâte de maïs',
+                    'dict-muamba': 'Muamba',
+                    'dict-muamba-desc': 'Poulet braisé'
+                },
+                'es': {
+                    'page-title': 'Información Útil',
+                    'dictionary': 'Diccionario',
+                    'language': 'Idioma',
+                    'banner-title': 'Todo lo que necesita saber antes de visitar Malanje',
+                    'banner-subtitle': 'Explore la belleza natural, la cultura y la hospitalidad de la provincia de Malanje',
+                    'tab-gerais': 'Información General',
+                    'tab-emergencias': 'Emergencias',
+                    'tab-clima': 'Clima',
+                    'tab-transportes': 'Transporte',
+                    'tab-hospedagem': 'Alojamiento',
+                    'tab-gastronomia': 'Gastronomía',
+                    'tab-saude': 'Salud',
+                    'tab-cambio': 'Cambio',
+                    'tab-mapa': 'Mapa',
+                    'tab-faq': 'FAQ',
+                    'tab-equipa': 'Equipo',
+                    'gerais-title': 'Información General',
+                    'gerais-capital': 'Capital de la Provincia',
+                    'gerais-currency': 'Moneda',
+                    'gerais-language': 'Idioma Oficial',
+                    'gerais-timezone': 'Zona Horaria',
+                    'gerais-population': 'Población',
+                    'gerais-attractions': 'Atracciones Turísticas',
+                    'attr-kalandula': 'Cascadas de Kalandula',
+                    'attr-kalandula-desc': 'Una de las cascadas más grandes de Angola, con 105 metros de altura.',
+                    'attr-kalandula-loc': 'Kalandula, Malanje',
+                    'attr-pungo': 'Piedras Negras de Pungo Andongo',
+                    'attr-pungo-desc': 'Imponentes formaciones rocosas con valor histórico y cultural.',
+                    'attr-pungo-loc': 'Pungo Andongo, Malanje',
+                    'attr-cangandala': 'Parque Nacional de Cangandala',
+                    'attr-cangandala-desc': 'Santuario de la Palanca Negra Gigante, especie endémica de Angola.',
+                    'attr-cangandala-loc': 'Cangandala, Malanje',
+                    'attr-museum': 'Museo Regional de Malanje',
+                    'attr-museum-desc': 'Colección histórica y cultural de la provincia de Malanje.',
+                    'attr-museum-loc': 'Centro de Malanje',
+                    'attr-forte': 'Fuerte de Pungo Andongo',
+                    'attr-forte-desc': 'Construcción histórica del período colonial portugués.',
+                    'attr-forte-loc': 'Pungo Andongo, Malanje',
+                    'attr-muceque': 'Laguna de Muceque',
+                    'attr-muceque-desc': 'Laguna con aguas cristalinas y paisaje impresionante.',
+                    'attr-muceque-loc': 'Muceque, Malanje',
+                    'clima-current': 'Clima Actual',
+                    'clima-sunny': 'Soleado',
+                    'clima-humidity': 'Humedad',
+                    'clima-wind': 'Viento',
+                    'clima-forecast': 'Pronóstico para 7 Días',
+                    'day-mon': 'Lun',
+                    'day-tue': 'Mar',
+                    'day-wed': 'Mié',
+                    'day-thu': 'Jue',
+                    'day-fri': 'Vie',
+                    'day-sat': 'Sáb',
+                    'day-sun': 'Dom',
+                    'clima-best-season': 'Mejor época: Mayo a Septiembre (estación seca)',
+                    'transport-title': 'Transporte en Malanje',
+                    'transport-taxi': 'Taxis',
+                    'transport-taxi-desc': 'Disponibles 24h',
+                    'transport-moto': 'Moto-taxis',
+                    'transport-moto-desc': 'Rápidos y accesibles',
+                    'transport-bus': 'Autobuses',
+                    'transport-bus-desc': 'Líneas urbanas e interurbanas',
+                    'transport-rental': 'Alquiler de Vehículos',
+                    'transport-rental-desc': 'Diversas empresas disponibles',
+                    'transport-how': 'Cómo Llegar',
+                    'transport-airport': 'Aeropuerto de Malanje (MEG)',
+                    'transport-road': 'Carretera Nacional EN-230 (Luanda-Malanje)',
+                    'transport-train': 'Ferrocarril (CFB)',
+                    'hospedagem-hotels': 'Hoteles',
+                    'hospedagem-hotels-desc': 'Opciones de lujo y confort',
+                    'hospedagem-pensions': 'Pensiones',
+                    'hospedagem-pensions-desc': 'Alojamiento económico',
+                    'hospedagem-residential': 'Residenciales',
+                    'hospedagem-residential-desc': 'Ambiente familiar',
+                    'hospedagem-contact': 'Contacto',
+                    'gastro-title': 'Gastronomía Típica de Malanje',
+                    'gastro-subtitle': 'Descubra los sabores auténticos de la cocina angoleña',
+                    'dish-calulu': 'Calulu',
+                    'dish-calulu-desc': 'Guiso de carne o pescado con quimbombó, lechuga y verduras',
+                    'dish-funje': 'Funje',
+                    'dish-funje-desc': 'Masa de harina de maíz o yuca, acompañamiento tradicional',
+                    'dish-muamba': 'Muamba de Pollo',
+                    'dish-muamba-desc': 'Pollo estofado con aceite de palma, quimbombó y ají',
+                    'dish-fish': 'Pescado Asado',
+                    'dish-fish-desc': 'Pescado fresco asado con pirão y ensalada',
+                    'dish-mufete': 'Mufete',
+                    'dish-mufete-desc': 'Pescado asado con frijoles, farofa y plátano',
+                    'dish-caldeirada': 'Caldeirada',
+                    'dish-caldeirada-desc': 'Estofado de pescado con verduras y especias',
+                    'dish-banana': 'Plátano Frito',
+                    'dish-banana-desc': 'Plátano macho frito, acompañamiento o postre',
+                    'dish-pirao': 'Pirão',
+                    'dish-pirao-desc': 'Puré de harina de yuca, acompañamiento cremoso',
+                    'gastro-recommended': 'Restaurantes Recomendados:',
+                    'emergency-police': 'Policía',
+                    'emergency-fire': 'Bomberos',
+                    'emergency-hospital': 'Hospital',
+                    'emergency-civil': 'Protección Civil',
+                    'emergency-number': 'Número',
+                    'health-vaccines': 'Vacunas Recomendadas',
+                    'health-yellow-fever': 'Fiebre Amarilla',
+                    'health-typhoid': 'Fiebre Tifoidea',
+                    'health-hepatitis': 'Hepatitis A y B',
+                    'health-tetanus': 'Tétanos',
+                    'health-hospitals': 'Hospitales y Farmacias',
+                    'health-regional': 'Hospital Regional de Malanje',
+                    'health-pediatric': 'Hospital Pediátrico',
+                    'health-pharmacy': 'Farmacias 24h',
+                    'exchange-title': 'Cambio',
+                    'exchange-banks': 'Bancos y Cajeros',
+                    'bank-bai': 'Banco BAI',
+                    'bank-bic': 'Banco BIC',
+                    'bank-angola': 'Banco de Angola',
+                    'bank-atm': 'Cajeros disponibles en el centro',
+                    'map-title': 'Mapa Interactivo de Malanje',
+                    'map-subtitle': 'Explore los puntos turísticos, hoteles, hospitales y más',
+                    'faq-title': 'Preguntas Frecuentes',
+                    'faq-safe': '¿Es seguro visitar Malanje?',
+                    'faq-safe-answer': 'Sí, Malanje es una ciudad acogedora y segura. Como en cualquier destino, se recomienda tomar precauciones básicas.',
+                    'faq-best-time': '¿Cuál es la mejor época para visitar?',
+                    'faq-best-time-answer': 'La mejor época es durante la estación seca, de mayo a septiembre, con temperaturas suaves y menos lluvia.',
+                    'faq-kalandula': '¿Cómo llegar a las Cascadas de Kalandula?',
+                    'faq-kalandula-answer': 'Las Cascadas de Kalandula están a unos 85 km de Malanje. Se puede llegar en coche, taxi o excursión organizada.',
+                    'faq-exchange': '¿Dónde puedo cambiar dinero?',
+                    'faq-exchange-answer': 'Puede cambiar dinero en bancos, casas de cambio u hoteles principales. Se recomienda cambiar en instituciones oficiales.',
+                    'team-title': 'Conozca a los Creadores',
+                    'team-subtitle': 'El equipo detrás del Sistema Web de Apoyo al Turismo en Malanje',
+                    'team-photo-caption': 'Equipo de desarrollo del Sistema Web de Apoyo al Turismo en Malanje',
+                    'team-antonio-role': 'Desarrollador Full Stack',
+                    'team-antonio-bio': 'Especialista en desarrollo web con 5 años de experiencia.',
+                    'team-maria-role': 'Diseñadora UI/UX',
+                    'team-maria-bio': 'Crea experiencias digitales intuitivas y visualmente impactantes.',
+                    'team-carlos-role': 'Analista de Sistemas',
+                    'team-carlos-bio': 'Especialista en análisis de requisitos y arquitectura de software.',
+                    'team-ana-role': 'Gestora de Proyecto',
+                    'team-ana-bio': 'Coordina equipos y garantiza la entrega de proyectos con calidad.',
+                    'team-projects': 'Proyectos',
+                    'team-years': 'Años Exp.',
+                    'assistant-title': 'Asistente Turístico',
+                    'assistant-message': '¡Hola! ¿Cómo puedo ayudar en su viaje a Malanje?',
+                    'assistant-pungo': 'Piedras Negras',
+                    'assistant-hotels': 'Hoteles',
+                    'assistant-weather': 'Clima',
+                    'assistant-food': 'Gastronomía',
+                    'footer-title': 'Sistema Web de Apoyo al Turismo en Malanje',
+                    'footer-privacy': 'Política de Privacidad',
+                    'footer-terms': 'Términos de Uso',
+                    'modal-language-title': 'Cambiar Idioma',
+                    'modal-language-desc': 'Seleccione el idioma deseado para la aplicación:',
+                    'lang-pt-desc': 'Idioma predeterminado',
+                    'lang-en-desc': 'Idioma internacional',
+                    'lang-fr-desc': 'Idioma internacional',
+                    'lang-es-desc': 'Idioma internacional',
+                    'modal-close': 'Saber más',
+                    'dictionary-title': 'Diccionario Turístico',
+                    'dict-general': 'Términos Generales',
+                    'dict-tourist': 'Turista',
+                    'dict-tourist-desc': '- Persona que viaja por ocio',
+                    'dict-accommodation': 'Alojamiento',
+                    'dict-accommodation-desc': '- Lugar para pasar la noche',
+                    'dict-gastronomy': 'Gastronomía',
+                    'dict-gastronomy-desc': '- Cocina típica',
+                    'dict-heritage': 'Patrimonio',
+                    'dict-heritage-desc': '- Bienes culturales e históricos',
+                    'dict-places': 'Lugares en Malanje',
+                    'dict-kalandula-desc': '- Cascadas',
+                    'dict-pungo-desc': '- Piedras Negras',
+                    'dict-cangandala-desc': '- Parque Nacional',
+                    'dict-muceque-desc': '- Laguna cristalina',
+                    'dict-gastronomy-title': 'Gastronomía',
+                    'dict-calulu': 'Calulu',
+                    'dict-calulu-desc': 'Guiso con quimbombó',
+                    'dict-funje': 'Funje',
+                    'dict-funje-desc': 'Masa de maíz',
+                    'dict-muamba': 'Muamba',
+                    'dict-muamba-desc': 'Pollo estofado'
+                }
+            };
+
+            // Função para aplicar tradução
+            function applyTranslation(lang) {
+                const t = translations[lang] || translations['pt'];
+                
+                // Traduzir elementos com data-i18n
+                $('[data-i18n]').each(function() {
+                    const key = $(this).data('i18n');
+                    if (t[key]) {
+                        // Se for elemento com HTML, manter HTML, senão texto
+                        if ($(this).html().includes('<')) {
+                            // Preservar HTML interno, apenas trocar texto
+                            const html = $(this).html();
+                            const text = $(this).text().trim();
+                            if (text) {
+                                $(this).html(html.replace(text, t[key]));
+                            }
+                        } else {
+                            $(this).text(t[key]);
+                        }
+                    }
+                });
+
+                // Traduzir FAQ answers (que tem data-i18n)
+                $('.faq-answer[data-i18n]').each(function() {
+                    const key = $(this).data('i18n');
+                    if (t[key]) {
+                        $(this).text(t[key]);
+                    }
+                });
+
+                // Traduzir placeholders
+                $('[data-i18n-placeholder]').each(function() {
+                    const key = $(this).data('i18n-placeholder');
+                    if (t[key]) {
+                        $(this).attr('placeholder', t[key]);
+                    }
+                });
+
+                // Atualizar o badge do idioma atual
+                $('[id^="langBadge-"]').addClass('d-none');
+                $(`#langBadge-${lang}`).removeClass('d-none');
+
+                // Atualizar o botão de idioma
+                const langNames = {
+                    'pt': '🇦🇴 Português',
+                    'en': '🇬🇧 English',
+                    'fr': '🇫🇷 Français',
+                    'es': '🇪🇸 Español'
+                };
+                const langBtn = $('.dropdown-toggle:contains("Idioma")');
+                if (langBtn.length) {
+                    langBtn.html(`<i class="bi bi-globe"></i> ${langNames[lang] || 'Idioma'}`);
+                } else {
+                    $('.btn-outline-primary.dropdown-toggle').html(`<i class="bi bi-globe"></i> ${langNames[lang] || 'Idioma'}`);
+                }
+
+                // Salvar preferência
+                localStorage.setItem('sicami-language', lang);
+                currentLanguage = lang;
+            }
+
+            // ============================================
+            // EVENTOS DE MUDANÇA DE IDIOMA
+            // ============================================
+            let currentLanguage = localStorage.getItem('sicami-language') || 'pt';
+
+            // Aplicar idioma inicial
+            applyTranslation(currentLanguage);
+
+            // Evento de clique nos itens do dropdown
+            $('.dropdown-item[data-lang]').click(function(e) {
+                e.preventDefault();
+                const lang = $(this).data('lang');
+                changeLanguage(lang);
+            });
+
+            // Função global changeLanguage
+            window.changeLanguage = function(lang) {
+                applyTranslation(lang);
+                
+                // Fechar modal se estiver aberto
+                const modal = bootstrap.Modal.getInstance(document.getElementById('languageModal'));
+                if (modal) modal.hide();
+
+                // Mostrar notificação
+                const msgs = {
+                    'pt': 'Idioma alterado para Português',
+                    'en': 'Language changed to English',
+                    'fr': 'Langue changée en Français',
+                    'es': 'Idioma cambiado a Español'
+                };
+                // Notificação visual suave
+                const notify = $(`
+                    <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+                        <div class="toast show align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    <i class="bi bi-check-circle-fill me-2"></i> ${msgs[lang] || 'Idioma alterado com sucesso!'}
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                $('body').append(notify);
+                setTimeout(() => {
+                    notify.fadeOut(500, function() { $(this).remove(); });
+                }, 3000);
+            };
+
+            // ============================================
+            // MAPA OSM (MAPA VERDADEIRO)
+            // ============================================
+            // Coordenadas de Malanje, Angola
+            const malanjeCoords = [-9.5446, 16.3450];
+
+            // Inicializar o mapa
+            const map = L.map('map').setView(malanjeCoords, 13);
+
+            // Adicionar o tile layer do OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Ícone personalizado para pontos turísticos
+            const touristIcon = L.divIcon({
+                html: '<i class="bi bi-pin-map" style="font-size: 24px; color: #dc3545;"></i>',
+                className: 'custom-div-icon',
+                iconSize: [24, 24],
+                iconAnchor: [12, 24]
+            });
+
+            // Ícone para hotéis
+            const hotelIcon = L.divIcon({
+                html: '<i class="bi bi-building" style="font-size: 24px; color: #0d6efd;"></i>',
+                className: 'custom-div-icon',
+                iconSize: [24, 24],
+                iconAnchor: [12, 24]
+            });
+
+            // Ícone para hospitais
+            const hospitalIcon = L.divIcon({
+                html: '<i class="bi bi-hospital" style="font-size: 24px; color: #198754;"></i>',
+                className: 'custom-div-icon',
+                iconSize: [24, 24],
+                iconAnchor: [12, 24]
+            });
+
+            // Ícone para bancos
+            const bankIcon = L.divIcon({
+                html: '<i class="bi bi-bank" style="font-size: 24px; color: #ffc107;"></i>',
+                className: 'custom-div-icon',
+                iconSize: [24, 24],
+                iconAnchor: [12, 24]
+            });
+
+            // ============================================
+            // PONTOS DE INTERESSE EM MALANJE
+            // ============================================
+            const pontosInteresse = [
+                // Atrações Turísticas
+                {
+                    nome: 'Quedas de Kalandula',
+                    coords: [-9.0733, 16.0012],
+                    tipo: 'turismo',
+                    descricao: 'Uma das maiores quedas de água de Angola, com 105 metros de altura.'
+                },
+                {
+                    nome: 'Pedras Negras de Pungo Andongo',
+                    coords: [-9.6833, 15.5833],
+                    tipo: 'turismo',
+                    descricao: 'Formações rochosas imponentes com valor histórico e cultural.'
+                },
+                {
+                    nome: 'Parque Nacional da Cangandala',
+                    coords: [-9.7000, 16.7500],
+                    tipo: 'turismo',
+                    descricao: 'Santuario da Palanca Negra Gigante, espécie endémica de Angola.'
+                },
+                {
+                    nome: 'Museu Regional de Malanje',
+                    coords: [-9.5446, 16.3450],
+                    tipo: 'turismo',
+                    descricao: 'Acervo histórico e cultural da província de Malanje.'
+                },
+                // Hotéis
+                {
+                    nome: 'Hotel Kalandula',
+                    coords: [-9.5446, 16.3500],
+                    tipo: 'hotel',
+                    descricao: 'Hotel de luxo com vista para a cidade.'
+                },
+                {
+                    nome: 'Hotel Palmeiras',
+                    coords: [-9.5400, 16.3400],
+                    tipo: 'hotel',
+                    descricao: 'Conforto e hospitalidade no centro de Malanje.'
+                },
+                // Hospitais
+                {
+                    nome: 'Hospital Regional de Malanje',
+                    coords: [-9.5480, 16.3420],
+                    tipo: 'hospital',
+                    descricao: 'Principal hospital da província.'
+                },
+                // Bancos
+                {
+                    nome: 'Banco BAI - Malanje',
+                    coords: [-9.5430, 16.3440],
+                    tipo: 'banco',
+                    descricao: 'Agência do Banco BAI no centro de Malanje.'
+                }
+            ];
+
+            // Adicionar os marcadores no mapa
+            pontosInteresse.forEach(ponto => {
+                let icon;
+                let color;
+                switch (ponto.tipo) {
+                    case 'turismo':
+                        icon = touristIcon;
+                        color = '#dc3545';
+                        break;
+                    case 'hotel':
+                        icon = hotelIcon;
+                        color = '#0d6efd';
+                        break;
+                    case 'hospital':
+                        icon = hospitalIcon;
+                        color = '#198754';
+                        break;
+                    case 'banco':
+                        icon = bankIcon;
+                        color = '#ffc107';
+                        break;
+                    default:
+                        icon = touristIcon;
+                        color = '#6c757d';
+                }
+
+                const marker = L.marker(ponto.coords, { icon: icon })
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="min-width: 200px;">
+                            <h6 style="margin-bottom: 5px; color: ${color};">${ponto.nome}</h6>
+                            <p style="margin-bottom: 5px; font-size: 0.9rem;">${ponto.descricao}</p>
+                            <small style="color: #6c757d;">📍 ${ponto.coords[0].toFixed(4)}, ${ponto.coords[1].toFixed(4)}</small>
+                        </div>
+                    `);
+            });
+
+            // Adicionar controle de zoom
+            L.control.zoom({
+                position: 'bottomright'
+            }).addTo(map);
+
+            // Adicionar legenda
+            const legend = L.control({ position: 'bottomleft' });
+            legend.onAdd = function() {
+                const div = L.DomUtil.create('div', 'info legend');
+                div.style.background = 'rgba(255, 255, 255, 0.85)';
+                div.style.padding = '10px 15px';
+                div.style.borderRadius = '8px';
+                div.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                div.style.backdropFilter = 'blur(10px)';
+                div.innerHTML = `
+                    <div style="font-weight: bold; margin-bottom: 5px;">📍 Legenda</div>
+                    <div><span style="color: #dc3545;">●</span> Atrações Turísticas</div>
+                    <div><span style="color: #0d6efd;">●</span> Hotéis</div>
+                    <div><span style="color: #198754;">●</span> Hospitais</div>
+                    <div><span style="color: #ffc107;">●</span> Bancos</div>
+                `;
+                return div;
+            };
+            legend.addTo(map);
+
+            // Redimensionar o mapa quando a tab for mostrada
+            document.querySelector('#mapa-tab').addEventListener('shown.bs.tab', function() {
+                setTimeout(() => {
+                    map.invalidateSize();
+                }, 300);
+            });
+
+            console.log('✅ Mapa OSM carregado com sucesso!');
+
+            // ============================================
+            // LOG INICIAL
+            // ============================================
+            console.log('✅ Tela de Informações Úteis - Turismo Malanje carregada com sucesso!');
+            console.log('✅ Sistema de tradução funcional com suporte a 4 idiomas!');
+            console.log('✅ Mapa OSM integrado com pontos de interesse!');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2550 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VITALINKA | Super Administrador</title>
+    <!-- Bootstrap 5 + Bootstrap Icons + Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ===== VARIÁVEIS DE TEMA ===== */
+        :root {
+            --bg-image: url('images/das-dev.png');
+            --bg-overlay: rgba(0, 0, 0, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.10);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-color: #f0f4f8;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --table-bg: rgba(255, 255, 255, 0.06);
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --input-border: rgba(255, 255, 255, 0.12);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --primary-glow: rgba(13, 110, 253, 0.25);
+            --success-color: #75f0a0;
+            --warning-color: #ffd75a;
+            --danger-color: #ff7a8a;
+            --info-color: #6ee7ff;
+            --chatbot-bg: rgba(20, 30, 28, 0.95);
+            --dropdown-bg: rgba(20, 30, 28, 0.95);
+            --modal-bg: rgba(20, 30, 28, 0.95);
+            --bg-pattern-opacity: 0.6;
+            --primary-color: #2b7a4b;
+            --primary-gradient: linear-gradient(135deg, #2b7a4b, #4c9f70);
+            --status-active: #75f0a0;
+            --status-inactive: #ff7a8a;
+            --status-pending: #ffd75a;
+            --status-online: #75f0a0;
+            --status-offline: #ff7a8a;
+            --status-warning: #ff9f43;
+        }
+
+        /* Tema Claro */
+        [data-theme="light"] {
+            --bg-image: url('images/das-dev.png');
+            --bg-overlay: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --text-color: #1a2634;
+            --text-muted: rgba(0, 0, 0, 0.6);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --table-bg: rgba(255, 255, 255, 0.6);
+            --input-bg: rgba(255, 255, 255, 0.75);
+            --input-border: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --primary-glow: rgba(13, 110, 253, 0.15);
+            --success-color: #198754;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #0dcaf0;
+            --chatbot-bg: rgba(255, 255, 255, 0.95);
+            --dropdown-bg: rgba(255, 255, 255, 0.95);
+            --modal-bg: rgba(255, 255, 255, 0.95);
+            --bg-pattern-opacity: 0.3;
+        }
+
+        /* ===== ESTILOS GERAIS ===== */
+        * { font-family: 'Times New Roman', Times, serif; }
+        
+        body {
+            background-image: var(--bg-image);
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            position: relative;
+            background-color: #1a2634;
+            transition: background-color 0.3s ease;
+        }
+
+        [data-theme="light"] body {
+            background-color: #e8ecef;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-overlay);
+            z-index: 0;
+            transition: background 0.3s ease;
+        }
+
+        .container-fluid { position: relative; z-index: 1; }
+
+        /* ===== GLASSMORPHISM ===== */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        /* ===== TABS ===== */
+        .nav-tabs .nav-link {
+            font-size: 14px;
+            color: var(--text-color);
+            border: none;
+            padding: 10px 16px;
+            margin-right: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+        .nav-tabs .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        .nav-tabs .nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            color: var(--text-color);
+            border-bottom: 3px solid #0d6efd;
+            font-weight: bold;
+            box-shadow: 0 -2px 20px var(--primary-glow);
+        }
+        .tab-content {
+            padding: 25px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 0 8px 8px 8px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+
+        /* ===== INDICATOR CARDS ===== */
+        .indicator-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 15px 10px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        .indicator-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .indicator-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            text-shadow: 0 2px 10px var(--shadow-color);
+        }
+        .indicator-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .indicator-card.success .number { color: var(--success-color); }
+        .indicator-card.warning .number { color: var(--warning-color); }
+        .indicator-card.danger .number { color: var(--danger-color); }
+        .indicator-card.info .number { color: var(--info-color); }
+        .indicator-card.primary .number { color: #6ea8fe; }
+
+        /* ===== CARDS ===== */
+        .info-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .info-card .card-title {
+            color: var(--text-color);
+            border-bottom: 2px solid var(--glass-border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .info-card .info-label {
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .info-card .info-value { color: var(--text-color); }
+
+        /* ===== STATUS BADGE ===== */
+        .status-badge.active { background: rgba(25, 135, 84, 0.7); color: #fff; }
+        .status-badge.inactive { background: rgba(220, 53, 69, 0.7); color: #fff; }
+        .status-badge.pending { background: rgba(255, 193, 7, 0.7); color: #000; }
+        .status-badge.online { background: rgba(25, 135, 84, 0.7); color: #fff; }
+        .status-badge.offline { background: rgba(220, 53, 69, 0.7); color: #fff; }
+        .status-badge.warning { background: rgba(255, 159, 67, 0.7); color: #fff; }
+
+        /* ===== PAGE TITLE ===== */
+        .page-title {
+            color: var(--text-color);
+            text-shadow: 0 2px 20px var(--shadow-color);
+        }
+        .page-title .badge {
+            background: rgba(13, 110, 253, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== SEARCH SECTION ===== */
+        .search-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        .search-section h6 { color: var(--text-color); }
+        .search-section .form-control,
+        .search-section .form-select {
+            border-radius: 8px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+        }
+        .search-section .form-control::placeholder { color: var(--text-muted); }
+        .search-section .form-control:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .search-section .btn-outline-secondary { color: var(--text-muted); border-color: var(--glass-border); }
+        .search-section .btn-outline-secondary:hover { background: var(--glass-bg); color: var(--text-color); }
+        .search-section .btn-outline-primary { color: var(--text-color); border-color: var(--glass-border); }
+        .search-section .btn-outline-primary:hover { background: rgba(13, 110, 253, 0.3); }
+
+        /* ===== REPORT CARDS ===== */
+        .report-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .report-card .card-body { color: var(--text-color); }
+        .report-card .card-title { color: var(--text-color); }
+        .report-card .card-text { color: var(--text-muted); }
+
+        /* ===== MODAL GLASS ===== */
+        .modal-content {
+            background: var(--modal-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+        }
+        .modal-header { border-bottom: 1px solid var(--glass-border); }
+        .modal-footer { border-top: 1px solid var(--glass-border); }
+        .modal .btn-close { 
+            filter: invert(1); 
+            opacity: 0.7;
+        }
+        [data-theme="light"] .modal .btn-close { 
+            filter: invert(0); 
+            opacity: 0.5;
+        }
+        .modal .form-control,
+        .modal .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+        }
+        .modal .form-control:focus,
+        .modal .form-select:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .modal .form-label {
+            color: var(--text-muted);
+        }
+        .modal .form-check-label {
+            color: var(--text-color);
+        }
+        .modal .btn-secondary {
+            background: var(--input-bg);
+            border-color: var(--glass-border);
+            color: var(--text-color);
+        }
+        .modal .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .modal .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* ===== DATETIME ===== */
+        #currentDateTime {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        /* ============================================================ */
+        /* ===== TIMER, DASHBOARD DROPDOWN, CHATBOT ===== */
+        /* ============================================================ */
+
+        .timer-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: inline-block;
+        }
+        .timer-container svg {
+            transform: rotate(-90deg);
+            width: 60px;
+            height: 60px;
+        }
+        .timer-container .timer-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 4;
+        }
+        [data-theme="light"] .timer-container .timer-bg {
+            stroke: rgba(0, 0, 0, 0.12);
+        }
+        .timer-container .timer-progress {
+            fill: none;
+            stroke: #4c9f70;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 169.646;
+            stroke-dashoffset: 169.646;
+            transition: stroke-dashoffset 1s linear;
+        }
+        .timer-container .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-shadow: 0 1px 5px var(--shadow-color);
+        }
+        .timer-warning .timer-progress { stroke: #ffc107; }
+        .timer-danger .timer-progress { stroke: #dc3545; }
+
+        /* --- DASHBOARD DROPDOWN --- */
+        .dashboard-dropdown .dropdown-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+        }
+        .dashboard-dropdown .dropdown-toggle:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        .dashboard-dropdown .dropdown-menu {
+            background: var(--dropdown-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 220px;
+            z-index: 9999 !important;
+        }
+        .dashboard-dropdown .dropdown-item {
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        .dashboard-dropdown .dropdown-item:hover {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+        }
+        .dashboard-dropdown .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            color: #4c9f70;
+        }
+        .dashboard-dropdown .dropdown-divider {
+            border-color: var(--glass-border);
+        }
+
+        /* --- CHATBOT VITA --- */
+        .chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+        }
+        .chatbot-toggle {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+            font-size: 1.8rem;
+            box-shadow: 0 4px 30px rgba(43, 122, 75, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 40px rgba(43, 122, 75, 0.5);
+        }
+        .chatbot-toggle .badge-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #dc3545;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            max-height: 480px;
+            background: var(--chatbot-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            box-shadow: 0 20px 60px var(--shadow-color);
+            display: none;
+            overflow: hidden;
+            flex-direction: column;
+            z-index: 9999;
+        }
+        .chatbot-window.open { display: flex; }
+        .chatbot-header {
+            padding: 15px 20px;
+            background: rgba(43, 122, 75, 0.2);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chatbot-header .chatbot-name {
+            color: var(--text-color);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .chatbot-header .chatbot-name i {
+            color: #4c9f70;
+            margin-right: 8px;
+        }
+        .chatbot-header .chatbot-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .chatbot-header .chatbot-close:hover { color: var(--text-color); }
+        .chatbot-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            max-height: 320px;
+        }
+        .chatbot-body .message {
+            margin-bottom: 12px;
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            animation: fadeInMsg 0.3s ease;
+        }
+        .chatbot-body .message.bot {
+            background: rgba(76, 159, 112, 0.15);
+            color: var(--text-color);
+            border-bottom-left-radius: 4px;
+            margin-right: auto;
+        }
+        .chatbot-body .message.user {
+            background: rgba(13, 110, 253, 0.2);
+            color: var(--text-color);
+            border-bottom-right-radius: 4px;
+            margin-left: auto;
+        }
+        @keyframes fadeInMsg {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chatbot-footer {
+            padding: 12px 15px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 8px;
+        }
+        .chatbot-footer input {
+            flex: 1;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: var(--input-bg);
+            color: var(--text-color);
+            outline: none;
+            font-size: 0.9rem;
+        }
+        .chatbot-footer input::placeholder { color: var(--text-muted); }
+        .chatbot-footer input:focus { border-color: #4c9f70; }
+        .chatbot-footer button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            background: var(--primary-gradient);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chatbot-footer button:hover { opacity: 0.85; transform: scale(0.97); }
+
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle {
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .indicator-card .number { font-size: 1.5rem; }
+            .tab-content { padding: 15px; }
+            .page-title { font-size: 1.5rem; }
+            .chatbot-window {
+                width: 300px;
+                right: -10px;
+                bottom: 75px;
+            }
+            .timer-container { width: 45px; height: 45px; }
+            .timer-container svg { width: 45px; height: 45px; }
+            .timer-container .timer-text { font-size: 0.6rem; }
+            .header-timer-wrapper .timer-label { display: none; }
+        }
+        @media (max-width: 400px) {
+            .chatbot-window { width: 280px; right: -5px; }
+        }
+
+        .header-timer-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-timer-wrapper .timer-label {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* ===== ESTILOS PERFIL ===== */
+        .profile-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .profile-detail .label {
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+        .profile-detail .value {
+            color: var(--text-color);
+        }
+        .profile-avatar-lg {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 3px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: var(--text-color);
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+        }
+        .profile-permissions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .profile-permissions .badge {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* ===== PERFIL CARD ===== */
+        .profile-image-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            position: relative;
+            z-index: 9998;
+        }
+        .profile-image-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.12);
+        }
+        .profile-image-card .avatar-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            flex-shrink: 0;
+        }
+        .profile-image-card .info h6 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.85rem;
+        }
+        .profile-image-card .info small {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+        .profile-image-card .dropdown-toggle {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 0 0 0 8px;
+            font-size: 0.8rem;
+        }
+        .profile-image-card .dropdown-toggle:hover {
+            color: var(--text-color);
+        }
+        .profile-image-card .dropdown-menu {
+            background: var(--dropdown-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 200px;
+            z-index: 99999 !important;
+        }
+        .profile-image-card .dropdown-item {
+            color: var(--text-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+        }
+        .profile-image-card .dropdown-item:hover {
+            background: rgba(76, 159, 112, 0.2);
+            color: var(--text-color);
+        }
+        .profile-image-card .dropdown-item i {
+            width: 20px;
+            margin-right: 10px;
+            color: #4c9f70;
+        }
+        .profile-image-card .dropdown-item.text-danger i { color: #dc3545; }
+        .profile-image-card .dropdown-item.text-danger:hover {
+            background: rgba(220, 53, 69, 0.15);
+        }
+        .profile-image-card .dropdown-divider {
+            border-color: var(--glass-border);
+        }
+
+        .profile-edit-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 3px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--text-color);
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-size: cover;
+            background-position: center;
+        }
+        .profile-edit-avatar:hover {
+            opacity: 0.8;
+            transform: scale(1.02);
+        }
+        .profile-edit-avatar .avatar-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 4px;
+            border-radius: 0 0 50% 50%;
+            text-align: center;
+        }
+        .profile-edit-avatar .avatar-overlay i {
+            font-size: 0.8rem;
+        }
+        .edit-profile-form .form-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .edit-profile-form .form-control,
+        .edit-profile-form .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+            border-radius: 8px;
+        }
+        .edit-profile-form .form-control:focus,
+        .edit-profile-form .form-select:focus {
+            background: var(--input-bg);
+            border-color: rgba(13, 110, 253, 0.5);
+            box-shadow: 0 0 0 0.25rem var(--primary-glow);
+        }
+        .edit-profile-form .form-control::placeholder {
+            color: var(--text-muted);
+        }
+        .edit-profile-form .form-text {
+            color: var(--text-muted);
+        }
+        .permission-checkbox {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .permission-checkbox .form-check {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 8px 15px;
+            margin: 0;
+            transition: all 0.2s ease;
+        }
+        .permission-checkbox .form-check:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .permission-checkbox .form-check-input {
+            margin-right: 8px;
+        }
+        .permission-checkbox .form-check-label {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        /* ===== ESTILOS UTILIZADORES ===== */
+        .utilizador-item {
+            background: var(--glass-bg);
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .utilizador-item:hover {
+            transform: translateX(5px);
+            background: rgba(255,255,255,0.05);
+        }
+        .utilizador-item .user-info {
+            flex: 1;
+        }
+        .utilizador-item .user-info .name {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .utilizador-item .user-info .details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== ESTILOS PERMISSÕES ===== */
+        .permissao-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .permissao-item .perm-info {
+            flex: 1;
+        }
+        .permissao-item .perm-info .perm-nome {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .permissao-item .perm-info .perm-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== ESTILOS MÓDULOS ===== */
+        .modulo-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modulo-item .mod-info {
+            flex: 1;
+        }
+        .modulo-item .mod-info .mod-nome {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .modulo-item .mod-info .mod-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== ESTILOS CONFIGURAÇÕES ===== */
+        .config-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .config-item .config-info {
+            flex: 1;
+        }
+        .config-item .config-info .config-nome {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .config-item .config-info .config-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== ESTILOS AUDITORIA ===== */
+        .audit-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+        }
+        .audit-item .audit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .audit-item .audit-header h6 {
+            color: var(--text-color);
+            margin: 0;
+        }
+        .audit-item .audit-details {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* ===== NOTIFICAÇÕES ===== */
+        .notif-item {
+            background: var(--glass-bg);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 6px;
+            border-left: 4px solid var(--primary-color);
+        }
+        .notif-item .notif-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .notif-item .notif-text {
+            color: var(--text-color);
+        }
+        .notif-item.critical { border-left-color: var(--danger-color); }
+        .notif-item.warning { border-left-color: var(--warning-color); }
+        .notif-item.info { border-left-color: var(--info-color); }
+
+        /* ===== BOTÕES ===== */
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+            color: #fff;
+        }
+
+        .vita-med {
+            width: 80px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .dropdown-menu {
+            z-index: 99999 !important;
+        }
+        .dropdown {
+            z-index: 9998 !important;
+        }
+        .dropdown-menu.show {
+            display: block !important;
+        }
+
+        /* ===== INDICADORES ===== */
+        .indicador-sistema {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid var(--glass-border);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .indicador-sistema .valor {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+        .indicador-sistema .rotulo {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- ========== CABEÇALHO ========== -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h2 class="page-title">
+                        <i class="fas fa-shield-alt text-primary"></i> 
+                        Super Administrador
+                        <span class="badge bg-primary ms-2 notification-badge">ATIVO</span>
+                    </h2>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        
+                        <!-- DASHBOARD DROPDOWN -->
+                        <div class="dashboard-dropdown dropdown">
+                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-th-large me-1"></i> Menu Admin
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="dashboardMenu">
+                                <li><a class="dropdown-item" href="#dashboard-tab" data-tab="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+                                <li><a class="dropdown-item" href="#utilizadores-tab" data-tab="utilizadores"><i class="fas fa-users"></i> Utilizadores</a></li>
+                                <li><a class="dropdown-item" href="#permissoes-tab" data-tab="permissoes"><i class="fas fa-lock"></i> Permissões</a></li>
+                                <li><a class="dropdown-item" href="#modulos-tab" data-tab="modulos"><i class="fas fa-cubes"></i> Módulos</a></li>
+                                <li><a class="dropdown-item" href="#configuracoes-tab" data-tab="configuracoes"><i class="fas fa-sliders-h"></i> Configurações</a></li>
+                                <li><a class="dropdown-item" href="#identificacao-tab" data-tab="identificacao"><i class="fas fa-id-card"></i> Identificação</a></li>
+                                <li><a class="dropdown-item" 
+                                       href="front-coci.html" ><i class="fas fa-comment-dots"></i> COCI</a></li>
+                                <li><a class="dropdown-item" href="#seguranca-tab" data-tab="seguranca"><i class="fas fa-shield-virus"></i> Segurança</a></li>
+                                <li><a class="dropdown-item" href="#auditoria-tab" data-tab="auditoria"><i class="fas fa-clipboard-list"></i> Auditoria</a></li>
+                                <li><a class="dropdown-item" href="#backup-tab" data-tab="backup"><i class="fas fa-database"></i> Backup</a></li>
+                                <li><a class="dropdown-item" href="#relatorios-tab" data-tab="relatorios"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+                            </ul>
+                        </div>
+                        
+                        <!-- RELÓGIO -->
+                        <span class="badge" id="currentDateTime">
+                            <i class="bi bi-clock"></i> 
+                            <span id="dateTimeDisplay">Carregando...</span>
+                        </span>
+
+                        <!-- THEME TOGGLE -->
+                        <div class="theme-toggle" id="themeToggle" title="Alterar Tema">
+                            <i class="fas fa-moon" id="themeIcon"></i>
+                        </div>
+
+                        <!-- TIMER CIRCULAR -->
+                        <div class="header-timer-wrapper">
+                            <span class="timer-label" id="timerLabel">Sessão</span>
+                            <div class="timer-container" id="timerContainer">
+                                <svg viewBox="0 0 60 60">
+                                    <circle class="timer-bg" cx="30" cy="30" r="27"/>
+                                    <circle class="timer-progress" id="timerProgress" cx="30" cy="30" r="27"/>
+                                </svg>
+                                <span class="timer-text" id="timerText">15:00</span>
+                            </div>
+                        </div>
+                        
+                        <!-- ===== PERFIL ===== -->
+                        <div class="profile-image-card dropdown" id="profileCard">
+                            <div class="avatar-img" id="profileCardAvatar">SA</div>
+                            <div class="info">
+                                <h6 id="profileCardName">Super Admin</h6>
+                                <small id="profileCardSpecialty">Administração</small>
+                            </div>
+                            <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="profileCardMenu">
+                                <li><a class="dropdown-item" href="#" id="profileCardView"><i class="fas fa-user"></i> Ver Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="profileCardEdit"><i class="fas fa-edit"></i> Editar Perfil</a></li>
+                                <li><a class="dropdown-item" href="#" id="profileCardPassword"><i class="fas fa-key"></i> Alterar Senha</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="logout-per.html" id="profileCardLogout">
+                                        <i class="fas fa-sign-out-alt"></i> Sair
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== PAINEL DE ESTATÍSTICAS ========== -->
+        <div class="row mb-4" id="dashboard-tab">
+            <div class="col-md-2 col-6">
+                <div class="indicator-card fade-in">
+                    <div class="number" id="totalUtilizadores">0</div>
+                    <div class="label"><i class="fas fa-users"></i> Utilizadores</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card success fade-in">
+                    <div class="number" id="utilizadoresOnline">0</div>
+                    <div class="label"><i class="fas fa-circle"></i> Online</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card info fade-in">
+                    <div class="number" id="modulosAtivos">0</div>
+                    <div class="label"><i class="fas fa-cubes"></i> Módulos</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card warning fade-in">
+                    <div class="number" id="sessoesAtivas">0</div>
+                    <div class="label"><i class="fas fa-clock"></i> Sessões</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card danger fade-in">
+                    <div class="number" id="alertasSistema">0</div>
+                    <div class="label"><i class="fas fa-bell"></i> Alertas</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-6">
+                <div class="indicator-card primary fade-in">
+                    <div class="number" id="integracoesAtivas">0</div>
+                    <div class="label"><i class="fas fa-link"></i> Integrações</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TABS ========== -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item"><button class="nav-link active" id="utilizadores-tab" data-bs-toggle="tab" data-bs-target="#utilizadores" type="button"><i class="fas fa-users"></i> Utilizadores</button></li>
+            <li class="nav-item"><button class="nav-link" id="permissoes-tab" data-bs-toggle="tab" data-bs-target="#permissoes" type="button"><i class="fas fa-lock"></i> Permissões</button></li>
+            <li class="nav-item"><button class="nav-link" id="modulos-tab" data-bs-toggle="tab" data-bs-target="#modulos" type="button"><i class="fas fa-cubes"></i> Módulos</button></li>
+            <li class="nav-item"><button class="nav-link" id="configuracoes-tab" data-bs-toggle="tab" data-bs-target="#configuracoes" type="button"><i class="fas fa-sliders-h"></i> Configurações</button></li>
+            <li class="nav-item"><button class="nav-link" id="identificacao-tab" data-bs-toggle="tab" data-bs-target="#identificacao" type="button"><i class="fas fa-id-card"></i> Identificação</button></li>
+            <li class="nav-item"><button class="nav-link" id="coci-tab" data-bs-toggle="tab" data-bs-target="#coci" type="button"><i class="fas fa-comment-dots"></i> COCI</button></li>
+            <li class="nav-item"><button class="nav-link" id="seguranca-tab" data-bs-toggle="tab" data-bs-target="#seguranca" type="button"><i class="fas fa-shield-virus"></i> Segurança</button></li>
+            <li class="nav-item"><button class="nav-link" id="auditoria-tab" data-bs-toggle="tab" data-bs-target="#auditoria" type="button"><i class="fas fa-clipboard-list"></i> Auditoria</button></li>
+            <li class="nav-item"><button class="nav-link" id="backup-tab" data-bs-toggle="tab" data-bs-target="#backup" type="button"><i class="fas fa-database"></i> Backup</button></li>
+            <li class="nav-item"><button class="nav-link" id="relatorios-tab" data-bs-toggle="tab" data-bs-target="#relatorios" type="button"><i class="fas fa-chart-bar"></i> Relatórios</button></li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- ===== ABA UTILIZADORES ===== -->
+            <div class="tab-pane fade show active" id="utilizadores" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="search-section">
+                            <h6><i class="fas fa-users me-2"></i> Gestão de Utilizadores</h6>
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <select class="form-select" id="filterUserStatus">
+                                        <option value="">Todos</option>
+                                        <option value="Ativo">🟢 Ativo</option>
+                                        <option value="Inativo">🔴 Inativo</option>
+                                        <option value="Bloqueado">🟠 Bloqueado</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" id="searchUser" class="form-control" placeholder="Nome ou email">
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-primary" id="btnNovoUtilizador"><i class="fas fa-plus me-2"></i> Novo Utilizador</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="listaUtilizadores">
+                            <!-- Utilizadores via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA PERMISSÕES ===== -->
+            <div class="tab-pane fade" id="permissoes" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-lock me-2"></i> Perfis e Permissões</h6>
+                            <div id="listaPermissoes">
+                                <div class="text-muted text-center p-3">Nenhum perfil encontrado</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-edit me-2"></i> Editar Permissões</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Perfil</label>
+                                <select class="form-select" id="editPerfil">
+                                    <option value="">-- Selecione --</option>
+                                </select>
+                            </div>
+                            <div id="permissaoDetalhes">
+                                <div class="text-muted">Selecione um perfil para editar</div>
+                            </div>
+                            <button class="btn btn-primary" id="btnSalvarPermissoes"><i class="fas fa-save me-2"></i> Salvar Permissões</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA MÓDULOS ===== -->
+            <div class="tab-pane fade" id="modulos" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-cubes me-2"></i> Módulos do Sistema</h6>
+                            <div id="listaModulos">
+                                <div class="text-muted text-center p-3">Nenhum módulo encontrado</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA CONFIGURAÇÕES ===== -->
+            <div class="tab-pane fade" id="configuracoes" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-sliders-h me-2"></i> Configurações Gerais</h6>
+                            <div id="listaConfiguracoes">
+                                <div class="text-muted text-center p-3">Nenhuma configuração encontrada</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA IDENTIFICAÇÃO ===== -->
+            <div class="tab-pane fade" id="identificacao" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-id-card me-2"></i> Identificação Institucional</h6>
+                            <div id="identificacaoInfo">
+                                <div class="text-muted text-center p-3">Carregando dados...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-qrcode me-2"></i> QR Codes</h6>
+                            <div id="qrcodeInfo">
+                                <div class="text-muted text-center p-3">Nenhum QR Code gerado</div>
+                            </div>
+                            <button class="btn btn-primary mt-2" id="btnGerarQRCode"><i class="fas fa-qrcode me-2"></i> Gerar QR Code</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA COCI ===== -->
+            <div class="tab-pane fade" id="coci" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-comment-dots me-2"></i> Administração do COCI</h6>
+                            <div id="cociInfo">
+                                <div class="text-muted text-center p-3">Carregando dados...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA SEGURANÇA ===== -->
+            <div class="tab-pane fade" id="seguranca" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-shield-virus me-2"></i> Monitorização de Segurança</h6>
+                            <div id="segurancaInfo">
+                                <div class="text-muted text-center p-3">Carregando dados...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-sync me-2"></i> Sessões Ativas</h6>
+                            <div id="sessoesInfo">
+                                <div class="text-muted text-center p-3">Nenhuma sessão ativa</div>
+                            </div>
+                            <button class="btn btn-danger mt-2" id="btnTerminarSessoes"><i class="fas fa-power-off me-2"></i> Terminar Todas as Sessões</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA AUDITORIA ===== -->
+            <div class="tab-pane fade" id="auditoria" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-clipboard-list me-2"></i> Registo de Auditoria</h6>
+                            <div id="listaAuditoria">
+                                <div class="text-muted text-center p-3">Nenhum registo encontrado</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA BACKUP ===== -->
+            <div class="tab-pane fade" id="backup" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-database me-2"></i> Gestão de Backups</h6>
+                            <div id="backupInfo">
+                                <div class="text-muted text-center p-3">Carregando dados...</div>
+                            </div>
+                            <div class="mt-3">
+                                <button class="btn btn-success" id="btnExecutarBackup"><i class="fas fa-save me-2"></i> Executar Backup</button>
+                                <button class="btn btn-warning" id="btnAgendarBackup"><i class="fas fa-clock me-2"></i> Agendar Backup</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h6 class="card-title"><i class="fas fa-history me-2"></i> Histórico de Backups</h6>
+                            <div id="historicoBackup">
+                                <div class="text-muted text-center p-3">Nenhum backup registado</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ABA RELATÓRIOS ===== -->
+            <div class="tab-pane fade" id="relatorios" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioUtilizadores">
+                            <div class="card-body text-center">
+                                <i class="fas fa-users text-primary fs-1"></i>
+                                <h5 class="card-title mt-3">Utilizadores</h5>
+                                <p class="card-text">Relatório de utilizadores ativos</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioSistema">
+                            <div class="card-body text-center">
+                                <i class="fas fa-server text-success fs-1"></i>
+                                <h5 class="card-title mt-3">Sistema</h5>
+                                <p class="card-text">Relatório de desempenho do sistema</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card report-card h-100" id="relatorioSeguranca">
+                            <div class="card-body text-center">
+                                <i class="fas fa-shield-alt text-info fs-1"></i>
+                                <h5 class="card-title mt-3">Segurança</h5>
+                                <p class="card-text">Relatório de eventos de segurança</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAIS ========== -->
+    <!-- Modal de Perfil -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user me-2"></i> Perfil do Super Administrador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <div class="profile-avatar-lg">SA</div>
+                        <h4 id="profileDoctorName">Super Admin</h4>
+                        <span class="badge bg-primary">ID: SA-0001</span>
+                        <span class="badge bg-success">Ativo</span>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="profile-detail"><span class="label">Nome Completo</span><span class="value">Administrador do Sistema</span></div>
+                            <div class="profile-detail"><span class="label">Cargo</span><span class="value">Super Administrador</span></div>
+                            <div class="profile-detail"><span class="label">ID Funcionário</span><span class="value">SA-0001</span></div>
+                            <div class="profile-detail"><span class="label">Email</span><span class="value">admin@vitalinka.ao</span></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="profile-detail"><span class="label">Telefone</span><span class="value">+244 923 456 782</span></div>
+                            <div class="profile-detail"><span class="label">Setor</span><span class="value">Administração</span></div>
+                            <div class="profile-detail"><span class="label">Data de Admissão</span><span class="value">01/01/2020</span></div>
+                            <div class="profile-detail"><span class="label">Último Acesso</span><span class="value">15/08/2026 08:00</span></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h6>Permissões</h6>
+                    <div class="profile-permissions">
+                        <span class="badge">🔑 Super Admin</span>
+                        <span class="badge">👥 Utilizadores</span>
+                        <span class="badge">🔒 Permissões</span>
+                        <span class="badge">📦 Módulos</span>
+                        <span class="badge">⚙️ Configurações</span>
+                        <span class="badge">🛡️ Segurança</span>
+                        <span class="badge">📋 Auditoria</span>
+                        <span class="badge">💾 Backup</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="profileEditBtn"><i class="fas fa-edit me-1"></i> Editar Perfil</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Perfil -->
+    <div class="modal fade" id="profileEditModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-edit me-2"></i> Editar Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="profileEditForm" class="edit-profile-form">
+                        <div class="text-center mb-4">
+                            <div class="profile-edit-avatar" id="avatarUpload">
+                                <span id="avatarInitials">SA</span>
+                                <div class="avatar-overlay">
+                                    <i class="fas fa-camera"></i> Alterar
+                                </div>
+                            </div>
+                            <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
+                            <small class="text-muted">Clique na imagem para alterar a foto</small>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Nome Completo</label>
+                                    <input type="text" class="form-control" id="editFullName" value="Administrador do Sistema" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Cargo</label>
+                                    <select class="form-select" id="editCargo">
+                                        <option value="Super Administrador" selected>Super Administrador</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">ID Funcionário</label>
+                                    <input type="text" class="form-control" id="editID" value="SA-0001" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="editEmail" value="admin@vitalinka.ao" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Telefone</label>
+                                    <input type="text" class="form-control" id="editPhone" value="+244 923 456 782" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Setor</label>
+                                    <select class="form-select" id="editSetor">
+                                        <option value="Administração" selected>Administração</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Data de Admissão</label>
+                                    <input type="date" class="form-control" id="editAdmissionDate" value="2020-01-01">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select" id="editStatus">
+                                        <option value="Ativo" selected>Ativo</option>
+                                        <option value="Inativo">Inativo</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>Preferências</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Idioma</label>
+                                    <select class="form-select" id="editLanguage">
+                                        <option value="pt" selected>Português</option>
+                                        <option value="en">Inglês</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Tema</label>
+                                    <select class="form-select" id="editTheme">
+                                        <option value="dark" selected>Escuro</option>
+                                        <option value="light">Claro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveProfile"><i class="fas fa-save me-1"></i> Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Novo Utilizador -->
+    <div class="modal fade" id="novoUtilizadorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i> Novo Utilizador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nome Completo</label>
+                        <input type="text" class="form-control" id="novoNome" placeholder="Nome completo">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="novoEmail" placeholder="email@vitalinka.ao">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Cargo</label>
+                        <select class="form-select" id="novoCargo">
+                            <option value="Diretor Geral">Diretor Geral</option>
+                            <option value="Médico">Médico</option>
+                            <option value="Enfermeiro">Enfermeiro</option>
+                            <option value="Farmacêutico">Farmacêutico</option>
+                            <option value="Técnico de Laboratório">Técnico de Laboratório</option>
+                            <option value="Rececionista">Rececionista</option>
+                            <option value="Financeiro">Financeiro</option>
+                            <option value="Gestor de Internamento">Gestor de Internamento</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Perfil</label>
+                        <select class="form-select" id="novoPerfil">
+                            <option value="Admin">Admin</option>
+                            <option value="Gestor">Gestor</option>
+                            <option value="Operador">Operador</option>
+                            <option value="Visualizador">Visualizador</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Senha Temporária</label>
+                        <input type="text" class="form-control" id="novaSenha" value="Vitalinka@2026">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnCriarUtilizador"><i class="fas fa-save me-2"></i> Criar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Sessão -->
+    <div class="modal fade" id="sessionModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-clock me-2" style="color:#ffc107;"></i> Sessão a expirar</h5>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="fas fa-exclamation-triangle" style="font-size:3rem; color:#ffc107; margin-bottom:15px;"></i>
+                    <h4>Tem a certeza que pretende terminar a sessão?</h4>
+                    <p class="text-muted" style="color:var(--text-muted) !important;">A sua sessão irá expirar em <strong id="sessionCountdown">2:00</strong> minutos.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-success" id="sessionContinueBtn"><i class="fas fa-check me-2"></i> Não, continuar</button>
+                    <button type="button" class="btn btn-danger" id="sessionEndBtn"><i class="fas fa-sign-out-alt me-2"></i> Sim, terminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CHATBOT VITA ========== -->
+    <div class="chatbot-container">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <span class="chatbot-name"><i class="fas fa-robot"></i> VITA</span>
+                <button class="chatbot-close" id="chatbotClose"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chatbot-body" id="chatbotBody">
+                <div class="message bot">
+                    <i class="fas fa-robot me-1"></i> Olá! Sou a <strong>VITA</strong>, sua assistente de administração.<br>
+                    Como posso ajudar? Pergunte sobre utilizadores, permissões, módulos, segurança ou backup.
+                </div>
+            </div>
+            
+            <a href="ia-dev.html">
+                <button class="ml-5" 
+                        style="margin-left: 20px;
+                               margin-bottom: 20px; 
+                               border-radius: 50px;
+                               color: green;
+                               background-color: #0b3b3b">
+                    <i class="fas fa-headset" 
+                   style="color: rgba(204, 185, 204, 0.39)">
+                </i> Vita AI </button>
+            </a>
+            
+            <div class="chatbot-footer">
+                <input type="text" id="chatbotInput" placeholder="Digite sua pergunta...">
+                <button id="chatbotSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        <button class="chatbot-toggle" id="chatbotToggle">
+            <img class="vita-med" src="images/chat-bot.png" alt="VITA">
+            <span class="badge-notification">1</span>
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // ================================================================
+            // 1. THEME TOGGLE
+            // ================================================================
+            let currentTheme = 'dark';
+            const themeToggle = $('#themeToggle');
+            const themeIcon = $('#themeIcon');
+
+            function setTheme(theme) {
+                currentTheme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                if (theme === 'light') {
+                    themeIcon.removeClass('fa-moon').addClass('fa-sun');
+                } else {
+                    themeIcon.removeClass('fa-sun').addClass('fa-moon');
+                }
+                localStorage.setItem('vitalinka-theme', theme);
+            }
+
+            const savedTheme = localStorage.getItem('vitalinka-theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            }
+
+            themeToggle.click(function() {
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+            });
+
+            // ================================================================
+            // 2. DASHBOARD DROPDOWN
+            // ================================================================
+            $('#dashboardMenu .dropdown-item[data-tab]').click(function(e) {
+                e.preventDefault();
+                const tabId = $(this).data('tab');
+                const tabButton = $(`#${tabId}-tab`);
+                if (tabButton.length) {
+                    const tab = new bootstrap.Tab(tabButton[0]);
+                    tab.show();
+                }
+                $(this).closest('.dropdown').find('.dropdown-toggle').dropdown('toggle');
+            });
+
+            // ================================================================
+            // 3. PERFIL
+            // ================================================================
+            const profileModal = new bootstrap.Modal(document.getElementById('profileModal'));
+            const profileEditModal = new bootstrap.Modal(document.getElementById('profileEditModal'));
+            const novoUtilizadorModal = new bootstrap.Modal(document.getElementById('novoUtilizadorModal'));
+
+            $('#profileCardView').click(function(e) {
+                e.preventDefault();
+                profileModal.show();
+            });
+
+            $('#profileEditBtn').click(function() {
+                profileModal.hide();
+                loadProfileDataToEdit();
+                profileEditModal.show();
+            });
+
+            $('#profileCardEdit').click(function(e) {
+                e.preventDefault();
+                loadProfileDataToEdit();
+                profileEditModal.show();
+            });
+
+            $('#profileCardLogout').click(function(e) {
+                e.preventDefault();
+                if (confirm('Tem certeza que deseja sair?')) {
+                    clearInterval(timerInterval);
+                    window.location.href = "logout-per.html";
+                }
+            });
+
+            $('#profileCardPassword').click(function(e) {
+                e.preventDefault();
+                alert('🔐 Redirecionando para a página de alteração de senha...');
+            });
+
+            // ================================================================
+            // 4. PERFIL - DADOS
+            // ================================================================
+            let profileData = {
+                fullName: 'Administrador do Sistema',
+                cargo: 'Super Administrador',
+                id: 'SA-0001',
+                email: 'admin@vitalinka.ao',
+                phone: '+244 923 456 782',
+                setor: 'Administração',
+                admissionDate: '2020-01-01',
+                status: 'Ativo',
+                language: 'pt',
+                theme: 'dark'
+            };
+
+            function loadProfileDataToEdit() {
+                $('#editFullName').val(profileData.fullName);
+                $('#editCargo').val(profileData.cargo);
+                $('#editID').val(profileData.id);
+                $('#editEmail').val(profileData.email);
+                $('#editPhone').val(profileData.phone);
+                $('#editSetor').val(profileData.setor);
+                $('#editAdmissionDate').val(profileData.admissionDate);
+                $('#editStatus').val(profileData.status);
+                $('#editLanguage').val(profileData.language);
+                $('#editTheme').val(profileData.theme);
+                
+                const initials = profileData.fullName.split(' ').map(n => n[0]).join('');
+                $('#avatarInitials').text(initials);
+                $('#avatarUpload').css('background-image', 'none');
+                $('#avatarInitials').show();
+            }
+
+            function saveProfileData() {
+                profileData.fullName = $('#editFullName').val() || profileData.fullName;
+                profileData.cargo = $('#editCargo').val() || profileData.cargo;
+                profileData.id = $('#editID').val() || profileData.id;
+                profileData.email = $('#editEmail').val() || profileData.email;
+                profileData.phone = $('#editPhone').val() || profileData.phone;
+                profileData.setor = $('#editSetor').val() || profileData.setor;
+                profileData.admissionDate = $('#editAdmissionDate').val() || profileData.admissionDate;
+                profileData.status = $('#editStatus').val() || profileData.status;
+                profileData.language = $('#editLanguage').val() || profileData.language;
+                profileData.theme = $('#editTheme').val() || profileData.theme;
+                
+                updateProfileDisplay();
+                profileEditModal.hide();
+                
+                alert('✅ Perfil atualizado com sucesso!');
+            }
+
+            function updateProfileDisplay() {
+                const initials = profileData.fullName.split(' ').map(n => n[0]).join('');
+                $('.profile-avatar-lg').text(initials);
+                $('#profileDoctorName').text(profileData.fullName);
+                
+                $('#profileCardAvatar').text(initials);
+                $('#profileCardName').text('Super Admin');
+                $('#profileCardSpecialty').text('Administração');
+                
+                if (profileData.theme !== currentTheme) {
+                    setTheme(profileData.theme);
+                }
+            }
+
+            $('#btnSaveProfile').click(saveProfileData);
+
+            $('#avatarUpload').click(function() { $('#avatarFileInput').click(); });
+            $('#avatarFileInput').change(function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        $('#avatarUpload').css({
+                            'background-image': `url(${event.target.result})`,
+                            'background-size': 'cover',
+                            'background-position': 'center'
+                        });
+                        $('#avatarInitials').hide();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // ================================================================
+            // 5. DADOS DE EXEMPLO
+            // ================================================================
+            
+            // Utilizadores
+            let utilizadores = [
+                { id: 1, nome: 'Dr. António Costa', email: 'antonio.costa@vitalinka.ao', cargo: 'Diretor Geral', perfil: 'Admin', status: 'Ativo', ultimoAcesso: '15/08/2026 08:00' },
+                { id: 2, nome: 'Dra. Ana Manuel', email: 'ana.manuel@vitalinka.ao', cargo: 'Médico', perfil: 'Operador', status: 'Ativo', ultimoAcesso: '15/08/2026 09:30' },
+                { id: 3, nome: 'Enfª. Fernanda Santos', email: 'fernanda.santos@vitalinka.ao', cargo: 'Enfermeiro', perfil: 'Operador', status: 'Ativo', ultimoAcesso: '15/08/2026 07:00' },
+                { id: 4, nome: 'Dr. Carlos Ferreira', email: 'carlos.ferreira@vitalinka.ao', cargo: 'Farmacêutico', perfil: 'Operador', status: 'Inativo', ultimoAcesso: '14/08/2026 18:00' }
+            ];
+            let userCounter = 5;
+
+            // Perfis e Permissões
+            let perfis = [
+                { id: 1, nome: 'Admin', descricao: 'Acesso total ao sistema', permissoes: ['Todos'] },
+                { id: 2, nome: 'Gestor', descricao: 'Acesso a gestão e relatórios', permissoes: ['Dashboard', 'Relatórios', 'Gestão'] },
+                { id: 3, nome: 'Operador', descricao: 'Acesso operacional', permissoes: ['Operações'] },
+                { id: 4, nome: 'Visualizador', descricao: 'Apenas visualização', permissoes: ['Visualizar'] }
+            ];
+
+            // Módulos
+            let modulos = [
+                { id: 1, nome: 'Área do Médico', status: 'Ativo', versao: '2.0.0', descricao: 'Gestão clínica e consultas' },
+                { id: 2, nome: 'Área do Enfermeiro', status: 'Ativo', versao: '2.0.0', descricao: 'Cuidados de enfermagem' },
+                { id: 3, nome: 'Área do Farmacêutico', status: 'Ativo', versao: '2.0.0', descricao: 'Gestão de medicamentos' },
+                { id: 4, nome: 'Área do Laboratório', status: 'Ativo', versao: '2.0.0', descricao: 'Exames laboratoriais' },
+                { id: 5, nome: 'Área da Receção', status: 'Ativo', versao: '2.0.0', descricao: 'Atendimento e agendamento' },
+                { id: 6, nome: 'Área Financeira', status: 'Ativo', versao: '2.0.0', descricao: 'Gestão financeira' },
+                { id: 7, nome: 'Área do Paciente', status: 'Ativo', versao: '2.0.0', descricao: 'Portal do paciente' },
+                { id: 8, nome: 'COCI', status: 'Ativo', versao: '2.0.0', descricao: 'Comunicação institucional' }
+            ];
+
+            // Configurações
+            let configuracoes = [
+                { id: 1, nome: 'Idioma Padrão', valor: 'Português', descricao: 'Idioma padrão do sistema' },
+                { id: 2, nome: 'Fuso Horário', valor: 'GMT-3 (Angola)', descricao: 'Fuso horário institucional' },
+                { id: 3, nome: 'Formato de Data', valor: 'DD/MM/YYYY', descricao: 'Formato padrão de datas' },
+                { id: 4, nome: 'Autenticação 2FA', valor: 'Ativada', descricao: 'Autenticação em duas etapas' }
+            ];
+
+            // Notificações
+            let notificacoes = [
+                { id: 1, texto: '⚠️ Tentativa de acesso suspeita detectada', tipo: 'critical', hora: '09:30' },
+                { id: 2, texto: '📊 Utilização do servidor atingiu 85%', tipo: 'warning', hora: '09:15' },
+                { id: 3, texto: '✅ Backup diário concluído com sucesso', tipo: 'info', hora: '09:00' }
+            ];
+
+            // Auditoria
+            let auditoria = [
+                { id: 1, acao: 'Login - Super Admin', utilizador: 'Super Admin', data: '15/08/2026 08:00', ip: '192.168.1.1' },
+                { id: 2, acao: 'Criação de Utilizador - Dra. Ana Manuel', utilizador: 'Super Admin', data: '15/08/2026 08:30', ip: '192.168.1.1' },
+                { id: 3, acao: 'Modificação de Permissões - Perfil Gestor', utilizador: 'Super Admin', data: '15/08/2026 09:00', ip: '192.168.1.1' },
+                { id: 4, acao: 'Backup Executado - Tamanho: 2.5GB', utilizador: 'Sistema', data: '15/08/2026 10:00', ip: '--' }
+            ];
+
+            // Backup
+            let backups = [
+                { id: 1, data: '15/08/2026 10:00', tamanho: '2.5 GB', tipo: 'Completo', status: 'Concluído' },
+                { id: 2, data: '14/08/2026 10:00', tamanho: '2.4 GB', tipo: 'Completo', status: 'Concluído' },
+                { id: 3, data: '13/08/2026 10:00', tamanho: '2.3 GB', tipo: 'Incremental', status: 'Concluído' }
+            ];
+
+            // ================================================================
+            // 6. FUNÇÕES PRINCIPAIS
+            // ================================================================
+            function updateDateTime() {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('pt-BR');
+                const timeStr = now.toLocaleTimeString('pt-BR');
+                $('#dateTimeDisplay').text(`${dateStr} ${timeStr}`);
+            }
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            function getStatusClass(status) {
+                const map = {
+                    'Ativo': 'active',
+                    'Inativo': 'inactive',
+                    'Bloqueado': 'pending',
+                    'Online': 'online',
+                    'Offline': 'offline'
+                };
+                return map[status] || 'pending';
+            }
+
+            function getStatusEmoji(status) {
+                const map = {
+                    'Ativo': '🟢',
+                    'Inativo': '🔴',
+                    'Bloqueado': '🟠',
+                    'Online': '🟢',
+                    'Offline': '⚪'
+                };
+                return map[status] || '🟡';
+            }
+
+            function updateStats() {
+                const total = utilizadores.length;
+                const online = Math.floor(Math.random() * 3 + 2);
+                const modulosAtivos = modulos.filter(m => m.status === 'Ativo').length;
+                const sessoes = Math.floor(Math.random() * 5 + 3);
+                const alertas = notificacoes.filter(n => n.tipo === 'critical').length;
+                const integracoes = 4;
+
+                $('#totalUtilizadores').text(total);
+                $('#utilizadoresOnline').text(online);
+                $('#modulosAtivos').text(modulosAtivos);
+                $('#sessoesAtivas').text(sessoes);
+                $('#alertasSistema').text(alertas);
+                $('#integracoesAtivas').text(integracoes);
+            }
+            updateStats();
+
+            function renderUtilizadores() {
+                const container = $('#listaUtilizadores');
+                container.empty();
+
+                const status = $('#filterUserStatus').val();
+                const search = $('#searchUser').val().toLowerCase();
+
+                let filtered = utilizadores;
+                if (status) filtered = filtered.filter(u => u.status === status);
+                if (search) filtered = filtered.filter(u => u.nome.toLowerCase().includes(search) || u.email.toLowerCase().includes(search));
+
+                if (filtered.length === 0) {
+                    container.append('<div class="text-muted text-center p-4">Nenhum utilizador encontrado.</div>');
+                    return;
+                }
+
+                filtered.forEach(u => {
+                    const statusClass = getStatusClass(u.status);
+                    const emoji = getStatusEmoji(u.status);
+                    container.append(`
+                        <div class="utilizador-item" data-id="${u.id}">
+                            <div class="user-info">
+                                <div>
+                                    <span class="name">${u.nome}</span>
+                                    <span class="badge bg-secondary ms-2">${u.cargo}</span>
+                                    <span class="badge bg-info ms-2">${u.perfil}</span>
+                                </div>
+                                <div class="details">
+                                    ${emoji} ${u.status} • ${u.email} • Último acesso: ${u.ultimoAcesso}
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary editar-user" data-id="${u.id}"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm ${u.status === 'Ativo' ? 'btn-outline-danger' : 'btn-outline-success'} toggle-user" data-id="${u.id}">
+                                    <i class="fas ${u.status === 'Ativo' ? 'fa-ban' : 'fa-check'}"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderPermissoes() {
+                const container = $('#listaPermissoes');
+                container.empty();
+                perfis.forEach(p => {
+                    container.append(`
+                        <div class="permissao-item" data-id="${p.id}">
+                            <div class="perm-info">
+                                <div class="perm-nome">${p.nome}</div>
+                                <div class="perm-details">${p.descricao} • ${p.permissoes.length} permissões</div>
+                            </div>
+                            <span class="badge bg-primary">${p.permissoes.join(', ')}</span>
+                        </div>
+                    `);
+                });
+
+                // Atualizar select
+                const sel = $('#editPerfil');
+                sel.empty().append('<option value="">-- Selecione --</option>');
+                perfis.forEach(p => {
+                    sel.append(`<option value="${p.id}">${p.nome}</option>`);
+                });
+            }
+
+            function renderModulos() {
+                const container = $('#listaModulos');
+                container.empty();
+                modulos.forEach(m => {
+                    const statusClass = m.status === 'Ativo' ? 'success' : 'secondary';
+                    container.append(`
+                        <div class="modulo-item">
+                            <div class="mod-info">
+                                <div class="mod-nome">${m.nome}</div>
+                                <div class="mod-details">v${m.versao} • ${m.descricao}</div>
+                            </div>
+                            <div>
+                                <span class="badge bg-${statusClass}">${m.status}</span>
+                                <button class="btn btn-sm btn-outline-${m.status === 'Ativo' ? 'danger' : 'success'} toggle-modulo" data-id="${m.id}">
+                                    <i class="fas ${m.status === 'Ativo' ? 'fa-pause' : 'fa-play'}"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderConfiguracoes() {
+                const container = $('#listaConfiguracoes');
+                container.empty();
+                configuracoes.forEach(c => {
+                    container.append(`
+                        <div class="config-item">
+                            <div class="config-info">
+                                <div class="config-nome">${c.nome}</div>
+                                <div class="config-details">${c.descricao}</div>
+                            </div>
+                            <span class="badge bg-info">${c.valor}</span>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderAuditoria() {
+                const container = $('#listaAuditoria');
+                container.empty();
+                auditoria.slice().reverse().forEach(a => {
+                    container.append(`
+                        <div class="audit-item">
+                            <div class="audit-header">
+                                <h6>${a.acao}</h6>
+                                <span class="badge bg-secondary">${a.data}</span>
+                            </div>
+                            <div class="audit-details">
+                                Utilizador: ${a.utilizador} • IP: ${a.ip}
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderNotificacoes() {
+                const container = $('#listaNotificacoes');
+                container.empty();
+                if (notificacoes.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhuma notificação</div>');
+                    return;
+                }
+                notificacoes.slice().reverse().forEach(n => {
+                    container.append(`
+                        <div class="notif-item ${n.tipo}">
+                            <div class="notif-time">${n.hora}</div>
+                            <div class="notif-text">${n.texto}</div>
+                        </div>
+                    `);
+                });
+            }
+
+            function renderBackup() {
+                const container = $('#historicoBackup');
+                container.empty();
+                if (backups.length === 0) {
+                    container.append('<div class="text-muted text-center p-3">Nenhum backup registado</div>');
+                    return;
+                }
+                backups.slice().reverse().forEach(b => {
+                    const statusClass = b.status === 'Concluído' ? 'success' : 'warning';
+                    container.append(`
+                        <div class="audit-item">
+                            <div class="audit-header">
+                                <h6>${b.data}</h6>
+                                <span class="badge bg-${statusClass}">${b.status}</span>
+                            </div>
+                            <div class="audit-details">
+                                Tamanho: ${b.tamanho} • Tipo: ${b.tipo}
+                            </div>
+                        </div>
+                    `);
+                });
+
+                // Backup Info
+                const infoContainer = $('#backupInfo');
+                infoContainer.html(`
+                    <div class="indicador-sistema">
+                        <div class="valor">${backups.length}</div>
+                        <div class="rotulo">Backups Realizados</div>
+                    </div>
+                    <div class="indicador-sistema">
+                        <div class="valor">${backups[0]?.data || '--'}</div>
+                        <div class="rotulo">Último Backup</div>
+                    </div>
+                    <div class="indicador-sistema">
+                        <div class="valor">${backups[0]?.tamanho || '--'}</div>
+                        <div class="rotulo">Último Tamanho</div>
+                    </div>
+                `);
+            }
+
+            function renderIdentificacao() {
+                const container = $('#identificacaoInfo');
+                container.html(`
+                    <div class="indicador-sistema">
+                        <div class="valor" style="font-size:1.5rem">VITALINKA</div>
+                        <div class="rotulo">Prefixo Institucional</div>
+                    </div>
+                    <div class="indicador-sistema">
+                        <div class="valor" style="font-size:1.5rem">HRM-2026</div>
+                        <div class="rotulo">Código Institucional</div>
+                    </div>
+                    <div class="indicador-sistema">
+                        <div class="valor" style="font-size:1.5rem">12</div>
+                        <div class="rotulo">CCI Ativos</div>
+                    </div>
+                    <div class="indicador-sistema">
+                        <div class="valor" style="font-size:1.5rem">45</div>
+                        <div class="rotulo">QR Codes Gerados</div>
+                    </div>
+                `);
+
+                const qrContainer = $('#qrcodeInfo');
+                qrContainer.html(`
+                    <div class="text-center p-4">
+                        <div style="width: 150px; height: 150px; margin: 0 auto; background: var(--glass-bg); border: 2px dashed var(--glass-border); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--text-muted);">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <p class="mt-3 text-muted">QR Code institucional para identificação</p>
+                    </div>
+                `);
+            }
+
+            function renderCOCI() {
+                const container = $('#cociInfo');
+                container.html(`
+                    <div class="indicador-sistema">
+                        <div class="valor" style="font-size:1.5rem">8</div>
+                        <div class="rotulo">Canais Ativos</div>
+                    </div>
+                    <div class="indicador-sistema">
+                        <div class="valor" style="font-size:1.5rem">15</div>
+                        <div class="rotulo">Grupos</div>
+                    </div>
+                    <div class="indicador-sistema">
+                        <div class="valor" style="font-size:1.5rem">24</div>
+                        <div class="rotulo">Tópicos</div>
+                    </div>
+                    <div class="indicador-sistema">
+                        <div class="valor" style="font-size:1.5rem">IA VITA</div>
+                        <div class="rotulo">Assistente Ativo</div>
+                    </div>
+                `);
+            }
+
+            function renderSeguranca() {
+                const container = $('#segurancaInfo');
+                container.html(`
+                    <div class="indicador-sistema">
+                        <div class="valor" style="font-size:1.5rem">0</div>
+                        <div class="rotulo">Tentativas de Acesso</div>
+                    </div>
+                    <div class="indicador-sistema">
+                        <div class="valor" style="font-size:1.5rem">${Math.floor(Math.random() * 5 + 3)}</div>
+                        <div class="rotulo">Sessões Ativas</div>
+                    </div>
+                    <div class="indicador-sistema">
+                        <div class="valor" style="font-size:1.5rem">2FA</div>
+                        <div class="rotulo">Autenticação Ativa</div>
+                    </div>
+                    <div class="indicador-sistema">
+                        <div class="valor" style="font-size:1.5rem">SSL</div>
+                        <div class="rotulo">Certificado Digital</div>
+                    </div>
+                `);
+
+                const sessoesContainer = $('#sessoesInfo');
+                const sessoes = [
+                    { utilizador: 'Super Admin', dispositivo: 'Chrome - Windows', ip: '192.168.1.1', data: '15/08/2026 08:00' },
+                    { utilizador: 'Dr. António Costa', dispositivo: 'Chrome - MacOS', ip: '192.168.1.5', data: '15/08/2026 08:30' },
+                    { utilizador: 'Dra. Ana Manuel', dispositivo: 'Mobile - Android', ip: '192.168.1.10', data: '15/08/2026 09:00' }
+                ];
+                let html = '';
+                sessoes.forEach(s => {
+                    html += `
+                        <div class="audit-item">
+                            <div class="audit-header">
+                                <h6>${s.utilizador}</h6>
+                                <span class="badge bg-success">Ativa</span>
+                            </div>
+                            <div class="audit-details">
+                                ${s.dispositivo} • ${s.ip} • ${s.data}
+                            </div>
+                        </div>
+                    `;
+                });
+                sessoesContainer.html(html || '<div class="text-muted text-center p-3">Nenhuma sessão ativa</div>');
+            }
+
+            // ================================================================
+            // 7. EVENTOS - UTILIZADORES
+            // ================================================================
+            $('#filterUserStatus, #searchUser').on('change input', renderUtilizadores);
+
+            $('#btnNovoUtilizador').click(function() {
+                novoUtilizadorModal.show();
+            });
+
+            $('#btnCriarUtilizador').click(function() {
+                const nome = $('#novoNome').val().trim();
+                const email = $('#novoEmail').val().trim();
+                const cargo = $('#novoCargo').val();
+                const perfil = $('#novoPerfil').val();
+                const senha = $('#novaSenha').val();
+
+                if (!nome || !email) {
+                    alert('Preencha o nome e email.');
+                    return;
+                }
+
+                utilizadores.push({
+                    id: userCounter++,
+                    nome,
+                    email,
+                    cargo,
+                    perfil,
+                    status: 'Ativo',
+                    ultimoAcesso: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR')
+                });
+
+                notificacoes.push({
+                    id: notificacoes.length + 1,
+                    texto: `👤 Novo utilizador criado: ${nome} (${cargo})`,
+                    tipo: 'info',
+                    hora: new Date().toLocaleTimeString('pt-BR')
+                });
+
+                renderUtilizadores();
+                renderNotificacoes();
+                updateStats();
+                novoUtilizadorModal.hide();
+                $('#novoNome, #novoEmail').val('');
+                alert(`✅ Utilizador ${nome} criado com sucesso!`);
+            });
+
+            $(document).on('click', '.toggle-user', function() {
+                const id = $(this).data('id');
+                const user = utilizadores.find(u => u.id === id);
+                if (user) {
+                    user.status = user.status === 'Ativo' ? 'Inativo' : 'Ativo';
+                    notificacoes.push({
+                        id: notificacoes.length + 1,
+                        texto: `🔄 Status de ${user.nome} alterado para ${user.status}`,
+                        tipo: 'warning',
+                        hora: new Date().toLocaleTimeString('pt-BR')
+                    });
+                    renderUtilizadores();
+                    renderNotificacoes();
+                    updateStats();
+                    alert(`✅ Status de ${user.nome} alterado para ${user.status}.`);
+                }
+            });
+
+            // ================================================================
+            // 8. EVENTOS - PERMISSÕES
+            // ================================================================
+            $('#editPerfil').change(function() {
+                const id = $(this).val();
+                const perfil = perfis.find(p => p.id == id);
+                if (perfil) {
+                    let html = `
+                        <div class="validacao-item">
+                            <div><strong>Perfil:</strong> ${perfil.nome}</div>
+                            <div><strong>Descrição:</strong> ${perfil.descricao}</div>
+                            <hr>
+                            <div><strong>Permissões:</strong></div>
+                    `;
+                    perfil.permissoes.forEach(p => {
+                        html += `<div class="form-check"><input class="form-check-input" type="checkbox" checked><label class="form-check-label">${p}</label></div>`;
+                    });
+                    html += '</div>';
+                    $('#permissaoDetalhes').html(html);
+                } else {
+                    $('#permissaoDetalhes').html('<div class="text-muted">Selecione um perfil para editar</div>');
+                }
+            });
+
+            $('#btnSalvarPermissoes').click(function() {
+                const id = $('#editPerfil').val();
+                if (!id) { alert('Selecione um perfil.'); return; }
+                alert('✅ Permissões atualizadas com sucesso!');
+            });
+
+            // ================================================================
+            // 9. EVENTOS - MÓDULOS
+            // ================================================================
+            $(document).on('click', '.toggle-modulo', function() {
+                const id = $(this).data('id');
+                const modulo = modulos.find(m => m.id === id);
+                if (modulo) {
+                    modulo.status = modulo.status === 'Ativo' ? 'Inativo' : 'Ativo';
+                    notificacoes.push({
+                        id: notificacoes.length + 1,
+                        texto: `🔄 Módulo ${modulo.nome} ${modulo.status === 'Ativo' ? 'ativado' : 'desativado'}`,
+                        tipo: 'warning',
+                        hora: new Date().toLocaleTimeString('pt-BR')
+                    });
+                    renderModulos();
+                    renderNotificacoes();
+                    updateStats();
+                }
+            });
+
+            // ================================================================
+            // 10. EVENTOS - SEGURANÇA
+            // ================================================================
+            $('#btnTerminarSessoes').click(function() {
+                if (confirm('Tem certeza que deseja terminar todas as sessões ativas?')) {
+                    alert('✅ Todas as sessões foram terminadas com sucesso.');
+                }
+            });
+
+            // ================================================================
+            // 11. EVENTOS - BACKUP
+            // ================================================================
+            $('#btnExecutarBackup').click(function() {
+                const now = new Date();
+                backups.push({
+                    id: backups.length + 1,
+                    data: now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR'),
+                    tamanho: (2.5 + Math.random()).toFixed(1) + ' GB',
+                    tipo: 'Completo',
+                    status: 'Concluído'
+                });
+                notificacoes.push({
+                    id: notificacoes.length + 1,
+                    texto: '💾 Backup executado com sucesso!',
+                    tipo: 'info',
+                    hora: new Date().toLocaleTimeString('pt-BR')
+                });
+                renderBackup();
+                renderNotificacoes();
+                alert('✅ Backup executado com sucesso!');
+            });
+
+            $('#btnAgendarBackup').click(function() {
+                alert('📅 Backup agendado para as 22:00 diariamente.');
+            });
+
+            // ================================================================
+            // 12. EVENTOS - RELATÓRIOS
+            // ================================================================
+            $('.report-card').click(function() {
+                const type = $(this).attr('id').replace('relatorio', '').toLowerCase();
+                const titles = {
+                    utilizadores: 'Relatório de Utilizadores',
+                    sistema: 'Relatório de Sistema',
+                    seguranca: 'Relatório de Segurança'
+                };
+                alert(`📊 ${titles[type] || 'Relatório'}\n\nUtilizadores: ${utilizadores.length}\nMódulos: ${modulos.length}\nBackups: ${backups.length}`);
+            });
+
+            // ================================================================
+            // 13. EVENTOS - QR CODE
+            // ================================================================
+            $('#btnGerarQRCode').click(function() {
+                alert('📱 QR Code institucional gerado com sucesso!');
+            });
+
+            // ================================================================
+            // 14. TIMER DE SESSÃO
+            // ================================================================
+            let totalSeconds = 900;
+            let timerInterval = null;
+            let sessionModalShown = false;
+            let sessionModal = new bootstrap.Modal(document.getElementById('sessionModal'), { backdrop: 'static', keyboard: false });
+
+            const timerProgress = document.getElementById('timerProgress');
+            const timerText = document.getElementById('timerText');
+            const timerContainer = document.getElementById('timerContainer');
+            const circumference = 2 * Math.PI * 27;
+
+            function updateTimer() {
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+                timerText.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+
+                const progress = totalSeconds / 900;
+                const offset = circumference * (1 - progress);
+                timerProgress.style.strokeDashoffset = offset;
+
+                timerContainer.classList.remove('timer-warning', 'timer-danger');
+                if (totalSeconds <= 120) timerContainer.classList.add('timer-danger');
+                else if (totalSeconds <= 300) timerContainer.classList.add('timer-warning');
+
+                if (totalSeconds === 120 && !sessionModalShown) {
+                    sessionModalShown = true;
+                    $('#sessionCountdown').text('2:00');
+                    sessionModal.show();
+                    const modalInterval = setInterval(() => {
+                        const remaining = totalSeconds;
+                        const mins = Math.floor(remaining / 60);
+                        const secs = remaining % 60;
+                        $('#sessionCountdown').text(`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`);
+                        if (remaining <= 0) clearInterval(modalInterval);
+                    }, 1000);
+                }
+
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    window.location.href = "408.html";
+                }
+            }
+
+            function startTimer() {
+                if (timerInterval) clearInterval(timerInterval);
+                totalSeconds = 900;
+                sessionModalShown = false;
+                timerProgress.style.strokeDasharray = circumference;
+                timerProgress.style.strokeDashoffset = circumference;
+                updateTimer();
+                timerInterval = setInterval(() => {
+                    totalSeconds--;
+                    updateTimer();
+                }, 1000);
+            }
+
+            $('#sessionContinueBtn').click(function() {
+                sessionModal.hide();
+                sessionModalShown = false;
+                startTimer();
+            });
+
+            $('#sessionEndBtn').click(function() {
+                sessionModal.hide();
+                clearInterval(timerInterval);
+                window.location.href = "index.html";
+            });
+
+            startTimer();
+
+            // ================================================================
+            // 15. CHATBOT VITA
+            // ================================================================
+            const chatbotToggle = $('#chatbotToggle');
+            const chatbotWindow = $('#chatbotWindow');
+            const chatbotClose = $('#chatbotClose');
+            const chatbotInput = $('#chatbotInput');
+            const chatbotSend = $('#chatbotSend');
+            const chatbotBody = $('#chatbotBody');
+
+            chatbotToggle.click(function() {
+                chatbotWindow.toggleClass('open');
+                $('.badge-notification').fadeOut();
+            });
+
+            chatbotClose.click(function() {
+                chatbotWindow.removeClass('open');
+            });
+
+            function addMessage(text, isUser = false) {
+                const msg = $('<div class="message ' + (isUser ? 'user' : 'bot') + '">' + text + '</div>');
+                chatbotBody.append(msg);
+                chatbotBody.scrollTop(chatbotBody[0].scrollHeight);
+            }
+
+            function processChatbotQuery(query) {
+                const q = query.toLowerCase();
+                let response = '';
+
+                if (q.includes('utilizador') || q.includes('user')) {
+                    const total = utilizadores.length;
+                    const ativos = utilizadores.filter(u => u.status === 'Ativo').length;
+                    response = `👥 O sistema tem <strong>${total} utilizadores</strong>, ${ativos} ativos.`;
+                } else if (q.includes('permissão') || q.includes('perfil')) {
+                    const total = perfis.length;
+                    response = `🔒 Existem <strong>${total} perfis</strong> configurados no sistema.`;
+                } else if (q.includes('módulo') || q.includes('modulo')) {
+                    const ativos = modulos.filter(m => m.status === 'Ativo').length;
+                    response = `📦 <strong>${ativos} módulos</strong> estão ativos no momento.`;
+                } else if (q.includes('segurança') || q.includes('seguranca')) {
+                    const sessoes = Math.floor(Math.random() * 5 + 3);
+                    response = `🛡️ <strong>${sessoes} sessões ativas</strong>. Nenhuma ameaça detectada.`;
+                } else if (q.includes('backup') || q.includes('cópia')) {
+                    const total = backups.length;
+                    response = `💾 <strong>${total} backups</strong> realizados. Último: ${backups[0]?.data || 'N/A'}.`;
+                } else if (q.includes('auditoria') || q.includes('log')) {
+                    const total = auditoria.length;
+                    response = `📋 <strong>${total} registos</strong> de auditoria disponíveis.`;
+                } else if (q.includes('ajuda') || q.includes('ajudar')) {
+                    response = '💡 Posso ajudar com: utilizadores, permissões, módulos, segurança, backup, auditoria e relatórios.';
+                } else {
+                    response = '🤔 Pode reformular a pergunta? Sou a <strong>VITA</strong> e posso ajudar com utilizadores, permissões, módulos, segurança, backup, auditoria e relatórios.';
+                }
+
+                addMessage(response, false);
+            }
+
+            chatbotSend.click(function() {
+                const query = chatbotInput.val().trim();
+                if (!query) return;
+                addMessage(query, true);
+                chatbotInput.val('');
+                setTimeout(() => processChatbotQuery(query), 500);
+            });
+
+            chatbotInput.keypress(function(e) {
+                if (e.which === 13) chatbotSend.click();
+            });
+
+            setTimeout(() => {
+                addMessage('💡 Estou aqui para ajudar! Pergunte sobre utilizadores, permissões, módulos, segurança, backup, auditoria e relatórios.', false);
+            }, 2000);
+
+            // ================================================================
+            // 16. INICIALIZAÇÃO
+            // ================================================================
+            renderUtilizadores();
+            renderPermissoes();
+            renderModulos();
+            renderConfiguracoes();
+            renderAuditoria();
+            renderBackup();
+            renderIdentificacao();
+            renderCOCI();
+            renderSeguranca();
+            renderNotificacoes();
+            updateStats();
+
+            console.log('✅ VITALINKA - Super Administrador carregado com sucesso!');
+            console.log('🕐 Timer de sessão: 15 minutos');
+            console.log('🤖 Assistente VITA ativo');
+            console.log('🎨 Tema: ' + currentTheme);
+            console.log('🔑 Perfil do Super Admin disponível');
+            console.log('📋 Todas as funcionalidades administrativas implementadas!');
+            console.log('  - ✅ Dashboard com indicadores do sistema');
+            console.log('  - ✅ Gestão de utilizadores');
+            console.log('  - ✅ Gestão de permissões');
+            console.log('  - ✅ Controlo de módulos');
+            console.log('  - ✅ Configurações gerais');
+            console.log('  - ✅ Identificação institucional');
+            console.log('  - ✅ Administração do COCI');
+            console.log('  - ✅ Segurança e sessões');
+            console.log('  - ✅ Auditoria completa');
+            console.log('  - ✅ Backup e recuperação');
+            console.log('  - ✅ Relatórios administrativos');
+            console.log('  - ✅ Chatbot VITA com comandos');
+        });
+    </script>
+</body>
+</html>

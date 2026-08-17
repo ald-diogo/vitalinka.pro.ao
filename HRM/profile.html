@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>VITALINKA | Verificação de Segurança</title>
+    <!-- Bootstrap 5 + Icons + Google Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* ========== TEMA CLARO ========== */
+        :root {
+            --bg-overlay: rgba(0, 0, 0, 0.50);
+            --glass-bg: rgba(255, 255, 255, 0.92);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+            --text-primary: #1a2e2a;
+            --text-secondary: #4a6a5e;
+            --text-light: #ffffff;
+            --input-bg: #f7faf9;
+            --input-border: #dce5e2;
+            --input-focus: #2b7a4b;
+            --accent-green: #2b7a4b;
+            --accent-hover: #1e5a3a;
+            --accent-gradient: linear-gradient(135deg, #2b7a4b 0%, #1e5a3a 100%);
+            --error-bg: #fee2e2;
+            --error-text: #b91c1c;
+            --card-radius: 24px;
+            --input-radius: 12px;
+            --info-bg: #d1ecf1;
+            --info-text: #0c5460;
+        }
+
+        /* ========== TEMA ESCURO ========== */
+        body.dark {
+            --bg-overlay: rgba(0, 0, 0, 0.70);
+            --glass-bg: rgba(20, 30, 28, 0.88);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+            --text-primary: #eef4f0;
+            --text-secondary: #b8d0c2;
+            --input-bg: #2a3c36;
+            --input-border: #3a4f48;
+            --input-focus: #4c9f70;
+            --accent-green: #4c9f70;
+            --accent-hover: #6bb886;
+            --accent-gradient: linear-gradient(135deg, #4c9f70 0%, #2b7a4b 100%);
+            --error-bg: #3b1e1e;
+            --error-text: #fca5a5;
+            --info-bg: #1a3a3f;
+            --info-text: #8dd4e0;
+        }
+
+        /* ========== WRAPPER ========== */
+        .verify-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100%;
+            background-image: url('images/bg-vita.png');
+            background-position: center 30%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            position: relative;
+            padding: 2rem;
+        }
+
+        .verify-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--bg-overlay);
+            z-index: 0;
+        }
+
+        /* ========== SLOGAN ========== */
+        .slogan-overlay {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
+            padding: 0 2rem;
+            max-width: 650px;
+            pointer-events: none;
+        }
+
+        .slogan-overlay .logo-slogan1 {
+            max-height: 60px;
+            width: auto;
+            filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.4));
+            margin-bottom: 0.5rem;
+        }
+
+        .slogan-overlay h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .slogan-overlay p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            margin-bottom: 0;
+        }
+
+        .logo-slogan1 {
+            width: 50px;
+            height: 50px;
+        }
+
+        /* ========== PAINEL PRINCIPAL ========== */
+        .form-panel {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .verify-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-radius: var(--card-radius);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 2.5rem 2.5rem 2rem;
+            transition: all 0.3s ease;
+        }
+
+        /* ========== HEADER ========== */
+        .card-header-custom {
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .card-header-custom .brand-icon {
+            font-size: 2.6rem;
+            color: var(--accent-green);
+            display: inline-block;
+            background: rgba(43, 122, 75, 0.12);
+            padding: 0.6rem;
+            border-radius: 16px;
+            margin-bottom: 0.75rem;
+        }
+
+        body.dark .card-header-custom .brand-icon {
+            background: rgba(76, 159, 112, 0.15);
+        }
+
+        .card-header-custom h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .card-header-custom p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        /* ========== BOTÕES DE TEMA E IDIOMA ========== */
+        .top-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-btn {
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            transition: 0.2s;
+            padding: 0.35rem 0.5rem;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+        }
+
+        body.dark .action-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.06);
+            color: var(--text-light);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.08);
+            background: rgba(43, 122, 75, 0.15);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        body.dark .action-btn:hover {
+            background: rgba(76, 159, 112, 0.2);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .dropdown-menu-custom {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 0.4rem;
+            min-width: 160px;
+        }
+
+        .dropdown-menu-custom .dropdown-item {
+            color: var(--text-primary);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-menu-custom .dropdown-item:hover {
+            background: rgba(43, 122, 75, 0.1);
+            color: var(--accent-green);
+        }
+
+        body.dark .dropdown-menu-custom .dropdown-item:hover {
+            background: rgba(76, 159, 112, 0.15);
+        }
+
+        /* ========== FORMULÁRIO ========== */
+        .form-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .input-group-custom {
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: var(--input-radius);
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .input-group-custom:focus-within {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 4px rgba(43, 122, 75, 0.12);
+        }
+
+        body.dark .input-group-custom:focus-within {
+            box-shadow: 0 0 0 4px rgba(76, 159, 112, 0.15);
+        }
+
+        .form-control {
+            background: transparent;
+            border: none;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            border-radius: var(--input-radius);
+            flex: 1;
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: #a0b8b0;
+        }
+
+        body.dark .form-control::placeholder {
+            color: #6a8a7e;
+        }
+
+        .form-control:focus {
+            background: transparent;
+            box-shadow: none;
+            border-color: transparent;
+            color: var(--text-primary);
+        }
+
+        .input-group-text {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0 0 0 1rem;
+            font-size: 1rem;
+        }
+
+        /* ========== PIN VISIBILITY TOGGLE ========== */
+        .pin-toggle-icon {
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            padding: 0 1rem;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+        .pin-toggle-icon:hover {
+            color: var(--accent-green);
+        }
+
+        /* ========== BOTÕES ========== */
+        .btn-validate {
+            background: var(--accent-gradient);
+            border: none;
+            padding: 0.85rem;
+            font-weight: 700;
+            border-radius: var(--input-radius);
+            font-size: 1rem;
+            transition: 0.3s ease;
+            color: #ffffff;
+            box-shadow: 0 6px 24px rgba(43, 122, 75, 0.25);
+            letter-spacing: 0.3px;
+            width: 100%;
+        }
+
+        .btn-validate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(43, 122, 75, 0.35);
+        }
+
+        .btn-validate:active {
+            transform: translateY(0px);
+        }
+
+        body.dark .btn-validate {
+            box-shadow: 0 6px 24px rgba(76, 159, 112, 0.2);
+        }
+
+        body.dark .btn-validate:hover {
+            box-shadow: 0 10px 32px rgba(76, 159, 112, 0.3);
+        }
+
+        .btn-cancel {
+            border-radius: var(--input-radius);
+            padding: 0.85rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: 2px solid var(--input-border);
+            background: transparent;
+            color: var(--text-secondary);
+            transition: 0.25s ease;
+            width: 100%;
+        }
+
+        .btn-cancel:hover {
+            border-color: #e53e3e;
+            color: #e53e3e;
+            background: rgba(229, 62, 62, 0.05);
+            transform: translateY(-1px);
+        }
+
+        body.dark .btn-cancel:hover {
+            background: rgba(229, 62, 62, 0.1);
+        }
+
+        /* ========== VALIDAÇÕES E ERROS ========== */
+        .invalid-feedback-custom {
+            font-size: 0.7rem;
+            color: var(--error-text);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .global-error {
+            background: var(--error-bg);
+            color: var(--error-text);
+            border-radius: var(--input-radius);
+            padding: 0.6rem 1rem;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            text-align: center;
+            border-left: 4px solid var(--error-text);
+            display: none;
+        }
+
+        .global-success {
+            background: var(--info-bg);
+            color: var(--info-text);
+            border-radius: var(--input-radius);
+            padding: 0.6rem 1rem;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            text-align: center;
+            border-left: 4px solid var(--accent-green);
+            display: none;
+        }
+
+        .text-muted-custom {
+            font-size: 0.7rem;
+            color: var(--text-secondary) !important;
+            opacity: 0.8;
+        }
+
+        /* ========== PERFIL DETECTADO ========== */
+        .profile-badge {
+            background: rgba(43, 122, 75, 0.12);
+            border-radius: var(--input-radius);
+            padding: 0.8rem 1rem;
+            margin: 0.5rem 0 1.5rem 0;
+            text-align: center;
+            border: 1px solid var(--accent-green);
+            display: none;
+        }
+
+        .profile-badge .profile-icon {
+            font-size: 1.5rem;
+            color: var(--accent-green);
+        }
+
+        .profile-badge .profile-name {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .profile-badge .profile-role {
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+
+        /* ========== KEY HINT ========== */
+        .key-hint {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .key-hint code {
+            background: var(--input-bg);
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .welcome-message {
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding: 0.8rem 1rem;
+            background: rgba(43, 122, 75, 0.08);
+            border-radius: var(--input-radius);
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .welcome-message strong {
+            color: var(--accent-green);
+        }
+
+        /* ========== RESPONSIVIDADE ========== */
+        @media (max-width: 576px) {
+            .verify-wrapper {
+                padding: 1rem;
+                background-position: center 50%;
+            }
+
+            .verify-card {
+                padding: 1.75rem 1.25rem 1.5rem;
+                border-radius: 20px;
+            }
+
+            .card-header-custom h2 {
+                font-size: 1.35rem;
+            }
+
+            .card-header-custom .brand-icon {
+                font-size: 2.2rem;
+                padding: 0.5rem;
+            }
+
+            .top-actions {
+                gap: 0.5rem;
+            }
+
+            .action-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 1rem;
+            }
+
+            .slogan-overlay {
+                bottom: 20px;
+                padding: 0 1rem;
+                max-width: 90%;
+            }
+
+            .slogan-overlay h2 {
+                font-size: 1.2rem;
+            }
+
+            .slogan-overlay p {
+                font-size: 0.75rem;
+            }
+
+            .slogan-overlay .logo-slogan1 {
+                max-height: 40px;
+            }
+
+            .form-control {
+                font-size: 0.9rem;
+                padding: 0.65rem 0.85rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .verify-card {
+                padding: 1.25rem 1rem;
+            }
+        }
+
+        /* ========== ANIMAÇÃO ========== */
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .verify-card {
+            animation: fadeSlideUp 0.6s ease forwards;
+        }
+
+        .slogan-overlay {
+            animation: fadeSlideUp 0.8s ease 0.2s both;
+        }
+
+        .profile-badge {
+            animation: fadeSlideUp 0.4s ease forwards;
+        }
+    </style>
+</head>
+<body>
+
+<div class="verify-wrapper">
+    <!-- SLOGAN -->
+    <div class="slogan-overlay">
+        <img class="logo-slogan1" src="images/vitalinka-rbg.png" alt="VITALINKA">
+        <h2>Ligando vidas através da tecnologia</h2>
+        <p>Sistema integrado de gestão hospitalar para uma saúde mais eficiente e humanizada.</p>
+    </div>
+
+    <!-- PAINEL PRINCIPAL -->
+    <div class="form-panel">
+        <div class="verify-card">
+            <!-- AÇÕES SUPERIORES -->
+            <div class="top-actions">
+                <button id="themeToggleBtn" class="action-btn" aria-label="Alternar tema">
+                    <i class="bi bi-moon-stars"></i>
+                </button>
+                <div class="dropdown">
+                    <button class="action-btn dropdown-toggle" type="button" id="langDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-globe2"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom" aria-labelledby="langDropdown">
+                        <li><a class="dropdown-item lang-option" data-lang="pt" href="#">🇵🇹 Português</a></li>
+                        <li><a class="dropdown-item lang-option" data-lang="en" href="#">🇬🇧 English</a></li>
+                        <li><a class="dropdown-item lang-option" data-lang="es" href="#">🇪🇸 Español</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- HEADER -->
+            <div class="card-header-custom">
+                <div class="brand-icon">
+                    <i class="bi bi-shield-lock"></i>
+                </div>
+                <h2 id="verifyTitle">Verificação de Segurança</h2>
+                <p id="verifySubtitle">Confirme a sua identidade para aceder ao sistema</p>
+            </div>
+
+            <!-- MENSAGEM DE BOAS-VINDAS -->
+            <div class="welcome-message" id="welcomeMessage">
+                <i class="bi bi-person-check me-2"></i>
+                <span id="welcomeText">Bem-vindo(a). Para concluir o acesso ao sistema, introduza a sua Chave Institucional e PIN de Segurança.</span>
+            </div>
+
+            <!-- FORMULÁRIO -->
+            <form id="verifyForm" novalidate>
+                <!-- Chave Institucional -->
+                <div class="mb-3">
+                    <label class="form-label" id="keyLabel">Chave Institucional</label>
+                    <div class="input-group-custom">
+                        <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                        <input type="text" class="form-control" id="institutionalKeyInput" placeholder="HRM-ADM-000001" required>
+                    </div>
+                    <div class="key-hint" id="keyHint">
+                        <span>Formato: <code>HRM-PERFIL-NÚMERO</code> (ex: HRM-ADM-000001)</span>
+                    </div>
+                    <div class="invalid-feedback-custom" id="keyError"></div>
+                </div>
+
+                <!-- PIN de Segurança -->
+                <div class="mb-4">
+                    <label class="form-label" id="pinLabel">PIN de Segurança</label>
+                    <div class="input-group-custom">
+                        <span class="input-group-text"><i class="bi bi-shield-shaded"></i></span>
+                        <input type="password" class="form-control" id="pinInput" placeholder="••••••" maxlength="6" inputmode="numeric" required>
+                        <button type="button" class="pin-toggle-icon" id="togglePinBtn" tabindex="-1">
+                            <i class="bi bi-eye-slash"></i>
+                        </button>
+                    </div>
+                    <div class="key-hint" id="pinHint">
+                        <span>PIN de 4 a 6 dígitos (atribuído pela administração)</span>
+                    </div>
+                    <div class="invalid-feedback-custom" id="pinError"></div>
+                </div>
+
+                <!-- PERFIL DETECTADO (aparece após validação) -->
+                <div id="profileBadge" class="profile-badge">
+                    <div class="profile-icon"><i class="bi bi-person-badge"></i></div>
+                    <div>
+                        <span class="profile-name" id="detectedProfileName">Utilizador</span><br>
+                        <span class="profile-role" id="detectedProfileRole">Perfil</span>
+                    </div>
+                </div>
+
+                <!-- BOTÕES -->
+                <button type="submit" class="btn-validate mb-3" id="validateBtn">
+                    <span id="validateBtnText">Validar Acesso</span>
+                    <span id="validateSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                </button>
+
+                <button type="button" class="btn-cancel" id="cancelBtn">
+                    <i class="bi bi-box-arrow-right"></i> <span id="cancelBtnText">Cancelar Sessão</span>
+                </button>
+
+                <div id="globalErrorMessage" class="global-error"></div>
+                <div id="globalSuccessMessage" class="global-success"></div>
+
+                <div class="text-center mt-3">
+                    <small class="text-muted-custom" id="demoNote">🔐 A Chave Institucional e PIN são atribuídos exclusivamente ao funcionário.</small>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ============================================================
+    //  BASE DE DADOS DE CHAVES INSTITUCIONAIS + PIN (10 PERFIS)
+    // ============================================================
+    const institutionalKeys = {
+        'HRM-ADM-000001': {
+            name: 'Super Administrador',
+            profile: 'Super Administrador',
+            profileIcon: 'bi bi-shield-fill-check',
+            pin: '1234',
+            redirect: 'dash-dev.html'
+        },
+        'HRM-DIR-000001': {
+            name: 'Diretor Geral',
+            profile: 'Diretor Geral',
+            profileIcon: 'bi bi-briefcase-fill',
+            pin: '2345',
+            redirect: 'dash-dir.html'
+        },
+        'HRM-REC-000001': {
+            name: 'Rececionista',
+            profile: 'Rececionista',
+            profileIcon: 'bi bi-person-badge',
+            pin: '3456',
+            redirect: 'dash-rec.html'
+        },
+        'HRM-MED-000001': {
+            name: 'Médico',
+            profile: 'Médico',
+            profileIcon: 'bi bi-stethoscope',
+            pin: '4567',
+            redirect: 'dash-med.html'
+        },
+        'HRM-ENF-000001': {
+            name: 'Enfermeiro',
+            profile: 'Enfermeiro',
+            profileIcon: 'bi bi-heart-pulse',
+            pin: '5678',
+            redirect: 'dash-enf.html'
+        },
+        'HRM-TEC-000001': {
+            name: 'Técnico de Laboratório',
+            profile: 'Técnico de Laboratório',
+            profileIcon: 'bi bi-flask',
+            pin: '6789',
+            redirect: 'dash-tec.html'
+        },
+        'HRM-FAR-000001': {
+            name: 'Farmacêutico',
+            profile: 'Farmacêutico',
+            profileIcon: 'bi bi-capsule',
+            pin: '7890',
+            redirect: 'dash-farm.html'
+        },
+        'HRM-GES-000001': {
+            name: 'Gestor de Internamento',
+            profile: 'Gestor de Internamento',
+            profileIcon: 'bi bi-hospital',
+            pin: '8901',
+            redirect: 'dash-internamento.html'
+        },
+        'HRM-FIN-000001': {
+            name: 'Financeiro',
+            profile: 'Financeiro',
+            profileIcon: 'bi bi-cash-coin',
+            pin: '9012',
+            redirect: 'dash-fin.html'
+        },
+        'HRM-PAC-000001': {
+            name: 'Paciente',
+            profile: 'Paciente',
+            profileIcon: 'bi bi-person-heart',
+            pin: '0123',
+            redirect: 'dash-pac.html'
+        }
+    };
+
+    // ============================================================
+    //  TRADUÇÕES
+    // ============================================================
+    const translations = {
+        pt: {
+            verifyTitle: "Verificação de Segurança",
+            verifySubtitle: "Confirme a sua identidade para aceder ao sistema",
+            keyLabel: "Chave Institucional",
+            pinLabel: "PIN de Segurança",
+            validateBtnText: "Validar Acesso",
+            cancelBtnText: "Cancelar Sessão",
+            demoNote: "🔐 A Chave Institucional e PIN são atribuídos exclusivamente ao funcionário.",
+            keyHint: "Formato: HRM-PERFIL-NÚMERO (ex: HRM-ADM-000001)",
+            pinHint: "PIN de 4 a 6 dígitos (atribuído pela administração)",
+            welcomeText: "Bem-vindo(a). Para concluir o acesso ao sistema, introduza a sua Chave Institucional e PIN de Segurança.",
+            keyRequired: "A Chave Institucional é obrigatória",
+            keyInvalid: "Chave Institucional inválida. Verifique o formato e tente novamente.",
+            keyNotFound: "Chave Institucional não encontrada.",
+            pinRequired: "O PIN de Segurança é obrigatório",
+            pinInvalid: "PIN inválido. Deve ter 4 a 6 dígitos.",
+            pinNotFound: "PIN incorreto. Verifique e tente novamente.",
+            profileDetected: "Perfil detectado: {profile}",
+            accessGranted: "✅ Acesso concedido. Redirecionando para o dashboard...",
+            accessDenied: "❌ Acesso negado. Redirecionando para a página de erro...",
+            sessionCancelled: "Sessão cancelada. A ser redirecionado para o login..."
+        },
+        en: {
+            verifyTitle: "Security Verification",
+            verifySubtitle: "Confirm your identity to access the system",
+            keyLabel: "Institutional Key",
+            pinLabel: "Security PIN",
+            validateBtnText: "Validate Access",
+            cancelBtnText: "Cancel Session",
+            demoNote: "🔐 The Institutional Key and PIN are assigned exclusively to the employee.",
+            keyHint: "Format: HRM-PROFILE-NUMBER (e.g.: HRM-ADM-000001)",
+            pinHint: "4 to 6 digit PIN (assigned by administration)",
+            welcomeText: "Welcome. To complete system access, enter your Institutional Key and Security PIN.",
+            keyRequired: "Institutional Key is required",
+            keyInvalid: "Invalid Institutional Key. Check the format and try again.",
+            keyNotFound: "Institutional Key not found.",
+            pinRequired: "Security PIN is required",
+            pinInvalid: "Invalid PIN. Must be 4 to 6 digits.",
+            pinNotFound: "Incorrect PIN. Check and try again.",
+            profileDetected: "Profile detected: {profile}",
+            accessGranted: "✅ Access granted. Redirecting to dashboard...",
+            accessDenied: "❌ Access denied. Redirecting to error page...",
+            sessionCancelled: "Session cancelled. Redirecting to login..."
+        },
+        es: {
+            verifyTitle: "Verificación de Seguridad",
+            verifySubtitle: "Confirme su identidad para acceder al sistema",
+            keyLabel: "Clave Institucional",
+            pinLabel: "PIN de Seguridad",
+            validateBtnText: "Validar Acceso",
+            cancelBtnText: "Cancelar Sesión",
+            demoNote: "🔐 La Clave Institucional y PIN se asignan exclusivamente al empleado.",
+            keyHint: "Formato: HRM-PERFIL-NÚMERO (ej: HRM-ADM-000001)",
+            pinHint: "PIN de 4 a 6 dígitos (asignado por la administración)",
+            welcomeText: "Bienvenido(a). Para completar el acceso al sistema, introduzca su Clave Institucional y PIN de Seguridad.",
+            keyRequired: "La Clave Institucional es obligatoria",
+            keyInvalid: "Clave Institucional inválida. Verifique el formato e intente de nuevo.",
+            keyNotFound: "Clave Institucional no encontrada.",
+            pinRequired: "El PIN de Seguridad es obligatorio",
+            pinInvalid: "PIN inválido. Debe tener 4 a 6 dígitos.",
+            pinNotFound: "PIN incorrecto. Verifique e intente de nuevo.",
+            profileDetected: "Perfil detectado: {profile}",
+            accessGranted: "✅ Acceso concedido. Redirigiendo al dashboard...",
+            accessDenied: "❌ Acceso denegado. Redirigiendo a la página de error...",
+            sessionCancelled: "Sesión cancelada. Redirigiendo al login..."
+        }
+    };
+
+    // ============================================================
+    //  ESTADO GLOBAL
+    // ============================================================
+    let currentLang = localStorage.getItem('vitalinkaLang') || 'pt';
+    let isDark = localStorage.getItem('vitalinkaTheme') === 'dark';
+    let isProcessing = false;
+
+    // ============================================================
+    //  DOM REFS
+    // ============================================================
+    const themeBtn = document.getElementById('themeToggleBtn');
+    const institutionalKeyInput = document.getElementById('institutionalKeyInput');
+    const pinInput = document.getElementById('pinInput');
+    const validateBtn = document.getElementById('validateBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const verifyForm = document.getElementById('verifyForm');
+    const globalError = document.getElementById('globalErrorMessage');
+    const globalSuccess = document.getElementById('globalSuccessMessage');
+    const profileBadge = document.getElementById('profileBadge');
+    const detectedProfileName = document.getElementById('detectedProfileName');
+    const detectedProfileRole = document.getElementById('detectedProfileRole');
+    const keyError = document.getElementById('keyError');
+    const pinError = document.getElementById('pinError');
+    const validateBtnText = document.getElementById('validateBtnText');
+    const validateSpinner = document.getElementById('validateSpinner');
+    const welcomeText = document.getElementById('welcomeText');
+    const togglePinBtn = document.getElementById('togglePinBtn');
+
+    const i18nEls = {
+        verifyTitle: document.getElementById('verifyTitle'),
+        verifySubtitle: document.getElementById('verifySubtitle'),
+        keyLabel: document.getElementById('keyLabel'),
+        pinLabel: document.getElementById('pinLabel'),
+        demoNote: document.getElementById('demoNote'),
+        keyHint: document.getElementById('keyHint'),
+        pinHint: document.getElementById('pinHint'),
+        cancelBtnText: document.getElementById('cancelBtnText')
+    };
+
+    // ============================================================
+    //  FUNÇÕES DE IDIOMA
+    // ============================================================
+    function applyLanguage() {
+        const t = translations[currentLang];
+        if (i18nEls.verifyTitle) i18nEls.verifyTitle.innerText = t.verifyTitle;
+        if (i18nEls.verifySubtitle) i18nEls.verifySubtitle.innerText = t.verifySubtitle;
+        if (i18nEls.keyLabel) i18nEls.keyLabel.innerText = t.keyLabel;
+        if (i18nEls.pinLabel) i18nEls.pinLabel.innerText = t.pinLabel;
+        if (i18nEls.demoNote) i18nEls.demoNote.innerText = t.demoNote;
+        if (i18nEls.keyHint) i18nEls.keyHint.innerHTML = t.keyHint;
+        if (i18nEls.pinHint) i18nEls.pinHint.innerHTML = t.pinHint;
+        if (i18nEls.cancelBtnText) i18nEls.cancelBtnText.innerText = t.cancelBtnText;
+        if (validateBtnText) validateBtnText.innerText = t.validateBtnText;
+        
+        // Atualizar mensagem de boas-vindas
+        welcomeText.innerHTML = t.welcomeText;
+    }
+
+    // ============================================================
+    //  FUNÇÕES DE VALIDAÇÃO
+    // ============================================================
+    function validateKey() {
+        const key = institutionalKeyInput.value.trim().toUpperCase();
+        if (!key) {
+            keyError.innerText = translations[currentLang].keyRequired;
+            return false;
+        }
+        const keyRegex = /^HRM-[A-Z]{3,4}-\d{6}$/;
+        if (!keyRegex.test(key)) {
+            keyError.innerText = translations[currentLang].keyInvalid;
+            return false;
+        }
+        keyError.innerText = '';
+        return true;
+    }
+
+    function validatePin() {
+        const pin = pinInput.value.trim();
+        if (!pin) {
+            pinError.innerText = translations[currentLang].pinRequired;
+            return false;
+        }
+        if (!/^\d{4,6}$/.test(pin)) {
+            pinError.innerText = translations[currentLang].pinInvalid;
+            return false;
+        }
+        pinError.innerText = '';
+        return true;
+    }
+
+    function showError(message) {
+        globalError.innerText = message;
+        globalError.style.display = 'block';
+        globalSuccess.style.display = 'none';
+        setTimeout(() => { globalError.style.display = 'none'; }, 3000);
+    }
+
+    function showSuccess(message) {
+        globalSuccess.innerText = message;
+        globalSuccess.style.display = 'block';
+        globalError.style.display = 'none';
+        setTimeout(() => { globalSuccess.style.display = 'none'; }, 3000);
+    }
+
+    function showProfile(profile, name) {
+        detectedProfileName.innerText = name;
+        detectedProfileRole.innerText = profile;
+        profileBadge.style.display = 'block';
+    }
+
+    function hideProfile() {
+        profileBadge.style.display = 'none';
+    }
+
+    // ============================================================
+    //  FUNÇÃO DE REDIRECIONAMENTO PARA 403
+    // ============================================================
+    function redirectTo403() {
+        window.location.href = '403.html';
+    }
+
+    // ============================================================
+    //  VALIDAÇÃO DA CHAVE + PIN
+    // ============================================================
+    verifyForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (isProcessing) return;
+        isProcessing = true;
+
+        // Validação de formato (key + pin)
+        const isKeyOk = validateKey();
+        const isPinOk = validatePin();
+
+        // Se o formato da chave ou PIN estiver errado, redireciona para 403
+        if (!isKeyOk || !isPinOk) {
+            isProcessing = false;
+            redirectTo403();
+            return;
+        }
+
+        // Mostrar loading
+        validateBtnText.classList.add('d-none');
+        validateSpinner.classList.remove('d-none');
+        validateBtn.disabled = true;
+
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        const key = institutionalKeyInput.value.trim().toUpperCase();
+        const pin = pinInput.value.trim();
+
+        // Verificar se a chave existe
+        const keyData = institutionalKeys[key];
+
+        // Esconder loading
+        validateBtnText.classList.remove('d-none');
+        validateSpinner.classList.add('d-none');
+        validateBtn.disabled = false;
+        isProcessing = false;
+
+        // Se chave não existe OU PIN incorreto -> redireciona para 403
+        if (!keyData || keyData.pin !== pin) {
+            redirectTo403();
+            return;
+        }
+
+        // Sucesso! Mostrar perfil e redirecionar para o dashboard
+        showProfile(keyData.profile, keyData.name);
+        showSuccess(translations[currentLang].accessGranted);
+
+        // Redirecionar após 2 segundos
+        setTimeout(() => {
+            window.location.href = keyData.redirect;
+        }, 2000);
+    });
+
+    // ============================================================
+    //  CANCELAR SESSÃO
+    // ============================================================
+    cancelBtn.addEventListener('click', () => {
+        showSuccess(translations[currentLang].sessionCancelled);
+        setTimeout(() => {
+            window.location.href = "login.html";
+        }, 1500);
+    });
+
+    // ============================================================
+    //  EVENTOS DE INPUT
+    // ============================================================
+    institutionalKeyInput.addEventListener('input', () => {
+        institutionalKeyInput.value = institutionalKeyInput.value.toUpperCase();
+    });
+
+    pinInput.addEventListener('input', () => {
+        pinInput.value = pinInput.value.replace(/\D/g, '');
+    });
+
+    // ============================================================
+    //  MOSTRAR/OCULTAR PIN
+    // ============================================================
+    togglePinBtn.addEventListener('click', () => {
+        const type = pinInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        pinInput.setAttribute('type', type);
+        const icon = togglePinBtn.querySelector('i');
+        icon.className = type === 'text' ? 'bi bi-eye' : 'bi bi-eye-slash';
+    });
+
+    // ============================================================
+    //  TEMA
+    // ============================================================
+    function setTheme(enableDark) {
+        if (enableDark) {
+            document.body.classList.add('dark');
+            localStorage.setItem('vitalinkaTheme', 'dark');
+            themeBtn.querySelector('i').className = 'bi bi-sun-fill';
+        } else {
+            document.body.classList.remove('dark');
+            localStorage.setItem('vitalinkaTheme', 'light');
+            themeBtn.querySelector('i').className = 'bi bi-moon-stars';
+        }
+    }
+
+    themeBtn.addEventListener('click', () => {
+        isDark = !isDark;
+        setTheme(isDark);
+    });
+
+    // ============================================================
+    //  IDIOMA
+    // ============================================================
+    document.querySelectorAll('.lang-option').forEach(option => {
+        option.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentLang = option.getAttribute('data-lang');
+            localStorage.setItem('vitalinkaLang', currentLang);
+            applyLanguage();
+        });
+    });
+
+    // ============================================================
+    //  INICIALIZAÇÃO
+    // ============================================================
+    setTheme(isDark);
+    applyLanguage();
+</script>
+</body>
+</html>
